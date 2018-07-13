@@ -51,11 +51,11 @@ def action_to_target(action_id):
     if action_id == 0:
         return [0, 0]
     elif action_id == 1:
-        return [255, 0]
+        return [31, 0]
     elif action_id == 2:
-        return [255, 255]
+        return [31, 31]
     elif action_id == 3:
-        return [0, 255]
+        return [0, 31]
 
 
 # Create the low-level SC2Env object, which we wrap with
@@ -64,8 +64,8 @@ def make_sc2env():
     env_args = {
         'agent_interface_format': sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
-                screen=(256,256),
-                minimap=(256,256)
+                screen=(32,32),
+                minimap=(32,32)
             ),
             rgb_dimensions=sc2_env.Dimensions(
                 screen=(256,256),
@@ -74,7 +74,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': 'FourChoices',
-        'step_mul': 1,
+        'step_mul': 600,
     }
     register_map('', env_args['map_name'])
     quiet_absl()
