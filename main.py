@@ -20,6 +20,8 @@ def main():
 
         after = np.concatenate([outcome_state[2], outcome_state[3]], axis=1)
         imutil.show(after, caption="After")
+        minimap = outcome_state[0].mean(axis=0)
+        imutil.show(minimap, resize_to=(256,256), caption="Minimap")
         import pdb; pdb.set_trace()
 
 

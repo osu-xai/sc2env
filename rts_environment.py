@@ -21,15 +21,12 @@ class RTSEnvironment():
 
         # Hack: Just no-op for 10 seconds, after which the
         # ten-second timer in the map should auto-reset the level
-        for i in range(20):
+        for i in range(10):
             action = actions.FUNCTIONS.no_op()
-            timestep = self.sc2env.step([action])[0]
+            self.last_timestep = self.sc2env.step([action])[0]
+            state, reward, done, info = unpack_timestep(self.last_timestep)
 
-        # Wiggle the camera to reset the 10-second timer
-        x = random.random() - .5
-        action = actions.FUNCTIONS.move_camera([16+x,16+x])
-        timestep = self.sc2env.step([action])[0]
-        state, reward, done, info = unpack_timestep(timestep)
+        state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
 
     # Action space: Choose which of four enemies to attack
@@ -39,14 +36,23 @@ class RTSEnvironment():
 
     # Step: Choose which enemy to attack
     def step(self, action):
-        self.chat('Taking action {}'.format(action))
-        target = action_to_target(action)
-        sc2_action = actions.FUNCTIONS.Attack_minimap("now", target)
-        timestep = self.sc2env.step([sc2_action])[0]
-        return unpack_timestep(timestep)
+        if self.can_attack():
+            target = action_to_target(action)
+            sc2_action = actions.FUNCTIONS.Attack_minimap("now", target)
+        else:
+            print('Cannot attack, taking no-op')
+            sc2_action = actions.FUNCTIONS.no_op()
+
+        self.last_timestep = self.sc2env.step([sc2_action])[0]
+        return unpack_timestep(self.last_timestep)
 
     def chat(self, message):
         self.sc2env.send_chat_messages([message])
+
+    def can_attack(self):
+        available = self.last_timestep.observation.available_actions
+        return actions.FUNCTIONS.Attack_minimap.id in available
+
 
 
 # Convert the SC2Env timestep into a Gym-style tuple
@@ -67,14 +73,16 @@ def unpack_timestep(timestep):
 # one of the four corners of the map
 def action_to_target(action_id):
     x = random.random()
+    map_size = 256
+    padding = 64
     if action_id == 0:
-        return [2 + x, 2 + x]
+        return [padding + x, padding + x]
     elif action_id == 1:
-        return [30 - x, 2 + x]
+        return [map_size - padding - x, padding + x]
     elif action_id == 2:
-        return [30-x, 30-x]
+        return [map_size - padding - x, map_size - padding - x]
     elif action_id == 3:
-        return [2 + x, 30-x]
+        return [padding + x, map_size - padding - x]
 
 
 # Create the low-level SC2Env object, which we wrap with
@@ -83,8 +91,8 @@ def make_sc2env():
     env_args = {
         'agent_interface_format': sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
-                screen=(32,32),
-                minimap=(32,32)
+                screen=(256,256),
+                minimap=(256,256)
             ),
             rgb_dimensions=sc2_env.Dimensions(
                 screen=(256,256),
@@ -93,7 +101,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': 'FourChoices',
-        'step_mul': 64,
+        'step_mul': 17,  # 17 is 1 action per second
     }
     register_map('', env_args['map_name'])
     quiet_absl()
