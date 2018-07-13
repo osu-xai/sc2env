@@ -26,7 +26,7 @@ class RTSEnvironment():
     # Step: Choose which enemy to attack
     def step(self, action):
         target = action_to_target(action)
-        sc2_action = actions.FUNCTIONS.Move_screen("now", target)
+        sc2_action = actions.FUNCTIONS.Attack_minimap("now", target)
         timestep = self.sc2env.step([sc2_action])[0]
         return unpack_timestep(timestep)
 
@@ -51,11 +51,11 @@ def action_to_target(action_id):
     if action_id == 0:
         return [0, 0]
     elif action_id == 1:
-        return [32, 0]
+        return [255, 0]
     elif action_id == 2:
-        return [32, 32]
+        return [255, 255]
     elif action_id == 3:
-        return [0, 32]
+        return [0, 255]
 
 
 # Create the low-level SC2Env object, which we wrap with
