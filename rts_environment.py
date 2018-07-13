@@ -1,19 +1,33 @@
 import os
+import random
 import numpy as np
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
 
-# An abstract environment similar to the SCAII-RTS Towers environment
+# A simple environment similar to SCAII-RTS Towers
 class RTSEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
 
-    # On reset, take one action: select the army
     def reset(self):
-        timestep = self.sc2env.reset()[0]
-        print('Selecting army...')
-        action = actions.FUNCTIONS.select_army("select")
+        # The built-in map reset is too slow
+        #print("Resetting game...")
+        #timestep = self.sc2env.reset()[0]
+
+        # Chat messages from the agent can't fire triggers
+        #print("Sending a reset chat message...")
+        #self.chat("reset")
+
+        # Hack: Just no-op for 10 seconds, after which the
+        # ten-second timer in the map should auto-reset the level
+        for i in range(20):
+            action = actions.FUNCTIONS.no_op()
+            timestep = self.sc2env.step([action])[0]
+
+        # Wiggle the camera to reset the 10-second timer
+        x = random.random() - .5
+        action = actions.FUNCTIONS.move_camera([16+x,16+x])
         timestep = self.sc2env.step([action])[0]
         state, reward, done, info = unpack_timestep(timestep)
         return state
@@ -25,10 +39,14 @@ class RTSEnvironment():
 
     # Step: Choose which enemy to attack
     def step(self, action):
+        self.chat('Taking action {}'.format(action))
         target = action_to_target(action)
         sc2_action = actions.FUNCTIONS.Attack_minimap("now", target)
         timestep = self.sc2env.step([sc2_action])[0]
         return unpack_timestep(timestep)
+
+    def chat(self, message):
+        self.sc2env.send_chat_messages([message])
 
 
 # Convert the SC2Env timestep into a Gym-style tuple
@@ -48,14 +66,15 @@ def unpack_timestep(timestep):
 # The four actions tell the army to move to
 # one of the four corners of the map
 def action_to_target(action_id):
+    x = random.random()
     if action_id == 0:
-        return [0, 0]
+        return [2 + x, 2 + x]
     elif action_id == 1:
-        return [31, 0]
+        return [30 - x, 2 + x]
     elif action_id == 2:
-        return [31, 31]
+        return [30-x, 30-x]
     elif action_id == 3:
-        return [0, 31]
+        return [2 + x, 30-x]
 
 
 # Create the low-level SC2Env object, which we wrap with
@@ -74,7 +93,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': 'FourChoices',
-        'step_mul': 600,
+        'step_mul': 64,
     }
     register_map('', env_args['map_name'])
     quiet_absl()

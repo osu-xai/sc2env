@@ -1,25 +1,26 @@
-import random
-
-import imutil
-from imutil import VideoMaker
+import numpy as np
 from rts_environment import RTSEnvironment
 from random_agent import RandomAgent
+import imutil
 
 
 def main():
     env = RTSEnvironment()
-    agent = RandomAgent(env.action_space())
-    state = env.reset()
 
-    try:
-        while True:
-            action = agent.step(state)
-            state, reward, done, info = env.step(action)
-            feature_minimap, feature_screen, rgb_minimap, rgb_screen = state
-            if done:
-                break
-    finally:
-        del env
+    agent = RandomAgent(env.action_space())
+    while True:
+        initial_state = env.reset()
+        action = agent.step(initial_state)
+
+        before = np.concatenate([initial_state[2], initial_state[3]], axis=1)
+        imutil.show(before, caption="Before")
+
+        for _ in range(10):
+            outcome_state, reward, done, info = env.step(action)
+
+        after = np.concatenate([outcome_state[2], outcome_state[3]], axis=1)
+        imutil.show(after, caption="After")
+        import pdb; pdb.set_trace()
 
 
 if __name__ == '__main__':
