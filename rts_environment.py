@@ -21,7 +21,7 @@ class RTSEnvironment():
 
         # Hack: Just no-op for 10 seconds, after which the
         # ten-second timer in the map should auto-reset the level
-        for i in range(10):
+        for i in range(15):
             action = actions.FUNCTIONS.no_op()
             self.last_timestep = self.sc2env.step([action])[0]
             state, reward, done, info = unpack_timestep(self.last_timestep)
