@@ -22,21 +22,20 @@ def create_dataset(dataset_size=100):
         # Select one of four actions
         selected_action = agent.step(initial_state)
 
-        # Simulate the battle for 30 seconds, repeating the selected action
-        for _ in range(30):
-            outcome_state, reward, done, info = env.step(selected_action)
+        # Take the action and simulate the game for one time step (~10 seconds)
+        outcome_state, reward, done, info = env.step(selected_action)
 
         # Record the state before, and the state after selected_action was taken
         b_prefix = 'output/{:05d}_before_'.format(i)
-        imutil.show(initial_state[0], filename=b_prefix + 'feature_map.png')
-        imutil.show(initial_state[1], filename=b_prefix + 'feature_screen.png')
-        imutil.show(initial_state[2], filename=b_prefix + 'rgb_map.png')
+        #imutil.show(initial_state[0], filename=b_prefix + 'feature_map.png')
+        #imutil.show(initial_state[1], filename=b_prefix + 'feature_screen.png')
+        #imutil.show(initial_state[2], filename=b_prefix + 'rgb_map.png')
         imutil.show(initial_state[3], filename=b_prefix + 'rgb_screen.png')
 
         a_prefix = 'output/{:05d}_after_{:02d}_'.format(i, selected_action)
-        imutil.show(outcome_state[0], filename=a_prefix + 'feature_map.png')
-        imutil.show(outcome_state[1], filename=a_prefix + 'feature_screen.png')
-        imutil.show(outcome_state[2], filename=a_prefix + 'rgb_map.png')
+        #imutil.show(outcome_state[0], filename=a_prefix + 'feature_map.png')
+        #imutil.show(outcome_state[1], filename=a_prefix + 'feature_screen.png')
+        #imutil.show(outcome_state[2], filename=a_prefix + 'rgb_map.png')
         imutil.show(outcome_state[3], filename=a_prefix + 'rgb_screen.png')
 
         print('Recorded episode {}/{}'.format(i, dataset_size))

@@ -20,12 +20,10 @@ class FourChoicesEnvironment():
         #print("Sending a reset chat message...")
         #self.chat("reset")
 
-        # Hack: Just no-op for 10 seconds, after which the
-        # ten-second timer in the map should auto-reset the level
-        for i in range(15):
-            action = actions.FUNCTIONS.no_op()
-            self.last_timestep = self.sc2env.step([action])[0]
-            state, reward, done, info = unpack_timestep(self.last_timestep)
+        # Hack: Move the camera in any direction
+        # This runs the ResetEpisode trigger built into the map
+        action = actions.FUNCTIONS.move_camera([0, 0])
+        self.last_timestep = self.sc2env.step([action])[0]
 
         state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
@@ -102,7 +100,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': 'FourChoices',
-        'step_mul': 17,  # 17 is ~1 action per second
+        'step_mul': 170,  # 17 is ~1 action per second
     }
     register_map('', env_args['map_name'])
     quiet_absl()
