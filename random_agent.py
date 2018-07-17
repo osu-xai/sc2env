@@ -1,9 +1,5 @@
-import random
-
-from dataset_recorder_agent import DatasetRecorderAgent
-from video_recorder_agent import VideoRecorderAgent
-
-
+# A template for an actual, intelligent agent
+# Receives an observation (features and RGB) and produces an action
 class RandomAgent():
     def __init__(self, action_space):
         self.action_space = action_space

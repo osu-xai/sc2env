@@ -6,7 +6,8 @@ from pysc2.lib import actions
 
 
 # A simple environment similar to SCAII-RTS Towers
-class RTSEnvironment():
+# Follows the interface of OpenAI Gym environments
+class FourChoicesEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
 
@@ -101,7 +102,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': 'FourChoices',
-        'step_mul': 17,  # 17 is 1 action per second
+        'step_mul': 17,  # 17 is ~1 action per second
     }
     register_map('', env_args['map_name'])
     quiet_absl()
