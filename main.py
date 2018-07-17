@@ -4,7 +4,7 @@ from rts_environment import FourChoicesEnvironment
 from random_agent import RandomAgent
 
 
-def create_dataset(dataset_size=100):
+def create_dataset(dataset_size=1000):
     # This environment teaches win/loss outcomes vs different enemies
     env = FourChoicesEnvironment()
     agent = RandomAgent(env.action_space())
@@ -27,15 +27,15 @@ def create_dataset(dataset_size=100):
 
         # Record the state before, and the state after selected_action was taken
         b_prefix = 'output/{:05d}_before_'.format(i)
-        #imutil.show(initial_state[0], filename=b_prefix + 'feature_map.png')
-        #imutil.show(initial_state[1], filename=b_prefix + 'feature_screen.png')
-        #imutil.show(initial_state[2], filename=b_prefix + 'rgb_map.png')
+        imutil.show(initial_state[0], filename=b_prefix + 'feature_map.png')
+        imutil.show(initial_state[1], filename=b_prefix + 'feature_screen.png')
+        imutil.show(initial_state[2], filename=b_prefix + 'rgb_map.png')
         imutil.show(initial_state[3], filename=b_prefix + 'rgb_screen.png')
 
         a_prefix = 'output/{:05d}_after_{:02d}_'.format(i, selected_action)
-        #imutil.show(outcome_state[0], filename=a_prefix + 'feature_map.png')
-        #imutil.show(outcome_state[1], filename=a_prefix + 'feature_screen.png')
-        #imutil.show(outcome_state[2], filename=a_prefix + 'rgb_map.png')
+        imutil.show(outcome_state[0], filename=a_prefix + 'feature_map.png')
+        imutil.show(outcome_state[1], filename=a_prefix + 'feature_screen.png')
+        imutil.show(outcome_state[2], filename=a_prefix + 'rgb_map.png')
         imutil.show(outcome_state[3], filename=a_prefix + 'rgb_screen.png')
 
         print('Recorded episode {}/{}'.format(i, dataset_size))
