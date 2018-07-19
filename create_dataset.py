@@ -13,7 +13,7 @@ def create_dataset(dataset_size=10000):
     env = FourChoicesEnvironment()
     agent = RandomAgent(env.action_space())
 
-    examples = []
+    fp = open('{}.dataset'.format(DATASET_NAME), 'w')
 
     for i in tqdm(range(dataset_size)):
         # Each episode consists of a "before", a single action, and an "after"
@@ -38,17 +38,15 @@ def create_dataset(dataset_size=10000):
         imutil.show(initial_state[2], filename=filename_initial)
         imutil.show(outcome_state[2], filename=filename_outcome)
 
-        examples.append({
+        example = {
             'filename': filename_initial,
             'action': selected_action,
             'next_filename': filename_outcome,
             'value': reward,
-        })
+        }
+        fp.write(json.dumps(example) + '\n')
         print('Recorded episode {}/{}'.format(i, dataset_size))
-
-    with open('{}.dataset'.format(DATASET_NAME), 'w') as fp:
-        for e in examples:
-            fp.write(json.dumps(e) + '\n')
+    fp.close()
 
 
 if __name__ == '__main__':
