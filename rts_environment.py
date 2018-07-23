@@ -110,8 +110,13 @@ def make_sc2env():
 # A hack to get around some very odd code in pysc2.maps.lib
 # This isn't necessary if you're using any of the maps that
 # are hard-coded into pysc2
+# TODO: This function just registers a map that already exists
+# in Maps/, but it could also copy a map into Maps/
 def register_map(map_dir, map_name):
     from pysc2.maps import lib
+    if map_name in globals():
+        print('Map {}.SC2Map already exists, skipping registration'.format(map_name))
+        return
     map_filename = map_name + '.SC2Map'
     class_definition = dict(prefix=map_dir, filename=map_filename, players=1)
     # Don't do this at home

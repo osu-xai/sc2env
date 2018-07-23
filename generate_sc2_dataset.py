@@ -35,8 +35,8 @@ def create_dataset(dataset_size=10000):
         filename_initial = '{}/images/{:06d}_initial.png'.format(DATASET_NAME, i)
         filename_outcome = '{}/images/{:06d}_outcome.png'.format(DATASET_NAME, i)
 
-        imutil.show(initial_state[2], filename=filename_initial)
-        imutil.show(outcome_state[2], filename=filename_outcome)
+        imutil.show(initial_state[3], filename=filename_initial)
+        imutil.show(outcome_state[3], filename=filename_outcome)
 
         example = {
             'filename': filename_initial,
@@ -46,6 +46,12 @@ def create_dataset(dataset_size=10000):
         }
         fp.write(json.dumps(example) + '\n')
         print('Recorded episode {}/{}'.format(i, dataset_size))
+
+        # Hack: Restart game every N episodes due to pysc2 limitations
+        if (i + 1) % 1000 == 0:
+            del env
+            env = FourChoicesEnvironment()
+
     fp.close()
 
 
