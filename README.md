@@ -1,13 +1,13 @@
-Run
+## Starcraft RL
+
+An example StarCraftII reinforcement learning task, in the style of an OpenAI Gym environment.
+Runs on Ubuntu 16.04.
+
+## Installation
+
+Ensure StarCraftII is installed. Then run:
 
 ````
     pip install -r requirements.txt
-    cp FourChoices.SC2Map ~/StarCraftII/Maps  # Or wherever your SC2PATH
-is
-````
-
-Then run with:
-
-````
     python main.py
 ````

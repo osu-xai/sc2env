@@ -5,6 +5,7 @@ from pysc2_util import register_map, unpack_timestep
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
+MAP_SIZE = 256
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
@@ -38,9 +39,6 @@ class FourChoicesEnvironment():
         self.last_timestep = self.sc2env.step([sc2_action])[0]
         return unpack_timestep(self.last_timestep)
 
-    def chat(self, message):
-        self.sc2env.send_chat_messages([message])
-
     def can_attack(self):
         available = self.last_timestep.observation.available_actions
         return actions.FUNCTIONS.Attack_minimap.id in available
@@ -50,8 +48,8 @@ class FourChoicesEnvironment():
 # one of the four corners of the map
 def action_to_target(action_id):
     x = random.random()
-    map_size = 256
-    padding = 64
+    map_size = MAP_SIZE
+    padding = MAP_SIZE / 4
     if action_id == 0:
         return [padding + x, padding + x]
     elif action_id == 1:
@@ -68,12 +66,12 @@ def make_sc2env():
     env_args = {
         'agent_interface_format': sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
-                screen=(256,256),
-                minimap=(256,256)
+                screen=(MAP_SIZE,MAP_SIZE),
+                minimap=(MAP_SIZE,MAP_SIZE)
             ),
             rgb_dimensions=sc2_env.Dimensions(
-                screen=(256,256),
-                minimap=(256,256),
+                screen=(MAP_SIZE,MAP_SIZE),
+                minimap=(MAP_SIZE,MAP_SIZE),
             ),
             action_space=actions.ActionSpace.FEATURES,
         ),
