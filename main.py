@@ -1,6 +1,6 @@
 import imutil
 from tqdm import tqdm
-from rts_environment import FourChoicesEnvironment
+from four_choices_environment import FourChoicesEnvironment
 from random_agent import RandomAgent
 
 
