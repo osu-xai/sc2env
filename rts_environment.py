@@ -1,7 +1,7 @@
 import os
 import random
 import numpy as np
-import pysc2_util
+from pysc2_util import register_map, unpack_timestep
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
@@ -18,7 +18,7 @@ class FourChoicesEnvironment():
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.last_timestep = self.sc2env.step([action])[0]
 
-        state, reward, done, info = pysc2_util.unpack_timestep(self.last_timestep)
+        state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
 
     # Action space: Choose which of four enemies to attack
@@ -36,7 +36,7 @@ class FourChoicesEnvironment():
             sc2_action = actions.FUNCTIONS.no_op()
 
         self.last_timestep = self.sc2env.step([sc2_action])[0]
-        return pysc2_util.unpack_timestep(self.last_timestep)
+        return unpack_timestep(self.last_timestep)
 
     def chat(self, message):
         self.sc2env.send_chat_messages([message])
@@ -81,6 +81,5 @@ def make_sc2env():
         'step_mul': 170,  # 17 is ~1 action per second
     }
     register_map('', env_args['map_name'])
-    quiet_absl()
     return sc2_env.SC2Env(**env_args)
 
