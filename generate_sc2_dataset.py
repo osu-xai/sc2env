@@ -1,12 +1,17 @@
-import imutil
-from tqdm import tqdm
-from four_choices_environment import FourChoicesEnvironment
-from random_agent import RandomAgent
 import json
-
+import numpy as np
 import os
+from tqdm import tqdm
+import imutil
+
+import pysc2_util
+from random_agent import RandomAgent
+from four_choices_environment import FourChoicesEnvironment
+
+
 DATASET_NAME = 'sc2_four_choices'
 os.makedirs(DATASET_NAME + '/images', exist_ok=True)
+
 
 def create_dataset(dataset_size=10000):
     # This environment teaches win/loss outcomes vs different enemies
@@ -32,11 +37,16 @@ def create_dataset(dataset_size=10000):
         outcome_state, reward, done, info = env.step(selected_action)
 
         # Record the state before, and the state after selected_action was taken
-        filename_initial = '{}/images/{:06d}_initial.png'.format(DATASET_NAME, i)
-        filename_outcome = '{}/images/{:06d}_outcome.png'.format(DATASET_NAME, i)
+        filename_initial = '{}/images/{:06d}_initial_ftr.png'.format(DATASET_NAME, i)
+        filename_initial_rgb = '{}/images/{:06d}_initial_rgb.png'.format(DATASET_NAME, i)
+        filename_outcome = '{}/images/{:06d}_outcome_ftr.png'.format(DATASET_NAME, i)
+        filename_outcome_rgb = '{}/images/{:06d}_outcome_rgb.png'.format(DATASET_NAME, i)
 
-        imutil.show(initial_state[3], filename=filename_initial)
-        imutil.show(outcome_state[3], filename=filename_outcome)
+        pysc2_util.save_sc2_feature_map_to_png(initial_state[1], filename_initial)
+        imutil.show(initial_state[3], filename=filename_initial_rgb)
+
+        pysc2_util.save_sc2_feature_map_to_png(outcome_state[1], filename_outcome)
+        imutil.show(outcome_state[3], filename=filename_outcome_rgb)
 
         example = {
             'filename': filename_initial,

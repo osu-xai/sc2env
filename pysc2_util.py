@@ -6,6 +6,8 @@ import shutil
 from pysc2.maps import lib
 from pysc2.lib import actions
 
+import imutil
+
 
 # Convert the SC2Env timestep into a Gym-style tuple
 def unpack_timestep(timestep):
@@ -54,3 +56,30 @@ def register_map(map_dir, map_name):
 def quiet_absl():
     import absl
     absl.flags.FLAGS(sys.argv)
+
+
+# Input: 17-layer SC2Env Feature map
+def save_sc2_feature_map_to_png(feature_map, output_filename):
+    imutil.show(feature_map, filename=output_filename, normalize_color=False, resize_to=None)
+
+
+# Input: png filename
+def load_png_to_sc2_feature_map(input_filename, width=256):
+    grid = imutil.decode_jpg(input_filename, resize_to=None)
+    grid = grid.astype(np.uint8)
+    height = width
+    assert grid.shape == (height * 5, width * 4, 3)
+    return untile(grid, height, width)[:17]
+
+
+def untile(grid, item_height, item_width):
+    items = []
+    total_height, total_width = grid.shape[:2]
+    for y in range(0, total_height, item_height):
+        for x in range(0, total_width, item_width):
+            item = grid[y:y+item_height, x:x+item_width]
+            # TODO: Handle RGB
+            if len(item.shape) > 2:
+                item = item.mean(axis=-1)
+            items.append(item)
+    return np.array(items)
