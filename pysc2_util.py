@@ -16,7 +16,7 @@ def unpack_timestep(timestep):
     rgb_map = timestep.observation.rgb_minimap
     rgb_screen = timestep.observation.rgb_screen
 
-    state = (feature_map, feature_screen, rgb_map, rgb_screen)
+    state = (np.array(feature_map), np.array(feature_screen), np.array(rgb_map), np.array(rgb_screen))
     reward = timestep.reward
     done = timestep.last()
     info = {}
