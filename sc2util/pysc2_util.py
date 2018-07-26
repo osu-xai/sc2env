@@ -26,6 +26,8 @@ def unpack_timestep(timestep):
 # A hack to get around some very odd code in pysc2.maps.lib
 # This isn't necessary if you're using any of the maps that
 # are hard-coded into pysc2
+# map_dir: relative or absolute directory name containing .SC2Map
+# map_name: either MyCustomMap or MyCustomMap.SC2Map
 def register_map(map_dir, map_name):
     quiet_absl()
 
@@ -39,7 +41,7 @@ def register_map(map_dir, map_name):
     maps_install_dir = os.path.expanduser(os.path.join(sc2_path, 'Maps'))
     if map_name.endswith('.SC2Map'):
         map_name = map_name.replace('.SC2Map', '')
-    map_filename = map_name + '.SC2Map'
+    map_filename = os.path.join(map_dir, map_name + '.SC2Map')
 
     print('Copying map {} to maps directory {}'.format(map_filename, maps_install_dir))
     shutil.copy(map_filename, maps_install_dir)

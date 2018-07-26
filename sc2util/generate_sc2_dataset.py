@@ -6,7 +6,7 @@ import imutil
 
 import pysc2_util
 from random_agent import RandomAgent
-from four_choices_environment import FourChoicesEnvironment
+from environments.four_choices_environment import FourChoicesEnvironment
 
 
 DATASET_NAME = 'sc2_four_choices'

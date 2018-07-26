@@ -5,6 +5,7 @@ from pysc2_util import register_map, unpack_timestep
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
+MAP_NAME = 'FourChoices'
 MAP_SIZE = 256
 
 # A simple environment similar to SCAII-RTS Towers
@@ -75,9 +76,11 @@ def make_sc2env():
             ),
             action_space=actions.ActionSpace.FEATURES,
         ),
-        'map_name': 'FourChoices',
+        'map_name': MAP_NAME,
         'step_mul': 170,  # 17 is ~1 action per second
     }
-    register_map('', env_args['map_name'])
+    maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
+    import pdb; pdb.set_trace()
+    register_map(maps_dir, env_args['map_name'])
     return sc2_env.SC2Env(**env_args)
 
