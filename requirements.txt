@@ -1,6 +1,6 @@
-git+https://github.com/lwneal/imutil
 numpy
 torch
-Pillow
 tqdm
-gym
+git+https://github.com/lwneal/imutil
+git+https://github.com/lwneal/logutil
+git+https://github.com/lwneal/libscaii

@@ -20,7 +20,7 @@ SC2_UNIT_IDS = sorted([
 
 # Input: A 17-dimensional integer pysc2 feature map
 # Output: A 18-dimensional float convolutional input map
-def expand_pysc2_to_neural_input(feature_map, vocabulary=None):
+def expand_pysc2_to_neural_input(feature_map, resize_to=None):
     neural_layers = []
 
     # Terrain height map, scaled 0 to 1
@@ -52,7 +52,16 @@ def expand_pysc2_to_neural_input(feature_map, vocabulary=None):
     unit_density = np.clip(feature_map[15] / MAX_DENSITY, 0, 1)
     neural_layers.append(unit_density)
 
-    return np.array(neural_layers)
+    layers = np.array(neural_layers)
+
+    if resize_to:
+        from skimage.transform import resize
+        num_channels = layers.shape[0]
+        output_shape = (resize_to, resize_to, num_channels)
+        layers_hwc = np.moveaxis(layers, 0, -1)
+        layers_hwc = resize(layers_hwc, output_shape, anti_aliasing=True, preserve_range=True, mode='reflect')
+        layers = np.moveaxis(layers_hwc, -1, 0)
+    return layers
 
 
 
