@@ -12,13 +12,15 @@ import imutil
 
 # Convert the SC2Env timestep into a Gym-style tuple
 def unpack_timestep(timestep):
-    feature_map = timestep.observation.feature_minimap
-    feature_screen = timestep.observation.feature_screen
-    rgb_map = timestep.observation.rgb_minimap
-    rgb_screen = timestep.observation.rgb_screen
+    feature_map = np.array(timestep.observation.feature_minimap)
+    feature_screen = np.array(timestep.observation.feature_screen)
+    rgb_map = np.array(timestep.observation.rgb_minimap)
+    rgb_screen = np.array(timestep.observation.rgb_screen)
+    state = (feature_map, feature_screen, rgb_map, rgb_screen)
 
-    state = (np.array(feature_map), np.array(feature_screen), np.array(rgb_map), np.array(rgb_screen))
-    reward = timestep.reward
+    # TODO: Figure out how to use a custom specified reward
+    reward = int(timestep.observation.player['army_count'])
+
     done = timestep.last()
     info = {}
     return state, reward, done, info

@@ -68,8 +68,8 @@ def make_sc2env():
     env_args = {
         'agent_interface_format': sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
-                screen=(MAP_SIZE,MAP_SIZE),
-                minimap=(MAP_SIZE,MAP_SIZE)
+                screen=(MAP_SIZE, MAP_SIZE),
+                minimap=(MAP_SIZE, MAP_SIZE)
             ),
             rgb_dimensions=sc2_env.Dimensions(
                 screen=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
