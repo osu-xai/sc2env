@@ -13,7 +13,7 @@ DATASET_NAME = 'sc2_four_choices'
 os.makedirs(DATASET_NAME + '/images', exist_ok=True)
 
 
-def create_dataset(dataset_size=10000):
+def create_dataset(dataset_size=20000):
     # This environment teaches win/loss outcomes vs different enemies
     env = FourChoicesEnvironment()
     agent = RandomAgent(env.action_space())
