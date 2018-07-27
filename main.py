@@ -103,6 +103,7 @@ def train(epoch, ts, max_batches=1000):
         optim_gen.zero_grad()
         optim_enc.zero_grad()
 
+        """
         # Update discriminator
         z = sample_z(args.batch_size, args.latent_size)
         d_real = 1.0 - discriminator(current_frame)
@@ -113,11 +114,13 @@ def train(epoch, ts, max_batches=1000):
         ts.collect('Disc (Fake)', d_fake.mean())
         disc_loss.backward()
         optim_disc.step()
+        """
 
         encoder.train()
         generator.train()
         value_estimator.train()
 
+        """
         # Update generator (based on output of discriminator)
         optim_gen.zero_grad()
         z = sample_z(args.batch_size, args.latent_size)
@@ -128,6 +131,7 @@ def train(epoch, ts, max_batches=1000):
         #d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
         gen_loss.backward()
         optim_gen.step()
+        """
 
         # For Improved Wasserstein GAN:
         # gp_loss = calc_gradient_penalty(discriminator, ...)
@@ -151,10 +155,10 @@ def train(epoch, ts, max_batches=1000):
         ts.collect('Z[0] mean', encoded[:,0].mean().item())
 
         # ValueEstimator outputs linear scores (logits)
-        predictions = value_estimator(encoder(current_frame))
+        qval_predictions = value_estimator(encoder(current_frame))
 
         # MSE loss, but only for the available data
-        qloss = torch.mean(mask * ((qvals - predictions) **2))
+        qloss = torch.mean(mask * ((qvals - qval_predictions) **2))
         ts.collect('Q Value Regression Loss', qloss)
 
         # Reconstruction loss for the simulated next frame
@@ -167,19 +171,16 @@ def train(epoch, ts, max_batches=1000):
 
         if i % 100 == 0:
             demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
-            imutil.show(demo_real, filename='epoch_{:04d}_{:04d}_real.png'.format(epoch, i))
+            demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qval_predictions[0])
+            imutil.show([demo_real, demo_recon], filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
 
-            demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qvals[0])
-            imutil.show(demo_recon, filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
-
+            generated = generator(sample_z(1, args.latent_size))
             demo_gen = format_demo_img(to_np(generated[0]), caption="Generated Frame")
             imutil.show(demo_gen, filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
 
-            demo_pred = format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", qvals=qvals[0])
-            imutil.show(demo_pred, filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
-
-            demo_next = format_demo_img(to_np(next_frame[0]), caption="True Next Frame", qvals=qvals[0])
-            imutil.show(demo_next, filename='epoch_{:04d}_{:04d}_nextreal.png'.format(epoch, i))
+            demo_pred = format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", qvals=qval_predictions[0])
+            demo_next = format_demo_img(to_np(next_frame[0]), caption="True Next Frame", qvals=qval_predictions[0])
+            imutil.show([demo_pred, demo_next], filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
 
         pred_rec_loss = F.smooth_l1_loss(predicted_next_frame, next_frame)
         ts.collect('Pred Recon Loss', pred_rec_loss)
