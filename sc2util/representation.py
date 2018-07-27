@@ -59,7 +59,7 @@ def expand_pysc2_to_neural_input(feature_map, resize_to=None):
         num_channels = layers.shape[0]
         output_shape = (resize_to, resize_to, num_channels)
         layers_hwc = np.moveaxis(layers, 0, -1)
-        layers_hwc = resize(layers_hwc, output_shape, anti_aliasing=True, preserve_range=True, mode='reflect')
+        layers_hwc = resize(layers_hwc, output_shape, anti_aliasing=False, preserve_range=True, mode='reflect')
         layers = np.moveaxis(layers_hwc, -1, 0)
     return layers
 

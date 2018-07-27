@@ -5,6 +5,7 @@ import numpy as np
 import shutil
 from pysc2.maps import lib
 from pysc2.lib import actions
+from PIL import Image
 
 import imutil
 
@@ -61,14 +62,20 @@ def quiet_absl():
 
 
 # Input: 17-layer SC2Env Feature map
+# Output: A tiled 8-bit integer PNG file
 def save_sc2_feature_map_to_png(feature_map, output_filename):
-    imutil.show(feature_map, filename=output_filename, normalize_color=False, resize_to=None)
+    # Tile in a 9x2 pattern to minimize empty space
+    combined = imutil.combine_images(feature_map, stack_width=9)
+    # Save as a tiled 8-bit integer PNG
+    img = Image.fromarray(combined).convert('L')
+    img.save(output_filename, optimize=False)
 
 
-# Input: png filename
+# Input: filename of a tiled 8-bit integer PNG, width of each tile
+# Output: A 17-dimensional pysc2 feature map
 def load_png_to_sc2_feature_map(input_filename, width=256):
-    grid = imutil.decode_jpg(input_filename, resize_to=None)
-    grid = grid.astype(np.uint8)
+    img = Image.open(input_filename)
+    grid = np.array(img, dtype=np.uint8)
     height = width
     assert grid.shape == (height * 5, width * 4, 3)
     return untile(grid, height, width)[:17]
