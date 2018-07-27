@@ -6,7 +6,8 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions
 
 MAP_NAME = 'FourChoices'
-MAP_SIZE = 256
+MAP_SIZE = 64
+RGB_SCREEN_SIZE = 256
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
@@ -71,8 +72,8 @@ def make_sc2env():
                 minimap=(MAP_SIZE,MAP_SIZE)
             ),
             rgb_dimensions=sc2_env.Dimensions(
-                screen=(MAP_SIZE,MAP_SIZE),
-                minimap=(MAP_SIZE,MAP_SIZE),
+                screen=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
+                minimap=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
             ),
             action_space=actions.ActionSpace.FEATURES,
         ),
