@@ -48,11 +48,12 @@ predictor = model.Predictor(args.latent_size).to(device)
 rgb = model.FeatureToRGB(18).to(device)
 
 if args.start_epoch:
+    discriminator.load_state_dict(torch.load('{}/disc_{}'.format(args.load_from_dir, args.start_epoch)))
     generator.load_state_dict(torch.load('{}/gen_{}'.format(args.load_from_dir, args.start_epoch)))
     encoder.load_state_dict(torch.load('{}/enc_{}'.format(args.load_from_dir, args.start_epoch)))
-    discriminator.load_state_dict(torch.load('{}/disc_{}'.format(args.load_from_dir, args.start_epoch)))
     value_estimator.load_state_dict(torch.load('{}/value_{}'.format(args.load_from_dir, args.start_epoch)))
-    value_estimator.load_state_dict(torch.load('{}/predictor_{}'.format(args.load_from_dir, args.start_epoch)))
+    predictor.load_state_dict(torch.load('{}/predictor_{}'.format(args.load_from_dir, args.start_epoch)))
+    rgb.load_state_dict(torch.load('{}/rgb_{}'.format(args.load_from_dir, args.start_epoch)))
 
 # because the spectral normalization module creates parameters that don't require gradients (u and v), we don't want to 
 # optimize these using sgd. We only let the optimizer operate on parameters that _do_ require gradients
@@ -86,10 +87,6 @@ def sample_z(batch_size, z_dim):
 def normalize_vector(x, eps=.0001):
     norm = torch.norm(x, p=2, dim=1) + eps
     return x / norm.expand(1, -1).t()
-
-
-def format_demo_img(state, qvals=None, caption_text="Title"):
-    return state
 
 
 def train(epoch, ts, max_batches=1000):
@@ -168,12 +165,12 @@ def train(epoch, ts, max_batches=1000):
         predicted_latent_points = predicted_successors.gather(1, indices)
         predicted_next_frame = generator(predicted_latent_points)
 
-        if i % 100 == 0:
-            format_feature_map_img(to_np(current_frame[0]), caption="Real Frame", filename='epoch_{:04d}_{:04d}_real.png'.format(epoch, i))
-            format_feature_map_img(to_np(reconstructed[0]), caption="Reconstructed Frame", filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
-            format_feature_map_img(to_np(generated[0]), caption="Generated Frame", filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
-            format_feature_map_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
-            format_feature_map_img(to_np(next_frame[0]), caption="True Next Frame", filename='epoch_{:04d}_{:04d}_nextreal.png'.format(epoch, i))
+        if i % 10 == 0:
+            format_demo_img(to_np(current_frame[0]), caption="Real Frame", filename='epoch_{:04d}_{:04d}_real.png'.format(epoch, i))
+            format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
+            format_demo_img(to_np(generated[0]), caption="Generated Frame", filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
+            format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
+            format_demo_img(to_np(next_frame[0]), caption="True Next Frame", filename='epoch_{:04d}_{:04d}_nextreal.png'.format(epoch, i))
 
         """
         if i % 100 == 0:
@@ -203,7 +200,7 @@ def train(epoch, ts, max_batches=1000):
     print(ts)
 
 
-def format_feature_map_img(feature_map, caption=None, filename=None):
+def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
     # Decompose the feature map
     from sc2util.representation import SC2_UNIT_IDS
@@ -216,7 +213,10 @@ def format_feature_map_img(feature_map, caption=None, filename=None):
     density = feature_map[-1]
 
     # Create a canvas with four maps
-    canvas = np.zeros((96, 192, 3))
+    canvas = np.ones((256, 256, 3))
+
+    def draw_text(x, y, caption):
+        textsize = draw.textsize(caption, font=font)
 
     from skimage.transform import resize
 
@@ -236,7 +236,34 @@ def format_feature_map_img(feature_map, caption=None, filename=None):
     canvas[16:16+64, 16:16+64] = unit_view
     canvas[16:16+64, 96:96+64] = faction_view
 
-    imutil.show(canvas, caption=caption, filename=filename)
+    canvas *= 255
+
+    # Now draw all the text captions
+    from PIL import Image, ImageFont, ImageDraw
+    img = Image.fromarray(canvas.astype('uint8'))
+    # Should be available on Ubuntu 14.04+
+    FONT_FILE = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf'
+    font = ImageFont.truetype(FONT_FILE, 10)
+    draw = ImageDraw.Draw(img)
+
+    def draw_text(x, y, caption):
+        textsize = draw.textsize(caption, font=font)
+        #draw.rectangle([(x, y), textsize], fill=(0,))
+        draw.multiline_text((x,y), caption, font=font, fill=(0,0,0,255))
+
+    draw_text(0, 0, caption)
+    draw_text(20, 96, "Faction")
+    draw_text(96, 96, "Type")
+
+    if qvals is not None:
+        draw_text(25, 128, "Reward Estimates")
+        draw_text(10, 138, "Atk Top Left:  {:.2f}".format(qvals[3]))
+        draw_text(10, 148, "Atk Top Right: {:.2f}".format(qvals[2]))
+        draw_text(10, 158, "Atk Bot Left:  {:.2f}".format(qvals[1]))
+        draw_text(10, 168, "Atk Bot Right: {:.2f}".format(qvals[0]))
+
+    canvas = np.array(img)
+    imutil.show(canvas, filename=filename)
     return canvas
 
 
@@ -292,14 +319,18 @@ def make_video(output_video_name, trajectory, whatif=""):
     z_0 = torch.Tensor(trajectory[0]).to(device)
     original_samples = generator(z_0)[0]
     original_qvals = value_estimator(z_0)[0]
-    left_pixels = format_demo_img(to_np(original_samples), to_np(original_qvals),
-                                  'Reality')
+    left_pixels = format_demo_img(
+        to_np(original_samples),
+        qvals=to_np(original_qvals),
+        caption='Reality')
     for z in torch.Tensor(trajectory):
         z = z.to(device)
         samples = generator(z)[0]
         qvals = value_estimator(z)[0]
-        right_pixels = format_demo_img(to_np(samples), to_np(qvals),
-                                       'What If: {}'.format(whatif))
+        right_pixels = format_demo_img(
+            to_np(samples),
+            qvals=to_np(qvals),
+            caption='What If: {}'.format(whatif))
         pixels = np.concatenate([left_pixels, right_pixels], axis=1)
         v.write_frame(pixels)
     v.finish()
@@ -326,6 +357,7 @@ def main():
         torch.save(encoder.state_dict(), os.path.join(args.save_to_dir, 'enc_{}'.format(epoch)))
         torch.save(value_estimator.state_dict(), os.path.join(args.save_to_dir, 'value_{}'.format(epoch)))
         torch.save(predictor.state_dict(), os.path.join(args.save_to_dir, 'predictor_{}'.format(epoch)))
+        torch.save(rgb.state_dict(), os.path.join(args.save_to_dir, 'rgb_{}'.format(epoch)))
 
 
 if __name__ == '__main__':
