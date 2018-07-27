@@ -4,8 +4,8 @@ import numpy as np
 # These 12 units should be enough to build some cool maps
 SC2_UNIT_IDS = sorted([
     48,  # marine
-    49,  # reaper
     53,  # hellion
+    55,  # banshee
     57,  # battlecruiser
     73,  # zealot
     74,  # stalker
@@ -13,8 +13,8 @@ SC2_UNIT_IDS = sorted([
     141, # archon
     105, # zergling
     107, # hydra
+    108, # mutalisk
     109, # ultra
-    110, # roach
 ])
 
 
