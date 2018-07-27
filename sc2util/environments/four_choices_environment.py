@@ -80,7 +80,6 @@ def make_sc2env():
         'step_mul': 170,  # 17 is ~1 action per second
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
-    import pdb; pdb.set_trace()
     register_map(maps_dir, env_args['map_name'])
     return sc2_env.SC2Env(**env_args)
 
