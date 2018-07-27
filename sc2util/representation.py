@@ -2,7 +2,7 @@ import numpy as np
 
 
 # These 12 units should be enough to build some cool maps
-SC2_UNIT_IDS = sorted([
+SC2_UNIT_IDS = [
     48,  # marine
     53,  # hellion
     55,  # banshee
@@ -15,7 +15,7 @@ SC2_UNIT_IDS = sorted([
     107, # hydra
     108, # mutalisk
     109, # ultra
-])
+]
 
 
 # Input: A 17-dimensional integer pysc2 feature map
