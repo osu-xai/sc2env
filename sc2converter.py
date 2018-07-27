@@ -19,7 +19,7 @@ from sc2util.representation import expand_pysc2_to_neural_input
 class SC2FeatureMapConverter(Converter):
     def __init__(self,
             dataset,
-            size=40,
+            size=64,
             **kwargs):
         self.data_dir = dataset.data_dir
         self.size = size
