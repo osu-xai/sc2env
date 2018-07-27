@@ -73,11 +73,11 @@ def save_sc2_feature_map_to_png(feature_map, output_filename):
 
 # Input: filename of a tiled 8-bit integer PNG, width of each tile
 # Output: A 17-dimensional pysc2 feature map
-def load_png_to_sc2_feature_map(input_filename, width=256):
+def load_png_to_sc2_feature_map(input_filename, width=64):
     img = Image.open(input_filename)
     grid = np.array(img, dtype=np.uint8)
     height = width
-    assert grid.shape == (height * 5, width * 4, 3)
+    assert grid.shape == (height * 2, width * 9)
     return untile(grid, height, width)[:17]
 
 
