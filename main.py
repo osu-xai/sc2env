@@ -165,21 +165,21 @@ def train(epoch, ts, max_batches=1000):
         predicted_latent_points = predicted_successors.gather(1, indices)
         predicted_next_frame = generator(predicted_latent_points)
 
-        if i % 10 == 0:
-            format_demo_img(to_np(current_frame[0]), caption="Real Frame", filename='epoch_{:04d}_{:04d}_real.png'.format(epoch, i))
-            format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
-            format_demo_img(to_np(generated[0]), caption="Generated Frame", filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
-            format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
-            format_demo_img(to_np(next_frame[0]), caption="True Next Frame", filename='epoch_{:04d}_{:04d}_nextreal.png'.format(epoch, i))
-
-        """
         if i % 100 == 0:
-            disp = torch.cat([current_frame[0],
-                              reconstructed[0],
-                              predicted_next_frame[0],
-                              next_frame[0]])
-            imutil.show(disp, resize_to=(512, 512), filename='epoch_{:04d}.jpg'.format(epoch))
-        """
+            demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
+            imutil.show(demo_real, filename='epoch_{:04d}_{:04d}_real.png'.format(epoch, i))
+
+            demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qvals[0])
+            imutil.show(demo_recon, filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
+
+            demo_gen = format_demo_img(to_np(generated[0]), caption="Generated Frame")
+            imutil.show(demo_gen, filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
+
+            demo_pred = format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", qvals=qvals[0])
+            imutil.show(demo_pred, filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
+
+            demo_next = format_demo_img(to_np(next_frame[0]), caption="True Next Frame", qvals=qvals[0])
+            imutil.show(demo_next, filename='epoch_{:04d}_{:04d}_nextreal.png'.format(epoch, i))
 
         pred_rec_loss = F.smooth_l1_loss(predicted_next_frame, next_frame)
         ts.collect('Pred Recon Loss', pred_rec_loss)
@@ -204,10 +204,17 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
     # Decompose the feature map
     from sc2util.representation import SC2_UNIT_IDS
-    unit_types = feature_map[3:3 + len(SC2_UNIT_IDS)]
     terrain_height = feature_map[0]
     friendly = feature_map[1]
     enemy = feature_map[2]
+    unit_types = feature_map[3:3 + len(SC2_UNIT_IDS)]
+
+    marines = unit_types[0]
+    zealots = unit_types[4]
+    zerglings = unit_types[8]
+    hydras = unit_types[9]
+    ultras = unit_types[11]
+
     health = feature_map[-3]
     shield = feature_map[-2]
     density = feature_map[-1]
@@ -218,23 +225,29 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
     def draw_text(x, y, caption):
         textsize = draw.textsize(caption, font=font)
 
-    from skimage.transform import resize
+    canvas[16:16+64, 16:16+64, 0] = enemy
+    canvas[16:16+64, 16:16+64, 1] = 0
+    canvas[16:16+64, 16:16+64, 2] = friendly
 
-    # Unit view: red/blue for enemy/friendly
-    unit_view = np.zeros((64, 64, 3))
-    unit_view[:,:,0] = enemy
-    unit_view[:,:,2] = friendly
+    canvas[16:16+64, 96:96+64, 0] = marines
+    canvas[16:16+64, 96:96+64, 1] = marines
+    canvas[16:16+64, 96:96+64, 2] = marines
 
-    # Faction view: blue for protoss, red for zerg, green for terran
-    faction_view = np.zeros((64, 64, 3))
-    faction_view[:,:,0] = np.sum(unit_types[8:12], axis=0)
-    faction_view[:,:,1] = np.sum(unit_types[0:4], axis=0)
-    faction_view[:,:,2] = np.sum(unit_types[4:8], axis=0)
+    canvas[16:16+64, 176:176+64, 0] = zerglings
+    canvas[16:16+64, 176:176+64, 1] = zerglings
+    canvas[16:16+64, 176:176+64, 2] = zerglings
 
-    # todo: other views... terrain? health+shield? massive? flying? etc
+    canvas[96:96+64, 16:16+64, 0] = zealots
+    canvas[96:96+64, 16:16+64, 1] = zealots
+    canvas[96:96+64, 16:16+64, 2] = zealots
 
-    canvas[16:16+64, 16:16+64] = unit_view
-    canvas[16:16+64, 96:96+64] = faction_view
+    canvas[96:96+64, 96:96+64, 0] = hydras
+    canvas[96:96+64, 96:96+64, 1] = hydras
+    canvas[96:96+64, 96:96+64, 2] = hydras
+
+    canvas[96:96+64, 176:176+64, 0] = ultras
+    canvas[96:96+64, 176:176+64, 1] = ultras
+    canvas[96:96+64, 176:176+64, 2] = ultras
 
     canvas *= 255
 
@@ -252,18 +265,23 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
         draw.multiline_text((x,y), caption, font=font, fill=(0,0,0,255))
 
     draw_text(0, 0, caption)
-    draw_text(20, 96, "Faction")
-    draw_text(96, 96, "Type")
+    draw_text(16, 80, "Units")
+    draw_text(96, 80, "Marines")
+    draw_text(176, 80, "Zerglings")
 
-    if qvals is not None:
-        draw_text(25, 128, "Reward Estimates")
-        draw_text(10, 138, "Atk Top Left:  {:.2f}".format(qvals[3]))
-        draw_text(10, 148, "Atk Top Right: {:.2f}".format(qvals[2]))
-        draw_text(10, 158, "Atk Bot Left:  {:.2f}".format(qvals[1]))
-        draw_text(10, 168, "Atk Bot Right: {:.2f}".format(qvals[0]))
+    draw_text(16, 166, "Zealots")
+    draw_text(96, 166, "Hydralisks")
+    draw_text(176, 166, "Ultralisks")
+
+    if qvals is None:
+        qvals = [-1, -1, -1, -1]
+    draw_text(25, 192, "Reward Estimates")
+    draw_text(10, 202, "Atk Top Left:  {:.2f}".format(qvals[3]))
+    draw_text(10, 212, "Atk Top Right: {:.2f}".format(qvals[2]))
+    draw_text(10, 222, "Atk Bot Left:  {:.2f}".format(qvals[1]))
+    draw_text(10, 232, "Atk Bot Right: {:.2f}".format(qvals[0]))
 
     canvas = np.array(img)
-    imutil.show(canvas, filename=filename)
     return canvas
 
 
@@ -271,7 +289,7 @@ def to_np(tensor):
     return tensor.detach().cpu().numpy()
 
 
-def make_counterfactual_trajectory(x, target_action, iters=300, initial_speed=0.1,
+def make_counterfactual_trajectory(x, target_action, iters=60, initial_speed=0.1,
                                    speed_decay=0.99, mu=0.9, stability_coefficient=1.0,
                                    closeness_coefficient=.01):
     trajectory = []
