@@ -276,11 +276,11 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
     if qvals is None:
         qvals = [-1, -1, -1, -1]
-    draw_text(57, 192, "Reward Estimates")
-    draw_text(42, 202, "Atk Top Left:  {:.2f}".format(qvals[0]))
-    draw_text(42, 212, "Atk Top Right: {:.2f}".format(qvals[1]))
-    draw_text(42, 222, "Atk Bot Right: {:.2f}".format(qvals[2]))
-    draw_text(42, 232, "Atk Bot Left:  {:.2f}".format(qvals[3]))
+    draw_text(68, 192, "Reward Estimates")
+    draw_text(58, 222, "Q1 Top Right: {:.2f}".format(qvals[2]))
+    draw_text(58, 232, "Q2 Top Left:  {:.2f}".format(qvals[3]))
+    draw_text(58, 202, "Q3 Bot Left:  {:.2f}".format(qvals[0]))
+    draw_text(58, 212, "Q4 Bot Right: {:.2f}".format(qvals[1]))
 
     canvas = np.array(img)
     return canvas
