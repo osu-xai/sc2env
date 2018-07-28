@@ -13,7 +13,7 @@ DATASET_NAME = 'sc2_four_choices'
 os.makedirs(DATASET_NAME + '/images', exist_ok=True)
 
 
-def create_dataset(dataset_size=20000):
+def create_dataset(dataset_size=60000):
     # This environment teaches win/loss outcomes vs different enemies
     env = FourChoicesEnvironment()
     agent = RandomAgent(env.action_space())
@@ -53,6 +53,7 @@ def create_dataset(dataset_size=20000):
             'action': selected_action,
             'next_filename': filename_outcome,
             'value': reward,
+            'fold': 'test' if i % 10 == 0 else 'train',
         }
         fp.write(json.dumps(example) + '\n')
         print('Recorded episode {}/{}'.format(i, dataset_size))
