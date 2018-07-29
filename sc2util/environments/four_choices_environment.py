@@ -34,16 +34,22 @@ class FourChoicesEnvironment():
         if self.can_attack():
             target = action_to_target(action)
             sc2_action = actions.FUNCTIONS.Attack_minimap("now", target)
+            self.last_timestep = self.sc2env.step([sc2_action])[0]
         else:
             print('Cannot attack, taking no-op')
-            sc2_action = actions.FUNCTIONS.no_op()
 
-        self.last_timestep = self.sc2env.step([sc2_action])[0]
+        # Wait for a while
+        self.noop()
+
         return unpack_timestep(self.last_timestep)
 
+    def noop(self):
+        sc2_action = actions.FUNCTIONS.no_op()
+        self.last_timestep = self.sc2env.step([sc2_action])[0]
+
     def can_attack(self):
-        available = self.last_timestep.observation.available_actions
-        return actions.FUNCTIONS.Attack_minimap.id in available
+        available_actions = self.last_timestep.observation.available_actions
+        return actions.FUNCTIONS.Attack_minimap.id in available_actions
 
 
 # The four actions tell the army to move to
