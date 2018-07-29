@@ -126,7 +126,8 @@ def train(epoch, ts, max_batches=1000):
         z = sample_z(args.batch_size, args.latent_size)
         generated = generator(z)
         d_gen = 1.0 - discriminator(generated)
-        gen_loss = nn.ReLU()(d_gen).mean()
+        gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
+        ts.collect('Gen Loss', gen_loss)
         # Alternative: If you want to only make reconstructions realistic
         #d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
         gen_loss.backward()
