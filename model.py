@@ -35,25 +35,23 @@ class FeatureToRGB(nn.Module):
         self.conv_to_rgb = nn.ConvTranspose2d(64, 3, 3, stride=1, padding=(1,1))
         # 3 x 256 x 256
 
-    def forward(self, z):
-        batch_size = z.shape[0]
-        x = z.view(-1, self.z_dim, 1, 1)
+    def forward(self, x):
 
         x = self.conv1(x)
         x = self.bn1(x)
-        x = F.relu(x)
+        x = nn.LeakyReLU(leak)(x)
 
         x = self.conv2(x)
         x = self.bn2(x)
-        x = F.relu(x)
+        x = nn.LeakyReLU(leak)(x)
 
         x = self.conv3(x)
         x = self.bn3(x)
-        x = F.relu(x)
+        x = nn.LeakyReLU(leak)(x)
 
         x = self.conv4(x)
         x = self.bn4(x)
-        x = F.relu(x)
+        x = nn.LeakyReLU(leak)(x)
 
         x = self.conv_to_rgb(x)
         x = F.sigmoid(x)
