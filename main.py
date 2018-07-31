@@ -91,9 +91,13 @@ def normalize_vector(x, eps=.0001):
 
 def train(epoch, ts, max_batches=1000):
     for i, (data, labels) in enumerate(islice(loader, max_batches)):
-        current_frame = data[:, 0]
-        next_frame = data[:, 1]
-        qvals, mask = labels
+        current_frame = torch.Tensor(np.array([d[0] for d in data])).cuda()
+        next_frame = torch.Tensor(np.array([d[1] for d in data])).cuda()
+        current_rgb = torch.Tensor(np.array([d[2] for d in data])).cuda()
+        next_rgb = torch.Tensor(np.array([d[3] for d in data])).cuda()
+
+        qvals = torch.Tensor(labels[:, 0]).cuda()
+        mask = torch.Tensor(labels[:, 0]).cuda()
 
         discriminator.train()
         encoder.eval()
@@ -121,6 +125,7 @@ def train(epoch, ts, max_batches=1000):
         generator.train()
         value_estimator.train()
 
+        """
         # Update generator (based on output of discriminator)
         optim_gen.zero_grad()
         z = sample_z(args.batch_size, args.latent_size)
@@ -132,6 +137,7 @@ def train(epoch, ts, max_batches=1000):
         #d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
         gen_loss.backward()
         optim_gen.step()
+        """
 
         # For Improved Wasserstein GAN:
         # gp_loss = calc_gradient_penalty(discriminator, ...)
@@ -169,6 +175,20 @@ def train(epoch, ts, max_batches=1000):
         predicted_latent_points = predicted_successors.gather(1, indices)
         predicted_next_frame = generator(predicted_latent_points)
 
+        pred_rec_loss = F.smooth_l1_loss(predicted_next_frame, next_frame)
+        ts.collect('Pred Recon Loss', pred_rec_loss)
+
+        loss = reconstruction_loss + qloss + pred_rec_loss
+        loss.backward()
+
+        # Separately from the other networks, run the RGB generator
+        optim_rgb.zero_grad()
+        rgb_loss = torch.mean((rgb(current_frame) - current_rgb)**2)
+        rgb_loss.backward()
+        ts.collect('RGB Loss', rgb_loss)
+        optim_rgb.step()
+
+
         if i % 100 == 0:
             demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
             demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qval_predictions[0])
@@ -182,11 +202,12 @@ def train(epoch, ts, max_batches=1000):
             demo_next = format_demo_img(to_np(next_frame[0]), caption="True Next Frame", qvals=qval_predictions[0])
             imutil.show([demo_pred, demo_next], filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
 
-        pred_rec_loss = F.smooth_l1_loss(predicted_next_frame, next_frame)
-        ts.collect('Pred Recon Loss', pred_rec_loss)
+            vis_filename = 'epoch_{:04d}_{:04d}_full.png'.format(epoch, i)
+            real_action = mask[0].argmax()
+            real_reward = qvals[0, real_action]
+            build_demo_visualization(current_frame[0], next_frame[0], real_action, real_reward, vis_filename)
 
-        loss = reconstruction_loss + qloss + pred_rec_loss
-        loss.backward()
+
 
         optim_class.step()
         optim_enc.step()
@@ -274,16 +295,70 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
     draw_text(96, 166, "Hydralisks")
     draw_text(176, 166, "Ultralisks")
 
-    if qvals is None:
-        qvals = [-1, -1, -1, -1]
-    draw_text(68, 192, "Reward Estimates")
-    draw_text(58, 222, "Q1 Top Right: {:.2f}".format(qvals[2]))
-    draw_text(58, 232, "Q2 Top Left:  {:.2f}".format(qvals[3]))
-    draw_text(58, 202, "Q3 Bot Left:  {:.2f}".format(qvals[0]))
-    draw_text(58, 212, "Q4 Bot Right: {:.2f}".format(qvals[1]))
+    if qvals is not None:
+        draw_text(68, 192, "Reward Estimates")
+        draw_text(58, 222, "Q1 Top Right: {:.2f}".format(qvals[2]))
+        draw_text(58, 232, "Q2 Top Left:  {:.2f}".format(qvals[3]))
+        draw_text(58, 202, "Q3 Bot Left:  {:.2f}".format(qvals[0]))
+        draw_text(58, 212, "Q4 Bot Right: {:.2f}".format(qvals[1]))
 
     canvas = np.array(img)
     return canvas
+
+
+def build_demo_visualization(current_frame, real_next_frame, real_action, real_reward, filename):
+    z = encoder(current_frame.unsqueeze(0))
+    estimated_rewards = value_estimator(z)
+    predicted_next_frames = generator(predictor(z))
+    predicted_next_frame_rgb = rgb(predicted_next_frames)
+    autoencoded = generator(z)
+
+    unfamiliarity = torch.sum((autoencoded - current_frame)**2)
+    surprise = torch.sum((predicted_next_frames[real_action] - real_next_frame)**2)
+
+    canvas = np.ones((1024, 1024, 3)) * 255
+
+    # Top row: Input frame and autoencoding
+    canvas[:256, :256] = format_demo_img(to_np(current_frame), caption="Real x_t")
+    canvas[:256, 256:512] = format_demo_img(to_np(autoencoded[0]), caption="Autoencoded x_t")
+    # Top right: Text, drawn later
+
+    # Mid row: Predicted outcomes for possible actions
+    for i in range(4):
+        frame = to_np(predicted_next_frames[i])
+        caption = "Pred. Action {} Reward {:.03f}".format(i, estimated_rewards[0][i])
+        tile = format_demo_img(frame, caption=caption)
+        canvas[256:512, 256*i:256*(i+1)] = tile
+
+    # Third row: RGB
+    pixels = to_np(predicted_next_frame_rgb[0])
+    pixels = np.moveaxis(pixels, 0, -1)
+    for i in range(4):
+        canvas[512:768, 256*i:256*(i+1)] = pixels[i] * 255
+
+    # Bottom row: Real outcome, ground truth
+    caption = "Real Action {} Reward {:.03f}".format(real_action, real_reward)
+    real_img = format_demo_img(to_np(real_next_frame), caption=caption)
+    canvas[768:, 256*real_action:256*(real_action+1)] = real_img
+
+    # Now draw all the text captions
+    from PIL import Image, ImageFont, ImageDraw
+    img = Image.fromarray(canvas.astype('uint8'))
+    # Should be available on Ubuntu 14.04+
+    FONT_FILE = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf'
+    font = ImageFont.truetype(FONT_FILE, 10)
+    draw = ImageDraw.Draw(img)
+
+    def draw_text(x, y, caption):
+        textsize = draw.textsize(caption, font=font)
+        draw.multiline_text((x,y), caption, font=font, fill=(0,0,0,255))
+
+    draw_text(768, 10, "Real action: {} reward {:.3f}".format(real_action, real_reward))
+    draw_text(768, 20, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
+    draw_text(768, 30, "L2 Surprise: {:.3f}".format(surprise))
+
+    canvas = np.array(img)
+    imutil.show(canvas, filename=filename)
 
 
 def to_np(tensor):

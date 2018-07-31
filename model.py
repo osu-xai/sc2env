@@ -29,7 +29,7 @@ class FeatureToRGB(nn.Module):
         self.conv3 = nn.ConvTranspose2d(64, 64, 4, stride=2, padding=(1,1))
         self.bn3 = nn.BatchNorm2d(64)
         # 64 x 256 x 256
-        self.conv4 = nn.ConvTranspose2d(64, 64, 4, stride=1, padding=(1,1))
+        self.conv4 = nn.ConvTranspose2d(64, 64, 3, stride=1, padding=(1,1))
         self.bn4 = nn.BatchNorm2d(64)
         # 64 x 256 x 256
         self.conv_to_rgb = nn.ConvTranspose2d(64, 3, 3, stride=1, padding=(1,1))

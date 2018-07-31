@@ -25,9 +25,11 @@ class SC2FeatureMapConverter(Converter):
         self.size = size
 
     def to_array(self, example):
-        curr = self.filename_to_pixels(self.get_filename(example, 'filename'))
-        next = self.filename_to_pixels(self.get_filename(example, 'next_filename'))
-        return curr, next
+        curr = self.filename_to_featuremap(self.get_filename(example, 'filename'))
+        next = self.filename_to_featuremap(self.get_filename(example, 'next_filename'))
+        rgb_curr = self.filename_to_rgb(self.get_filename(example, 'rgb_filename'))
+        rgb_next = self.filename_to_rgb(self.get_filename(example, 'next_rgb_filename'))
+        return curr, next, rgb_curr, rgb_next
 
     def get_filename(self, example, key):
         filename = os.path.expanduser(example[key])
@@ -35,10 +37,15 @@ class SC2FeatureMapConverter(Converter):
             filename = os.path.join(self.data_dir, filename)
         return filename
 
-    def filename_to_pixels(self, filename):
+    def filename_to_featuremap(self, filename):
         pysc2_features = load_png_to_sc2_feature_map(filename)
         neural_input = expand_pysc2_to_neural_input(pysc2_features, resize_to=self.size)
         return neural_input
+
+    def filename_to_rgb(self, filename):
+        pixels = imutil.decode_jpg(filename, resize_to=None)
+        pixels /= 255.
+        return np.moveaxis(pixels, -1, 0)
 
     def from_array(self, array):
         return array
