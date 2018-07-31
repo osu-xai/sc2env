@@ -24,7 +24,7 @@ parser.add_argument('--load_from_dir', type=str, default='checkpoints')
 parser.add_argument('--epochs', type=int, default=10)
 parser.add_argument('--latent_size', type=int, default=16)
 parser.add_argument('--start_epoch', type=int, default=0)
-parser.add_argument('--lambda_gan', type=float, default=0.1)
+parser.add_argument('--lambda_gan', type=float, default=0.001)
 parser.add_argument('--dataset', type=str, required=True)
 parser.add_argument('--disc_updates_per_gen', type=int, default=2)
 
@@ -125,7 +125,6 @@ def train(epoch, ts, max_batches=1000):
         generator.train()
         value_estimator.train()
 
-        """
         # Update generator (based on output of discriminator)
         optim_gen.zero_grad()
         z = sample_z(args.batch_size, args.latent_size)
@@ -137,7 +136,6 @@ def train(epoch, ts, max_batches=1000):
         #d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
         gen_loss.backward()
         optim_gen.step()
-        """
 
         # For Improved Wasserstein GAN:
         # gp_loss = calc_gradient_penalty(discriminator, ...)
