@@ -439,8 +439,8 @@ def main():
 
         data, _ = next(i for i in test_loader)
         for target_action in range(4):
-            curr_frame = data[:,0]
-            cf_trajectory = make_counterfactual_trajectory(curr_frame, target_action)
+            current_frame = torch.Tensor(np.array([d[0] for d in data])).cuda()
+            cf_trajectory = make_counterfactual_trajectory(current_frame, target_action)
             filename = 'cf_epoch_{:03d}_{}'.format(epoch, target_action)
             make_video(filename, cf_trajectory, whatif=' action={}'.format(target_action))
 
