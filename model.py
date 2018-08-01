@@ -57,6 +57,31 @@ class FeatureToRGB(nn.Module):
         x = F.sigmoid(x)
         return x
 
+class RGBDiscriminator(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        # Input: 3 x 256 x 256
+        self.conv1 = SpectralNorm(nn.Conv2d(3, 64, 4, stride=2, padding=(1,1)))
+        self.conv2 = SpectralNorm(nn.Conv2d(64, 128, 4, stride=2, padding=(1,1)))
+        self.conv3 = SpectralNorm(nn.Conv2d(128, 256, 4, stride=2, padding=(1,1)))
+        self.conv4 = SpectralNorm(nn.Conv2d(256, 256, 4, stride=2, padding=(1,1)))
+        self.conv5 = SpectralNorm(nn.Conv2d(256, 256, 4, stride=2, padding=(1,1)))
+        self.conv6 = SpectralNorm(nn.Conv2d(256, 256, 4, stride=2, padding=(1,1)))
+        self.fc = SpectralNorm(nn.Linear(256, 1))
+
+    def forward(self, x):
+        x = nn.LeakyReLU(leak)(self.conv1(x))
+        x = nn.LeakyReLU(leak)(self.conv2(x))
+        x = nn.LeakyReLU(leak)(self.conv3(x))
+        x = nn.LeakyReLU(leak)(self.conv4(x))
+        x = nn.LeakyReLU(leak)(self.conv5(x))
+        x = nn.LeakyReLU(leak)(self.conv6(x))
+        # Global average pool
+        x = x.mean(-1).mean(-1)
+        return self.fc(x.view(-1, 256))
+
+
 
 class Generator(nn.Module):
     def __init__(self, z_dim):

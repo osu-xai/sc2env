@@ -17,7 +17,7 @@ device = torch.device("cuda")
 
 print('Parsing arguments')
 parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size', type=int, default=64)
+parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--lr', type=float, default=2e-4)
 parser.add_argument('--save_to_dir', type=str, default='checkpoints')
 parser.add_argument('--load_from_dir', type=str, default='checkpoints')
@@ -46,6 +46,7 @@ encoder = model.Encoder(args.latent_size).to(device)
 value_estimator = model.ValueEstimator(args.latent_size).to(device)
 predictor = model.Predictor(args.latent_size).to(device)
 rgb = model.FeatureToRGB(18).to(device)
+rgb_disc = model.RGBDiscriminator().to(device)
 
 if args.start_epoch:
     discriminator.load_state_dict(torch.load('{}/disc_{}'.format(args.load_from_dir, args.start_epoch)))
@@ -54,18 +55,23 @@ if args.start_epoch:
     value_estimator.load_state_dict(torch.load('{}/value_{}'.format(args.load_from_dir, args.start_epoch)))
     predictor.load_state_dict(torch.load('{}/predictor_{}'.format(args.load_from_dir, args.start_epoch)))
     rgb.load_state_dict(torch.load('{}/rgb_{}'.format(args.load_from_dir, args.start_epoch)))
+    rgb_disc.load_state_dict(torch.load('{}/rgb_disc_{}'.format(args.load_from_dir, args.start_epoch)))
 
 # because the spectral normalization module creates parameters that don't require gradients (u and v), we don't want to 
 # optimize these using sgd. We only let the optimizer operate on parameters that _do_ require gradients
 # TODO: replace Parameters with buffers, which aren't returned from .parameters() method.
 print('Building optimizers')
+
+def get_params(network):
+    return filter(lambda p: p.requires_grad, network.parameters())
+
 optim_disc = optim.Adam(filter(lambda p: p.requires_grad, discriminator.parameters()), lr=args.lr, betas=(0.0,0.9))
 optim_gen = optim.Adam(generator.parameters(), lr=args.lr, betas=(0.0,0.9))
-optim_gen_gan = optim.Adam(generator.parameters(), lr=args.lr, betas=(0.0,0.9))
 optim_enc = optim.Adam(filter(lambda p: p.requires_grad, encoder.parameters()), lr=args.lr, betas=(0.0,0.9))
 optim_class = optim.Adam(value_estimator.parameters(), lr=args.lr)
 optim_predictor = optim.Adam(predictor.parameters(), lr=args.lr)
 optim_rgb = optim.Adam(rgb.parameters(), lr=args.lr)
+optim_rgb_disc = optim.Adam(get_params(rgb_disc), lr=args.lr)
 
 # use an exponentially decaying learning rate
 scheduler_d = optim.lr_scheduler.ExponentialLR(optim_disc, gamma=0.99)
@@ -143,7 +149,8 @@ def train(epoch, ts, max_batches=1000):
         encoded = encoder(current_frame)
         reconstructed = generator(encoded)
         # Huber loss
-        reconstruction_loss = F.smooth_l1_loss(reconstructed, current_frame)
+        HUBER_SCALE = 10.
+        reconstruction_loss = F.smooth_l1_loss(reconstructed * HUBER_SCALE, current_frame * HUBER_SCALE) / HUBER_SCALE
         # Alternative: Good old-fashioned MSE loss
         #reconstruction_loss = torch.sum((reconstructed - current_frame)**2)
         ts.collect('Reconst Loss', reconstruction_loss)
@@ -172,11 +179,32 @@ def train(epoch, ts, max_batches=1000):
         loss = reconstruction_loss + qloss + pred_rec_loss
         loss.backward()
 
+        optim_class.step()
+        optim_enc.step()
+        optim_gen.step()
+        optim_predictor.step()
+
         # Separately from the other networks, run the RGB generator
+
+        # Train the RGB discriminator
+        optim_rgb_disc.zero_grad()
+        d_real = 1.0 - rgb_disc(current_rgb)
+        d_fake = 1.0 + rgb_disc(rgb(current_frame))
+        rgb_disc_loss = F.relu(d_real).mean() + F.relu(d_fake).mean()
+        ts.collect('RGB Disc Loss', rgb_disc_loss)
+        rgb_disc_loss.backward()
+        optim_rgb_disc.step()
+
+        # Train the features-to-RGB network
         optim_rgb.zero_grad()
         rgb_loss = torch.mean((rgb(current_frame) - current_rgb)**2)
         rgb_loss.backward()
-        ts.collect('RGB Loss', rgb_loss)
+        ts.collect('RGB L2 Loss', rgb_loss)
+        if i % 5 == 0:
+            d_real_gen = 1.0 - rgb_disc(rgb(current_frame))
+            rgb_gen_loss = F.relu(d_real_gen).mean()
+            ts.collect('RGB Gen Loss', rgb_gen_loss)
+            rgb_gen_loss.backward()
         optim_rgb.step()
 
 
@@ -198,12 +226,6 @@ def train(epoch, ts, max_batches=1000):
             real_reward = qvals[0, real_action]
             build_demo_visualization(current_frame[0], next_frame[0], real_action, real_reward, vis_filename)
 
-
-
-        optim_class.step()
-        optim_enc.step()
-        optim_gen.step()
-        optim_predictor.step()
 
         ts.print_every(n_sec=4)
 
@@ -449,6 +471,7 @@ def main():
         torch.save(value_estimator.state_dict(), os.path.join(args.save_to_dir, 'value_{}'.format(epoch)))
         torch.save(predictor.state_dict(), os.path.join(args.save_to_dir, 'predictor_{}'.format(epoch)))
         torch.save(rgb.state_dict(), os.path.join(args.save_to_dir, 'rgb_{}'.format(epoch)))
+        torch.save(rgb_disc.state_dict(), os.path.join(args.save_to_dir, 'rgb_disc_{}'.format(epoch)))
 
 
 if __name__ == '__main__':
