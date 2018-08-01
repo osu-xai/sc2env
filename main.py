@@ -97,7 +97,7 @@ def train(epoch, ts, max_batches=1000):
         next_rgb = torch.Tensor(np.array([d[3] for d in data])).cuda()
 
         qvals = torch.Tensor(labels[:, 0]).cuda()
-        mask = torch.Tensor(labels[:, 0]).cuda()
+        mask = torch.Tensor(labels[:, 1]).cuda()
 
         discriminator.train()
         encoder.eval()
@@ -107,41 +107,30 @@ def train(epoch, ts, max_batches=1000):
         optim_gen.zero_grad()
         optim_enc.zero_grad()
 
-        # Update discriminator
-        z = sample_z(args.batch_size, args.latent_size)
-        d_real = 1.0 - discriminator(current_frame)
-        d_fake = 1.0 + discriminator(generator(z))
-        disc_loss = nn.ReLU()(d_real).mean() + nn.ReLU()(d_fake).mean()
-        ts.collect('Disc Loss', disc_loss)
-        ts.collect('Disc (Real)', d_real.mean())
-        ts.collect('Disc (Fake)', d_fake.mean())
-        disc_loss.backward()
-        optim_disc.step()
-
         if i % args.disc_updates_per_gen:
-            continue
+            # Update discriminator
+            z = sample_z(args.batch_size, args.latent_size)
+            d_real = 1.0 - discriminator(current_frame)
+            d_fake = 1.0 + discriminator(generator(encoder(current_frame)))
+            disc_loss = nn.ReLU()(d_real).mean() + nn.ReLU()(d_fake).mean()
+            ts.collect('Disc Loss', disc_loss)
+            ts.collect('Disc (Real)', d_real.mean())
+            ts.collect('Disc (Fake)', d_fake.mean())
+            disc_loss.backward()
+            optim_disc.step()
+        else:
+            encoder.train()
+            generator.train()
+            value_estimator.train()
 
-        encoder.train()
-        generator.train()
-        value_estimator.train()
-
-        # Update generator (based on output of discriminator)
-        optim_gen.zero_grad()
-        z = sample_z(args.batch_size, args.latent_size)
-        #generated = generator(z)
-        d_gen = 1.0 - discriminator(generated)
-        # Alternative: If you want to only make reconstructions realistic
-        #d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
-        gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
-
-        ts.collect('Gen Loss', gen_loss)
-
-        gen_loss.backward()
-        optim_gen.step()
-
-        # For Improved Wasserstein GAN:
-        # gp_loss = calc_gradient_penalty(discriminator, ...)
-        # gp_loss.backward()
+            # Update generator (based on output of discriminator)
+            optim_gen.zero_grad()
+            z = sample_z(args.batch_size, args.latent_size)
+            d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
+            gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
+            ts.collect('Gen Loss', gen_loss)
+            gen_loss.backward()
+            optim_gen.step()
 
         # Reconstruct pixels
         optim_enc.zero_grad()
@@ -297,10 +286,10 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
     if qvals is not None:
         draw_text(68, 192, "Reward Estimates")
-        draw_text(58, 222, "Q1 Top Right: {:.2f}".format(qvals[2]))
-        draw_text(58, 232, "Q2 Top Left:  {:.2f}".format(qvals[3]))
-        draw_text(58, 202, "Q3 Bot Left:  {:.2f}".format(qvals[0]))
-        draw_text(58, 212, "Q4 Bot Right: {:.2f}".format(qvals[1]))
+        draw_text(58, 202, "0. Top Right (Q1): {:.2f}".format(qvals[2]))
+        draw_text(58, 212, "1. Bot Right (Q4): {:.2f}".format(qvals[1]))
+        draw_text(58, 222, "2. Bot Left (Q3):  {:.2f}".format(qvals[0]))
+        draw_text(58, 232, "3. Top Left (Q2):  {:.2f}".format(qvals[3]))
 
     canvas = np.array(img)
     return canvas
