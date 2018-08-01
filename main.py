@@ -99,15 +99,15 @@ def train(epoch, ts, max_batches=1000):
         qvals = torch.Tensor(labels[:, 0]).cuda()
         mask = torch.Tensor(labels[:, 1]).cuda()
 
-        discriminator.train()
-        encoder.eval()
-        generator.eval()
-
         optim_disc.zero_grad()
         optim_gen.zero_grad()
         optim_enc.zero_grad()
 
         if i % args.disc_updates_per_gen:
+            discriminator.train()
+            encoder.eval()
+            generator.eval()
+
             # Update discriminator
             z = sample_z(args.batch_size, args.latent_size)
             d_real = 1.0 - discriminator(current_frame)
@@ -118,19 +118,21 @@ def train(epoch, ts, max_batches=1000):
             ts.collect('Disc (Fake)', d_fake.mean())
             disc_loss.backward()
             optim_disc.step()
-        else:
+
             encoder.train()
             generator.train()
             value_estimator.train()
-
+        else:
             # Update generator (based on output of discriminator)
             optim_gen.zero_grad()
+            optim_enc.zero_grad()
             z = sample_z(args.batch_size, args.latent_size)
             d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
             gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
             ts.collect('Gen Loss', gen_loss)
             gen_loss.backward()
             optim_gen.step()
+            optim_enc.step()
 
         # Reconstruct pixels
         optim_enc.zero_grad()
