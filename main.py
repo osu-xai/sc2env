@@ -26,7 +26,7 @@ parser.add_argument('--latent_size', type=int, default=16)
 parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--lambda_gan', type=float, default=0.001)
 parser.add_argument('--dataset', type=str, required=True)
-parser.add_argument('--disc_updates_per_gen', type=int, default=2)
+parser.add_argument('--disc_updates_per_gen', type=int, default=5)
 
 args = parser.parse_args()
 
@@ -297,10 +297,12 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
 def build_demo_visualization(current_frame, real_next_frame, real_action, real_reward, filename):
     z = encoder(current_frame.unsqueeze(0))
+    current_frame_rgb = rgb(current_frame.unsqueeze(0)).squeeze(0)
     estimated_rewards = value_estimator(z)
     predicted_next_frames = generator(predictor(z))
     predicted_next_frames_rgb = rgb(predicted_next_frames)
     autoencoded = generator(z)
+    autoencoded_rgb = rgb(autoencoded).squeeze(0)
 
     unfamiliarity = torch.sum((autoencoded - current_frame)**2)
     surprise = torch.sum((predicted_next_frames[real_action] - real_next_frame)**2)
@@ -310,7 +312,8 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
     # Top row: Input frame and autoencoding
     canvas[:256, :256] = format_demo_img(to_np(current_frame), caption="Real x_t")
     canvas[:256, 256:512] = format_demo_img(to_np(autoencoded[0]), caption="Autoencoded x_t")
-    # Top right: Text, drawn later
+    canvas[:256, 512:768] = np.moveaxis(to_np(current_frame_rgb), 0, -1)
+    canvas[:256, 768:] = np.moveaxis(to_np(autoencoded_rgb), 0, -1)
 
     # Mid row: Predicted outcomes for possible actions
     for i in range(4):
@@ -342,9 +345,9 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
         textsize = draw.textsize(caption, font=font)
         draw.multiline_text((x,y), caption, font=font, fill=(0,0,0,255))
 
-    draw_text(768, 10, "Real action: {} reward {:.3f}".format(real_action, real_reward))
-    draw_text(768, 20, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
-    draw_text(768, 30, "L2 Surprise: {:.3f}".format(surprise))
+    draw_text(10, 900, "Real action: {} reward {:.3f}".format(real_action, real_reward))
+    draw_text(10, 910, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
+    draw_text(10, 920, "L2 Surprise: {:.3f}".format(surprise))
 
     canvas = np.array(img)
     imutil.show(canvas, filename=filename)
