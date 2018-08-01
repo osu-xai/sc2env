@@ -351,6 +351,9 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
     draw_text(10, 980, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
     draw_text(10, 990, "L2 Surprise: {:.3f}".format(surprise))
 
+    draw_text(512, 0, "RGB visual x_t")
+    draw_text(768, 0, "RGB visual G(E(x_t))")
+
     canvas = np.array(img)
     imutil.show(canvas, filename=filename)
 
