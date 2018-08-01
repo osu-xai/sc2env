@@ -314,8 +314,8 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
     # Top row: Input frame and autoencoding
     canvas[:256, :256] = format_demo_img(to_np(current_frame), caption="Real x_t")
     canvas[:256, 256:512] = format_demo_img(to_np(autoencoded[0]), caption="Autoencoded x_t")
-    canvas[:256, 512:768] = np.moveaxis(to_np(current_frame_rgb), 0, -1)
-    canvas[:256, 768:] = np.moveaxis(to_np(autoencoded_rgb), 0, -1)
+    canvas[:256, 512:768] = np.moveaxis(to_np(current_frame_rgb), 0, -1) * 255
+    canvas[:256, 768:] = np.moveaxis(to_np(autoencoded_rgb), 0, -1) * 255
 
     # Mid row: Predicted outcomes for possible actions
     for i in range(4):
@@ -347,9 +347,9 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
         textsize = draw.textsize(caption, font=font)
         draw.multiline_text((x,y), caption, font=font, fill=(0,0,0,255))
 
-    draw_text(10, 900, "Real action: {} reward {:.3f}".format(real_action, real_reward))
-    draw_text(10, 910, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
-    draw_text(10, 920, "L2 Surprise: {:.3f}".format(surprise))
+    draw_text(10, 970, "Real action: {} reward {:.3f}".format(real_action, real_reward))
+    draw_text(10, 980, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
+    draw_text(10, 990, "L2 Surprise: {:.3f}".format(surprise))
 
     canvas = np.array(img)
     imutil.show(canvas, filename=filename)
