@@ -1,19 +1,4 @@
 import argparse
-import numpy as np
-import os
-from itertools import islice
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch import autograd
-
-import model
-from logutil import TimeSeries
-import imutil
-
-device = torch.device("cuda")
 
 print('Parsing arguments')
 parser = argparse.ArgumentParser()
@@ -31,14 +16,26 @@ parser.add_argument('--disc_updates_per_gen', type=int, default=5)
 args = parser.parse_args()
 
 
+import numpy as np
+import os
+from itertools import islice
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch import autograd
+
+import model
+from logutil import TimeSeries
+import imutil
+
 from datasetutil.dataloader import CustomDataloader
 from sc2converter import SC2FeatureMapConverter, QValueConverter
 
-loader = CustomDataloader(args.dataset, batch_size=args.batch_size, img_format=SC2FeatureMapConverter, label_format=QValueConverter)
-test_loader = CustomDataloader(args.dataset, batch_size=args.batch_size, img_format=SC2FeatureMapConverter, label_format=QValueConverter, fold='test')
-
 
 print('Building model...')
+device = torch.device("cuda")
 
 discriminator = model.Discriminator().to(device)
 generator = model.Generator(args.latent_size).to(device)
@@ -57,17 +54,13 @@ if args.start_epoch:
     rgb.load_state_dict(torch.load('{}/rgb_{}'.format(args.load_from_dir, args.start_epoch)))
     rgb_disc.load_state_dict(torch.load('{}/rgb_disc_{}'.format(args.load_from_dir, args.start_epoch)))
 
-# because the spectral normalization module creates parameters that don't require gradients (u and v), we don't want to 
-# optimize these using sgd. We only let the optimizer operate on parameters that _do_ require gradients
-# TODO: replace Parameters with buffers, which aren't returned from .parameters() method.
-print('Building optimizers')
 
 def get_params(network):
     return filter(lambda p: p.requires_grad, network.parameters())
 
-optim_disc = optim.Adam(filter(lambda p: p.requires_grad, discriminator.parameters()), lr=args.lr, betas=(0.0,0.9))
+optim_disc = optim.Adam(get_params(discriminator), lr=args.lr, betas=(0.0,0.9))
 optim_gen = optim.Adam(generator.parameters(), lr=args.lr, betas=(0.0,0.9))
-optim_enc = optim.Adam(filter(lambda p: p.requires_grad, encoder.parameters()), lr=args.lr, betas=(0.0,0.9))
+optim_enc = optim.Adam(get_params(encoder), lr=args.lr, betas=(0.0,0.9))
 optim_class = optim.Adam(value_estimator.parameters(), lr=args.lr)
 optim_predictor = optim.Adam(predictor.parameters(), lr=args.lr)
 optim_rgb = optim.Adam(rgb.parameters(), lr=args.lr)
@@ -95,7 +88,11 @@ def normalize_vector(x, eps=.0001):
     return x / norm.expand(1, -1).t()
 
 
-def train(epoch, ts, max_batches=1000):
+def huber_loss(x, y, scale=10.):
+    return F.smooth_l1_loss(x * scale, y * scale) / scale
+
+
+def train(epoch, ts, loader, max_batches=1000):
     for i, (data, labels) in enumerate(islice(loader, max_batches)):
         current_frame = torch.Tensor(np.array([d[0] for d in data])).cuda()
         next_frame = torch.Tensor(np.array([d[1] for d in data])).cuda()
@@ -115,7 +112,6 @@ def train(epoch, ts, max_batches=1000):
             generator.eval()
 
             # Update discriminator
-            z = sample_z(args.batch_size, args.latent_size)
             d_real = 1.0 - discriminator(current_frame)
             d_fake = 1.0 + discriminator(generator(encoder(current_frame)))
             disc_loss = nn.ReLU()(d_real).mean() + nn.ReLU()(d_fake).mean()
@@ -132,7 +128,6 @@ def train(epoch, ts, max_batches=1000):
             # Update generator (based on output of discriminator)
             optim_gen.zero_grad()
             optim_enc.zero_grad()
-            z = sample_z(args.batch_size, args.latent_size)
             d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
             gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
             ts.collect('Gen Loss', gen_loss)
@@ -148,11 +143,7 @@ def train(epoch, ts, max_batches=1000):
 
         encoded = encoder(current_frame)
         reconstructed = generator(encoded)
-        # Huber loss
-        HUBER_SCALE = 10.
-        reconstruction_loss = F.smooth_l1_loss(reconstructed * HUBER_SCALE, current_frame * HUBER_SCALE) / HUBER_SCALE
-        # Alternative: Good old-fashioned MSE loss
-        #reconstruction_loss = torch.sum((reconstructed - current_frame)**2)
+        reconstruction_loss = huber_loss(reconstructed, current_frame)
         ts.collect('Reconst Loss', reconstruction_loss)
         ts.collect('Z variance', encoded.var(0).mean())
         ts.collect('Reconst Pixel variance', reconstructed.var(0).mean())
@@ -207,7 +198,6 @@ def train(epoch, ts, max_batches=1000):
             rgb_gen_loss.backward()
         optim_rgb.step()
 
-
         if i % 100 == 0:
             demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
             demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qval_predictions[0])
@@ -225,7 +215,6 @@ def train(epoch, ts, max_batches=1000):
             real_action = mask[0].argmax()
             real_reward = qvals[0, real_action]
             build_demo_visualization(current_frame[0], next_frame[0], real_action, real_reward, vis_filename)
-
 
         ts.print_every(n_sec=4)
 
@@ -450,12 +439,15 @@ def make_video(output_video_name, trajectory, whatif=""):
 
 
 def main():
+    loader = CustomDataloader(args.dataset, batch_size=args.batch_size, img_format=SC2FeatureMapConverter, label_format=QValueConverter)
+    test_loader = CustomDataloader(args.dataset, batch_size=args.batch_size, img_format=SC2FeatureMapConverter, label_format=QValueConverter, fold='test')
+
     os.makedirs(args.save_to_dir, exist_ok=True)
     batches_per_epoch = len(loader)
     ts_train = TimeSeries('Training', batches_per_epoch * args.epochs)
     for epoch in range(args.epochs):
         print('starting epoch {}'.format(epoch))
-        train(epoch, ts_train, max_batches=batches_per_epoch)
+        train(epoch, ts_train, loader, max_batches=batches_per_epoch)
         print(ts_train)
 
         data, _ = next(i for i in test_loader)
