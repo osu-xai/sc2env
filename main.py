@@ -128,12 +128,14 @@ def train(epoch, ts, max_batches=1000):
         # Update generator (based on output of discriminator)
         optim_gen.zero_grad()
         z = sample_z(args.batch_size, args.latent_size)
-        generated = generator(z)
+        #generated = generator(z)
         d_gen = 1.0 - discriminator(generated)
-        gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
-        ts.collect('Gen Loss', gen_loss)
         # Alternative: If you want to only make reconstructions realistic
         #d_gen = 1.0 - discriminator(generator(encoder(current_frame)))
+        gen_loss = nn.ReLU()(d_gen).mean() * args.lambda_gan
+
+        ts.collect('Gen Loss', gen_loss)
+
         gen_loss.backward()
         optim_gen.step()
 
@@ -308,7 +310,7 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
     z = encoder(current_frame.unsqueeze(0))
     estimated_rewards = value_estimator(z)
     predicted_next_frames = generator(predictor(z))
-    predicted_next_frame_rgb = rgb(predicted_next_frames)
+    predicted_next_frames_rgb = rgb(predicted_next_frames)
     autoencoded = generator(z)
 
     unfamiliarity = torch.sum((autoencoded - current_frame)**2)
@@ -323,16 +325,16 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
 
     # Mid row: Predicted outcomes for possible actions
     for i in range(4):
-        frame = to_np(predicted_next_frames[i])
         caption = "Pred. Action {} Reward {:.03f}".format(i, estimated_rewards[0][i])
-        tile = format_demo_img(frame, caption=caption)
-        canvas[256:512, 256*i:256*(i+1)] = tile
+        pixels = to_np(predicted_next_frames[i])
+        pixels = format_demo_img(pixels, caption=caption)
+        canvas[256:512, 256*i:256*(i+1)] = pixels
 
     # Third row: RGB
-    pixels = to_np(predicted_next_frame_rgb[0])
-    pixels = np.moveaxis(pixels, 0, -1)
     for i in range(4):
-        canvas[512:768, 256*i:256*(i+1)] = pixels[i] * 255
+        pixels = to_np(predicted_next_frames_rgb[i])
+        pixels = np.moveaxis(pixels, 0, -1)
+        canvas[512:768, 256*i:256*(i+1)] = pixels * 255
 
     # Bottom row: Real outcome, ground truth
     caption = "Real Action {} Reward {:.03f}".format(real_action, real_reward)
