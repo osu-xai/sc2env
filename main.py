@@ -58,21 +58,14 @@ if args.start_epoch:
 def get_params(network):
     return filter(lambda p: p.requires_grad, network.parameters())
 
-optim_disc = optim.Adam(get_params(discriminator), lr=args.lr, betas=(0.0,0.9))
-optim_gen = optim.Adam(generator.parameters(), lr=args.lr, betas=(0.0,0.9))
-optim_enc = optim.Adam(get_params(encoder), lr=args.lr, betas=(0.0,0.9))
+optim_disc = optim.Adam(get_params(discriminator), lr=args.lr)
+optim_gen = optim.Adam(generator.parameters(), lr=args.lr)
+optim_enc = optim.Adam(get_params(encoder), lr=args.lr)
 optim_class = optim.Adam(value_estimator.parameters(), lr=args.lr)
 optim_predictor = optim.Adam(predictor.parameters(), lr=args.lr)
 optim_rgb = optim.Adam(rgb.parameters(), lr=args.lr)
 optim_rgb_disc = optim.Adam(get_params(rgb_disc), lr=args.lr)
 
-# use an exponentially decaying learning rate
-scheduler_d = optim.lr_scheduler.ExponentialLR(optim_disc, gamma=0.99)
-scheduler_g = optim.lr_scheduler.ExponentialLR(optim_gen, gamma=0.99)
-scheduler_e = optim.lr_scheduler.ExponentialLR(optim_enc, gamma=0.99)
-scheduler_c = optim.lr_scheduler.ExponentialLR(optim_class, gamma=0.99)
-scheduler_p = optim.lr_scheduler.ExponentialLR(optim_predictor, gamma=0.99)
-scheduler_rgb = optim.lr_scheduler.ExponentialLR(optim_rgb, gamma=0.99)
 print('Finished building model')
 
 
@@ -218,9 +211,6 @@ def train(epoch, ts, loader, max_batches=1000):
 
         ts.print_every(n_sec=4)
 
-    scheduler_e.step()
-    scheduler_d.step()
-    scheduler_g.step()
     print(ts)
 
 
