@@ -192,27 +192,37 @@ def train(epoch, ts, loader, max_batches=1000):
         optim_rgb.step()
 
         if i % 100 == 0:
-            demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
-            demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qval_predictions[0])
-            imutil.show([demo_real, demo_recon], filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
+            #demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
+            #demo_recon = format_demo_img(to_np(reconstructed[0]), caption="Reconstructed Frame", qvals=qval_predictions[0])
+            #imutil.show([demo_real, demo_recon], filename='epoch_{:04d}_{:04d}_recon.png'.format(epoch, i))
 
-            generated = generator(sample_z(1, args.latent_size))
-            demo_gen = format_demo_img(to_np(generated[0]), caption="Generated Frame")
-            imutil.show(demo_gen, filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
+            #generated = generator(sample_z(1, args.latent_size))
+            #demo_gen = format_demo_img(to_np(generated[0]), caption="Generated Frame")
+            #imutil.show(demo_gen, filename='epoch_{:04d}_{:04d}_gen.png'.format(epoch, i))
 
-            demo_pred = format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", qvals=qval_predictions[0])
-            demo_next = format_demo_img(to_np(next_frame[0]), caption="True Next Frame", qvals=qval_predictions[0])
-            imutil.show([demo_pred, demo_next], filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
+            #demo_pred = format_demo_img(to_np(predicted_next_frame[0]), caption="Predicted Next Frame", qvals=qval_predictions[0])
+            #demo_next = format_demo_img(to_np(next_frame[0]), caption="True Next Frame", qvals=qval_predictions[0])
+            #imutil.show([demo_pred, demo_next], filename='epoch_{:04d}_{:04d}_pred_next.png'.format(epoch, i))
 
-            vis_filename = 'epoch_{:04d}_{:04d}_full.png'.format(epoch, i)
+            vis_filename = 'epoch_{:04d}_{:04d}_why.png'.format(epoch, i)
             real_action = mask[0].argmax()
             real_reward = qvals[0, real_action]
-            build_demo_visualization(current_frame[0], next_frame[0], real_action, real_reward, vis_filename)
+            build_demo_visualization(current_frame[0], current_rgb[0], next_frame[0], real_action, real_reward, vis_filename)
+
+            trajectories = []
+            for target_action in range(4):
+                cf_trajectory = make_counterfactual_trajectory(current_frame, target_action)
+                trajectories.append(cf_trajectory)
+            trajectories = np.array(trajectories)
+            trajectories = trajectories.squeeze(2).swapaxes(0, 1)
+            trajectories = np.concatenate([trajectories, trajectories[::-1]])
+
+            cf_filename = 'epoch_{:04d}_{:04d}_whynot'.format(epoch, i)
+            build_counterfactual_visualization(cf_filename, trajectories, current_frame[0])
 
         ts.print_every(n_sec=4)
 
     print(ts)
-
 
 def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
@@ -298,9 +308,65 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
     return canvas
 
 
-def build_demo_visualization(current_frame, real_next_frame, real_action, real_reward, filename):
+def build_counterfactual_visualization(filename, trajectories, current_frame):
+
+
+    descriptions = [
+        'Counterfactual: Quadrant 1',
+        'Counterfactual: Quadrant 4',
+        'Counterfactual: Quadrant 3',
+        'Counterfactual: Quadrant 2',
+    ]
+    vid = imutil.VideoMaker(filename)
+    for i in range(len(trajectories)):
+        canvas = np.ones((1024, 1024, 3)) * 255
+
+        predicted_frames = generator(torch.Tensor(trajectories[i]).cuda())
+        qvals = value_estimator(torch.Tensor(trajectories[i]).cuda())
+        qvals = to_np(qvals)
+
+        canvas[256:512, 0:256] = format_demo_img(to_np(current_frame), caption='Real Scenario')
+
+        canvas[512:768, 0:256] = format_demo_img(to_np(predicted_frames[0]), caption=descriptions[0], qvals=qvals[0])
+        canvas[512:768, 256:512] = format_demo_img(to_np(predicted_frames[1]), caption=descriptions[1], qvals=qvals[1])
+        canvas[512:768, 512:768] = format_demo_img(to_np(predicted_frames[2]), caption=descriptions[2], qvals=qvals[2])
+        canvas[512:768, 768:1024] = format_demo_img(to_np(predicted_frames[3]), caption=descriptions[3], qvals=qvals[3])
+
+
+        # Now draw all the text captions
+        from PIL import Image, ImageFont, ImageDraw
+        img = Image.fromarray(canvas.astype('uint8'))
+        # Should be available on Ubuntu 14.04+
+        FONT_FILE = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf'
+        small_font = ImageFont.truetype(FONT_FILE, 10)
+        med_font = ImageFont.truetype(FONT_FILE, 20)
+        large_font = ImageFont.truetype(FONT_FILE, 36)
+        draw = ImageDraw.Draw(img)
+        def draw_text(x, y, caption, font=small_font, color=(0,0,0,255)):
+            textsize = draw.textsize(caption, font=font)
+            draw.multiline_text((x,y), caption, font=font, fill=color)
+        draw_text(300, 0, "Why not something else?", font=large_font)
+        draw_text(0, 100, "Counterfactual Scenarios:", font=large_font, color=(0,0,128))
+        canvas = np.array(img)
+
+        vid.write_frame(canvas)
+        print("Wrote counterfactual video frame {}".format(i))
+    vid.finish()
+
+    """
+    draw_text(300, 0, '"Why Did You Do That?"', font=large_font)
+    draw_text(0, 64, "Network Decision:", font=large_font)
+    draw_text(400, 64, descriptions[decision_idx], font=large_font, color=(0,0,128))
+    draw_text(0, 128, "Estimated Reward:", font=large_font)
+    draw_text(400, 128, "{:.1f}% survival rate".format(decision_value * 100), font=large_font, color=(0,0,128))
+
+    draw_text(0, 196, "Explanation:", font=large_font)
+    """
+
+
+def build_demo_visualization(current_frame, current_rgb, real_next_frame, real_action, real_reward, filename):
     z = encoder(current_frame.unsqueeze(0))
-    current_frame_rgb = rgb(current_frame.unsqueeze(0)).squeeze(0)
+    estimated_current_rgb = rgb(current_frame.unsqueeze(0)).squeeze(0)
     estimated_rewards = value_estimator(z)
     predicted_next_frames = generator(predictor(z))
     predicted_next_frames_rgb = rgb(predicted_next_frames)
@@ -312,48 +378,66 @@ def build_demo_visualization(current_frame, real_next_frame, real_action, real_r
 
     canvas = np.ones((1024, 1024, 3)) * 255
 
-    # Top row: Input frame and autoencoding
-    canvas[:256, :256] = format_demo_img(to_np(current_frame), caption="Real x_t")
-    canvas[:256, 256:512] = format_demo_img(to_np(autoencoded[0]), caption="Autoencoded x_t")
-    canvas[:256, 512:768] = np.moveaxis(to_np(current_frame_rgb), 0, -1) * 255
-    canvas[:256, 768:] = np.moveaxis(to_np(autoencoded_rgb), 0, -1) * 255
+    """
+    # Top right: Real outcome, ground truth
+    caption = "Real Action {} Reward {:.03f}".format(real_action, real_reward)
+    real_img = format_demo_img(to_np(real_next_frame), caption=caption)
+    canvas[64:320, 768:] = real_img
+    """
+
+    # Second row: Input frame and autoencoding
+    canvas[256:512, 0:256] = format_demo_img(to_np(current_frame), caption=" Network Input")
+    canvas[256:512, 256:512] = np.moveaxis(to_np(current_rgb), 0, -1) * 255
+    canvas[256:512, 512:768] = format_demo_img(to_np(autoencoded[0]), caption=" Network Autoencoding")
+    canvas[256:512, 768:1024] = np.moveaxis(to_np(estimated_current_rgb), 0, -1) * 255
+
+    descriptions = [
+        'Attack Quadrant 1',
+        'Attack Quadrant 4',
+        'Attack Quadrant 3',
+        'Attack Quadrant 2',
+    ]
 
     # Mid row: Predicted outcomes for possible actions
     for i in range(4):
-        caption = "Pred. Action {} Reward {:.03f}".format(i, estimated_rewards[0][i])
+        caption = "{}: {:.01f}%".format(descriptions[i], estimated_rewards[0][i] * 100)
         pixels = to_np(predicted_next_frames[i])
         pixels = format_demo_img(pixels, caption=caption)
-        canvas[256:512, 256*i:256*(i+1)] = pixels
+        canvas[512:768, 256*i:256*(i+1)] = pixels
 
-    # Third row: RGB
+    # Bottom row: RGB
     for i in range(4):
         pixels = to_np(predicted_next_frames_rgb[i])
         pixels = np.moveaxis(pixels, 0, -1)
-        canvas[512:768, 256*i:256*(i+1)] = pixels * 255
-
-    # Bottom row: Real outcome, ground truth
-    caption = "Real Action {} Reward {:.03f}".format(real_action, real_reward)
-    real_img = format_demo_img(to_np(real_next_frame), caption=caption)
-    canvas[768:, 256*real_action:256*(real_action+1)] = real_img
+        canvas[768:1024, 256*i:256*(i+1)] = pixels * 255
 
     # Now draw all the text captions
     from PIL import Image, ImageFont, ImageDraw
     img = Image.fromarray(canvas.astype('uint8'))
     # Should be available on Ubuntu 14.04+
     FONT_FILE = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf'
-    font = ImageFont.truetype(FONT_FILE, 10)
+    small_font = ImageFont.truetype(FONT_FILE, 10)
+    med_font = ImageFont.truetype(FONT_FILE, 20)
+    large_font = ImageFont.truetype(FONT_FILE, 36)
     draw = ImageDraw.Draw(img)
 
-    def draw_text(x, y, caption):
+    def draw_text(x, y, caption, font=small_font, color=(0,0,0,255)):
         textsize = draw.textsize(caption, font=font)
-        draw.multiline_text((x,y), caption, font=font, fill=(0,0,0,255))
+        draw.multiline_text((x,y), caption, font=font, fill=color)
 
-    draw_text(10, 970, "Real action: {} reward {:.3f}".format(real_action, real_reward))
-    draw_text(10, 980, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
-    draw_text(10, 990, "L2 Surprise: {:.3f}".format(surprise))
+    #draw_text(10, 970, "Real action: {} reward {:.3f}".format(real_action, real_reward))
+    #draw_text(10, 980, "L2 Unfamiliarity: {:.3f}".format(unfamiliarity))
+    #draw_text(10, 990, "L2 Surprise: {:.3f}".format(surprise))
 
-    draw_text(512, 0, "RGB visual x_t")
-    draw_text(768, 0, "RGB visual G(E(x_t))")
+    decision_idx = estimated_rewards[0].argmax().item()
+    decision_value = estimated_rewards[0].max().item()
+    draw_text(300, 0, '"Why Did You Do That?"', font=large_font)
+    draw_text(0, 64, "Network Decision:", font=large_font)
+    draw_text(400, 64, descriptions[decision_idx], font=large_font, color=(0,0,128))
+    draw_text(0, 128, "Estimated Reward:", font=large_font)
+    draw_text(400, 128, "{:.1f}% survival rate".format(decision_value * 100), font=large_font, color=(0,0,128))
+
+    draw_text(0, 196, "Explanation:", font=large_font)
 
     canvas = np.array(img)
     imutil.show(canvas, filename=filename)
