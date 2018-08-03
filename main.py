@@ -309,8 +309,6 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
 
 def build_counterfactual_visualization(filename, trajectories, current_frame):
-
-
     descriptions = [
         'Counterfactual: Quadrant 1',
         'Counterfactual: Quadrant 4',
@@ -345,8 +343,8 @@ def build_counterfactual_visualization(filename, trajectories, current_frame):
         def draw_text(x, y, caption, font=small_font, color=(0,0,0,255)):
             textsize = draw.textsize(caption, font=font)
             draw.multiline_text((x,y), caption, font=font, fill=color)
-        draw_text(300, 0, "Why not something else?", font=large_font)
-        draw_text(0, 100, "Counterfactual Scenarios:", font=large_font, color=(0,0,128))
+        draw_text(280, 0, '"Why not something else?"', font=large_font)
+        draw_text(0, 100, "Computing Counterfactual Scenarios...", font=large_font, color=(0,0,128))
         canvas = np.array(img)
 
         vid.write_frame(canvas)
