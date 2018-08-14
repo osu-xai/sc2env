@@ -216,16 +216,17 @@ def train(epoch, ts, loader, max_batches=1000):
             real_reward = qvals[0, real_action]
             build_demo_visualization(current_frame[0], current_rgb[0], next_frame[0], real_action, real_reward, vis_filename)
 
-            trajectories = []
-            for target_action in range(4):
-                cf_trajectory = make_counterfactual_trajectory(current_frame, target_action)
-                trajectories.append(cf_trajectory)
-            trajectories = np.array(trajectories)
-            trajectories = trajectories.squeeze(2).swapaxes(0, 1)
-            trajectories = np.concatenate([trajectories, trajectories[::-1]])
+            if i % 1000 == 0:
+                trajectories = []
+                for target_action in range(4):
+                    cf_trajectory = make_counterfactual_trajectory(current_frame, target_action)
+                    trajectories.append(cf_trajectory)
+                trajectories = np.array(trajectories)
+                trajectories = trajectories.squeeze(2).swapaxes(0, 1)
+                trajectories = np.concatenate([trajectories, trajectories[::-1]])
 
-            cf_filename = 'epoch_{:04d}_{:04d}_whynot'.format(epoch, i)
-            build_counterfactual_visualization(cf_filename, trajectories, current_frame[0])
+                cf_filename = 'epoch_{:04d}_{:04d}_whynot'.format(epoch, i)
+                build_counterfactual_visualization(cf_filename, trajectories, current_frame[0])
 
         ts.print_every(n_sec=4)
 
