@@ -137,6 +137,13 @@ def train(epoch, ts, loader, max_batches=1000):
         encoded = encoder(current_frame)
         reconstructed = generator(encoded)
         reconstruction_loss = huber_loss(reconstructed, current_frame)
+
+        # Add L1 regularization to the encoded points
+        l1_loss = 0.
+        for param in predictor.parameters():
+            l1_loss += .1 * F.l1_loss(param, torch.zeros(param.shape).cuda())
+        ts.collect('L1 reg loss', l1_loss)
+
         ts.collect('Reconst Loss', reconstruction_loss)
         ts.collect('Z variance', encoded.var(0).mean())
         ts.collect('Reconst Pixel variance', reconstructed.var(0).mean())
@@ -160,7 +167,7 @@ def train(epoch, ts, loader, max_batches=1000):
         pred_rec_loss = F.smooth_l1_loss(predicted_next_frame, next_frame)
         ts.collect('Pred Recon Loss', pred_rec_loss)
 
-        loss = reconstruction_loss + qloss + pred_rec_loss
+        loss = reconstruction_loss + qloss + pred_rec_loss + l1_loss
         loss.backward()
 
         optim_class.step()
@@ -250,7 +257,7 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
         textsize = draw.textsize(caption, font=font)
 
     canvas[16:16+64, 16:16+64, 0] = enemy
-    canvas[16:16+64, 16:16+64, 1] = 0
+    canvas[16:16+64, 16:16+64, 1] = friendly
     canvas[16:16+64, 16:16+64, 2] = friendly
 
     canvas[16:16+64, 96:96+64, 0] = marines
