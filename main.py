@@ -181,9 +181,9 @@ def train(epoch, ts, loader, max_batches=1000):
 
         # Train the features-to-RGB network
         optim_rgb.zero_grad()
-        rgb_loss = torch.mean((rgb(current_frame) - current_rgb)**2)
-        rgb_loss.backward()
-        ts.collect('RGB L2 Loss', rgb_loss)
+        #rgb_loss = torch.mean((rgb(current_frame) - current_rgb)**2)
+        #rgb_loss.backward()
+        #ts.collect('RGB L2 Loss', rgb_loss)
         if i % 5 == 0:
             d_real_gen = 1.0 - rgb_disc(rgb(current_frame))
             rgb_gen_loss = F.relu(d_real_gen).mean()
@@ -299,9 +299,9 @@ def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
     if qvals is not None:
         draw_text(68, 192, "Reward Estimates")
-        draw_text(58, 202, "0. Top Right (Q1): {:.2f}".format(qvals[2]))
+        draw_text(58, 202, "0. Top Right (Q1):  {:.2f}".format(qvals[0]))
         draw_text(58, 212, "1. Bot Right (Q4): {:.2f}".format(qvals[1]))
-        draw_text(58, 222, "2. Bot Left (Q3):  {:.2f}".format(qvals[0]))
+        draw_text(58, 222, "2. Bot Left (Q3): {:.2f}".format(qvals[2]))
         draw_text(58, 232, "3. Top Left (Q2):  {:.2f}".format(qvals[3]))
 
     canvas = np.array(img)
@@ -517,7 +517,8 @@ def main():
     os.makedirs(args.save_to_dir, exist_ok=True)
     batches_per_epoch = len(loader)
     ts_train = TimeSeries('Training', batches_per_epoch * args.epochs)
-    for epoch in range(args.epochs):
+    first_epoch = args.start_epoch + 1
+    for epoch in range(first_epoch, first_epoch + args.epochs):
         print('starting epoch {}'.format(epoch))
         train(epoch, ts_train, loader, max_batches=batches_per_epoch)
         print(ts_train)
