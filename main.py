@@ -177,6 +177,7 @@ def train(epoch, ts, loader, max_batches=1000):
 
         # Separately from the other networks, run the RGB generator
 
+        """
         # Train the RGB discriminator
         optim_rgb_disc.zero_grad()
         d_real = 1.0 - rgb_disc(current_rgb)
@@ -197,6 +198,7 @@ def train(epoch, ts, loader, max_batches=1000):
             ts.collect('RGB Gen Loss', rgb_gen_loss)
             rgb_gen_loss.backward()
         optim_rgb.step()
+        """
 
         if i % 100 == 0:
             #demo_real = format_demo_img(to_np(current_frame[0]), caption="Real Frame", qvals=qvals[0])
@@ -225,12 +227,90 @@ def train(epoch, ts, loader, max_batches=1000):
                 trajectories = trajectories.squeeze(2).swapaxes(0, 1)
                 trajectories = np.concatenate([trajectories, trajectories[::-1]])
 
-                cf_filename = 'epoch_{:04d}_{:04d}_whynot'.format(epoch, i)
-                build_counterfactual_visualization(cf_filename, trajectories, current_frame[0])
+                #cf_filename = 'epoch_{:04d}_{:04d}_whynot'.format(epoch, i)
+                #build_counterfactual_visualization(cf_filename, trajectories, current_frame[0])
+
+                scm = compute_causal_graph(predictor, args.latent_size, num_actions=4)
+                filename = 'scm_{:04d}_{:04d}'.format(epoch, i)
+                imutil.show(render_causal_graph(scm), filename=filename)
 
         ts.print_every(n_sec=4)
 
     print(ts)
+
+
+# This function identifies the non-pruned connections
+def compute_causal_graph(model, latent_size, num_actions):
+    input_size = latent_size
+    rows = []
+    for i in range(input_size):
+        x = torch.zeros(input_size)
+        W1 = model.fc1.weight.abs().cpu()
+        W2 = model.fc2.weight.abs().cpu()
+
+        # Simple perturbation-based analysis
+        zero_return = torch.matmul(W2, torch.matmul(W1, x))# + model.fc2.bias
+        x[i] = 1.
+        one_return = torch.matmul(W2, torch.matmul(W1, x))# + model.fc2.bias
+        result = (one_return - zero_return)
+
+        # TODO: switch to explicit T(z, a) -> z instead of T(z) -> (z \times a)
+        result = result[:input_size]
+
+        rows.append(np.array(result.abs().cpu().data))
+
+    scm = np.array(rows)
+    #scm -= scm.min()
+    eps = .0001
+    return scm / (scm.max() + eps)
+    #return scm
+
+
+# Just a helper function to render the graph to an image
+def render_causal_graph(scm):
+    # Headless matplotlib fix
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    import networkx as nx
+
+    plt.cla()
+
+    # The SCM will have more rows than columns
+    # Pad with zeros to create a square adjacency matrix
+    rows, cols = scm.shape
+    adjacency = np.zeros((rows, rows))
+    adjacency[:,:cols] = scm[:]
+    print(adjacency)
+
+    edge_alphas = adjacency.flatten() **2
+
+    from networkx.classes.multidigraph import DiGraph
+    G = DiGraph(np.ones(adjacency.shape))
+
+    pos = nx.layout.circular_layout(G)
+
+    node_sizes = [10 for i in range(len(G))]
+    M = G.number_of_edges()
+    #edge_colors = range(2, M + 2)
+    #edge_alphas = [(5 + i) / (M + 4) for i in range(M)]
+    #edge_colors = [2 for i in range(len(G))]
+
+    nodes = nx.draw_networkx_nodes(G, pos, node_size=node_sizes, node_color='blue')
+    edges = nx.draw_networkx_edges(G, pos, node_size=node_sizes, arrowstyle='->', arrowsize=20, edge_cmap=plt.cm.Blues, width=2)
+    labels = ['$z_{}$'.format(i) for i in range(cols)] + ['$a_{}$'.format(i) for i in range(rows - cols)]
+    labels = {i: labels[i] for i in range(len(labels))}
+    pos = {k: (v[0], v[1] + .1) for (k,v) in pos.items()}
+    nx.draw_networkx_labels(G, pos, labels, font_size=16)
+    # set alpha value for each edge
+    for i in range(M):
+        edges[i].set_alpha(edge_alphas[i])
+        ax = plt.gca()
+        ax.set_axis_off()
+        plt.show()
+    return imutil.show(plt, return_pixels=True, display=False, save=False)
+
 
 def format_demo_img(feature_map, qvals=None, caption=None, filename=None):
 
