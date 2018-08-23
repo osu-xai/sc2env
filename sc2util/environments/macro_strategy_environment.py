@@ -17,7 +17,7 @@ class MacroStrategyEnvironment():
     def reset(self):
         # Move the camera in any direction
         # This runs the ResetEpisode trigger built into the map
-        action = actions.FUNCTIONS.move_camera([0, 0])
+        action = actions.FUNCTIONS.move_camera([32, 32])
         self.last_timestep = self.sc2env.step([action])[0]
 
         state, reward, done, info = unpack_timestep(self.last_timestep)
@@ -30,12 +30,13 @@ class MacroStrategyEnvironment():
 
     # Step: Take an action and play the game out 10 seconds
     def step(self, action):
-        import pdb; pdb.set_trace()
         if action == 0:
-            self.use_custom_ability(3805)
-        else:
-            # Wait for a while
+            # No-op action
             self.noop()
+        else:
+            # Press one of the command card buttons
+            ability_id = action_to_ability_id(action)
+            self.use_custom_ability(ability_id)
 
         # Wait for a while
         self.noop()
@@ -76,6 +77,14 @@ def get_client(pysc2_env):
     return pysc2_env._controllers[0]._client
 
 
+def action_to_ability_id(action):
+    return {
+        1: 3771,  # Spawn Marines
+        2: 3773,  # Spawn Immortals
+        3: 3775,  # Spawn Ultralisks
+    }[action]
+
+
 # Create the low-level SC2Env object, which we wrap with
 #  a high level Gym-style environment
 def make_sc2env():
@@ -92,7 +101,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 170,  # 17 is ~1 action per second
+        'step_mul': 17 * 5,  # 17 is ~1 action per second
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
     register_map(maps_dir, env_args['map_name'])
