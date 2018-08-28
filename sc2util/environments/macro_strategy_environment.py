@@ -23,20 +23,27 @@ class MacroStrategyEnvironment():
         state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
 
-    # Action space: Choose which of three types of units to build (or, no-op)
+    # Action space:
+    # 0: No-op
+    # 1: Build Marines
+    # 2: Build Immortals
+    # 3: Build Ultralisk
     def action_space(self):
         from gym.spaces.discrete import Discrete
         return Discrete(4)
 
     # Step: Take an action and play the game out 10 seconds
-    def step(self, action):
-        if action == 0:
-            # No-op action
-            self.noop()
-        else:
-            # Press one of the command card buttons
-            ability_id = action_to_ability_id(action)
-            self.use_custom_ability(ability_id)
+    def step(self, action_player1, action_player2=None):
+        # Default: Play against a random agent
+        if action_player2 is None:
+            action_player2 = self.action_space().sample()
+
+        if action_player1 > 0:
+            player1_ability_id = action_to_ability_id(action_player1)
+            self.use_custom_ability(player1_ability_id, 1)
+        if action_player2:
+            player2_ability_id = action_to_ability_id(action_player2)
+            self.use_custom_ability(player2_ability_id, 2)
 
         # Wait for a while
         self.noop()
@@ -51,30 +58,30 @@ class MacroStrategyEnvironment():
         available_actions = self.last_timestep.observation.available_actions
         return actions.FUNCTIONS.Attack_minimap.id in available_actions
 
-    def use_custom_ability(self, ability_id):
+    def use_custom_ability(self, ability_id, player_id=1):
         from s2clientprotocol import sc2api_pb2
         from s2clientprotocol import common_pb2
         from s2clientprotocol import spatial_pb2
 
-        target_point = common_pb2.PointI()
-        target_point.x = 0
-        target_point.y = 0
+        def get_action_spatial(ability_id):
+            target_point = common_pb2.PointI()
+            target_point.x = 0
+            target_point.y = 0
 
-        action_spatial_unit_command = spatial_pb2.ActionSpatialUnitCommand(target_minimap_coord=target_point)
-        action_spatial_unit_command.ability_id = ability_id
+            action_spatial_unit_command = spatial_pb2.ActionSpatialUnitCommand(target_minimap_coord=target_point)
+            action_spatial_unit_command.ability_id = ability_id
 
-        action_spatial = spatial_pb2.ActionSpatial(unit_command=action_spatial_unit_command)
-        action = sc2api_pb2.Action(action_feature_layer=action_spatial)
-        request_action = sc2api_pb2.RequestAction(actions=[action])
+            action_spatial = spatial_pb2.ActionSpatial(unit_command=action_spatial_unit_command)
+            action = sc2api_pb2.Action(action_feature_layer=action_spatial)
+            return action
+
+        player_action = get_action_spatial(ability_id)
+        request_action = sc2api_pb2.RequestAction(actions=[player_action])
         request = sc2api_pb2.Request(action=request_action)
 
-        client = get_client(self.sc2env)
+        # Bypass pysc2 and send the proto directly
+        client = self.sc2env._controllers[player_id - 1]._client
         client.send_req(request)
-
-
-def get_client(pysc2_env):
-    # Bypass pysc2 and get the Blizzard-made protobuf client
-    return pysc2_env._controllers[0]._client
 
 
 def action_to_ability_id(action):
@@ -102,8 +109,9 @@ def make_sc2env():
         ),
         'map_name': MAP_NAME,
         'step_mul': 17 * 5,  # 17 is ~1 action per second
+        'players': [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)],
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
-    register_map(maps_dir, env_args['map_name'])
+    register_map(maps_dir, env_args['map_name'], players=2)
     return sc2_env.SC2Env(**env_args)
 

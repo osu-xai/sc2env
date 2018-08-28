@@ -31,7 +31,7 @@ def unpack_timestep(timestep):
 # are hard-coded into pysc2
 # map_dir: relative or absolute directory name containing .SC2Map
 # map_name: either MyCustomMap or MyCustomMap.SC2Map
-def register_map(map_dir, map_name):
+def register_map(map_dir, map_name, players=1):
     quiet_absl()
 
     print('Installing Map {}'.format(map_name))
@@ -50,7 +50,7 @@ def register_map(map_dir, map_name):
     shutil.copy(map_filename, maps_install_dir)
 
     # Don't do this at home
-    class_definition = dict(prefix=map_dir, filename=map_filename, players=1)
+    class_definition = dict(prefix=map_dir, filename=map_filename, players=players)
     constructed_class = type(map_name, (lib.Map,), class_definition)
     globals()[map_name] = constructed_class
     print('Installed map {}'.format(map_name))
