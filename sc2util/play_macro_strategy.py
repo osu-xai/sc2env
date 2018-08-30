@@ -44,9 +44,11 @@ def create_dataset(dataset_size=80000):
 
         pysc2_util.save_sc2_feature_map_to_png(initial_state[1], filename_initial)
         imutil.show(initial_state[2], filename=filename_initial_rgb)
+        imutil.show(initial_state[3], filename=filename_initial_rgb)
 
         pysc2_util.save_sc2_feature_map_to_png(outcome_state[1], filename_outcome)
         imutil.show(outcome_state[2], filename=filename_outcome_rgb)
+        imutil.show(outcome_state[3], filename=filename_initial_rgb)
 
         example = {
             'filename': filename_initial,

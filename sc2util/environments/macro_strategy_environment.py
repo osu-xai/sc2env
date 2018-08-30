@@ -10,16 +10,27 @@ MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
 
 
+action_to_ability_id = {
+    1: 3771,  # Spawn Marines
+    2: 3773,  # Spawn Immortals
+    3: 3775,  # Spawn Ultralisks
+    4: 3777,  # Spawn SCV
+    5: 3779,  # Reserve Marines
+    6: 3781,  # Reserve Immortals
+    7: 3783,  # Reserve Ultralisks
+}
+
+# Squelch pysc2 complaints about unknown ids
+#for ability_id in action_to_ability_id.values():
+#    actions.ABILITY_IDS[ability_id] = set()
+
+
 class MacroStrategyEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
 
     def reset(self):
-        # Move the camera in any direction
-        # This runs the ResetEpisode trigger built into the map
-        action = actions.FUNCTIONS.move_camera([32, 32])
-        self.last_timestep = self.sc2env.step([action])[0]
-
+        self.noop()
         state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
 
@@ -28,6 +39,10 @@ class MacroStrategyEnvironment():
     # 1: Build Marines
     # 2: Build Immortals
     # 3: Build Ultralisk
+    # 4: Build SCV (to gather resources)
+    # 5: Add Marines to reserve
+    # 6: Add Immortals to reserve
+    # 7: Add Ultralisks to reserve
     def action_space(self):
         from gym.spaces.discrete import Discrete
         return Discrete(4)
@@ -39,10 +54,10 @@ class MacroStrategyEnvironment():
             action_player2 = self.action_space().sample()
 
         if action_player1 > 0:
-            player1_ability_id = action_to_ability_id(action_player1)
+            player1_ability_id = action_to_ability_id[action_player1]
             self.use_custom_ability(player1_ability_id, 1)
         if action_player2:
-            player2_ability_id = action_to_ability_id(action_player2)
+            player2_ability_id = action_to_ability_id[action_player2]
             self.use_custom_ability(player2_ability_id, 2)
 
         # Wait for a while
@@ -82,14 +97,6 @@ class MacroStrategyEnvironment():
         # Bypass pysc2 and send the proto directly
         client = self.sc2env._controllers[player_id - 1]._client
         client.send_req(request)
-
-
-def action_to_ability_id(action):
-    return {
-        1: 3771,  # Spawn Marines
-        2: 3773,  # Spawn Immortals
-        3: 3775,  # Spawn Ultralisks
-    }[action]
 
 
 # Create the low-level SC2Env object, which we wrap with
