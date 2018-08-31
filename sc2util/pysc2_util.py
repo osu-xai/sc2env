@@ -63,8 +63,8 @@ def quiet_absl():
     absl.flags.FLAGS(sys.argv)
 
     # Disable pysc2.lib.actions spam on custom maps
-    #import absl.logging
-    #absl.logging.set_verbosity(absl.logging.ERROR)
+    import absl.logging
+    absl.logging.set_verbosity(absl.logging.ERROR)
 
 
 # Input: 17-layer SC2Env Feature map

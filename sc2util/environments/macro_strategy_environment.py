@@ -18,7 +18,7 @@ action_to_ability_id = {
     3: 3779,  # Spawn Ultralisk
     4: 3783,  # Spawn SCV
     5: 3773,  # Reserve Marines
-    5: 3777,  # Reserve Immortals
+    6: 3777,  # Reserve Immortals
     7: 3781,  # Reserve Ultralisk
 }
 action_to_name = {

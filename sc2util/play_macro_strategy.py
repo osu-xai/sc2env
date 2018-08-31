@@ -28,15 +28,7 @@ def demo_task():
         #   rgb_minimap: np array of an RGB pixel view of the minimap
         #   rgb_screen: np array of RGB pixel rendered frame of Starcraft II
 
-        # new actions:
-        # 1 - build marines
-        # 2 - reserve marines
-        # 3 - build immos
-        # 4 - reserve immos
-        # 5 - build ultras
-        # 6 - reserve ultras
-        # 7 - build scv
-        my_action = random.choice([1,3,4])
+        my_action = random.choice([1,2,6])
         enemy_action = agent.step(initial_state)
         # Take the action and simulate the game for one time step (~10 seconds)
         outcome_state, reward, done, info = env.step(my_action, enemy_action)
