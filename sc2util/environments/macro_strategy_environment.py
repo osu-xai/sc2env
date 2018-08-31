@@ -14,12 +14,12 @@ RGB_SCREEN_HEIGHT = 240
 
 action_to_ability_id = {
     1: 3771,  # Spawn Marines
-    2: 3773,  # Spawn Immortals
-    3: 3775,  # Spawn Ultralisks
-    4: 3777,  # Spawn SCV
-    5: 3779,  # Reserve Marines
-    6: 3781,  # Reserve Immortals
-    7: 3783,  # Reserve Ultralisks
+    2: 3775,  # Spawn Immortals
+    3: 3779,  # Spawn Ultralisk
+    4: 3783,  # Spawn SCV
+    5: 3773,  # Reserve Marines
+    5: 3777,  # Reserve Immortals
+    7: 3781,  # Reserve Ultralisk
 }
 action_to_name = {
     0: "No-Op",
@@ -65,10 +65,6 @@ class MacroStrategyEnvironment():
         print('Running step()')
         self.steps += 1
 
-        # Default: Play against a random agent
-        if action_player2 is None:
-            action_player2 = random.choice([1,2,3])
-
         if action_player1 > 0:
             player1_ability_id = action_to_ability_id[action_player1]
             self.use_custom_ability(player1_ability_id, 1)
@@ -89,7 +85,7 @@ class MacroStrategyEnvironment():
         from pysc2.lib.actions import FUNCTIONS
         #doop = actions.FunctionCall(FUNCTIONS[549], [])
         noop = FUNCTIONS.no_op()
-        action_list = [noop]
+        action_list = [noop, noop]
         start_time = time.time()
         self.last_timestep, enemy_timestep = self.sc2env.step(action_list)
         print('Called sc2env.step() in {:.02f} sec'.format(time.time() - start_time))
@@ -148,7 +144,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 17 * 5,  # 17 is ~1 action per second
+        'step_mul': 17 * 6,  # 17 is ~1 action per second
         'players': [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)],
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')

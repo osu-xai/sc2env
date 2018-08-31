@@ -1,4 +1,5 @@
 import json
+import random
 import numpy as np
 import os
 from tqdm import tqdm
@@ -27,16 +28,27 @@ def demo_task():
         #   rgb_minimap: np array of an RGB pixel view of the minimap
         #   rgb_screen: np array of RGB pixel rendered frame of Starcraft II
 
-        selected_action = agent.step(initial_state)
+        # new actions:
+        # 1 - build marines
+        # 2 - reserve marines
+        # 3 - build immos
+        # 4 - reserve immos
+        # 5 - build ultras
+        # 6 - reserve ultras
+        # 7 - build scv
+        my_action = random.choice([1,3,4])
+        enemy_action = agent.step(initial_state)
         # Take the action and simulate the game for one time step (~10 seconds)
-        outcome_state, reward, done, info = env.step(selected_action)
+        outcome_state, reward, done, info = env.step(my_action, enemy_action)
 
 
         top = imutil.show(outcome_state[2], resize_to=(800,480), return_pixels=True, display=False)
         bottom = imutil.show(outcome_state[3], resize_to=(800,480), return_pixels=True, display=False)
         filename = "output_frame_{:05d}.jpg".format(i)
-        caption = 't={}  Taking Action: {}'.format(
-            env.steps, macro_strategy_environment.action_to_name[selected_action])
+        caption = 't={}  Left: {}  Right: {}'.format(
+            env.steps,
+            macro_strategy_environment.action_to_name[my_action],
+            macro_strategy_environment.action_to_name[enemy_action])
         imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
 
 
