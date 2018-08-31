@@ -35,7 +35,7 @@ def demo_task():
         top = imutil.show(outcome_state[2], resize_to=(800,480), return_pixels=True, display=False)
         bottom = imutil.show(outcome_state[3], resize_to=(800,480), return_pixels=True, display=False)
         filename = "output_frame_{:05d}.jpg".format(i)
-        caption = 't={}\tTaking Action:{}'.format(
+        caption = 't={}  Taking Action: {}'.format(
             env.steps, macro_strategy_environment.action_to_name[selected_action])
         imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
 

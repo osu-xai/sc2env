@@ -67,7 +67,7 @@ class MacroStrategyEnvironment():
 
         # Default: Play against a random agent
         if action_player2 is None:
-            action_player2 = self.action_space().sample()
+            action_player2 = random.choice([1,2,3])
 
         if action_player1 > 0:
             player1_ability_id = action_to_ability_id[action_player1]
@@ -76,6 +76,12 @@ class MacroStrategyEnvironment():
             player2_ability_id = action_to_ability_id[action_player2]
             self.use_custom_ability(player2_ability_id, 2)
 
+        # Step forward to synchronize clients
+        self.sc2env._controllers[0].step(count=1)
+        self.sc2env._controllers[1].step(count=1)
+        self.sc2env._controllers[0].observe()
+        self.sc2env._controllers[1].observe()
+
         self.do_step()
         return unpack_timestep(self.last_timestep)
 
@@ -83,7 +89,7 @@ class MacroStrategyEnvironment():
         from pysc2.lib.actions import FUNCTIONS
         #doop = actions.FunctionCall(FUNCTIONS[549], [])
         noop = FUNCTIONS.no_op()
-        action_list = [noop, noop]
+        action_list = [noop]
         start_time = time.time()
         self.last_timestep, enemy_timestep = self.sc2env.step(action_list)
         print('Called sc2env.step() in {:.02f} sec'.format(time.time() - start_time))
@@ -98,10 +104,6 @@ class MacroStrategyEnvironment():
         # Observe player 1
         #self.last_timestep = self.sc2env._controllers[0].observe()
 
-
-    def can_attack(self):
-        available_actions = self.last_timestep.observation.available_actions
-        return actions.FUNCTIONS.Attack_minimap.id in available_actions
 
     def use_custom_ability(self, ability_id, player_id=1):
         from s2clientprotocol import sc2api_pb2
@@ -146,7 +148,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 17 * 10,  # 17 is ~1 action per second
+        'step_mul': 17 * 5,  # 17 is ~1 action per second
         'players': [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)],
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
