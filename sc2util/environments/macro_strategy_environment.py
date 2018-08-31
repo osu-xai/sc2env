@@ -1,3 +1,4 @@
+import time
 import os
 import random
 import numpy as np
@@ -7,7 +8,8 @@ from pysc2.lib import actions
 
 MAP_NAME = 'MacroStrategy'
 MAP_SIZE = 64
-RGB_SCREEN_SIZE = 256
+RGB_SCREEN_WIDTH = 400
+RGB_SCREEN_HEIGHT = 240
 
 
 action_to_ability_id = {
@@ -18,6 +20,16 @@ action_to_ability_id = {
     5: 3779,  # Reserve Marines
     6: 3781,  # Reserve Immortals
     7: 3783,  # Reserve Ultralisks
+}
+action_to_name = {
+    0: "No-Op",
+    1: "Build Marines",
+    2: "Build Immortals",
+    3: "Build Ultralisk",
+    4: "Build SCV",
+    5: "Add Marines to reserve",
+    6: "Add Immortals to reserve",
+    7: "Add Ultralisk to reserve",
 }
 
 # Squelch pysc2 complaints about unknown ids
@@ -30,7 +42,8 @@ class MacroStrategyEnvironment():
         self.sc2env = make_sc2env()
 
     def reset(self):
-        self.noop()
+        self.do_step()
+        self.steps = 0
         state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
 
@@ -45,10 +58,13 @@ class MacroStrategyEnvironment():
     # 7: Add Ultralisks to reserve
     def action_space(self):
         from gym.spaces.discrete import Discrete
-        return Discrete(4)
+        return Discrete(8)
 
     # Step: Take an action and play the game out 10 seconds
     def step(self, action_player1, action_player2=None):
+        print('Running step()')
+        self.steps += 1
+
         # Default: Play against a random agent
         if action_player2 is None:
             action_player2 = self.action_space().sample()
@@ -56,18 +72,32 @@ class MacroStrategyEnvironment():
         if action_player1 > 0:
             player1_ability_id = action_to_ability_id[action_player1]
             self.use_custom_ability(player1_ability_id, 1)
-        if action_player2:
+        if action_player2 > 0:
             player2_ability_id = action_to_ability_id[action_player2]
             self.use_custom_ability(player2_ability_id, 2)
 
-        # Wait for a while
-        self.noop()
-
+        self.do_step()
         return unpack_timestep(self.last_timestep)
 
-    def noop(self):
-        sc2_action = actions.FUNCTIONS.no_op()
-        self.last_timestep = self.sc2env.step([sc2_action])[0]
+    def do_step(self):
+        from pysc2.lib.actions import FUNCTIONS
+        #doop = actions.FunctionCall(FUNCTIONS[549], [])
+        noop = FUNCTIONS.no_op()
+        action_list = [noop, noop]
+        start_time = time.time()
+        self.last_timestep, enemy_timestep = self.sc2env.step(action_list)
+        print('Called sc2env.step() in {:.02f} sec'.format(time.time() - start_time))
+
+        #start_time = time.time()
+        #self.last_timestep, enemy_timestep = self.sc2env._step()
+        #print('Called sc2env._step() in {:.02f} sec'.format(time.time() - start_time))
+
+        # Step forward
+        #for player_id in [1, 2]:
+        #    self.sc2env._controllers[player_id - 1].step()
+        # Observe player 1
+        #self.last_timestep = self.sc2env._controllers[0].observe()
+
 
     def can_attack(self):
         available_actions = self.last_timestep.observation.available_actions
@@ -96,6 +126,7 @@ class MacroStrategyEnvironment():
 
         # Bypass pysc2 and send the proto directly
         client = self.sc2env._controllers[player_id - 1]._client
+        print('Calling client.send_req for player_id {}'.format(player_id))
         client.send_req(request)
 
 
@@ -109,13 +140,13 @@ def make_sc2env():
                 minimap=(MAP_SIZE, MAP_SIZE)
             ),
             rgb_dimensions=sc2_env.Dimensions(
-                screen=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
-                minimap=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
+                screen=(RGB_SCREEN_WIDTH, RGB_SCREEN_HEIGHT),
+                minimap=(RGB_SCREEN_WIDTH, RGB_SCREEN_HEIGHT),
             ),
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 17 * 5,  # 17 is ~1 action per second
+        'step_mul': 17 * 10,  # 17 is ~1 action per second
         'players': [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)],
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
