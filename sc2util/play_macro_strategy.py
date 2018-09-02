@@ -19,7 +19,7 @@ def demo_task():
     # This environment involves choosing to build the right units
     env = MacroStrategyEnvironment()
     agent = RandomAgent(env.action_space())
-    initial_state = env.reset()
+    state = env.reset()
 
     for i in range(100):
         # The state is a tuple of:
@@ -28,8 +28,10 @@ def demo_task():
         #   rgb_minimap: np array of an RGB pixel view of the minimap
         #   rgb_screen: np array of RGB pixel rendered frame of Starcraft II
 
-        my_action = random.choice([1,2,6])
-        enemy_action = agent.step(initial_state)
+        # 7 - build ultralisk?
+        my_action = random.choice([1, 2, 3, 5, 6, 7])
+        enemy_action = random.choice([1, 2, 3, 5, 6, 7])
+        #enemy_action = agent.step(state)
         # Take the action and simulate the game for one time step (~10 seconds)
         outcome_state, reward, done, info = env.step(my_action, enemy_action)
 

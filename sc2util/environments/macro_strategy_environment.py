@@ -17,19 +17,19 @@ action_to_ability_id = {
     2: 3775,  # Spawn Immortals
     3: 3779,  # Spawn Ultralisk
     4: 3783,  # Spawn SCV
-    5: 3773,  # Reserve Marines
-    6: 3777,  # Reserve Immortals
-    7: 3781,  # Reserve Ultralisk
+    5: 3773,  # Secondary Button Marines
+    6: 3777,  # Secondary Button Immortals
+    7: 3781,  # Secondary Button Ultralisk
 }
 action_to_name = {
     0: "No-Op",
-    1: "Build Marines",
-    2: "Build Immortals",
-    3: "Build Ultralisk",
+    1: "Invest in Marines",
+    2: "Invest in Immortals",
+    3: "Invest in Ultralisk",
     4: "Build SCV",
-    5: "Add Marines to reserve",
-    6: "Add Immortals to reserve",
-    7: "Add Ultralisk to reserve",
+    5: "Build Marines",
+    6: "Build Immortals",
+    7: "Build Ultralisk",
 }
 
 # Squelch pysc2 complaints about unknown ids
@@ -144,7 +144,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 17 * 6,  # 17 is ~1 action per second
+        'step_mul': 17 * 10,  # 17 is ~1 action per second
         'players': [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)],
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
