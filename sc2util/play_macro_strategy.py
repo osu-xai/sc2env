@@ -8,43 +8,47 @@ import imutil
 import pysc2_util
 from random_agent import RandomAgent
 from environments import macro_strategy_environment
-from environments.macro_strategy_environment import MacroStrategyEnvironment
+from environments.macro_strategy_environment import MacroStrategyEnvironment, action_to_name
 
 
-DATASET_NAME = 'sc2_macro_strategy'
-os.makedirs(DATASET_NAME + '/images', exist_ok=True)
-
-
-def demo_task():
+def main():
     # This environment involves choosing to build the right units
     env = MacroStrategyEnvironment()
-    agent = RandomAgent(env.action_space())
+    blue_agent = RandomAgent(env.action_space())
+    red_agent = RandomAgent(env.action_space())
     state = env.reset()
 
     for i in range(100):
+        # The buildable units are named Rock, Paper, and Scissors
+        # 1: Build paper in back
+        # 2: Build paper in front
+        # 3: Build rock in back
+        # 4: Build rock in front
+        # 5: Build scissors in back
+        # 6: Build scissors in front
+        # 7: Scout to reveal the enemy's army
+        blue_action = blue_agent.step()
+        red_action = red_agent.step()
+
+        # Take the action and simulate the game for one time step (~10 seconds)
+        state, reward, done, info = env.step(my_action, enemy_action)
+
         # The state is a tuple of:
         #   features_minimap: np array of features from the minimap view
         #   features_screen: np array of features from the camera view
         #   rgb_minimap: np array of an RGB pixel view of the minimap
         #   rgb_screen: np array of RGB pixel rendered frame of Starcraft II
+        features_minimap, features_screen, rgb_minimap, rgb_screen = state
 
-        # 7 - build ultralisk?
-        my_action = random.choice([1, 2, 3, 5, 6, 7])
-        enemy_action = random.choice([1, 2, 3, 5, 6, 7])
-        #enemy_action = agent.step(state)
-        # Take the action and simulate the game for one time step (~10 seconds)
-        outcome_state, reward, done, info = env.step(my_action, enemy_action)
-
-
-        top = imutil.show(outcome_state[2], resize_to=(800,480), return_pixels=True, display=False)
-        bottom = imutil.show(outcome_state[3], resize_to=(800,480), return_pixels=True, display=False)
+        top = imutil.show(rgb_minimap, resize_to=(400,240), return_pixels=True, display=False)
+        bottom = imutil.show(rgb_screen, resize_to=(400,240), return_pixels=True, display=False)
         filename = "output_frame_{:05d}.jpg".format(i)
         caption = 't={}  Left: {}  Right: {}'.format(
-            env.steps,
-            macro_strategy_environment.action_to_name[my_action],
-            macro_strategy_environment.action_to_name[enemy_action])
+            env.steps, action_to_name[my_action], action_to_name[enemy_action])
         imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
-
+        if done:
+            print('Game is done')
+            break
 
 if __name__ == '__main__':
-    demo_task()
+    main()

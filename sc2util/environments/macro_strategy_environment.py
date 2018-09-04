@@ -11,97 +11,94 @@ MAP_SIZE = 64
 RGB_SCREEN_WIDTH = 400
 RGB_SCREEN_HEIGHT = 240
 
+# See the ResolveBattle trigger in the .SC2Map
+MAX_STEPS = 10
 
 action_to_ability_id = {
-    1: 3771,  # Spawn Marines
-    2: 3775,  # Spawn Immortals
-    3: 3779,  # Spawn Ultralisk
-    4: 3783,  # Spawn SCV
-    5: 3773,  # Secondary Button Marines
-    6: 3777,  # Secondary Button Immortals
-    7: 3781,  # Secondary Button Ultralisk
+    1: 3771,
+    2: 3773,
+    3: 3775,
+    4: 3777,
+    5: 3779,
+    6: 3781,
+    7: 3783,
+    8: 3785,
 }
 action_to_name = {
     0: "No-Op",
-    1: "Invest in Marines",
-    2: "Invest in Immortals",
-    3: "Invest in Ultralisk",
+    1: "Paper 1",
+    2: "Rock 1",
+    3: "Scissors 1",
     4: "Build SCV",
-    5: "Build Marines",
-    6: "Build Immortals",
-    7: "Build Ultralisk",
+    5: "Paper 2",
+    6: "Rock 2",
+    7: "Scissors 2",
+    8: "Scout",
 }
-
-# Squelch pysc2 complaints about unknown ids
-#for ability_id in action_to_ability_id.values():
-#    actions.ABILITY_IDS[ability_id] = set()
-
 
 class MacroStrategyEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
 
     def reset(self):
-        self.do_step()
+        self.step_sc2env()
         self.steps = 0
         state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
 
-    # Action space:
-    # 0: No-op
-    # 1: Build Marines
-    # 2: Build Immortals
-    # 3: Build Ultralisk
-    # 4: Build SCV (to gather resources)
-    # 5: Add Marines to reserve
-    # 6: Add Immortals to reserve
-    # 7: Add Ultralisks to reserve
     def action_space(self):
         from gym.spaces.discrete import Discrete
-        return Discrete(8)
+        return Discrete(len(action_to_name))
 
     # Step: Take an action and play the game out 10 seconds
     def step(self, action_player1, action_player2=None):
-        print('Running step()')
+        # 0: first timestep, 1: any other, 2: last timestep
+        if self.sc2env._state == 2:
+            print('Game is over, cannot take further actions')
+            return
+
+        print('Taking action t={}'.format(self.steps))
         self.steps += 1
 
-        if action_player1 > 0:
-            player1_ability_id = action_to_ability_id[action_player1]
-            self.use_custom_ability(player1_ability_id, 1)
-        if action_player2 > 0:
-            player2_ability_id = action_to_ability_id[action_player2]
-            self.use_custom_ability(player2_ability_id, 2)
+        if self.steps >= MAX_STEPS:
+            print('Game has reached limit of {} actions: simulating endgame'.format(MAX_STEPS))
+            self.step_until_endgame()
+        else:
+            if action_player1 > 0:
+                player1_ability_id = action_to_ability_id[action_player1]
+                self.use_custom_ability(player1_ability_id, 1)
+            if action_player2 > 0:
+                player2_ability_id = action_to_ability_id[action_player2]
+                self.use_custom_ability(player2_ability_id, 2)
+            self.step_sc2env()
+        return unpack_timestep(self.last_timestep)
 
+
+    def step_sc2env(self):
+        print('step_sc2env() state={}'.format(self.sc2env._state))
         # Step forward to synchronize clients
+        start_time = time.time()
         self.sc2env._controllers[0].step(count=1)
         self.sc2env._controllers[1].step(count=1)
         self.sc2env._controllers[0].observe()
         self.sc2env._controllers[1].observe()
 
-        self.do_step()
-        return unpack_timestep(self.last_timestep)
-
-    def do_step(self):
-        from pysc2.lib.actions import FUNCTIONS
-        #doop = actions.FunctionCall(FUNCTIONS[549], [])
-        noop = FUNCTIONS.no_op()
+        noop = actions.FUNCTIONS.no_op()
         action_list = [noop, noop]
-        start_time = time.time()
         self.last_timestep, enemy_timestep = self.sc2env.step(action_list)
-        print('Called sc2env.step() in {:.02f} sec'.format(time.time() - start_time))
+        print('SC2Env step took {:.02f} sec'.format(time.time() - start_time))
 
-        #start_time = time.time()
-        #self.last_timestep, enemy_timestep = self.sc2env._step()
-        #print('Called sc2env._step() in {:.02f} sec'.format(time.time() - start_time))
-
-        # Step forward
-        #for player_id in [1, 2]:
-        #    self.sc2env._controllers[player_id - 1].step()
-        # Observe player 1
-        #self.last_timestep = self.sc2env._controllers[0].observe()
+    def step_until_endgame(self):
+        import imutil
+        self.sc2env._step_mul = 36
+        while self.sc2env._state != 2:
+            self.step_sc2env()
+            imutil.show(unpack_timestep(self.last_timestep)[0][3])
 
 
     def use_custom_ability(self, ability_id, player_id=1):
+        # Sends a command directly to the SC2 protobuf API
+        # Can cause the pysc2 client to desync, unless step_sc2env() is called afterward
         from s2clientprotocol import sc2api_pb2
         from s2clientprotocol import common_pb2
         from s2clientprotocol import spatial_pb2
@@ -125,6 +122,9 @@ class MacroStrategyEnvironment():
         # Bypass pysc2 and send the proto directly
         client = self.sc2env._controllers[player_id - 1]._client
         print('Calling client.send_req for player_id {}'.format(player_id))
+        if self.sc2env._state == 2:
+            print('Game is over, cannot send action')
+            return
         client.send_req(request)
 
 
@@ -144,7 +144,7 @@ def make_sc2env():
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 17 * 10,  # 17 is ~1 action per second
+        'step_mul': 170,  # 17 is ~1 action per second
         'players': [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)],
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
