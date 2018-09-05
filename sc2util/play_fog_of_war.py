@@ -2,8 +2,8 @@ import imutil
 import time
 import numpy as np
 
-from random_agent import RandomAgent
-from environments import fog_of_war
+from sc2util.random_agent import RandomAgent
+from sc2util.environments import fog_of_war
 
 
 """
