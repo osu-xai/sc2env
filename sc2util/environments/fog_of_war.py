@@ -103,6 +103,8 @@ class FogOfWarEnvironment():
 
         reward = 0
         done = self.game_over()
+        if done:
+            import pdb; pdb.set_trace()
         info = {}
         return state, reward, done, info
 
