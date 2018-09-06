@@ -4,7 +4,7 @@ import random
 import numpy as np
 
 import imutil
-from pysc2_util import register_map, unpack_timestep
+from pysc2_util import register_map
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
@@ -15,6 +15,13 @@ RGB_SCREEN_HEIGHT = 240
 
 # See the ResolveBattle trigger in the .SC2Map
 MAX_STEPS = 10
+
+unit_id_to_name = {
+    1922: "CustomUnitCommandCenter",
+    1923: "CustomUnitPaper",
+    1924: "CustomUnitRock",
+    1925: "CustomUnitScissors",
+}
 
 action_to_ability_id = {
     1: 3771,
@@ -49,7 +56,7 @@ class FogOfWarEnvironment():
     def reset(self):
         self.step_sc2env()
         self.steps = 0
-        state, reward, done, info = unpack_timestep(self.last_timestep)
+        state, reward, done, info = self.unpack_state()
         return state
 
     def action_space(self):
@@ -80,9 +87,24 @@ class FogOfWarEnvironment():
                 self.use_custom_ability(player2_ability_id, 2)
             self.step_sc2env()
         if self.video:
-            screenshot = unpack_timestep(self.last_timestep)[0][3]
-            self.video.write_frame(screenshot)
-        return unpack_timestep(self.last_timestep)
+            screenshot = self.unpack_state()[0][3]
+            for _ in range(10):
+                self.video.write_frame(screenshot)
+        return self.unpack_state()
+
+    # Convert the SC2Env timestep into a Gym-style tuple
+    def unpack_state(self):
+        obs = self.last_timestep.observation
+        feature_map = np.array(obs.feature_minimap)
+        feature_screen = np.array(obs.feature_screen)
+        rgb_map = np.array(obs.rgb_minimap)
+        rgb_screen = np.array(obs.rgb_screen)
+        state = (feature_map, feature_screen, rgb_map, rgb_screen)
+
+        reward = 0
+        done = self.game_over()
+        info = {}
+        return state, reward, done, info
 
     def game_over(self):
         # SC2Env Game States
@@ -106,11 +128,11 @@ class FogOfWarEnvironment():
 
     def step_until_endgame(self):
         if self.video:
-            self.sc2env._step_mul = 1
+            self.sc2env._step_mul = 3
         while self.sc2env._state != 2:
             self.step_sc2env()
             if self.video:
-                screenshot = unpack_timestep(self.last_timestep)[0][3]
+                screenshot = self.unpack_state()[0][3]
                 self.video.write_frame(screenshot)
 
     def use_custom_ability(self, ability_id, player_id=1):
