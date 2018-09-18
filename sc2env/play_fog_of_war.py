@@ -49,16 +49,26 @@ def main(render=False):
         filename = "output_frame_{}_{:05d}.jpg".format(unique_id, env.steps)
         caption = fog_of_war.action_to_name[action]
         caption = 't={}  Reward={}  Action: {}'.format(env.steps, reward, caption)
+
+        left = imutil.show(colorize(features_minimap[4]), resize_to=(256, 256), return_pixels=True, display=False, save=False)
+        right = imutil.show(colorize(features_minimap[5]), resize_to=(256, 256), return_pixels=True, display=False, save=False)
+        pixels = np.concatenate([left, right], axis=1)
         if render:
-            top = imutil.show(rgb_minimap, resize_to=(800, 480), return_pixels=True, display=False, save=False)
-            bottom = imutil.show(rgb_screen, resize_to=(800, 480), return_pixels=True, display=False, save=False)
-            imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
-        else:
-            top = imutil.show(features_minimap[5], resize_to=(256, 256), return_pixels=True, display=False, save=False)
-            bottom = imutil.show(features_screen[5], resize_to=(256, 256), return_pixels=True, display=False, save=False)
-            imutil.show(np.concatenate([top, bottom], axis=1), filename=filename, caption=caption)
+            screenshot = imutil.show(rgb_screen, resize_to=(512, 288), return_pixels=True, display=False, save=False)
+            pixels = np.concatenate([pixels, screenshot], axis=0)
+        imutil.show(pixels, filename=filename, caption=caption)
 
     print('Finished game with final reward {}'.format(reward))
+
+def colorize(pixels):
+    from matplotlib import cm
+    values = np.unique(pixels)
+    vmin, vmax = min(values), max(values)
+    new_pixels = np.zeros(pixels.shape + (3,))
+    for v in values:
+        val = (v - vmin) / (vmax - vmin)
+        new_pixels[np.where(pixels == v)] = cm.gnuplot(val)[:3]
+    return new_pixels
 
 
 if __name__ == '__main__':
