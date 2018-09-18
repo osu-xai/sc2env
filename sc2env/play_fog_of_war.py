@@ -51,7 +51,7 @@ def main(render=False):
         caption = 't={}  Reward={}  Action: {}'.format(env.steps, reward, caption)
 
         left = imutil.show(colorize(features_minimap[4]), resize_to=(256, 256), return_pixels=True, display=False, save=False)
-        right = imutil.show(colorize(features_minimap[5]), resize_to=(256, 256), return_pixels=True, display=False, save=False)
+        right = imutil.show(colorize(features_minimap[5], mode='nipy'), resize_to=(256, 256), return_pixels=True, display=False, save=False)
         pixels = np.concatenate([left, right], axis=1)
         if render:
             screenshot = imutil.show(rgb_screen, resize_to=(512, 288), return_pixels=True, display=False, save=False)
@@ -60,14 +60,19 @@ def main(render=False):
 
     print('Finished game with final reward {}'.format(reward))
 
-def colorize(pixels):
+
+def colorize(pixels, mode='gnuplot'):
     from matplotlib import cm
     values = np.unique(pixels)
     vmin, vmax = min(values), max(values)
     new_pixels = np.zeros(pixels.shape + (3,))
+    if mode == 'gnuplot':
+        map = cm.gnuplot
+    else:
+        map = cm.nipy_spectral
     for v in values:
         val = (v - vmin) / (vmax - vmin)
-        new_pixels[np.where(pixels == v)] = cm.gnuplot(val)[:3]
+        new_pixels[np.where(pixels == v)] = map(val)[:3]
     return new_pixels
 
 
