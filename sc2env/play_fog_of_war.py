@@ -14,7 +14,8 @@ Each group consists of one of three unit compositions: Rock units, Paper units, 
 At each time step the agent may take one of the following actions:
     - Add more units to a group, increasing its size
     - Switch a group to a different unit type (deleting the existing units)
-    - Deploy a Scout to reveal the current composition of the enemy's army
+    - Scan to reveal the current composition of the enemy's army
+    - Counterintelligence to nullify enemy scans for the next 3 time steps
 After 10 time steps, a game simulation rollout determines which army wins.
 """
 def main(render=False):
@@ -40,8 +41,8 @@ def main(render=False):
         # The state is a tuple of:
         #   features_minimap: np array of features from the minimap view
         #   features_screen: np array of features from the camera view
-        #   rgb_minimap: np array of an RGB pixel view of the minimap
-        #   rgb_screen: np array of RGB pixel rendered frame of Starcraft II
+        #   rgb_minimap: np array of an RGB pixel view of the minimap (if render=True)
+        #   rgb_screen: np array of RGB pixel rendered frame of Starcraft II (if render=True)
         features_minimap, features_screen, rgb_minimap, rgb_screen = state
 
         # Example code for visualizing the state
@@ -53,13 +54,11 @@ def main(render=False):
             bottom = imutil.show(rgb_screen, resize_to=(800, 480), return_pixels=True, display=False, save=False)
             imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
         else:
-            # Display unit ids
-            top = imutil.show(features_minimap[5], resize_to=(512, 512), return_pixels=True, display=False, save=False)
-            bottom = imutil.show(features_screen[5], resize_to=(512, 512), return_pixels=True, display=False, save=False)
-            imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
+            top = imutil.show(features_minimap[5], resize_to=(256, 256), return_pixels=True, display=False, save=False)
+            bottom = imutil.show(features_screen[5], resize_to=(256, 256), return_pixels=True, display=False, save=False)
+            imutil.show(np.concatenate([top, bottom], axis=1), filename=filename, caption=caption)
 
-
-    print('Finished game with cumulative reward {}'.format(reward))
+    print('Finished game with final reward {}'.format(reward))
 
 
 if __name__ == '__main__':
