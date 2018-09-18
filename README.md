@@ -1,6 +1,6 @@
 ## Starcraft RL
 
-An example StarCraftII reinforcement learning task, in the style of an OpenAI Gym environment.
+A selection of StarCraftII reinforcement learning environments for strategic learning.
 Runs on Ubuntu 16.04.
 
 ## Installation
