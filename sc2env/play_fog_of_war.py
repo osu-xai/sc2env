@@ -26,9 +26,8 @@ def main():
     state = env.reset()
     done = False
 
-    # Two agents play each other: the learner (blue) and the adversary (red)
-    blue_agent = RandomAgent(env.action_space())
-    red_agent = RandomAgent(env.action_space())
+    # Our agent takes actions to defeat the enemy
+    agent = RandomAgent(env.action_space())
 
 
     while not done:
@@ -40,12 +39,10 @@ def main():
         # 5: Build scissors in reserves
         # 6: Build scissors in front
         # 7: Scout to reveal the enemy's army
-        import random
-        blue_action = random.choice([1, 4, 7])
-        red_action = random.choice([5, 6, 7])
+        action = agent.step(state)
 
         # Take an action and simulate the game for one time step (~10 seconds)
-        state, reward, done, info = env.step(blue_action, red_action)
+        state, reward, done, info = env.step(action)
 
         # The state is a tuple of:
         #   features_minimap: np array of features from the minimap view
@@ -56,11 +53,10 @@ def main():
 
         # Example code for visualizing the state
         filename = "output_frame_{}_{:05d}.jpg".format(unique_id, env.steps)
-        blue_caption = fog_of_war.action_to_name[blue_action]
-        red_caption = fog_of_war.action_to_name[red_action]
-        caption = 't={}  R={}  Left: {}  Right: {}'.format(env.steps, reward, blue_caption, red_caption)
-        top = imutil.show(rgb_minimap, resize_to=(800, 480), return_pixels=True, display=False)
-        bottom = imutil.show(rgb_screen, resize_to=(800, 480), return_pixels=True, display=False)
+        caption = fog_of_war.action_to_name[action]
+        caption = 't={}  R={}  Left: {}'.format(env.steps, reward, caption)
+        top = imutil.show(rgb_minimap, resize_to=(800, 480), return_pixels=True, display=False, save=False)
+        bottom = imutil.show(rgb_screen, resize_to=(800, 480), return_pixels=True, display=False, save=False)
         imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
     print('Finished game')
 

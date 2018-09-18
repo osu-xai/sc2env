@@ -8,21 +8,23 @@ from pysc2_util import register_map
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
+
+# These parameters are adjustable without changing the .SC2Map
 MAP_NAME = 'FogOfWar'
 MAP_SIZE = 64
 RGB_SCREEN_WIDTH = 400
 RGB_SCREEN_HEIGHT = 240
 
-# See the ResolveBattle trigger in the .SC2Map
-MAX_STEPS = 10
 
+# These parameters are based on the .SC2Map triggers
+# Open the map in the Galaxy editor for details
+MAX_STEPS = 10
 unit_id_to_name = {
     1922: "CustomUnitCommandCenter",
     1923: "CustomUnitPaper",
     1924: "CustomUnitRock",
     1925: "CustomUnitScissors",
 }
-
 action_to_ability_id = {
     1: 3771,
     2: 3773,
@@ -45,8 +47,15 @@ action_to_name = {
     8: "Counterintelligence",
 }
 
+
 class FogOfWarMultiplayerEnvironment():
+    """
+    This environment pits two agents against each other in a game of
+    incomplete information. Each agent trades off between building more
+    units, and gathering information about the enemy's units.
+    """
     def __init__(self, video_filename=None, verbose=False, num_players=2):
+        self.num_players = num_players
         self.sc2env = make_sc2env(num_players)
         self.video = None
         if video_filename:
@@ -82,7 +91,7 @@ class FogOfWarMultiplayerEnvironment():
             if action_player1 > 0:
                 player1_ability_id = action_to_ability_id[action_player1]
                 self.use_custom_ability(player1_ability_id, 1)
-            if action_player2 > 0:
+            if self.num_players > 1 and action_player2 > 0:
                 player2_ability_id = action_to_ability_id[action_player2]
                 self.use_custom_ability(player2_ability_id, 2)
             self.step_sc2env()
@@ -117,14 +126,14 @@ class FogOfWarMultiplayerEnvironment():
         print('step_sc2env() state={}'.format(self.sc2env._state))
         # Step forward to synchronize clients
         start_time = time.time()
-        self.sc2env._controllers[0].step(count=1)
-        self.sc2env._controllers[1].step(count=1)
-        self.sc2env._controllers[0].observe()
-        self.sc2env._controllers[1].observe()
+        for i in range(self.num_players):
+            self.sc2env._controllers[i].step(count=1)
+            self.sc2env._controllers[i].observe()
 
         noop = actions.FUNCTIONS.no_op()
-        action_list = [noop, noop]
-        self.last_timestep, enemy_timestep = self.sc2env.step(action_list)
+        action_list = [noop] * self.num_players
+        timesteps = self.sc2env.step(action_list)
+        self.last_timestep = timesteps[0]
         if self.verbose:
             print('SC2Env step took {:.02f} sec'.format(time.time() - start_time))
 
@@ -194,11 +203,14 @@ def make_sc2env(num_players):
         'players': players,
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
-    register_map(maps_dir, env_args['map_name'], players=2)
+    register_map(maps_dir, env_args['map_name'], players=num_players)
     return sc2_env.SC2Env(**env_args)
 
 
 class FogOfWarEnvironment(FogOfWarMultiplayerEnvironment):
+    """
+    The single-player version, against a scripted opponent
+    """
     def __init__(self, *args, **kwargs):
         kwargs['num_players'] = 1
         super().__init__(*args, **kwargs)
