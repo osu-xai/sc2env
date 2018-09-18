@@ -54,9 +54,12 @@ class FogOfWarMultiplayerEnvironment():
     incomplete information. Each agent trades off between building more
     units, and gathering information about the enemy's units.
     """
-    def __init__(self, video_filename=None, verbose=False, num_players=2):
+    def __init__(self, render=False, video_filename=None, verbose=False, num_players=2):
+        if video_filename:
+            render = True
+        self.render = render
         self.num_players = num_players
-        self.sc2env = make_sc2env(num_players)
+        self.sc2env = make_sc2env(num_players, render=render)
         self.video = None
         if video_filename:
             self.video = imutil.VideoMaker(filename=video_filename)
@@ -106,13 +109,17 @@ class FogOfWarMultiplayerEnvironment():
         obs = self.last_timestep.observation
         feature_map = np.array(obs.feature_minimap)
         feature_screen = np.array(obs.feature_screen)
-        rgb_map = np.array(obs.rgb_minimap)
-        rgb_screen = np.array(obs.rgb_screen)
+        rgb_map = None
+        rgb_screen = None
+        if self.render:
+            rgb_map = np.array(obs.rgb_minimap)
+            rgb_screen = np.array(obs.rgb_screen)
         state = (feature_map, feature_screen, rgb_map, rgb_screen)
 
         reward = 0
         done = self.game_over()
         if done:
+            reward = 1 if self.first_player_victory() else -1
             print('Finishing game at step {}'.format(self.steps))
         info = {}
         return state, reward, done, info
@@ -122,8 +129,12 @@ class FogOfWarMultiplayerEnvironment():
         # 0: first timestep, 1: other, 2: last timestep
         return self.sc2env._state == 2
 
+    def first_player_victory(self):
+        return self.sc2env._obs[0].player_result[0].result != 2
+
     def step_sc2env(self):
-        print('step_sc2env() state={}'.format(self.sc2env._state))
+        if self.verbose:
+            print('step_sc2env() state={}'.format(self.sc2env._state))
         # Step forward to synchronize clients
         start_time = time.time()
         for i in range(self.num_players):
@@ -140,7 +151,7 @@ class FogOfWarMultiplayerEnvironment():
     def step_until_endgame(self):
         if self.video:
             self.sc2env._step_mul = 3
-        while self.sc2env._state != 2:
+        while not self.game_over():
             self.step_sc2env()
             if self.video:
                 screenshot = self.unpack_state()[0][3]
@@ -181,13 +192,14 @@ class FogOfWarMultiplayerEnvironment():
 
 # Create the low-level SC2Env object, which we wrap with
 #  a high level Gym-style environment
-def make_sc2env(num_players):
+def make_sc2env(num_players, render=False):
     if num_players == 1:
         players = [sc2_env.Agent(sc2_env.Race.terran)]
     else:
         players = [sc2_env.Agent(sc2_env.Race.terran), sc2_env.Agent(sc2_env.Race.terran)]
-    env_args = {
-        'agent_interface_format': sc2_env.AgentInterfaceFormat(
+
+    if render:
+        interface = sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
                 screen=(MAP_SIZE, MAP_SIZE),
                 minimap=(MAP_SIZE, MAP_SIZE)
@@ -196,8 +208,16 @@ def make_sc2env(num_players):
                 screen=(RGB_SCREEN_WIDTH, RGB_SCREEN_HEIGHT),
                 minimap=(RGB_SCREEN_WIDTH, RGB_SCREEN_HEIGHT),
             ),
-            action_space=actions.ActionSpace.FEATURES,
-        ),
+            action_space=actions.ActionSpace.FEATURES)
+    else:
+        interface = sc2_env.AgentInterfaceFormat(
+            feature_dimensions=sc2_env.Dimensions(
+                screen=(MAP_SIZE, MAP_SIZE),
+                minimap=(MAP_SIZE, MAP_SIZE)
+            ), action_space=actions.ActionSpace.FEATURES)
+
+    env_args = {
+        'agent_interface_format': interface,
         'map_name': MAP_NAME,
         'step_mul': 85,  # 17 is ~1 action per second
         'players': players,

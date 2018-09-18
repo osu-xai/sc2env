@@ -1,3 +1,4 @@
+import sys
 import imutil
 import time
 import numpy as np
@@ -16,32 +17,24 @@ At each time step the agent may take one of the following actions:
     - Deploy a Scout to reveal the current composition of the enemy's army
 After 10 time steps, a game simulation rollout determines which army wins.
 """
-def main():
-    # Environment options:
-    #   rollout_video=True: Generate .mp4 video of the battle at the end
-    #   verbose=False: Print debug statements
+def main(render=False):
     unique_id = int(time.time())
-    video_filename = 'video_{}.mp4'.format(unique_id)
-    env = fog_of_war.FogOfWarEnvironment(video_filename=video_filename)
+    if render:
+        video_filename = 'video_{}.mp4'.format(unique_id)
+        env = fog_of_war.FogOfWarEnvironment(video_filename=video_filename, verbose=True)
+    else:
+        env = fog_of_war.FogOfWarEnvironment(render=False, verbose=True)
+
     state = env.reset()
     done = False
 
-    # Our agent takes actions to defeat the enemy
     agent = RandomAgent(env.action_space())
 
-
     while not done:
-        # The buildable units are named Rock, Paper, and Scissors
-        # 1: Build paper in reserves
-        # 2: Build paper in front
-        # 3: Build rock in reserves
-        # 4: Build rock in front
-        # 5: Build scissors in reserves
-        # 6: Build scissors in front
-        # 7: Scout to reveal the enemy's army
+        # Our agent takes the state as input and selects actions to maximize reward
         action = agent.step(state)
 
-        # Take an action and simulate the game for one time step (~10 seconds)
+        # Take an action and simulate the game for one time step (~5 seconds)
         state, reward, done, info = env.step(action)
 
         # The state is a tuple of:
@@ -54,12 +47,21 @@ def main():
         # Example code for visualizing the state
         filename = "output_frame_{}_{:05d}.jpg".format(unique_id, env.steps)
         caption = fog_of_war.action_to_name[action]
-        caption = 't={}  R={}  Left: {}'.format(env.steps, reward, caption)
-        top = imutil.show(rgb_minimap, resize_to=(800, 480), return_pixels=True, display=False, save=False)
-        bottom = imutil.show(rgb_screen, resize_to=(800, 480), return_pixels=True, display=False, save=False)
-        imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
-    print('Finished game')
+        caption = 't={}  Reward={}  Action: {}'.format(env.steps, reward, caption)
+        if render:
+            top = imutil.show(rgb_minimap, resize_to=(800, 480), return_pixels=True, display=False, save=False)
+            bottom = imutil.show(rgb_screen, resize_to=(800, 480), return_pixels=True, display=False, save=False)
+            imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
+        else:
+            # Display unit ids
+            top = imutil.show(features_minimap[5], resize_to=(512, 512), return_pixels=True, display=False, save=False)
+            bottom = imutil.show(features_screen[5], resize_to=(512, 512), return_pixels=True, display=False, save=False)
+            imutil.show(np.concatenate([top, bottom], axis=0), filename=filename, caption=caption)
+
+
+    print('Finished game with cumulative reward {}'.format(reward))
 
 
 if __name__ == '__main__':
-    main()
+    render = '--render' in sys.argv
+    main(render=render)
