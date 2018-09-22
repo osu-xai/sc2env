@@ -23,3 +23,26 @@ Ensure StarCraftII is installed at `~/StarCraftII`. Then run:
 ````
 
 Rendered game screenshots and feature maps should be generated as a set of .jpg files in the current directory.
+
+## Environments
+
+### Tactical Decision Making
+
+Action Space: Discrete(4). Attack one of four quadrants, each containing a group of enemy units.
+Observation Space: Features, pixels, or structured unit list.
+Reward: Multiple-reward signal representing damage dealt to enemy unit types, one value per enemy unit type.
+
+### Macro Strategy Task
+
+Action Space: Discrete(6). Build a few units immediately or build more units over time. Two unit types are available (offensive and defensive).
+Alternatively, invest in your economy (build SCV) or take a desparate defensive action (launch nuke).
+Observation Space: Features and pixels.
+Reward: Binary win/loss
+
+
+### Fog of War Task
+
+Action Space: Discrete(8). Build two groups each consisting of one unit type: Rock, Paper, or Scissors.
+Alternatively take a Scout action to reveal the composition of the opponent's army, or a Counterintelligence action to nullify an opponent's Scout.
+Observation Space: Features and pixels.
+Reward: Binary win/loss
