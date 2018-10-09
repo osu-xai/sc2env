@@ -1,5 +1,6 @@
 numpy
 torch
 tqdm
+gym
 git+https://github.com/lwneal/imutil
 git+https://github.com/lwneal/logutil
