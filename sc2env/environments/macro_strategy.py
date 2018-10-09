@@ -18,7 +18,6 @@ RGB_SCREEN_HEIGHT = 240
 
 # These parameters are based on the .SC2Map triggers
 # Open the map in the Galaxy editor for details
-MAX_STEPS = 10
 unit_id_to_name = {
     1922: "CustomUnitCommandCenter",
     1923: "CustomUnitPaper",
@@ -87,18 +86,13 @@ class MacroStrategyMultiplayerEnvironment():
                 action_player1, action_player2, self.steps))
         self.steps += 1
 
-        if self.steps >= MAX_STEPS:
-            if self.verbose:
-                print('Game has reached limit of {} actions: simulating endgame'.format(MAX_STEPS))
-            self.step_until_endgame()
-        else:
-            if action_player1 > 0:
-                player1_ability_id = action_to_ability_id[action_player1]
-                self.use_custom_ability(player1_ability_id, 1)
-            if self.num_players > 1 and action_player2 > 0:
-                player2_ability_id = action_to_ability_id[action_player2]
-                self.use_custom_ability(player2_ability_id, 2)
-            self.step_sc2env()
+        if action_player1 > 0:
+            player1_ability_id = action_to_ability_id[action_player1]
+            self.use_custom_ability(player1_ability_id, 1)
+        if self.num_players > 1 and action_player2 > 0:
+            player2_ability_id = action_to_ability_id[action_player2]
+            self.use_custom_ability(player2_ability_id, 2)
+        self.step_sc2env()
         if self.video:
             screenshot = self.unpack_state()[0][3]
             for _ in range(10):
