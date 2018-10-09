@@ -6,6 +6,7 @@ import numpy as np
 from random_agent import RandomAgent
 from environments import fog_of_war
 
+EPISODES = 10
 
 """
 Fog of War environment
@@ -26,12 +27,17 @@ def main(render=False):
     else:
         env = fog_of_war.FogOfWarEnvironment(render=False, verbose=True)
 
-    state = env.reset()
-    done = False
 
     agent = RandomAgent(env.action_space())
 
-    while not done:
+    play_episode(agent, env)
+
+
+def play_episode(agent, env):
+    unique_id = int(time.time())
+    state = env.reset()
+    done = False
+    for i in range(EPISODES):
         # Our agent takes the state as input and selects actions to maximize reward
         action = agent.step(state)
 
@@ -57,8 +63,8 @@ def main(render=False):
             screenshot = imutil.show(rgb_screen, resize_to=(512, 288), return_pixels=True, display=False, save=False)
             pixels = np.concatenate([pixels, screenshot], axis=0)
         imutil.show(pixels, filename=filename, caption=caption)
-
     print('Finished game with final reward {}'.format(reward))
+    return reward
 
 
 def colorize(pixels, mode='gnuplot'):

@@ -66,6 +66,7 @@ class MacroStrategyMultiplayerEnvironment():
         self.verbose = verbose
 
     def reset(self):
+        self.sc2env.reset()
         self.step_sc2env()
         self.steps = 0
         state, reward, done, info = self.unpack_state()
