@@ -26,6 +26,8 @@ if [ -f ~/StarCraftII ]; then
     echo "StarCraftII is already installed in ~/StarCraftII"
     echo "Do you wish to re-install StarCraftII?"
     confirm || exit
+    echo "Moving ~/StarCraftII to ~/StarCraftII.bak"
+    mv $HOME/StarCraftII $HOME/StarCraftII.bak
 else
     echo "StarCraftII is not installed"
     echo "Installer will download StarCraftII to `pwd`/StarCraftII"
@@ -35,7 +37,7 @@ fi
 
 if [ ! -z "$SC2_CACHE" ]; then
     echo "Copying pre-downloaded StarCraft files from  $SC2_CACHE ..."
-    cp -v $SC2_CACHE/*.zip .
+    rsync -v $SC2_CACHE/*.zip .
 fi
 
 yellow "Performing StarCraftII installation..."
