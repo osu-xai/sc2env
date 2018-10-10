@@ -14,8 +14,8 @@ import imutil
 def unpack_timestep(timestep):
     feature_map = np.array(timestep.observation.feature_minimap)
     feature_screen = np.array(timestep.observation.feature_screen)
-    rgb_map = np.array(timestep.observation.rgb_minimap)
-    rgb_screen = np.array(timestep.observation.rgb_screen)
+    rgb_map = np.array(timestep.observation.get('rgb_minimap'))
+    rgb_screen = np.array(timestep.observation.get('rgb_screen'))
     state = (feature_map, feature_screen, rgb_map, rgb_screen)
 
     # TODO: Figure out how to use a custom specified reward
