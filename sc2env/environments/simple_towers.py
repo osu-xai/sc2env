@@ -1,17 +1,17 @@
 import os
 import random
 import numpy as np
-from pysc2_util import register_map, unpack_timestep
+from pysc2_util import register_map
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
-MAP_NAME = 'FourChoices'
+MAP_NAME = 'SimpleTowers'
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
-class FourChoicesEnvironment():
+class SimpleTowersEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
 
@@ -90,3 +90,20 @@ def make_sc2env():
     register_map(maps_dir, env_args['map_name'])
     return sc2_env.SC2Env(**env_args)
 
+
+# Convert the SC2Env timestep into a Gym-style tuple
+def unpack_timestep(timestep):
+    feature_map = np.array(timestep.observation.feature_minimap)
+    feature_screen = np.array(timestep.observation.feature_screen)
+    rgb_map = np.array(timestep.observation.get('rgb_minimap'))
+    rgb_screen = np.array(timestep.observation.get('rgb_screen'))
+    state = (feature_map, feature_screen, rgb_map, rgb_screen)
+
+    # See other maps to learn about custom specified rewards
+    reward = int(timestep.observation.player['army_count'])
+
+    done = timestep.last()
+
+    # The info dict can include reward decompositions when available
+    info = {}
+    return state, reward, done, info
