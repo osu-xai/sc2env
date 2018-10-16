@@ -12,12 +12,10 @@ Game screenshots require `libOSMesa` or a graphical version of StarCraft II (Win
 
 ## Installation
 
-Follow the [Blizzard documentation](https://github.com/Blizzard/s2client-proto#downloads)
-to download and install the Linux version of StarCraft II
-
-Ensure StarCraftII is installed at `~/StarCraftII`. Then run:
+Just run:
 
 ````
+    ./install_starcraft2.sh
     pip install -r requirements.txt
     python sc2env/play_fog_of_war.py
 ````
