@@ -15,11 +15,17 @@ class ConvNetQLearningAgent():
     def step(self, obs):
         self.model.eval()
         self.prev_obs = obs
-        feature_map = obs[1]
-        x = torch.Tensor(expand_pysc2_to_neural_input(feature_map))
-        self.estimated_reward = self.model(x.unsqueeze(0))
+        features_minimap, features_screen, rgb_minimap, rgb_screen = obs
+        x = self.to_tensor(features_screen)
+        self.estimated_reward = self.model(x)
         self.action_choice = self.action_space.sample()
         return self.action_choice
+
+    def to_tensor(self, features_screen):
+        x = expand_pysc2_to_neural_input(features_screen)
+        x = torch.Tensor(x)
+        x = x.unsqueeze(0)
+        return x
 
     def update(self, reward):
         self.model.train()
