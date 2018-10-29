@@ -2,7 +2,7 @@ import numpy as np
 
 
 # These 12 units should be enough to build some cool maps
-SC2_UNIT_IDS = [
+SIMPLE_SC2_UNITS = [
     48,  # marine
     53,  # hellion
     55,  # banshee
@@ -35,8 +35,8 @@ def expand_pysc2_to_neural_input(feature_map, resize_to=None):
     enemy_units = (feature_map[5] == 4).astype(float)
     neural_layers.append(enemy_units)
 
-    # Categorical map of unit types (see SC2_UNIT_IDS)
-    unit_layers = int_map_to_onehot(feature_map[6], SC2_UNIT_IDS)
+    # Categorical map of unit types (see SIMPLE_SC2_UNITS)
+    unit_layers = int_map_to_onehot(feature_map[6], SIMPLE_SC2_UNITS)
     neural_layers.extend(unit_layers)
 
     # Unit Health Points (scaled 0 to 1)
@@ -85,5 +85,5 @@ x[1,2] = 49
 x[3,10] = 107
 x[40:50, 60:70] = 105
 assert int_map_to_onehot(x).shape == (4, 84, 84)
-assert int_map_to_onehot(x, SC2_UNIT_IDS).shape == (len(SC2_UNIT_IDS), 84, 84)
+assert int_map_to_onehot(x, SIMPLE_SC2_UNITS).shape == (len(SIMPLE_SC2_UNITS), 84, 84)
 """

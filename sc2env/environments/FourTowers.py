@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd 
 import csv
 import json
+import visdom
 import imutil
 
 import numpy as np
@@ -22,40 +23,30 @@ from pysc2.lib import actions, features, units
 from pysc2 import maps
 import sys
 
-# Hack for DuplicateMapError
-registered = False
-
-class FourTowerSequentialMultiUnit():
+class FourTowerSequential():
     """
     This environement can be used to teach an agent to learn how to choose to fight zerglings over banelings.
     The agent has two actions that it can take in the environment and the enviornment's state is a feature
     map of the different agent IDs which have been scaled from 0-1 to act as input to a convolutional neural
     network.
     """
-    def __init__(self, render=False):
-        global registered
-        if not registered:
-            self.register_map('/maps/','FourTowerSequentialDecomposedFourUnitsRandomComp')
-            registered = True
-        if render:
-          agent_interface_format=features.AgentInterfaceFormat(
-              feature_dimensions=features.Dimensions(screen=84, minimap=64),
-              rgb_dimensions=features.Dimensions(screen=(512,512), minimap=128),
-              action_space=actions.ActionSpace.FEATURES)
-        else:
-          agent_interface_format=features.AgentInterfaceFormat(
-              feature_dimensions=features.Dimensions(screen=84, minimap=64),
-              action_space=actions.ActionSpace.FEATURES)
+    def __init__(self):
+        self.register_map('/maps/','FourTowerSequentialDecomposed')
         self.sc2_env = sc2_env.SC2Env(
-          map_name="FourTowerSequentialDecomposedFourUnitsRandomComp",
+          map_name="FourTowerSequentialDecomposed",
           players=[sc2_env.Agent(sc2_env.Race.terran)],
-          agent_interface_format=agent_interface_format,
+          agent_interface_format=features.AgentInterfaceFormat(
+              feature_dimensions=features.Dimensions(screen=84, minimap=64),
+              # rgb_dimensions=features.Dimensions(screen=84, minimap=64),
+              # action_space=actions.ActionSpace.FEATURES,
+              use_feature_units=True),
           step_mul=16,
           game_steps_per_episode=0,
           score_index=0,
-          visualize=True)
+          visualize=False)
         self.current_obs = None
         self.actions_taken = 0
+        self.vis = visdom.Visdom()
         self.last_mineral_count = 0
         self.reward = 0
         self.zergling_count = 0
@@ -64,7 +55,7 @@ class FourTowerSequentialMultiUnit():
         self.last2_reward = 0
         self.rewards = []
         self.decomposed_rewards = [0,0]
-        self.last_losses = 0
+        self.last_timestep = None
 
     def action_space():
         return Discrete(2)
@@ -91,101 +82,6 @@ class FourTowerSequentialMultiUnit():
         state = self.int_map_to_onehot(state)
         state = np.array(state)
         self.actions_taken = 0 
-        from s2clientprotocol import sc2api_pb2 as sc_pb
-
-
-
-        data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
-        self.sc2_env._controllers[0]._client.send(action=sc_pb.RequestAction())
-
-
-        data = data.observation.raw_data.units
-
-
-
-        damageByZealot = 0
-        damageToZealot = 0
-        damageByZergling = 0
-        damageToZergling = 0
-        damageByRoach = 0
-        damageToRoach = 0
-        damageByStalker = 0
-        damageToStalker = 0
-        damageByMarine = 0
-        damageToMarine = 0
-        damageByHydralisk = 0
-        damageToHydralisk = 0
-        wins = 0
-        losses = 0
-        rewards = []
-        unit_types = []
-
-        state = []
-
-        # print("#################")
-        for x in data:
-            # print(x.unit_type)
-            if x.unit_type < 1922 and x.unit_type != 51:
-                state.append(x.unit_type)
-                state.append(x.pos.x)
-                state.append(x.pos.y)
-            if x.unit_type == 1922:
-                damageByZealot = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1923:
-                damageToZealot = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1924:
-                damageByZergling = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1925:
-                damageToZergling = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1926:
-                damageByRoach = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1927:
-                damageToRoach = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1928:
-                damageByStalker = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1929:
-                damageToStalker = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1930:
-                damageByMarine = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1931:
-                damageToMarine = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1932:
-                damageByHydralisk = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1933:
-                damageToHydralisk = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1934:
-                wins = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1935:
-                # print("LOSSSSSSSESSSSSSSS")
-                losses = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
         return state
 
     def noop(self):
@@ -234,141 +130,61 @@ class FourTowerSequentialMultiUnit():
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
 
-        damageByZealot = 0
-        damageToZealot = 0
-        damageByZergling = 0
-        damageToZergling = 0
         damageByRoach = 0
+        damageByZergling = 0
         damageToRoach = 0
-        damageByStalker = 0
-        damageToStalker = 0
-        damageByMarine = 0
-        damageToMarine = 0
-        damageByHydralisk = 0
-        damageToHydralisk = 0
-        wins = 0
-        losses = 0
-        rewards = []
-        unit_types = []
+        damageToZergling = 0
 
-        state = []
-
-        # print("#################")
         for x in data:
-            # print(x.unit_type)
-            if x.unit_type < 1922 and x.unit_type != 51:
-                state.append(x.unit_type)
-                state.append(x.pos.x)
-                state.append(x.pos.y)
             if x.unit_type == 1922:
-                damageByZealot = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
+                roach_reward = x.health
             if x.unit_type == 1923:
-                damageToZealot = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
+                zergling_reward = x.health 
             if x.unit_type == 1924:
-                damageByZergling = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1925:
-                damageToZergling = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1926:
                 damageByRoach = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1927:
+            if x.unit_type == 1925:
+                damageByZergling = x.health
+            if x.unit_type == 1926:
                 damageToRoach = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1928:
-                damageByStalker = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1929:
-                damageToStalker = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1930:
-                damageByMarine = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1931:
-                damageToMarine = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1932:
-                damageByHydralisk = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1933:
-                damageToHydralisk = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1934:
-                wins = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-            if x.unit_type == 1935:
-                # print("LOSSSSSSSESSSSSSSS")
-                losses = x.health
-                rewards.append(x.health)
-                unit_types.append(x.unit_type)
-        # print("#################")
-        # print(rewards)
-        # unit_types.sort()
-        # print(wins)
-        # print(losses)
-        # print(damageToHydralisk)
-        # print(unit_types)
-        # print(len(unit_types))
-        # print("#################")
-
-        # THIS PRINTS OUT A RENDERED IMAGE
-        # imutil.show(self.last_timestep.observation['rgb_screen'], filename="test.jpg")
+            if x.unit_type == 1927:
+                damageToZergling = x.health
 
         # print("Damage by roach: {}".format(damageByRoach))
         # print("Damage by zergling: {}".format(damageByZergling))
         # print("Damage to roach: {}".format(damageToRoach))
         # print("Damage to zergling: {}".format(damageToZergling))
 
-        # total_reward = roach_reward + zergling_reward - 4
-        # reward = total_reward
-        # self.reward = total_reward
-        self.reward = wins + losses
-        self.losses = losses
-        # self.rewards.append(reward)
+        total_reward = roach_reward + zergling_reward - 4
+        reward = total_reward
+        self.reward = total_reward
+        self.rewards.append(reward)
 
         if self.last_reward != self.reward:
             done = True
-            if self.last_losses < self.losses:
+            if self.last_reward > self.reward:
                 dead = True
             else:
                 dead = False
 
         self.last_reward = self.reward
-        self.last_losses = self.losses
 
-        self.decomposed_rewards.append([damageToZealot - 2, damageToZergling - 2, damageToRoach - 2, damageToStalker - 2, damageToMarine - 2, damageToHydralisk - 2])
-
-        # damageToZealot
-        # damageToZergling
-        # damageToRoach
-        # damageToStalker
-        # damageToMarine
-        # damageToHydralisk
+        self.decomposed_rewards.append([roach_reward - 2, zergling_reward - 2, damageByRoach - 2, damageByZergling - 2, damageToRoach - 2, damageToZergling - 2])
 
         ###########################################
-        # print(len(state))
-        if len(state) < 36:
-            current_len_state = len(state)
-            for x in range(current_len_state, 36):
-                state.append(0.0)
-        # print(len(state))
+
         return state, reward, done, dead, info
+
+    def render(self):
+        if self.vis is None:
+            return
+
+        obs_image = imutil.show(self.last_timestep.observation['rgb_screen'], filename="test.jpg")
+        opts = dict(title = "state", width = 360, height = 350)
+        
+        if self.image_window is None:
+            self.image_window = self.vis.image(obs_image, opts = opts)
+        else:
+            self.vis.image(obs_image, opts = opts, win = self.image_window)
 
     def register_map(self, map_dir, map_name):
         from pysc2.maps import lib
@@ -423,6 +239,4 @@ class FourTowerSequentialMultiUnit():
             onehot = [location_zergling[0][0], location_zergling[0][1], location_roach[0][0], location_roach[0][1], location_roach[1][0], location_roach[1][1], location_roach[2][0], location_roach[2][1]]
 
         onehot = np.reshape(onehot, [1, 8])
-        # print(len(x.ravel()))
-        # sys.exit()
-        return x.ravel()
+        return onehot

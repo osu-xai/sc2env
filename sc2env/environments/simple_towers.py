@@ -103,7 +103,6 @@ def unpack_timestep(timestep):
     reward = int(timestep.observation.player['army_count'])
 
     done = timestep.last()
-    import pdb; pdb.set_trace()
 
     # The info dict can include reward decompositions when available
     info = {}
