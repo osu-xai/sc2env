@@ -5,7 +5,7 @@ from pysc2_util import register_map
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
-MAP_NAME = 'SimpleTowers'
+MAP_NAME = 'SimpleTacticalEnvironment'
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
 
