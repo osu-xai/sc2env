@@ -20,7 +20,7 @@ SIMPLE_SC2_UNITS = [
 
 # Input: A 17-dimensional integer pysc2 feature map
 # Output: A 18-dimensional float convolutional input map
-def expand_pysc2_to_neural_input(feature_map, resize_to=None):
+def expand_pysc2_to_neural_input(feature_map, unit_map=SIMPLE_SC2_UNITS, resize_to=None):
     neural_layers = []
 
     # Terrain height map, scaled 0 to 1
@@ -36,7 +36,7 @@ def expand_pysc2_to_neural_input(feature_map, resize_to=None):
     neural_layers.append(enemy_units)
 
     # Categorical map of unit types (see SIMPLE_SC2_UNITS)
-    unit_layers = int_map_to_onehot(feature_map[6], SIMPLE_SC2_UNITS)
+    unit_layers = int_map_to_onehot(feature_map[6], unit_map)
     neural_layers.extend(unit_layers)
 
     # Unit Health Points (scaled 0 to 1)
