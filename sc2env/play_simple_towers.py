@@ -4,13 +4,11 @@ import os
 from tqdm import tqdm
 from logutil import TimeSeries
 
-print('importing agents...')
 from q_learning_agent import ConvNetQLearningAgent
-print('importing environments...')
 from environments.simple_towers import SimpleTowersEnvironment
 
 
-def train_agent(episodes=1000):
+def train_agent(episodes=10000):
     # This environment teaches win/loss outcomes vs different enemies
     print('Initializing environment...')
     env = SimpleTowersEnvironment()
