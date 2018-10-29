@@ -13,6 +13,7 @@ class ConvNetQLearningAgent():
 
     # obs: the state format returned from a SimpleTowersEnvironment
     def step(self, obs):
+        self.model.eval()
         self.prev_obs = obs
         feature_map = obs[1]
         x = torch.Tensor(expand_pysc2_to_neural_input(feature_map))
@@ -21,6 +22,7 @@ class ConvNetQLearningAgent():
         return self.action_choice
 
     def update(self, reward):
+        self.model.train()
         est_reward = self.estimated_reward[:, self.action_choice]
         error = torch.mean((est_reward - reward) ** 2)
         error.backward()
@@ -42,9 +44,9 @@ class SimplePolicyNetwork(nn.Module):
 
     def forward(self, x):
         # Input shape: (batch, INPUT_LAYERS, 64, 64)
-        x = F.relu(self.bn1(self.conv1(x)))
-        x = F.relu(self.bn2(self.conv2(x)))
-        x = F.relu(self.bn3(self.conv3(x)))
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
         x = F.relu(self.conv4(x))
         # Output shape: (batch, num_outputs)
         return self.fc1(x.view(x.size(0), -1))
