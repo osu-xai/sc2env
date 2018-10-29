@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 from torch import nn
 from torch.optim import Adam
@@ -6,9 +7,10 @@ from representation import expand_pysc2_to_neural_input
 
 
 class ConvNetQLearningAgent():
-    def __init__(self, num_input_layers, action_space):
-        self.action_space = action_space
-        self.model = SimplePolicyNetwork(num_input_layers, action_space.n)
+    def __init__(self, num_input_layers, num_actions, epsilon=0.2):
+        self.epsilon = epsilon
+        self.num_actions = num_actions
+        self.model = SimplePolicyNetwork(num_input_layers, num_actions)
         self.optimizer = Adam(self.model.parameters())
 
     # obs: the state format returned from a SimpleTowersEnvironment
@@ -18,7 +20,10 @@ class ConvNetQLearningAgent():
         features_minimap, features_screen, rgb_minimap, rgb_screen = obs
         x = self.to_tensor(features_screen)
         self.estimated_reward = self.model(x)
-        self.action_choice = self.action_space.sample()
+        if np.random.random() > self.epsilon:
+            self.action_choice = self.estimated_reward.max(dim=1)[1].item()
+        else:
+            self.action_choice = np.random.randint(self.num_actions)
         return self.action_choice
 
     def to_tensor(self, features_screen):
