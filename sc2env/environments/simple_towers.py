@@ -4,6 +4,7 @@ import numpy as np
 from pysc2_util import register_map
 from pysc2.env import sc2_env
 from pysc2.lib import actions
+from gym.spaces.discrete import Discrete
 
 MAP_NAME = 'SimpleTacticalEnvironment'
 MAP_SIZE = 64
@@ -14,20 +15,15 @@ RGB_SCREEN_SIZE = 256
 class SimpleTowersEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
+        self.action_space = Discrete(4)
 
     def reset(self):
         # Move the camera in any direction
         # This runs the ResetEpisode trigger built into the map
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.last_timestep = self.sc2env.step([action])[0]
-
         state, reward, done, info = unpack_timestep(self.last_timestep)
         return state
-
-    # Action space: Choose which of four enemies to attack
-    def action_space(self):
-        from gym.spaces.discrete import Discrete
-        return Discrete(4)
 
     # Step: Choose which enemy to attack
     def step(self, action):
@@ -50,6 +46,13 @@ class SimpleTowersEnvironment():
     def can_attack(self):
         available_actions = self.last_timestep.observation.available_actions
         return actions.FUNCTIONS.Attack_minimap.id in available_actions
+
+    def render(self):
+        import imutil
+        state, reward, done, info = unpack_timestep(self.last_timestep)
+        feature_map, feature_screen, rgb_map, rgb_screen = state
+        visual = np.concatenate([rgb_map, rgb_screen], axis=1)
+        imutil.show(visual, save=False)
 
 
 # The four actions tell the army to move to
