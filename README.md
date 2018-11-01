@@ -15,9 +15,9 @@ Game screenshots require `libOSMesa` or a graphical version of StarCraft II (Win
 Just run:
 
 ````
-    ./install_starcraft2.sh
-    pip install -r requirements.txt
-    python sc2env/play_fog_of_war.py
+    pip install sc2env
+    install_starcraft2
+    python -m sc2env.play_fog_of_war
 ````
 
 Rendered game screenshots and feature maps should be generated as a set of .jpg files in the current directory.
