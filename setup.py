@@ -13,4 +13,7 @@ setup(name='sc2env',
     package_data={
         'sc2env': ['maps/*.SC2Map'],
     },
+    scripts=[
+        'scripts/install_starcraft2',
+    ],
 )

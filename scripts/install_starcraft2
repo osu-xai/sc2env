@@ -42,14 +42,14 @@ fi
 
 yellow "Performing StarCraftII installation..."
 
-wget -nc http://blzdistsc2-a.akamaihd.net/Linux/SC2.4.0.2.zip
-unzip -P iagreetotheeula SC2.4.0.2.zip
+wget -nc https://blzdistsc2-a.akamaihd.net/Linux/SC2.4.1.2.60604_2018_05_16.zip
+unzip -P iagreetotheeula SC2.4.1.2.60604_2018_05_16.zip
 ln -s $(pwd)/StarCraftII $HOME/StarCraftII
 
-unzip mini_games.zip -d StarCraftII/Maps/
+wget -nc https://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip
 unzip -P iagreetotheeula Melee.zip -d StarCraftII/Maps/
-unzip -P iagreetotheeula Ladder2017Season3.zip -d StarCraftII/Maps/
-unzip -P iagreetotheeula Ladder2017Season2.zip -d StarCraftII/Maps/
-unzip -P iagreetotheeula Ladder2017Season1.zip -d StarCraftII/Maps/
+
+wget -nc https://github.com/deepmind/pysc2/releases/download/v1.2/mini_games.zip
+unzip mini_games.zip -d StarCraftII/Maps/
 
 yellow "StarCraftII is installed to `pwd`/StarCraftII"
