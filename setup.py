@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='sc2env',
-    version='0.1.3',
+    version='0.1.4',
     description='Simple StarCraftII AI environments',
     author='Larry Neal',
     author_email='nealla@lwneal.com',
