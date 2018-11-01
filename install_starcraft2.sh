@@ -5,7 +5,7 @@ confirm() {
     echo
     read -r -p "${1:-Do you wish to continue? [y/N]} " response
     case "$response" in
-        [yY][eE][sS]|[yY]) 
+        [yY][eE][sS]|[yY])
             true
             ;;
         *)
@@ -22,7 +22,7 @@ yellow() {
 echo
 echo
 yellow "StarCraftII Installer"
-if [ -f ~/StarCraftII ]; then
+if [ -e $HOME/StarCraftII ]; then
     echo "StarCraftII is already installed in ~/StarCraftII"
     echo "Do you wish to re-install StarCraftII?"
     confirm || exit
