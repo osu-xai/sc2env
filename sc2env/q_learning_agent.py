@@ -3,7 +3,8 @@ import torch
 from torch import nn
 from torch.optim import Adam
 import torch.nn.functional as F
-from representation import expand_pysc2_to_neural_input
+
+from sc2env.representation import expand_pysc2_to_neural_input
 
 
 class ConvNetQLearningAgent():

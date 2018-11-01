@@ -1,10 +1,11 @@
 import os
 import random
 import numpy as np
-from pysc2_util import register_map
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 from gym.spaces.discrete import Discrete
+
+from sc2env.pysc2_util import register_map
 
 MAP_NAME = 'SimpleTacticalEnvironment'
 MAP_SIZE = 64

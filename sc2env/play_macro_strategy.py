@@ -3,8 +3,8 @@ import imutil
 import time
 import numpy as np
 
-from random_agent import RandomAgent
-from environments import macro_strategy
+from sc2env.random_agent import RandomAgent
+from sc2env.environments import macro_strategy
 
 
 """

@@ -6,9 +6,9 @@ from tqdm import tqdm
 import imutil
 from logutil import TimeSeries
 
-from profiling import Timer
-from q_learning_agent import ConvNetQLearningAgent
-from environments.simple_towers import SimpleTowersEnvironment
+from sc2env.profiling import Timer
+from sc2env.q_learning_agent import ConvNetQLearningAgent
+from sc2env.environments.simple_towers import SimpleTowersEnvironment
 
 
 def train_agent(train_episodes=1000, epochs=10):

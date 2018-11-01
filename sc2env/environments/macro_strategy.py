@@ -2,12 +2,12 @@ import time
 import os
 import random
 import numpy as np
-
 import imutil
-from pysc2_util import register_map
+
 from pysc2.env import sc2_env
 from pysc2.lib import actions
 
+from sc2env.pysc2_util import register_map
 
 # These parameters are adjustable without changing the .SC2Map
 MAP_NAME = 'MacroStrategy'
