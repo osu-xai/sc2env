@@ -1,4 +1,4 @@
-from collections import namedtuple
+import os
 import time
 import sys
 import numpy as np
@@ -11,18 +11,23 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps
 
+from sc2env.pysc2_util import register_map
+
+
+MAP_NAME = 'FourTowerSequentialDecomposedFourUnitsRandomComp'
+
 
 class FourTowersSequentialMultiUnitEnvironment():
     def __init__(self):
-        self.register_map('/maps/','FourTowerSequentialDecomposedFourUnitsRandomComp')
+        maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
+        register_map(maps_dir, MAP_NAME)
         self.sc2_env = sc2_env.SC2Env(
-          map_name="FourTowerSequentialDecomposedFourUnitsRandomComp",
+          map_name=MAP_NAME,
           players=[sc2_env.Agent(sc2_env.Race.terran)],
           agent_interface_format=features.AgentInterfaceFormat(
               feature_dimensions=features.Dimensions(screen=84, minimap=64),
-              # rgb_dimensions=features.Dimensions(screen=640, minimap=640),
               action_space=actions.ActionSpace.FEATURES,
-              ),
+          ),
           step_mul=16,
           game_steps_per_episode=0,
           score_index=0,
@@ -63,9 +68,8 @@ class FourTowersSequentialMultiUnitEnvironment():
         self.current_obs = observation
         state = self.int_map_to_onehot(state)
         state = np.array(state)
-        self.actions_taken = 0 
+        self.actions_taken = 0
         from s2clientprotocol import sc2api_pb2 as sc_pb
-
 
 
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
@@ -354,8 +358,8 @@ class FourTowersSequentialMultiUnitEnvironment():
     def get_vespene_gas_count(self, obs):
         return 0
 
-    def unpack_timestep(self, timestep):  
-        observation = timestep 
+    def unpack_timestep(self, timestep):
+        observation = timestep
         state = timestep.observation.feature_screen[6]
         reward = timestep.observation.score_cumulative[0]
         done = timestep.last()

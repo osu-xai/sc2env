@@ -1,11 +1,12 @@
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='sc2env',
-    version='0.1.0',
+    version='0.1.1',
     description='Simple StarCraftII AI environments',
     author='Larry Neal',
     author_email='nealla@lwneal.com',
-    include_package_data=True,
-    packages=find_packages(),
+    packages=['sc2env'],
+    package_data={
+        'sc2env': ['maps/*.SC2Map'],
+    },
 )
