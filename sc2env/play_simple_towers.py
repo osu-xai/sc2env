@@ -5,18 +5,18 @@ from tqdm import tqdm
 
 import imutil
 
-from sc2env.profiling import Timer
 from sc2env.q_learning_agent import ConvNetQLearningAgent
 from sc2env.environments.simple_towers import SimpleTowersEnvironment
 
 
-def train_agent(train_episodes=1000, epochs=10):
+def train_agent(train_episodes=100, epochs=10):
     # This environment teaches win/loss outcomes vs different enemies
     agent = ConvNetQLearningAgent(num_input_layers=18, num_actions=4)
 
     # Train and evaluate
     for epoch in range(epochs):
         env = SimpleTowersEnvironment()
+        cumulative_reward = 0
         for i in range(train_episodes):
             # Each episode consists of a "before", a single action, and an "after"
             # The state is a tuple of:
@@ -33,7 +33,9 @@ def train_agent(train_episodes=1000, epochs=10):
             state, reward, done, info = env.step(selected_action)
 
             agent.update(reward)
-            print('Took action {} received reward {}'.format(selected_action, reward))
+            cumulative_reward += reward
+            avg_reward = cumulative_reward / (i+1)
+            print('Step {}/{} average reward {}'.format(i, train_episodes, avg_reward))
 
         print('Evaluating:')
         state = env.reset()
