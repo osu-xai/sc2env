@@ -13,6 +13,8 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps
 
+from sc2env.pysc2_util import register_map
+
 
 MAP_NAME = 'FourTowerSequentialDecomposed'
 
