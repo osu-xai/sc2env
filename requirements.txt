@@ -4,4 +4,3 @@ tqdm
 gym
 pysc2
 imutil
-git+https://github.com/lwneal/logutil

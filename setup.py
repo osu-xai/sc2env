@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='sc2env',
-    version='0.1.7',
+    version='0.1.8',
     description='Simple StarCraftII environments for reinforcement learning',
     long_description='A curriculum of custom-made StarCraftII environments for reinforcement learning.',
     author='Larry Neal',
@@ -16,5 +16,13 @@ setup(name='sc2env',
     },
     scripts=[
         'scripts/install_starcraft2',
+    ],
+    install_requires=[
+        'numpy',
+        'torch',
+        'tqdm',
+        'gym',
+        'pysc2',
+        'imutil',
     ],
 )

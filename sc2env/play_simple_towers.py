@@ -4,7 +4,6 @@ import os
 from tqdm import tqdm
 
 import imutil
-from logutil import TimeSeries
 
 from sc2env.profiling import Timer
 from sc2env.q_learning_agent import ConvNetQLearningAgent
@@ -14,9 +13,6 @@ from sc2env.environments.simple_towers import SimpleTowersEnvironment
 def train_agent(train_episodes=1000, epochs=10):
     # This environment teaches win/loss outcomes vs different enemies
     agent = ConvNetQLearningAgent(num_input_layers=18, num_actions=4)
-
-    # Logs time-series data to Tensorflow, prints formatted output
-    ts = TimeSeries('Training', train_episodes*epochs)
 
     # Train and evaluate
     for epoch in range(epochs):
@@ -37,9 +33,7 @@ def train_agent(train_episodes=1000, epochs=10):
             state, reward, done, info = env.step(selected_action)
 
             agent.update(reward)
-            ts.collect('Reward', reward)
-            ts.print_every(2)
-        print(ts)
+            print('Took action {} received reward {}'.format(selected_action, reward))
 
         print('Evaluating:')
         state = env.reset()
