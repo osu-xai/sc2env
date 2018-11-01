@@ -345,13 +345,6 @@ class FourTowersSequentialMultiUnitEnvironment():
         # print(len(state))
         return state, reward, done, dead, info
 
-    def register_map(self, map_dir, map_name):
-        from pysc2.maps import lib
-        map_filename = map_name + '.SC2Map'
-        class_definition = dict(prefix=map_dir, filename=map_filename, players=1)
-        constructed_class = type(map_name, (lib.Map,), class_definition)
-        globals()[map_name] = constructed_class
-
     def get_mineral_count(self, obs):
         return 0
 

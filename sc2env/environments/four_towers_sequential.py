@@ -13,11 +13,15 @@ from pysc2.lib import actions, features, units
 from pysc2 import maps
 
 
+MAP_NAME = 'FourTowerSequentialDecomposed'
+
+
 class FourTowersSequentialEnvironment():
     def __init__(self):
-        self.register_map('/maps/','FourTowerSequentialDecomposed')
+        maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
+        register_map(map_dir, MAP_NAME)
         self.sc2_env = sc2_env.SC2Env(
-          map_name="FourTowerSequentialDecomposed",
+          map_name=MAP_NAME,
           players=[sc2_env.Agent(sc2_env.Race.terran)],
           agent_interface_format=features.AgentInterfaceFormat(
               feature_dimensions=features.Dimensions(screen=84, minimap=64),
@@ -162,18 +166,11 @@ class FourTowersSequentialEnvironment():
 
         obs_image = imutil.show(self.last_timestep.observation['rgb_screen'], filename="test.jpg")
         opts = dict(title = "state", width = 360, height = 350)
-        
+
         if self.image_window is None:
             self.image_window = self.vis.image(obs_image, opts = opts)
         else:
             self.vis.image(obs_image, opts = opts, win = self.image_window)
-
-    def register_map(self, map_dir, map_name):
-        from pysc2.maps import lib
-        map_filename = map_name + '.SC2Map'
-        class_definition = dict(prefix=map_dir, filename=map_filename, players=1)
-        constructed_class = type(map_name, (lib.Map,), class_definition)
-        globals()[map_name] = constructed_class
 
     def get_mineral_count(self, obs):
         return 0
