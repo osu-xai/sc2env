@@ -17,6 +17,7 @@ class ConvNetQLearningAgent():
         self.replay_x = torch.zeros((BUFFER_SIZE, num_input_layers, input_size, input_size)).cuda()
         self.replay_a = torch.zeros((BUFFER_SIZE, 1), dtype=torch.long).cuda()
         self.replay_y = torch.zeros(BUFFER_SIZE).cuda()
+        self.replay_buffer_mask = torch.zeros(BUFFER_SIZE).cuda()
 
     # obs: the state format returned from a SimpleTowersEnvironment
     def step(self, obs):
@@ -45,11 +46,13 @@ class ConvNetQLearningAgent():
         self.replay_x[idx] = self.input_x
         self.replay_a[idx] = self.action_choice
         self.replay_y[idx] = reward
+        self.replay_buffer_mask[idx] = 1
 
         # Perform regression with MSE loss to estimate reward
         pred_y = self.model(self.replay_x)
-        gathered_y = torch.gather(pred_y, 1, self.replay_a)
-        error = torch.mean((gathered_y - self.replay_y)**2)
+        gathered_y = torch.gather(pred_y, 1, self.replay_a)[:,0]
+        error_per_sample = (gathered_y - self.replay_y)**2
+        error = torch.mean(self.replay_buffer_mask * error_per_sample)
         print("Pred y: {:.02f} {:.02f} {:.02f} {:.02f}".format(
             pred_y[idx, 0], pred_y[idx, 1], pred_y[idx, 2], pred_y[idx, 3]))
         error.backward()
@@ -60,9 +63,9 @@ class ConvNetQLearningAgent():
 class SimplePolicyNetwork(nn.Module):
     def __init__(self, num_input_layers, num_outputs):
         super().__init__()
-        self.conv1 = nn.Conv2d(num_input_layers, 16, kernel_size=5, stride=2)
-        self.bn1 = nn.BatchNorm2d(16)
-        self.conv2 = nn.Conv2d(16, 32, kernel_size=5, stride=2)
+        self.conv1 = nn.Conv2d(num_input_layers, 32, kernel_size=5, stride=2)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 32, kernel_size=5, stride=2)
         self.bn2 = nn.BatchNorm2d(32)
         self.conv3 = nn.Conv2d(32, 32, kernel_size=5, stride=2)
         self.bn3 = nn.BatchNorm2d(32)
