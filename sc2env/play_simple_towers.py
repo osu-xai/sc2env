@@ -42,7 +42,7 @@ def train_agent(train_episodes=1000, epochs=100):
             avg_loss = cumulative_loss / (i + 1)
             print('Step {}/{} average reward {:.3f} avg. loss {:.3f}'.format(
                 i, train_episodes, avg_reward, avg_loss))
-            agent.epsilon **= 0.9
+        agent.epsilon **= 0.9
 
         # Evaluate agent
         print('Evaluating:')
