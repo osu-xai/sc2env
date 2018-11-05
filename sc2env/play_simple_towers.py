@@ -48,7 +48,7 @@ def train_agent(train_episodes=1000, epochs=100):
         print('Evaluating:')
         selected_action = agent.step(demo_state)
         estimates = agent.model(agent.to_tensor(demo_state[1]))[0].cpu().data.numpy()
-        caption = 'Q1 {:.02f},  Q4 {:.02f},  Q3 {:.02f},  Q2 {:.02f}'.format(
+        caption = 'NW {:.02f},  NE {:.02f},  SE {:.02f},  SW {:.02f}'.format(
             estimates[0], estimates[1], estimates[2], estimates[3])
         imutil.show(demo_state[3], filename="eval_epoch_{:04d}.png".format(epoch),
                     caption=caption, resize_to=(512,512), font_size=10)
