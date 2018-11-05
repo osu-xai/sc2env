@@ -6,37 +6,52 @@ import torch.nn.functional as F
 
 from sc2env.representation import expand_pysc2_to_neural_input
 
+BUFFER_SIZE = 256
 
 class ConvNetQLearningAgent():
-    def __init__(self, num_input_layers, num_actions, epsilon=0.2):
+    def __init__(self, num_input_layers, num_actions, epsilon=0.5, input_size=64):
         self.epsilon = epsilon
         self.num_actions = num_actions
         self.model = SimplePolicyNetwork(num_input_layers, num_actions)
-        self.optimizer = Adam(self.model.parameters())
+        self.optimizer = Adam(self.model.parameters(), lr=.0001)
+        self.replay_x = torch.zeros((BUFFER_SIZE, num_input_layers, input_size, input_size)).cuda()
+        self.replay_a = torch.zeros((BUFFER_SIZE, 1), dtype=torch.long).cuda()
+        self.replay_y = torch.zeros(BUFFER_SIZE).cuda()
 
     # obs: the state format returned from a SimpleTowersEnvironment
     def step(self, obs):
         self.model.eval()
         self.prev_obs = obs
         features_minimap, features_screen, rgb_minimap, rgb_screen = obs
-        x = self.to_tensor(features_screen)
-        self.estimated_reward = self.model(x)
+        self.input_x = self.to_tensor(features_screen)
+        self.estimated_rewards = self.model(self.input_x)
         if np.random.random() > self.epsilon:
-            self.action_choice = self.estimated_reward.max(dim=1)[1].item()
-        else:
             self.action_choice = np.random.randint(self.num_actions)
+        else:
+            self.action_choice = self.estimated_rewards.max(dim=1)[1].item()
         return self.action_choice
 
     def to_tensor(self, features_screen):
         x = expand_pysc2_to_neural_input(features_screen)
         x = torch.Tensor(x)
         x = x.unsqueeze(0)
-        return x
+        return x.cuda()
 
     def update(self, reward):
         self.model.train()
-        est_reward = self.estimated_reward[:, self.action_choice]
-        error = torch.mean((est_reward - reward) ** 2)
+
+        # Add this reward to the replay buffer
+        idx = np.random.randint(0, BUFFER_SIZE)
+        self.replay_x[idx] = self.input_x
+        self.replay_a[idx] = self.action_choice
+        self.replay_y[idx] = reward
+
+        # Perform regression with MSE loss to estimate reward
+        pred_y = self.model(self.replay_x)
+        gathered_y = torch.gather(pred_y, 1, self.replay_a)
+        error = torch.mean((gathered_y - self.replay_y)**2)
+        print("Pred y: {:.02f} {:.02f} {:.02f} {:.02f}".format(
+            pred_y[idx, 0], pred_y[idx, 1], pred_y[idx, 2], pred_y[idx, 3]))
         error.backward()
         self.optimizer.step()
         return float(error.data)
@@ -52,14 +67,32 @@ class SimplePolicyNetwork(nn.Module):
         self.conv3 = nn.Conv2d(32, 32, kernel_size=5, stride=2)
         self.bn3 = nn.BatchNorm2d(32)
         self.conv4 = nn.Conv2d(32, 128, kernel_size=5, stride=2)
-        self.fc1 = nn.Linear(128, num_outputs)
+        self.bn4 = nn.BatchNorm2d(128)
+        self.fc1 = nn.Linear(128, 128)
+        self.bn5 = nn.BatchNorm1d(128)
+        self.fc2 = nn.Linear(128, num_outputs)
+        self.cuda()
 
     def forward(self, x):
         # Input shape: (batch, INPUT_LAYERS, 64, 64)
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = F.relu(self.conv4(x))
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = F.leaky_relu(x, 0.2)
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = F.leaky_relu(x, 0.2)
+        x = self.conv3(x)
+        x = self.bn3(x)
+        x = F.leaky_relu(x, 0.2)
+        x = self.conv4(x)
+        x = self.bn4(x)
+        x = F.leaky_relu(x, 0.2)
         # Output shape: (batch, num_outputs)
-        return self.fc1(x.view(x.size(0), -1))
+        x = x.view(x.size(0), -1)
+        x = self.fc1(x)
+        x = self.bn5(x)
+        x = F.leaky_relu(x, 0.2)
+        x = self.fc2(x)
+        #x = 3 * torch.sigmoid(x)
+        return x
 
