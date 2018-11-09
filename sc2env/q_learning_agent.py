@@ -40,6 +40,7 @@ class ConvNetQLearningAgent():
 
     def update(self, reward):
         self.model.train()
+        self.model.zero_grad()
 
         # Add this reward to the replay buffer
         idx = np.random.randint(0, BUFFER_SIZE)
