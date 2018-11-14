@@ -22,7 +22,7 @@ MAP_NAME = 'FourTowerSequentialDecomposed'
 class FourTowersSequentialEnvironment():
     def __init__(self):
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
-        register_map(map_dir, MAP_NAME)
+        register_map(maps_dir, MAP_NAME)
         self.sc2_env = sc2_env.SC2Env(
           map_name=MAP_NAME,
           players=[sc2_env.Agent(sc2_env.Race.terran)],
