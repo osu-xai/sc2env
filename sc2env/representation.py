@@ -73,9 +73,15 @@ def expand_pysc2_to_neural_input(feature_map, unit_map=DEFAULT_SC2_UNITS, resize
 # Output: a 3d array of floats usable as input to a network
 # Output shape: (height x width x number_of_unit_types)
 def int_map_to_onehot(x, vocabulary=None):
+    unique_items = set(x.flatten())
+    # If no vocabulary is given, make a conservative assumption
     if vocabulary is None:
-        # If no vocabulary is known, make a conservative assumption
-        vocabulary = set(x.flatten())
+        vocabulary = unique_items
+    # Raise an error if any items are not in the vocab
+    for item in unique_items:
+        if item and item not in vocabulary:
+            raise ValueError('Unexpected item {}'.format(item))
+
     output_shape = (len(vocabulary),) + x.shape
     output_map = np.zeros(shape=output_shape, dtype=float)
     for i, id in enumerate(vocabulary):
