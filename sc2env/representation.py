@@ -4,6 +4,7 @@ import numpy as np
 # These 12 units should be enough to build some cool maps
 SIMPLE_SC2_UNITS = [
     48,  # marine
+    51,  # marauder
     53,  # hellion
     55,  # banshee
     57,  # battlecruiser
@@ -12,6 +13,7 @@ SIMPLE_SC2_UNITS = [
     83,  # immo
     141, # archon
     105, # zergling
+    110, # roach
     107, # hydra
     108, # mutalisk
     109, # ultra
