@@ -11,8 +11,8 @@ from sc2env.environments.simple_towers import SimpleTowersEnvironment
 
 def train_agent(train_episodes=1000, epochs=100):
     # This environment teaches win/loss outcomes vs different enemies
-    agent = ConvNetQLearningAgent(num_input_layers=18, num_actions=4)
     env = SimpleTowersEnvironment()
+    agent = ConvNetQLearningAgent(num_input_layers=env.layers(), num_actions=env.actions())
     demo_state = env.reset()
 
     for epoch in range(epochs):

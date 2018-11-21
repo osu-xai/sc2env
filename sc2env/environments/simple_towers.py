@@ -6,17 +6,26 @@ from pysc2.lib import actions
 from gym.spaces.discrete import Discrete
 
 from sc2env.pysc2_util import register_map
+from sc2env.representation import expand_pysc2_to_neural_input
 
 MAP_NAME = 'SimpleTacticalEnvironment'
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
+
+UNIT_ID_LIST = [
+    48,  # marine
+    73,  # zealot
+    105, # zergling
+    107, # hydra
+    109, # ultra
+]
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
 class SimpleTowersEnvironment():
     def __init__(self):
         self.sc2env = make_sc2env()
-        self.action_space = Discrete(4)
+        self.action_space = Discrete(self.actions())
 
     def reset(self):
         # Move the camera in any direction
@@ -54,6 +63,14 @@ class SimpleTowersEnvironment():
         feature_map, feature_screen, rgb_map, rgb_screen = state
         visual = np.concatenate([rgb_map, rgb_screen], axis=1)
         imutil.show(visual, save=False)
+
+    def actions(self):
+        # Attack top/bottom left/right corners
+        return 4
+
+    def layers(self):
+        # One-hot unit ids plus metadata
+        return len(UNIT_ID_LIST) + 6
 
 
 # The four actions tell the army to move to
@@ -95,15 +112,22 @@ def make_sc2env():
     return sc2_env.SC2Env(**env_args)
 
 
-# Convert the SC2Env timestep into a Gym-style tuple
+# Convert the timestep into a Gym-style tuple
 def unpack_timestep(timestep):
+    # The pysc2 representations include unit types and positions
     feature_map = np.array(timestep.observation.feature_minimap)
     feature_screen = np.array(timestep.observation.feature_screen)
+
+    # The neural representation is appropriate for input to a neural network
+    feature_screen_onehot = expand_pysc2_to_neural_input(feature_screen, UNIT_ID_LIST)
+
+    # The RGB maps will be None if rendering is disabled (eg. for faster training)
     rgb_map = np.array(timestep.observation.get('rgb_minimap'))
     rgb_screen = np.array(timestep.observation.get('rgb_screen'))
-    state = (feature_map, feature_screen, rgb_map, rgb_screen)
 
-    # See other maps to learn about custom specified rewards
+    state = (feature_map, feature_screen_onehot, rgb_map, rgb_screen)
+
+    # For this game we use a simple reward: number of surviving friendly units
     reward = int(timestep.observation.player['army_count'])
 
     done = timestep.last()

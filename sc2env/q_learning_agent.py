@@ -4,8 +4,6 @@ from torch import nn
 from torch.optim import Adam
 import torch.nn.functional as F
 
-from sc2env.representation import expand_pysc2_to_neural_input
-
 BUFFER_SIZE = 256
 
 class ConvNetQLearningAgent():
@@ -24,19 +22,13 @@ class ConvNetQLearningAgent():
         self.model.eval()
         self.prev_obs = obs
         features_minimap, features_screen, rgb_minimap, rgb_screen = obs
-        self.input_x = self.to_tensor(features_screen)
+        self.input_x = to_tensor(features_screen)
         self.estimated_rewards = self.model(self.input_x)
         if np.random.random() > self.epsilon:
             self.action_choice = np.random.randint(self.num_actions)
         else:
             self.action_choice = self.estimated_rewards.max(dim=1)[1].item()
         return self.action_choice
-
-    def to_tensor(self, features_screen):
-        x = expand_pysc2_to_neural_input(features_screen)
-        x = torch.Tensor(x)
-        x = x.unsqueeze(0)
-        return x.cuda()
 
     def update(self, reward):
         self.model.train()
@@ -59,6 +51,12 @@ class ConvNetQLearningAgent():
         error.backward()
         self.optimizer.step()
         return float(error.data)
+
+
+def to_tensor(x):
+    x = torch.Tensor(x)
+    x = x.unsqueeze(0)
+    return x.cuda()
 
 
 class SimplePolicyNetwork(nn.Module):
