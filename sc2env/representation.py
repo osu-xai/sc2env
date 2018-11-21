@@ -1,8 +1,9 @@
 import numpy as np
 
 
-# These 12 units should be enough to build some cool maps
-SIMPLE_SC2_UNITS = [
+# If you do not supply a unit list, this default will be used.
+# Note: this defautl list should be the union of all unit IDs we use
+DEFAULT_SC2_UNITS = [
     48,  # marine
     51,  # marauder
     53,  # hellion
@@ -21,8 +22,8 @@ SIMPLE_SC2_UNITS = [
 
 
 # Input: A 17-dimensional integer pysc2 feature map
-# Output: A 18-dimensional float convolutional input map
-def expand_pysc2_to_neural_input(feature_map, unit_map=SIMPLE_SC2_UNITS, resize_to=None):
+# Output: A N-dimensional float convolutional input map, N = 6 + len(unit_map)
+def expand_pysc2_to_neural_input(feature_map, unit_map=DEFAULT_SC2_UNITS, resize_to=None):
     neural_layers = []
 
     # Terrain height map, scaled 0 to 1
@@ -37,7 +38,7 @@ def expand_pysc2_to_neural_input(feature_map, unit_map=SIMPLE_SC2_UNITS, resize_
     enemy_units = (feature_map[5] == 4).astype(float)
     neural_layers.append(enemy_units)
 
-    # Categorical map of unit types (see SIMPLE_SC2_UNITS)
+    # Categorical map of unit types (see DEFAULT_SC2_UNITS)
     unit_layers = int_map_to_onehot(feature_map[6], unit_map)
     neural_layers.extend(unit_layers)
 
@@ -80,12 +81,3 @@ def int_map_to_onehot(x, vocabulary=None):
     for i, id in enumerate(vocabulary):
         output_map[i][x == id] = 1.
     return output_map
-"""
-# Unit test for int_map_to_onehot
-x = np.zeros((84, 84), dtype=int)
-x[1,2] = 49
-x[3,10] = 107
-x[40:50, 60:70] = 105
-assert int_map_to_onehot(x).shape == (4, 84, 84)
-assert int_map_to_onehot(x, SIMPLE_SC2_UNITS).shape == (len(SIMPLE_SC2_UNITS), 84, 84)
-"""
