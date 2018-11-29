@@ -5,16 +5,18 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps, lib
 from s2clientprotocol import sc2api_pb2 as sc_pb
-
+from sc2env.pysc2_util import register_map
+import os
 SCREEN_SIZE = 40
+#MAP_NAME = 'FourTowersWithFriendlyUnits'
+#MAP_NAME = 'FourTowersWithFriendlyUnitsFixedEnemies'
+MAP_NAME = 'FourTowersWithFriendlyUnitsFixedEnemiesFixedPosition'
 class FourTowerSequentialFriendlyUnits():
     def __init__(self):
- #       mapName = 'FourTowersWithFriendlyUnits'
-        mapName = 'FourTowersWithFriendlyUnitsFixedEnemies'
- #       mapName = 'FourTowersWithFriendlyUnitsFixedEnemiesFixedPosition'
-        self.register_map('/maps/',mapName)
+        maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
+        register_map(maps_dir, MAP_NAME)
         self.sc2_env = sc2_env.SC2Env(
-          map_name = mapName,
+          map_name = MAP_NAME,
           players = [sc2_env.Agent(sc2_env.Race.protoss)],
           agent_interface_format = features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = 30),
