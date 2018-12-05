@@ -21,15 +21,14 @@ After 10 time steps, a game simulation rollout determines which army wins.
 """
 def main(render=False):
     unique_id = int(time.time())
+    import pdb; pdb.set_trace()
     if render:
         video_filename = 'video_{}.mp4'.format(unique_id)
-        env = fog_of_war.FogOfWarEnvironment(video_filename=video_filename, verbose=True)
+        env = fog_of_war.FogOfWarEnvironment(render=True, video_filename=video_filename, verbose=True)
     else:
         env = fog_of_war.FogOfWarEnvironment(render=False, verbose=True)
 
-
     agent = RandomAgent(env.action_space())
-
     play_episode(agent, env)
 
 

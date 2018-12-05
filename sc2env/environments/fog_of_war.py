@@ -15,7 +15,7 @@ MAP_NAME = 'FogOfWar'
 MAP_SIZE = 64
 RGB_SCREEN_WIDTH = 400
 RGB_SCREEN_HEIGHT = 240
-
+FIVE_SECONDS = 85
 
 # These parameters are based on the .SC2Map triggers
 # Open the map in the Galaxy editor for details
@@ -98,7 +98,18 @@ class FogOfWarMultiplayerEnvironment():
             if self.num_players > 1 and action_player2 > 0:
                 player2_ability_id = action_to_ability_id[action_player2]
                 self.use_custom_ability(player2_ability_id, 2)
-            self.step_sc2env()
+            if self.render:
+                # Move forward 5 ticks at a time
+                self.sc2env._step_mul = 5
+                for i in range(FIVE_SECONDS // self.sc2env._step_mul):
+                    self.step_sc2env()
+                    filename = 'demo_fog_of_war_frame_output_{:06d}_{:04d}.jpg'.format(self.steps, i)
+                    imutil.show(self.unpack_state()[0][3], filename=filename, resize_to=(2*800,2*480))
+                    print('Saving file {}'.format(filename))
+            else:
+                # Move forward 5 seconds in time (in a single step)
+                self.step_sc2env()
+
         if self.video:
             screenshot = self.unpack_state()[0][3]
             for _ in range(10):
@@ -220,7 +231,7 @@ def make_sc2env(num_players, render=False):
     env_args = {
         'agent_interface_format': interface,
         'map_name': MAP_NAME,
-        'step_mul': 85,  # 17 is ~1 action per second
+        'step_mul': FIVE_SECONDS,  # 17 is ~1 action per second
         'players': players,
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
