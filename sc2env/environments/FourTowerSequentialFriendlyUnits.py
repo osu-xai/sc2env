@@ -12,11 +12,13 @@ SCREEN_SIZE = 40
 #MAP_NAME = 'FourTowersWithFriendlyUnitsFixedEnemies'
 MAP_NAME = 'FourTowersWithFriendlyUnitsFixedEnemiesFixedPosition'
 class FourTowerSequentialFriendlyUnits():
-    def __init__(self):
+    def __init__(self, map_name = None):
+        if map_name is None:
+            map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
-        register_map(maps_dir, MAP_NAME)
+        register_map(maps_dir, map_name)
         self.sc2_env = sc2_env.SC2Env(
-          map_name = MAP_NAME,
+          map_name = map_name,
           players = [sc2_env.Agent(sc2_env.Race.protoss)],
           agent_interface_format = features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = 30),
