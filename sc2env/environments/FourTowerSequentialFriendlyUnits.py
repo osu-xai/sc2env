@@ -137,19 +137,17 @@ class FourTowerSequentialFriendlyUnits():
         tstate = np.append(tstate, self.normalizeExceptZeros(state[8],
                                                              (0, 500)), axis=0)
 
+        #append unit hit point ratio
+        SCALE = 255
+        hit_point_ratio = state[9] / SCALE
+        hit_point_ratio = np.reshape(hit_point_ratio, (1, SCREEN_SIZE, SCREEN_SIZE))
+        tstate = np.append(tstate, hit_point_ratio, axis=0)
+
         #extend unit density
         MAX_UNIT_DENSITY = 4
         unit_density = np.clip(state[14] / MAX_UNIT_DENSITY, 0, 1)
         unit_density = np.reshape(unit_density, (1, SCREEN_SIZE, SCREEN_SIZE))
         tstate = np.append(tstate, unit_density, axis=0)
-
-        '''
-        #extend unit density anti-aliased
-        MAX_UNIT_DENSITY_AA = 16
-        unit_density_aa = np.clip(state[15] / MAX_UNIT_DENSITY_AA, 0, 1)
-        unit_density_aa = np.reshape(unit_density_aa, (1, SCREEN_SIZE, SCREEN_SIZE))
-        tstate = np.append(tstate, unit_density_aa, axis=0)
-        '''
 
        # print(tstate)
        # print(tstate.shape)
