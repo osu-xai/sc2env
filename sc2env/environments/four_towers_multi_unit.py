@@ -18,20 +18,32 @@ MAP_NAME = 'FourTowerSequentialDecomposedFourUnitsRandomComp'
 
 
 class FourTowersSequentialMultiUnitEnvironment():
-    def __init__(self):
+    def __init__(self, generate_xai_replay):
+        print("================================WITHOUT RGB DIMENSION CONFIG ====================================")
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         register_map(maps_dir, MAP_NAME)
+        aif=features.AgentInterfaceFormat(
+            feature_dimensions=features.Dimensions(screen=84, minimap=64),
+            action_space=actions.ActionSpace.FEATURES,
+        )
+        if generate_xai_replay:
+            aif=features.AgentInterfaceFormat(
+                feature_dimensions=features.Dimensions(screen=84, minimap=64),
+                rgb_dimensions=sc2_env.Dimensions(
+                screen=(256, 256),
+                minimap=(64, 64),
+                ),
+                action_space=actions.ActionSpace.FEATURES,
+            )
+
         self.sc2_env = sc2_env.SC2Env(
-          map_name=MAP_NAME,
-          players=[sc2_env.Agent(sc2_env.Race.terran)],
-          agent_interface_format=features.AgentInterfaceFormat(
-              feature_dimensions=features.Dimensions(screen=84, minimap=64),
-              action_space=actions.ActionSpace.FEATURES,
-          ),
-          step_mul=16,
-          game_steps_per_episode=0,
-          score_index=0,
-          visualize=True)
+            map_name=MAP_NAME,
+            players=[sc2_env.Agent(sc2_env.Race.terran)],
+            agent_interface_format=aif,
+            step_mul=16,
+            game_steps_per_episode=0,
+            score_index=0,
+            visualize=True)
         self.current_obs = None
         self.actions_taken = 0
         self.last_mineral_count = 0
