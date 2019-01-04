@@ -1,0 +1,142 @@
+syntax = "proto2";
+
+package scaii.common;
+
+// A message specifying the configuration of some module.
+// Only `CoreCfg` and `BackendCfg` have any real specification,
+// the rest are handled with extensions (including special behavior
+// for the Backend configuration).
+message Cfg {
+	oneof which_module {
+		CoreCfg core_cfg = 1;
+		BackendCfg backend_cfg = 2;
+		AgentCfg agent_cfg = 3;
+		ModuleCfg module_cfg = 4;
+	}
+}
+
+// Specifies the type of plugin the Core plugin
+// manager should spawn. 
+message PluginType {
+	oneof plugin_type {
+		SkyRts sky_rts = 1;
+		RpcConfig rpc = 2;
+	}
+}
+
+// A configuration message to specify Core's behavior.
+message CoreCfg {
+	required PluginType plugin_type = 1;
+}
+
+// What to initialize the given plugin as:
+// the backend, agent, or a generic module.
+message InitAs {
+	oneof init_as {
+		BackendInit backend = 1;
+		ModuleInit module = 2;
+	}
+}
+
+// Marker for Sky RTS well-known backend
+message SkyRts {}
+
+
+// Initialization marker for a Backend.
+// See `InitAs` for more info.
+message BackendInit {}
+
+// Initialization for a Module. See
+// `InitAs` for more into.
+message ModuleInit {
+	required string name = 1;
+}
+
+message RpcConfig {
+	optional string ip = 1 [default="127.0.0.1"];
+	optional uint32 port = 2 [default=6112];
+	optional string command = 3;
+	repeated string command_args = 4;
+
+	required InitAs init_as = 5;
+}
+
+// Configuration of a Backend. This is handled
+// by a given Backend, please check that environment's
+// protobuf files for an extension to `BackendCfg` for more info
+// on that Backend's configuration.
+message BackendCfg {
+	optional bytes cfg_msg = 1;
+	required bool is_replay_mode = 2;
+}
+
+
+// Configuration of an Agent. 
+// This is handled by a given Agent, and generally will only be used within
+// your own modules and programs (e.g. two cooperative modules both acting
+// as agents).
+message AgentCfg {
+	optional bytes cfg_msg = 1;
+}
+
+
+// Configuration of a Module. Any generic module may
+// elect to specify its own configuration like Backend.
+//
+// A Backend may elect to also handle `ModuleCfg` if it expects
+// to be run as a Module (e.g. for multiple instances).
+message ModuleCfg {
+	optional bytes cfg_msg = 1;
+}
+
+// What kind of special behavior a given module supports.
+message SupportedBehavior {
+	oneof which_module {
+		BackendSupported backend = 1;
+		AgentSupported agent = 2;
+		ModuleSupported generic_module = 5;
+	}
+}
+
+// Defines any special behavior a Backend may support.
+//
+// The types specified here denote the only configuration
+// the core plugin loader cares about.
+//
+// Additional extensions may be declared in an environment's
+// protobuf files to be handled by dedicated game wrappers.
+message BackendSupported {
+	enum SerializationSupport {
+		NONE = 0;
+		DIVERGING_ONLY = 1;
+		NONDIVERGING_ONLY = 2;
+		FULL = 3;
+	}
+	required SerializationSupport serialization_support = 1;
+	extensions 100 to max;
+}
+
+// Any special behavior an agent supports.
+// Similar to `AgentCfg`, this will likely only
+// be used in your own modules that act
+// coopoeratively with an Agent.
+message AgentSupported {
+	extensions 100 to max;
+}
+
+// Any special behavior a module supports.
+// See a Module's protobuf files for more info.
+message ModuleSupported {
+	extensions 100 to max;
+}
+
+// Describes the environment with things like actions,
+// etc
+message EnvDescription {
+	// This is actually a hashset, the bool is 
+	// dummy
+	map<string,bool> reward_types = 1;
+	map<string,int32> possible_discrete_actions = 2;
+	optional string action_desc = 3;
+	required BackendSupported supported = 4;
+}
