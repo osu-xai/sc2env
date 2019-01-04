@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+	<head>
+<html lang="en">
+		<meta charset="utf-8">
+		<title>SCAII Visualization</title>
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+		<script src="js/jquery.min.js"></script>
+	  <script src="js/closure-library/closure/goog/base.js"></script>
+	  <script>
+	  	goog.require('goog.dom');
+	  </script>
+	  <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+	  <script src="js/protobuf_js/binary/arith.js"></script>
+      <script src="js/protobuf_js/binary/constants.js"></script>
+      <script src="js/protobuf_js/binary/utils.js"></script>
+      <script src="js/protobuf_js/binary/decoder.js"></script>
+      <script src="js/protobuf_js/binary/encoder.js"></script>
+      <script src="js/protobuf_js/binary/reader.js"></script>
+      <script src="js/protobuf_js/binary/writer.js"></script>
+      <script src="js/protobuf_js/map.js"></script>
+      <script src="js/protobuf_js/message.js"></script>
+      <!--<script src="js/protobuf_js/debug.js"></script>-->
+      <script src="js/questionAccessManager.js"></script>
+      <script src="js/test/questionAccessManagerTests.js"></script>
+      <script src="js/explanations/rewards/chartV2Data.js"></script>
+      <script src="js/explanations/rewards/chartV2Rank.js"></script>
+      <script src="js/explanations/rewards/chartV2Selection.js"></script>
+      <script src="js/explanations/rewards/chartV2Color.js"></script>
+      <script src="js/explanations/rewards/chartV2Geometry.js"></script>
+      <script src="js/explanations/rewards/chartV2Text.js"></script>
+      <script src="js/explanations/rewards/rewardTooltips.js"></script>
+      <script src="js/explanations/rewards/chartV2Msx.js"></script>
+      <script src="js/explanations/rewards/chartV2MsxGeometry.js"></script>
+      <script src="js/test/chartStateTests.js"></script>
+      <script src="js/test/sessionTests.js"></script>
+      <script src="js/test/dummyChartData.js"></script>
+      <script src="js/test/chartDataTests/selectionTests.js"></script>
+      <script src="js/test/chartDataTests/geometryTests.js"></script>
+      <script src="js/test/chartDataTests/textGenTests.js"></script>
+      <script src="js/test/chartDataTests/rankingTests.js"></script>
+      <script src="js/test/chartDataTests/colorTests.js"></script>
+      <script src="js/test/chartDataTests/msxColorTests.js"></script>
+      <script src="js/test/chartDataTests/msxRankingTests.js"></script>
+      <script src="js/test/chartDataTests/msxGeometryTests.js"></script>
+      <script src="js/test/tests.js"></script>
+      <script src="js/drawEntities.js"></script>
+      <script src="js/studyTabs.js"></script>
+      <script src="js/studyQuestionsEntities.js"></script>
+      <script src="js/logTemplates.js"></script>
+      <script src="js/userActionMonitor.js"></script>
+      <script src="js/stateMonitor.js"></script>
+      <script src="js/studyQuestionsRenderer.js"></script>
+      <script src="js/studyQuestionsIndexManager.js"></script>
+      <script src="js/studyQuestions.js"></script>
+      <script src="js/navigation.js"></script>
+      <script src="js/ui.js"></script>
+      <script src="js/session.js"></script>
+      <script src="js/zoomBox.js"></script>
+      <script src="js/comms.js"></script>
+      <script src="js/vizProtos.js"></script>
+      <script src="js/logUtils.js"></script>
+      <script src="js/renderUtils.js"></script>
+      <script src="js/toolTips.js"></script>
+      <script src="js/renderEntities.js"></script>
+      <script src="js/explanations/saliency/saliencyV2UIMap.js"></script>
+      <script src="js/explanations/saliency/normalization.js"></script>
+      <script src="js/explanations/saliency/normValuesTemplate.js"></script>
+      <script src="js/explanations/explanationsV2.js"></script>
+      <script src="js/explanations/decisionPointLegend.js"></script>
+      <script src="js/explanations/explanationSelectors.js"></script>
+      <script src="js/explanations/chartV2UI.js"></script>
+      <script src="js/explanations/saliencyV2UI.js"></script>
+      <script src="js/gameState.js"></script>
+      <script src="js/protobufUtils.js"></script>
+	  <link rel="stylesheet" type="text/css" href="css/tabs.css">
+	  <link rel="stylesheet" type="text/css" href="css/gameControls.css">
+	  <link rel="stylesheet" type="text/css" href="css/explanations.css">
+	  <link rel="stylesheet" type="text/css" href="css/game.css">
+	  <link rel="stylesheet" type="text/css" href="css/majorContainers.css">
+	<style>
+    </style>
+	</head>
+	<body>
+        <div id="tabbed-interface" class="flex-column">
+            <div id="master-tabs" class= "master-tab-container flex-row"></div>
+            <div id="scaii-interface" class="bg" style="display:flex-column">
+                <!--<div id="top-title-panel" class="flex-row bg">
+                    <div id="scaii-interface-title" class="bg" >Small Configurable AI Interface</div>
+                </div>-->
+                <div id = "game-chart-container" style="display:flex">
+                    <div id="game-titled-container" class="titled-container bg" style="display:flex-column;float:left;">
+                        
+                        <div id="title-row" class="flex-row">
+                            <div id="scaii-acronym" style="font-family:Arial;">XAI  xACT</div>
+                            <div id="game-replay-label" style="font-family:Arial;">replaying game file:</div>
+                            <select id="replay-file-selector" style="font-family:Arial;font-size:16px" onchange="loadSelectedReplayFile()"></select>
+                        </div>
+                        
+                        <!--<div id="step-control" class="flex-row">
+                            <div id="step-control-info class="flex-column">
+                                <div id="replay-interval-max" class="minor-label-text">100 (ms)</div>
+                                <div id="replay-speed-label" class="minor-label-text">step interval</div>
+                                <div id="replay-interval-min" class="minor-label-text">0 (ms)</div>
+                            </div>
+                            <div id="replay-speed-panel" class="control-panel"></div>
+                        </div>-->
+                        <div id="game-row" class="flex-row">
+                            <div id="reward-values-panel" class="flex-column">
+                                <!--<div id="cumulative-rewards-title" class="grid bg" style="text-align:center;margin-left:30px;margin-top:30px;width:200px;font-family:Arial;font-size:16px;">Cumulative Rewards</div>-->
+                                <div id="cumulative-rewards" class="grid bg" style="margin-left:30px;margin-top:10px;width:250px;height:125px"></div>
+                            </div>
+                            <div id="left-side-quadrant-labels" class="flex-column bg">
+                                <div id="q1-label" style="margin-left:4px;margin-right:4px;margin-top:20px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q2</div>
+                                <div id="q2-label" style="margin-left:4px;margin-right:4px;margin-top:140px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q3</div>
+                            </div>
+                            <div id="scaii-gameboard" class="grid-center bg"></div>
+                            <div id="right-side-quadrant-labels" class="flex-column bg">
+                                <div id="q3-label" style="margin-left:4px;margin-right:4px;margin-top:20px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q1</div>
+                                <div id="q4-label" style="margin-left:4px;margin-right:4px;margin-top:140px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q4</div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div id="playback-controls-panel" class="flex-row">
+                            <div id="step-value" class="minor-label-text"></div>
+                            <div id="rewind-control"></div>
+                            <div id="step-back-control"></div>
+                            <div id="step-forward-control"></div>
+                            <div id="pause-play-control"></div>
+                        </div>
+                        <div id="explanation-control-panel" class="timeline-control bg">
+                            <!--<input type="button" id="test-button" style="z-index:2; position:relative; top:20px; left:50px" value="?"/>-->
+                        </div>
+                        <div id="action-list" class="bg grid" style="margin-top:10px;"></div>
+                        <div id="q-and-a-div" class="flex-column"></div>
+                        <!--<div id="debug-panel" class="flex-row" style="height:60px;">
+                            <div id="debug1" class="debug-msg"></div>
+                            <div id="debug2" class="debug-msg"></div>
+                            <div id="debug3" class="debug-msg"></div>
+                            <div id="debug4" class="debug-msg"></div>
+                        </div>-->
+                    </div>
+                </div>
+                <!--<div id="rewards-titled-container" class="titled-container r0c1 bg">	
+                    <div id="explanations-rewards" class="bg"></div>
+                </div>-->
+                
+                <!--<div id="scaii-explanations" class="r1c0_1 bg">
+                    <div id="saliency-group" class="flex-row">
+                        <div id="saliency-selections" class="flex-column">
+                            <div id="saliency-selections-title" class="region-title-grey">Generating Rewards</div>
+                            <div id="saliency-checkboxes" class="grid"></div>
+                        </div>
+                        <div id="saliency-content" class="flex-column">
+                            <div id="saliency-maps-titled-container" class="titled-container flex-column bg"> 
+                                <div id="saliency-maps" class="grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+		<script src="js/scaiiViz.js"></script>
+	</body>
+</html>

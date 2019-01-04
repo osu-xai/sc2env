@@ -1,0 +1,12 @@
+
+#scaii-gameboard {
+    /*width: 400px;
+    height: 400px;*/
+    /*margin-left: 16px;*/
+}
+.tooltip-invisible {
+    visibility:hidden;
+}
+.debug-msg {
+    margin: 10px;
+}

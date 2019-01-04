@@ -1,0 +1,24 @@
+SPEC
+- always show expl info relevant to DP prior to current step
+- do not resurrect maps and overlays
+- never show combined saliency
+
+- if easy, allow them to go back and re-shighlight and overlay
+
+
+
+
+chartData set in explanationsV2 when expl info arrives
+
+which happens due to askBackendForExplanationRewardInfo
+
+which runs when 
+	- why button clicked 1rst, 3rd,5th time
+	- when arrive at DP diamond for T1
+	- if currentExplManager.chartVisible when arrive at DP
+	
+	
+	BUT explanationsV2 caches the data and uses the cached if exists for that step - is the step wrong - i.e. the step jumped to?
+	
+	
+	

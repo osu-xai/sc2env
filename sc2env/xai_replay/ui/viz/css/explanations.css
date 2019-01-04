@@ -1,0 +1,102 @@
+#explanation-control-panel {
+	height: 85px;
+	background-color:#EEDDCC;
+}
+
+#saliency-maps {
+	/*background-color: blue;
+    width: 800px;
+    height: 300px;*/
+    margin: 0px;
+}
+
+#explanations-rewards {
+    margin: 0px;
+}
+
+.question-selector {
+	border-style: none;
+	background: #e0e0e0;
+	text-indent: 0px;
+	padding-left: 8px;
+	padding-right: 2px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.question-label {
+	/*width: 190px;*/
+	/*height: 30px;*/
+	padding: 8px 8px;
+
+}
+
+.question-dropdown {
+	/*width: 220px;*/
+	height: 40px;
+}
+/*
+#why-label {
+    background-color:#C4D6A4; 
+}
+
+#why-questions {
+    background-color:#C4D6A4; 
+}
+*/
+.question-button {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 6px;
+	padding-right: 6px;
+	
+	/*width: 80px;*/
+	/*height: 40px;*/
+}
+/*
+#explanation-control {
+    width: 400px;
+    height: 20px;
+    margin: auto;
+}
+*/
+/*
+#explanation-control-info {
+    height: 20px;
+    margin: auto;
+}
+*/
+/*.Button:active, .active {
+	background-color:#EEDDCC;*/
+   /* background-color:#C4D6A4; /* OSU reindeer moss */
+  /*  color: black;
+}*/
+#rewards-titled-container {
+	background-color:#EEDDCC;
+   /* background-color:#C4D6A4; /* OSU reindeer moss */
+}
+.rewards-bg {
+	background-color:#EEDDCC;
+   /* background-color:#C4D6A4; /* OSU reindeer moss */
+}
+
+.saliencies-bg {
+	background-color:#EEDDCC;
+	/*background-color:#C6DAE7; /* OSU moondust */
+	/*background-color:#E0E0E0; /* OSU moondust */
+}
+
+.value-tooltip-holder{
+    text-decoration:none;
+    position:relative;
+}
+.value-tooltip-holder span {
+	display:none;
+	color: white;
+}
+.explanation-canvas:hover span {
+    display:block;
+    position:relative;
+	overflow:hidden;
+	color: white;
+}
