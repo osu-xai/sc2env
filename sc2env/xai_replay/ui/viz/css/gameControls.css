@@ -1,0 +1,68 @@
+
+#scaii-timeline {
+    width: 100%;
+    height: 20px;
+    margin: auto;
+}
+
+
+#playback-controls-panel {
+	width: 460px;
+	margin-left: 40px;
+	margin-top: 20px;
+	margin-bottom: 15px;
+}
+
+.minor-label-text {
+	font-size: 14px;
+	text-align: right;
+	padding: 4px 6px;
+}
+
+.playback-button {
+	margin-right: 5px;
+	margin-left: 5px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+#replay-file-selector {
+	border-style: none;
+	background: #e0e0e0;
+	text-indent: 5px;
+}
+#playback {
+    width: 100%;
+    height: 40px;
+    margin: auto;
+}
+
+#speed-slider {
+  -webkit-appearance: slider-vertical;
+  height: 100%;
+}
+
+.left-column-label {
+    width: 76px;
+    height: 30px;
+    margin: 0px;
+}
+
+.free-width-label {
+    height: 30px;
+    margin: 0px;
+}
+/*.timeline-control {
+	width: 90%;
+    padding-left:5%;
+    padding-right: 5%;
+}*/
+progress::-webkit-progress-value { background: darkgrey; }
+progress::-moz-progress-bar { background: darkgrey; }
+
+#step-value {
+	width:200px;
+	text-align: left;
+}

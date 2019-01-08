@@ -1,0 +1,16 @@
+
+#scaii-zoom-controls {
+    display: flex;
+	flex-direction: row;
+	background-color: lightgrey;
+    width: 400px;
+    height: 20px;
+    margin: 2px;
+}
+
+#scaii-gameboard-zoom {
+	background-color: #C0C0C0;
+    width: 400px;
+    height: 400px;
+    margin: 0px;
+}
