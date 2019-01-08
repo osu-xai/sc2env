@@ -58,19 +58,19 @@ class FourTowerSequentialFriendlyUnits():
             }
         '''
         self.decomposed_reward_dict = {
-            'damageToMarine' : 0,
-            'damageByMarine' : 0,
-            'damageToZergling' : 0,
-            'damageByZergling' : 0,
-            'damageToMarauder' : 0,
-            'damageByMarauder' : 0,
-            'damageToHydralisk' : 0,
-            'damageByHydralisk' : 0,
-            'damageToThor' : 0,
-            'damageByThor' : 0,
-            'damageToUltralisk' : 0,
-            'damageByUltralisk' : 0,
-            'penalty' : 0
+            'damageToEnemyMarine' : 0,
+            'damageByEnemyMarine' : 0,
+            'damageToEnemyZergling' : 0,
+            'damageByEnemyZergling' : 0,
+            'damageToEnemyMarauder' : 0,
+            'damageByEnemyMarauder' : 0,
+            'damageToEnemyHydralisk' : 0,
+            'damageByEnemyHydralisk' : 0,
+            'damageToEnemyThor' : 0,
+            'damageByEnemyThor' : 0,
+            'damageToEnemyUltralisk' : 0,
+            'damageByEnemyUltralisk' : 0,
+            'damageToFriendZealot' : 0
             }
         
     
@@ -182,43 +182,43 @@ class FourTowerSequentialFriendlyUnits():
                 state[1] += 1
             '''
             if x.shield == 101:
-                self.decomposed_reward_dict['damageToMarine'] = x.health - 1
+                self.decomposed_reward_dict['damageToEnemyMarine'] = x.health - 1
                 rewards.append(x.health - 1)
             elif x.shield == 102:
-                self.decomposed_reward_dict['damageByMarine'] = (x.health - 1) * -1
+                self.decomposed_reward_dict['damageByEnemyMarine'] = (x.health - 1) * -1
                 rewards.append((x.health - 1) * -1)   
             elif x.shield == 103:
-                self.decomposed_reward_dict['damageToZergling'] = x.health - 1
+                self.decomposed_reward_dict['damageToEnemyZergling'] = x.health - 1
                 rewards.append(x.health - 1)
             elif x.shield == 104:
-                self.decomposed_reward_dict['damageByZergling'] = (x.health - 1) * -1
+                self.decomposed_reward_dict['damageByEnemyZergling'] = (x.health - 1) * -1
                 rewards.append((x.health - 1) * -1)
             elif x.shield == 105:
-                self.decomposed_reward_dict['damageToMarauder'] = x.health - 1
+                self.decomposed_reward_dict['damageToEnemyMarauder'] = x.health - 1
                 rewards.append(x.health - 1)
             elif x.shield == 106:
-                self.decomposed_reward_dict['damageByMarauder'] = (x.health - 1) * -1
+                self.decomposed_reward_dict['damageByEnemyMarauder'] = (x.health - 1) * -1
                 rewards.append((x.health - 1) * -1)
             elif x.shield == 107:
-                self.decomposed_reward_dict['damageToHydralisk'] = x.health - 1
+                self.decomposed_reward_dict['damageToEnemyHydralisk'] = x.health - 1
                 rewards.append(x.health - 1)
             elif x.shield == 108:
-                self.decomposed_reward_dict['damageByHydralisk'] = (x.health - 1) * -1
+                self.decomposed_reward_dict['damageByEnemyHydralisk'] = (x.health - 1) * -1
                 rewards.append((x.health - 1) * -1)
             elif x.shield == 109:
-                self.decomposed_reward_dict['damageToThor'] = x.health - 1
+                self.decomposed_reward_dict['damageToEnemyThor'] = x.health - 1
                 rewards.append(x.health - 1)
             elif x.shield == 110:
-                self.decomposed_reward_dict['damageByThor'] = (x.health - 1)* -1
+                self.decomposed_reward_dict['damageByEnemyThor'] = (x.health - 1)* -1
                 rewards.append((x.health - 1) * -1)
             elif x.shield == 111:
-                self.decomposed_reward_dict['damageToUltralisk'] = x.health - 1
+                self.decomposed_reward_dict['damageToEnemyUltralisk'] = x.health - 1
                 rewards.append(x.health - 1)
             elif x.shield == 112:
-                self.decomposed_reward_dict['damageByUltralisk'] = (x.health - 1)* -1
+                self.decomposed_reward_dict['damageByEnemyUltralisk'] = (x.health - 1)* -1
                 rewards.append((x.health - 1) * -1)
             elif x.shield == 113:
-                self.decomposed_reward_dict['penalty'] = (x.health - 1) * -1
+                self.decomposed_reward_dict['damageToFriendZealot'] = (x.health - 1) * -1
                 rewards.append((x.health - 1) * -1)
             elif x.shield == 114:
                 sof = x.health
