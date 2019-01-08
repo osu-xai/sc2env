@@ -12,10 +12,11 @@ SCREEN_SIZE = 40
 #MAP_NAME = 'FourTowersWithFriendlyUnitsFixedEnemies'
 MAP_NAME = 'FourTowersWithFriendlyUnitsFixedEnemiesFixedPosition'
 class FourTowerSequentialFriendlyUnits():
-    def __init__(self, map_name = None):
+    def __init__(self, reward_types, map_name = None):
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
+        print(maps_dir)
         register_map(maps_dir, map_name)
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
@@ -40,22 +41,11 @@ class FourTowerSequentialFriendlyUnits():
         self.signal_of_finished = 1
         self.last_state = None
 
-        '''
-        self.enemy_type_number_dict = {
-            101 : 'damageToMarine',
-            102 : 'damageByMarine',
-            103 : 'damageToZergling',
-            104 : 'damageByZergling',
-            105 : 'damageToMarauder',
-            106 : 'damageByMarauder',
-            107 : 'damageToHydralisk',
-            108 : 'damageByHydralisk',
-            109 : 'damageToThor',
-            110 : 'damageByThor',
-            111 : 'damageToUltralisk',
-            112 : 'damageByUltralisk',
-            113 : 'penalty'
-            }
+        self.reward_types = reward_types
+        self.decomposed_reward_dict = {}
+        for rt in reward_types:
+        	self.decomposed_reward_dict[rt] = 0
+        #print(self.decomposed_reward_dict)
         '''
         self.decomposed_reward_dict = {
             'damageToEnemyMarine' : 0,
@@ -72,7 +62,7 @@ class FourTowerSequentialFriendlyUnits():
             'damageByEnemyUltralisk' : 0,
             'damageToFriendZealot' : 0
             }
-        
+		'''
     
     def action_space():
         return Discrete(2)
@@ -166,65 +156,18 @@ class FourTowerSequentialFriendlyUnits():
     def getRewards(self, data):
         
         rewards = []
- #       state = [0.0,0.0]
 
+        l = len(self.reward_types)
         for x in data:
-#            print(x.shield, x.health)
- #           print(x.alliance)
-            '''
-            if x.unit_type != 45 and x.unit_type != 83:
-                state.append(x.unit_type)
-                state.append(x.pos.x)
-                state.append(x.pos.y)
-            
-            elif x.unit_type == 83:
-                state[0] += x.health
-                state[1] += 1
-            '''
-            if x.shield == 101:
-                self.decomposed_reward_dict['damageToEnemyMarine'] = x.health - 1
-                rewards.append(x.health - 1)
-            elif x.shield == 102:
-                self.decomposed_reward_dict['damageByEnemyMarine'] = (x.health - 1) * -1
-                rewards.append((x.health - 1) * -1)   
-            elif x.shield == 103:
-                self.decomposed_reward_dict['damageToEnemyZergling'] = x.health - 1
-                rewards.append(x.health - 1)
-            elif x.shield == 104:
-                self.decomposed_reward_dict['damageByEnemyZergling'] = (x.health - 1) * -1
-                rewards.append((x.health - 1) * -1)
-            elif x.shield == 105:
-                self.decomposed_reward_dict['damageToEnemyMarauder'] = x.health - 1
-                rewards.append(x.health - 1)
-            elif x.shield == 106:
-                self.decomposed_reward_dict['damageByEnemyMarauder'] = (x.health - 1) * -1
-                rewards.append((x.health - 1) * -1)
-            elif x.shield == 107:
-                self.decomposed_reward_dict['damageToEnemyHydralisk'] = x.health - 1
-                rewards.append(x.health - 1)
-            elif x.shield == 108:
-                self.decomposed_reward_dict['damageByEnemyHydralisk'] = (x.health - 1) * -1
-                rewards.append((x.health - 1) * -1)
-            elif x.shield == 109:
-                self.decomposed_reward_dict['damageToEnemyThor'] = x.health - 1
-                rewards.append(x.health - 1)
-            elif x.shield == 110:
-                self.decomposed_reward_dict['damageByEnemyThor'] = (x.health - 1)* -1
-                rewards.append((x.health - 1) * -1)
-            elif x.shield == 111:
-                self.decomposed_reward_dict['damageToEnemyUltralisk'] = x.health - 1
-                rewards.append(x.health - 1)
-            elif x.shield == 112:
-                self.decomposed_reward_dict['damageByEnemyUltralisk'] = (x.health - 1)* -1
-                rewards.append((x.health - 1) * -1)
-            elif x.shield == 113:
-                self.decomposed_reward_dict['damageToFriendZealot'] = (x.health - 1) * -1
-                rewards.append((x.health - 1) * -1)
-            elif x.shield == 114:
-                sof = x.health
-            
+        	if x.shield == 199:
+        		sof = x.health
+        	elif x.shield > 100:
+        		rt = self.reward_types[int(x.shield - 101)]
+        		if 'damageToEnemy' in rt:
+        			self.decomposed_reward_dict[rt] = x.health - 1
+        		else:
+        			self.decomposed_reward_dict[rt] = (x.health - 1) * -1
         return rewards, sof
-
         
     def noop(self):
         return actions.FUNCTIONS.no_op()
@@ -279,9 +222,9 @@ class FourTowerSequentialFriendlyUnits():
 
         #print(state.shape)
         self.decomposed_rewards_all.append([])
-        for key in self.decomposed_reward_dict:
+        for rt in self.reward_types:
             la = len(self.decomposed_rewards_all)
-            self.decomposed_rewards_all[la - 1].append(self.decomposed_reward_dict[key])
+            self.decomposed_rewards_all[la - 1].append(self.decomposed_reward_dict[rt])
  #       print(self.signal_of_finished,sof)
         if self.signal_of_finished != sof:
             done = True
@@ -293,7 +236,7 @@ class FourTowerSequentialFriendlyUnits():
             self.decomposed_rewards.append([])
             
             
-            for i, key in enumerate(self.decomposed_reward_dict):
+            for i, rt in enumerate(self.reward_types):
                 l = len(self.decomposed_rewards)
                 la = len(self.decomposed_rewards_all)
                 if not dead:
