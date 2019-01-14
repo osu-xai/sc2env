@@ -49,7 +49,6 @@ message UserCommand {
 		POLL_FOR_COMMANDS= 5;
 		SET_SPEED = 8;
 		SELECT_FILE = 9;
-		SELCT_FILE_COMPLETE - LEFT OFF HERE - WHAT WAS THIS USED FOR
 	}
 	required UserCommandType command_type = 1;
 	repeated string args = 2;
