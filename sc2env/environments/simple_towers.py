@@ -1,8 +1,10 @@
 import os
 import random
 import numpy as np
+
 from pysc2.env import sc2_env
 from pysc2.lib import actions
+import gym
 from gym.spaces.discrete import Discrete
 
 from sc2env.pysc2_util import register_map
@@ -22,7 +24,7 @@ UNIT_ID_LIST = [
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
-class SimpleTowersEnvironment():
+class SimpleTowersEnvironment(gym.Env):
     def __init__(self):
         self.sc2env = make_sc2env()
         self.action_space = Discrete(self.actions())
