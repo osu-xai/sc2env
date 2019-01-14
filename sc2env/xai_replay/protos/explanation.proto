@@ -1,0 +1,56 @@
+syntax = "proto2";
+
+package sc2env.common;
+
+message ExplanationPoints {
+	repeated ExplanationPoint explanation_points = 1;
+}
+
+message ExplanationPoint {
+   // which step in the game this explanation corresponds to
+    optional uint32 step = 1;
+	// the id will be a one-up number that may or may not be equiv to the step
+    optional uint32 id = 2; 
+	// short identifier to be shown on timeline (ex "knight attacks x")
+    optional string title = 3; 
+	// longer string that could be shown in tooltip on mouseover  
+	// (if the particular explanation system in play can generate a meaningful summary) 
+    optional string description = 4;
+    optional Saliency saliency = 5;
+    optional BarChart bar_chart = 6;
+}
+
+message BarChart {
+  repeated BarGroup groups = 1;
+  optional string title = 2;
+  optional string v_title = 3;
+  optional string h_title = 4;
+}
+
+message BarGroup {
+	optional double value = 1;
+    repeated Bar bars = 2;
+    optional string saliency_id = 3;
+    optional string name = 4;
+}
+
+message Bar {
+    required double value = 1;
+    optional string saliency_id = 2;
+    optional string name = 3;
+}
+message Layer {
+    optional string name = 1;
+    repeated double cells = 2;
+    // to address the cell: row major order (row, row...)
+    optional uint32 width = 3;
+    optional uint32 height = 4;
+}
+
+message Layers {
+   repeated Layer layers = 1;
+}
+
+message Saliency {
+    map<string,Layers> saliency_map= 1;
+}

@@ -1,0 +1,88 @@
+syntax = "proto2";
+
+package sc2env.replay;
+
+import "user_study.proto";
+import "explanation.proto";
+
+// A simple list of `ScaiiPacket`s that have accumulated
+// before the last time this module was checked for responses.
+// All modules should collect their responses into a single `MultiMessage`
+// when queried. 
+//
+// If no responses have accumulated, an empty `MultiMessage` is allowed.
+message MultiMessage {
+	repeated ScaiiPacket packets = 1;
+}
+
+// The main wrapper packet, everything else is in terms of this.
+// All Scaii Modules are expected to handle an arbitrary `ScaiiPacket`,
+// but may elect to redirect an `Error` to the `src` field if they are
+// given a message they do not specifically handle (for instance,
+// being given a `VizInit` packet as an environment backend).
+//
+// Silently ignoring unsupported packets is allowed as well, but
+// passing error messages may make debugging easier.
+message ScaiiPacket {
+	// The specific packet this resolves to
+	oneof specific_msg {
+		UserCommand user_command = 1;
+		SC2ReplaySessionConfig replay_session_config = 2;
+		ExplanationDetails expl_details = 3;
+		ReplayChoiceConfig replay_choice_config = 4;
+        StudyQuestions study_questions = 5;
+        StudyQuestionAnswer study_question_answer = 6;
+        LogFileEntry log_file_entry = 7;
+	}
+
+}
+
+// Since Rpc waits for a response for each packet that is sent,
+// but in non-testing mode, Viz does not send back state,
+// we send back a UserCommand of the NONE variety as a simple Ack.  
+// EXPLAIN is a standin for when explanation info is requested.
+
+message UserCommand {
+	enum UserCommandType {
+		NONE = 0;
+		EXPLAIN = 1;
+		POLL_FOR_COMMANDS= 5;
+		SET_SPEED = 8;
+		SELECT_FILE = 9;
+		SELCT_FILE_COMPLETE - LEFT OFF HERE - WHAT WAS THIS USED FOR
+	}
+	required UserCommandType command_type = 1;
+	repeated string args = 2;
+}
+
+// the replay files available for replay
+message ReplayChoiceConfig {
+	repeated string replay_filenames = 1;
+    required bool user_study_mode = 6;
+}
+
+message SC2ReplaySessionConfig {
+	required string json_data = 1;
+	repeated ExplanationPoint explanations = 1;
+	repeated string reward_types = 2;
+}
+
+// Configures a module (e.g. backend) to begin recording, logging how often 
+// it should emit serialized keyframes
+//
+// NOTE: Since the frontend is responsible for making serialization requests and
+//  forwarding packets to the recorder, `keyframe_interval` will be ignored unless the
+// backend has some facility meant to take control of the game for some time.
+message Record {
+	required uint32 keyframe_interval = 1;
+}
+
+//
+// Replay will, upon request, forward ExplanationDetails for a particular step
+// the UI knows which steps have that information from ReplaySessionConfig's info
+//
+message ExplanationDetails {
+	optional uint32 step = 1;
+    optional ExplanationPoint expl_point = 2;
+	optional ChartInfo chart = 3;
+}
