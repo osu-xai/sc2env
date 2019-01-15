@@ -1,0 +1,33 @@
+syntax = "proto2";
+
+package sc2env.replay;
+
+message StudyQuestions {
+    repeated StudyQuestion study_questions = 1;
+    required string user_id = 2;
+    required string treatment_id = 3;
+    required string answer_filename = 4;
+}
+
+message StudyQuestion {
+    required string step = 1;
+    required string question = 2;
+    repeated string answers = 3;
+    required string question_id_for_step = 4;
+    required string question_type = 5;
+}
+
+message StudyQuestionAnswer {
+    required string step = 1;
+    required string question_number = 2;
+    required string question = 3;
+    required string answer = 4;
+    required string user_id = 5;
+    required string treatment_id = 6;
+}
+
+message LogFileEntry {
+    required string filename = 1;
+    required string entry = 2;
+    required bool is_last_line = 3;
+}

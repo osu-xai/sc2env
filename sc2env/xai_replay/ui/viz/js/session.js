@@ -7,142 +7,6 @@ var activeStudyQuestionManager = undefined;
 var stateMonitor = undefined;
 var userActionMonitor = undefined;
 
-// ToDo - when strat jump- turn off incrementing index until receive set position.  Unblock incrementing on jump complete
-// then it will be apparent if we need to correct for ReplaySequencer's index pointing to next-packet-to-send rather than 
-// current packet in hand
-function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointSteps, progressWidth) {
-	var sim = {};
-	sim.replaySequencerIndex  = 0;
-	sim.replaySequencerMaxIndex = stepSizeAsKnownInReplaySequencer - 1;
-    sim.progressWidth = progressWidth;
-    sim.decisionPointSteps = decisionPointSteps;
-    
-    sim.isAtDecisionPoint = function() {
-        return this.decisionPointSteps.includes(this.getCurrentIndex());
-    }
-    sim.getDPThatStartsEpochForStep = function(step) {
-        if (Number(step) > Number(this.replaySequencerMaxIndex)){
-            return "NA";
-        }
-        var result = "DP1";
-        for (var i in this.decisionPointSteps){
-            var dpStep = this.decisionPointSteps[i];
-            if (Number(dpStep) <= Number(step)) {
-                var indexPlusOne = Number(i) + Number(1);
-                result = "DP" + indexPlusOne; 
-            }
-            else {
-                return result;
-            } 
-        }
-        return result;
-    }
-
-    sim.getStepThatStartsEpochForStep = function(step){
-        if (Number(step) > Number(this.replaySequencerMaxIndex)){
-            alert("step number higher than max!  Returning step 1");
-            return 1;
-        }
-        for (var i in this.decisionPointSteps){
-            var dpStep = this.decisionPointSteps[i];
-            if (Number(dpStep) <= Number(step)) {
-                return dpStep;
-            }
-        }
-        alert("step number less than 1!  Returning step 1");
-        return 1;
-    }
-	// progress bar is divided up in stepSizeAsKnownInReplaySequencer - 1 pieces
-	// because the first chunk of that we want to correspond to ReplaySequencer.scaii_pkts[1]
-	// since ReplaySequencer.scaii_pkts[0] corresponds to the initial state (prior to first "step")
-	var progressBarSegmentCount = stepSizeAsKnownInReplaySequencer - 1;
-	sim.progressBarSegmentCount = progressBarSegmentCount
-	sim.getStepCountToDisplay = function(){
-		if (this.replaySequencerIndex == 0) {
-			return undefined;
-		}
-		else {
-			// from one on up, the actual replaySequencerIndex will be what we want to display 
-			// as we are presenting the step sequence as starting at 1.
-			return this.replaySequencerIndex;
-		}
-	}
-	
-	sim.isAtGameStart = function() {
-		return (this.replaySequencerIndex == 0);
-	}
-	
-	sim.isAtTimelineStepOne = function() {
-		return (this.replaySequenceIndex == 1);
-	}
-	sim.getReplaySequencerIndexForClick = function(xIndexOfClick){
-		var percent = xIndexOfClick/this.progressWidth;
-		// example, click 65% -> 6.5 -> 6  -> add one for UI render -> 7  so clicking on segment 7 of 10
-		var replaySequenceTargetStep = Math.floor(this.progressBarSegmentCount * percent) + 1;
-		if (replaySequenceTargetStep > this.replaySequencerMaxIndex) {
-			replaySequenceTargetStep = this.replaySequencerMaxIndex;
-		}
-		//console.log('calculated replaySequenceTargetStep as ' + replaySequenceTargetStep);
-		return replaySequenceTargetStep;
-	}
-	
-	sim.setReplaySequencerIndex = function(index) {
-        var currentDP = sessionIndexManager.getDPThatStartsEpochForStep(this.replaySequencerIndex);
-        var nextDP = sessionIndexManager.getDPThatStartsEpochForStep(index);
-        if (currentDP != nextDP){
-            epochIsChanging();
-        }
-		//$("#why-button").remove();
-		this.replaySequencerIndex = index;
-        //console.log('');
-
-        if (this.decisionPointSteps.includes(index)){
-            currentExplManager.captureEntitiesForDecisionPoint(index);
-        }
-        //console.log('replaySequencerIndex is now ' + index);
-        var displayVal = this.getStepCountToDisplay();
-        //console.log('display Step value : ' + displayVal);
-		if (displayVal == undefined){
-			$("#step-value").html('');
-		}
-		else {
-			$("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
-		}
-		paintProgress(this.getProgressBarValue());
-	}
-	
-	sim.getProgressBarValue = function() {
-		var value = Math.floor((this.replaySequencerIndex / this.replaySequencerMaxIndex ) * 100);
-		//console.log('progress value to paint: ' + value);
-		return value;
-	}
-	
-	sim.getPercentIntoGameForStep = function(step){
-		var value = Math.floor((step / this.replaySequencerMaxIndex ) * 100);
-		return value;
-	}
-	sim.getCurrentIndex = function() {
-		return this.replaySequencerIndex;
-    }
-    
-	sim.getMaxIndex = function() {
-		return this.replaySequencerMaxIndex;
-	}
-
-	sim.incrementReplaySequencerIndex = function() {
-		if (Number(Number(this.replaySequencerIndex) + Number(1)) <= this.replaySequencerMaxIndex) {
-			this.setReplaySequencerIndex(this.replaySequencerIndex + 1);
-		}
-	}
-	sim.isAtEndOfGame = function(){
-		if (this.replaySequencerIndex == this.replaySequencerMaxIndex) {
-			return true;
-		} 
-		return false;
-	}
-	return sim;
-}
-
 var treatmentID = undefined;
 
 // Since studyMode is controlled at front end, backend is unaware which mode and will always send 
@@ -184,19 +48,6 @@ function handleStudyQuestions(studyQuestions){
     $("#reward-values-panel").append(winningActionLabel);
     // re-render this sowe can change names to ??? if need to for waitForPredictionClick questions
     renderDecisionPointLegend();
-}
-function handleReplayControl(replayControl) {
-	var command = replayControl.getCommandList();
-	if (command.length == 2) {
-		if (command[0] == 'set_step_position') {
-			//console.log('___set_step_position updating step from handleReplayControl to ' + command[1] + ' which should be one prior to what the first viz packet arriving will set it to');
-			sessionIndexManager.setReplaySequencerIndex(parseInt(command[1]));
-            updateButtonsAfterJump();
-            if (userStudyMode){
-                activeStudyQuestionManager.accessManager.express();
-            }
-		}
-	}
 }
 
 function promoteTutorialFileIfPresent(replayNames) {
@@ -285,6 +136,9 @@ function clearUIElementsForNewFile(){
     $("#cumulative-rewards").empty();
     rewardsDivMap = {};
 }
+//
+// SC2_CHANGE - this info will be sent in the json blob so it will become extractReplaySessionConfig(json_string)
+//
 function handleReplaySessionConfig(rsc, selectedStep) {
 	if (!rsc.hasStepCount()) {
 		dialog('Error no stepCount carried by ReplaySessionConfig');
@@ -309,6 +163,9 @@ function handleVizInit(vizInit) {
 	// ignoring gameboard width and height, assume 40 x 40
 }
 
+//
+// SC2_CHANGE - no Viz packet comes in, but timing loop will trigger portion of this to be renamed handleSC2Data(frame_info)
+//
 function handleViz(vizData) {
 	entitiesList = vizData.getEntitiesList();
 	cumulativeRewardsMap = vizData.getCumulativeRewardsMap();
@@ -349,6 +206,10 @@ function handleViz(vizData) {
 	}
 }
 var totalsString = "total score";
+//
+// SC2_CHANGE rework to handle java object for the reward info,
+// adding up reward info as we go forward and subtracting as we go backward
+//
 function handleCumulativeRewards(crm) {
 	var entryList = crm.getEntryList();
 	var total = 0;
@@ -442,6 +303,21 @@ function addCumRewardPair(index, key, val){
 //  9. Viz
 //  10. JumpCompleted
 //
+
+//
+// SC2_CHANGE fewer packets arrive.   New protocol will bew as follows:
+//
+
+//  INITIAL ORDER OF ARRIVAL OF PACKETS
+//
+//  1. ReplayChoiceConfig   (list of filenames)
+//  2. SC2ReplaySessionConfig
+//  3. StudyQuestions (optional)
+
+
+//
+// SC2_CHANGE remove deadcode, tweak for adjusted code
+//
 function handleScaiiPacket(sPacket) {
 	var result = undefined;
 	if (sPacket.hasReplayChoiceConfig()) {
@@ -456,35 +332,11 @@ function handleScaiiPacket(sPacket) {
 		//var selectedStep = undefined;
 		handleReplaySessionConfig(config,undefined);
 	}
-	else if (sPacket.hasVizInit()) {
-		//console.log("-----got vizInit");
-		var vizInit = sPacket.getVizInit();
-		handleVizInit(vizInit);
-		controlsManager.gameStarted();
-	}
-	else if (sPacket.hasViz()) {
-		//console.log("-----got Viz");
-		var viz = sPacket.getViz();
-		handleViz(viz);
-		// we're moving forward so rewind should be enabled
-		controlsManager.gameSteppingForward();
-		if (testingMode) {
-			result = buildReturnMultiMessageFromState(masterEntities);
-		}
-		else {
-			result = new proto.scaii.common.MultiMessage;
-		}
-	}
 	else if (sPacket.hasExplDetails()) {
 		//console.log('has expl details');
 		var explDetails = sPacket.getExplDetails();
         handleExplanationDetails(explDetails);
 	}
-	else if (sPacket.hasReplayControl()) {
-		//console.log("-----got replayCOntrol");
-		var replayControl = sPacket.getReplayControl();
-		handleReplayControl(replayControl);
-    }
     else if(sPacket.hasStudyQuestions()) {
         handleStudyQuestions(sPacket.getStudyQuestions());
     }
@@ -495,30 +347,22 @@ function handleScaiiPacket(sPacket) {
 	else if (sPacket.hasUserCommand()) {
 		var userCommand = sPacket.getUserCommand();
 		var commandType = userCommand.getCommandType();
-		if (commandType == proto.scaii.common.UserCommand.UserCommandType.POLL_FOR_COMMANDS) {
-            if (userInfoScaiiPackets.length > 0){
-                result = buildResponseToReplay(userInfoScaiiPackets);
-                userInfoScaiiPackets = [];
-            }
-			//console.log("-----got pollForCommands");
-			else if (userCommandScaiiPackets.length > 0) {
-				result = buildResponseToReplay(userCommandScaiiPackets);
-                controlsManager.userCommandSent();
-                userCommandScaiiPackets = [];
-			}
-			else {
-				result = new proto.scaii.common.MultiMessage;
-			}
-		}
-		else if (commandType == proto.scaii.common.UserCommand.UserCommandType.JUMP_COMPLETED) {
+		if (commandType == proto.scaii.common.UserCommand.UserCommandType.JUMP_COMPLETED) {
 			//console.log("-----got jump completed message");
             controlsManager.jumpCompleted();
             if (userStudyMode) {
                 tabManager.finalStepsForChangeToTab();
-            }
+			}
+			//
+			//  SC2_CHANGE  we need the following line somewhere else
+			//
             currentExplManager.setCurrentStepAfterJump(sessionIndexManager.getCurrentIndex());
 		}
 		else if (commandType == proto.scaii.common.UserCommand.UserCommandType.SELECT_FILE_COMPLETE){
+
+			//
+			//  SC2_CHANGE  we need the following code blocks somewhere else
+			//
             controlsManager.doneLoadReplayFile();
             if (userStudyMode){
                 if (!hasShownWelcomeScreen){
