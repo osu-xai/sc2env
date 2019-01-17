@@ -24,7 +24,7 @@ UNIT_ID_LIST = [
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
-class SimpleTowersEnvironment(gym.Env):
+class SimpleTacticalEnvironment(gym.Env):
     def __init__(self):
         self.sc2env = make_sc2env()
         self.action_space = Discrete(self.actions())

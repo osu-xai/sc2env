@@ -6,18 +6,18 @@ from tqdm import tqdm
 import imutil
 
 from sc2env.q_learning_agent import ConvNetQLearningAgent, to_tensor
-from sc2env.environments.simple_towers import SimpleTowersEnvironment
+from sc2env.environments.simple_tactical import SimpleTacticalEnvironment
 
 
 def train_agent(train_episodes=1000, epochs=100):
     # This environment teaches win/loss outcomes vs different enemies
-    env = SimpleTowersEnvironment()
+    env = SimpleTacticalEnvironment()
     agent = ConvNetQLearningAgent(num_input_layers=env.layers(), num_actions=env.actions())
     demo_state = env.reset()
 
     for epoch in range(epochs):
         # Train agent
-        env = SimpleTowersEnvironment()
+        env = SimpleTacticalEnvironment()
         cumulative_reward = 0
         cumulative_loss = 0
         for i in range(train_episodes):
