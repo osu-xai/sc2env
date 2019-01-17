@@ -50,3 +50,32 @@ Alternatively take a Scout action to reveal the composition of the opponent's ar
 Observation Space: Features and pixels.
 
 Reward: Binary win/loss
+
+### Generating replays
+
+To setup the environment so that you can generate replays of your own, ensure you have >= python 3.6.  Then install sc2env as above if you haven't already.  Then install abp using the instructions at https://github.com/osu-xai/abp.  Then, when ready to do replay, do this: git pull under both abp and sc2env to get the latest, then cd into abp and do:
+
+````
+cd ~/sc2/sc2env
+git pull  // to get the latest
+cd ~/sc2/abp
+git pull  // to get the latest
+// so that the example you will run under abp can find the sc2env code...
+export PYTHONPATH=~/sc2/c2env
+
+// then, run the one example (as of 1/16/2019) where we have our replay recorder running
+python -m abp.trainer.task_runner -f tasks/four_towers_multi_unit/hra_recorded/v1 -t abp.examples.sc2env.four_towers_multi_unit.hra_recorded
+
+// this runs the file abp/abp/examples/sc2env/four_towers_multi_unti/hra_recorded.py, which can be adjusted as follows:
+//- how many training iterations - line 64
+//- how many test iterations - line 133
+// 
+//  ...and some things are configured (hardcoded at moment) in sc2env/sc2env/environments/four_towers_multi_unit.py, such as 
+//
+//- image dimensions - line 33
+//- step_mul  (the number of game cycles to run for every time step() is called on the environment ) - line 43
+````
+
+
+
+
