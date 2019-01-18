@@ -6,6 +6,7 @@ from pysc2.lib import actions, features, units
 from pysc2 import maps, lib
 from s2clientprotocol import sc2api_pb2 as sc_pb
 from sc2env.pysc2_util import register_map
+from sc2env.utility import getOneHotState
 import os
 SCREEN_SIZE = 40
 #MAP_NAME = 'FourTowersWithFriendlyUnits'
@@ -39,13 +40,18 @@ class FourTowerSequentialFriendlyUnits():
         self.decomposed_rewards = []
         self.decomposed_rewards_mark = 0
         self.signal_of_finished = 1
-        self.last_state = None
+        self.end_state = None
 
         self.reward_types = reward_types
         self.decomposed_reward_dict = {}
         for rt in reward_types:
         	self.decomposed_reward_dict[rt] = 0
-        #print(self.decomposed_reward_dict)
+        self.input_screen_features = {
+            "PLAYER_RELATIVE":[1, 3, 4],
+            "UNIT_TYPE": [48, 105, 73, 83, 52, 109, 51, 107],
+            'HIT_POINT': 0,
+            'HIT_POINT_RATIO': 0
+        }
         '''
         self.decomposed_reward_dict = {
             'damageToEnemyMarine' : 0,
@@ -87,14 +93,14 @@ class FourTowerSequentialFriendlyUnits():
         np.set_printoptions(threshold=np.nan,linewidth=np.nan)
  #       print(observation)
         state = observation[3]['feature_screen']
-        player_id = np.array(state[4])
-        player_id[np.array(state[6]) == 73] = 3
-        state[4] = player_id.tolist()
+        player_relative = np.array(state[5])
+        player_relative[np.array(state[6]) == 73] = 3
+        state[5] = player_relative.tolist()
  #       print(type(state))
-        state = self.getOneHotState(state)
+        state = getOneHotState(state, self.input_screen_features)
         state = np.reshape(state, (1, -1))
         
-        self.last_state = None
+        self.end_state = None
 
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
@@ -112,17 +118,17 @@ class FourTowerSequentialFriendlyUnits():
             self.decomposed_reward_dict[key] = 0
 
         return state
-
+    """
     def getOneHotState(self, state):
 
         #extend player id
-        PLAYER_ID = set([1, 3, 16])
+        PLAYER_ID = [1, 3, 16]
         tstate = self.int_map_to_onehot(np.array(state[4]),PLAYER_ID)
-
+        
         #extend unit type
-        UNIT_TYPE = set([48, 105, 73, 83, 52, 109, 51, 107])
+        UNIT_TYPE = [48, 105, 73, 83, 52, 109, 51, 107]
         tstate = np.append(tstate, self.int_map_to_onehot(np.array(state[6]),UNIT_TYPE), axis=0)
-
+        
         #append unit hit point
         tstate = np.append(tstate, self.normalizeExceptZeros(state[8],
                                                              (0, 500)), axis=0)
@@ -132,13 +138,13 @@ class FourTowerSequentialFriendlyUnits():
         hit_point_ratio = state[9] / SCALE
         hit_point_ratio = np.reshape(hit_point_ratio, (1, SCREEN_SIZE, SCREEN_SIZE))
         tstate = np.append(tstate, hit_point_ratio, axis=0)
-
+        '''
         #extend unit density
         MAX_UNIT_DENSITY = 4
         unit_density = np.clip(state[14] / MAX_UNIT_DENSITY, 0, 1)
         unit_density = np.reshape(unit_density, (1, SCREEN_SIZE, SCREEN_SIZE))
         tstate = np.append(tstate, unit_density, axis=0)
-
+        '''
        # print(tstate)
        # print(tstate.shape)
         return tstate
@@ -153,6 +159,7 @@ class FourTowerSequentialFriendlyUnits():
             nstate = (state - certainRange[0]) / (certainRange[1] - certainRange[0])
         nstate = np.reshape(nstate, (1, SCREEN_SIZE, SCREEN_SIZE))
         return nstate
+    """
     def getRewards(self, data):
         
         rewards = []
@@ -214,17 +221,17 @@ class FourTowerSequentialFriendlyUnits():
         rewards, sof = self.getRewards(data)
 
         state = observation[3]['feature_screen']
-        player_id = np.array(state[4])
-        player_id[np.array(state[6]) == 73] = 3
-        state[4] = player_id.tolist()
-        state = self.getOneHotState(state)
+        player_relative = np.array(state[5])
+        player_relative[np.array(state[6]) == 73] = 3
+        state[5] = player_relative.tolist()
+        state = getOneHotState(state, self.input_screen_features)
         state = np.reshape(state, (1, -1))
 
         #print(state.shape)
         self.decomposed_rewards_all.append([])
-        for rt in self.reward_types:
-            la = len(self.decomposed_rewards_all)
-            self.decomposed_rewards_all[la - 1].append(self.decomposed_reward_dict[rt])
+        la = len(self.decomposed_rewards_all)
+        for key in self.decomposed_reward_dict:
+            self.decomposed_rewards_all[la - 1].append(self.decomposed_reward_dict[key])
  #       print(self.signal_of_finished,sof)
         if self.signal_of_finished != sof:
             done = True
@@ -236,7 +243,7 @@ class FourTowerSequentialFriendlyUnits():
             self.decomposed_rewards.append([])
             
             
-            for i, rt in enumerate(self.reward_types):
+            for i in range(len(self.reward_types)):
                 l = len(self.decomposed_rewards)
                 la = len(self.decomposed_rewards_all)
                 if not dead:
@@ -257,8 +264,24 @@ class FourTowerSequentialFriendlyUnits():
                 state.append(0.0)
 #        print(done,dead)
         '''
-        if not dead:
-            self.last_state = state
+        if dead:
+
+            state = observation[3]['feature_screen']
+            player_id = np.array(state[4])
+            player_id[np.array(state[6]) == 73] = 3
+            state[4] = player_id.tolist()
+
+            agent_units_position = np.array(state[6]) == 83
+            
+            for i, s in enumerate(state):
+                nps = np.array(s)
+                nps[agent_units_position] = 0
+                state[i] = nps.tolist()
+            state = self.getOneHotState(state)
+            state = np.reshape(state, (1, -1))
+
+            self.end_state = state
+
         return state, done, dead
 
     def register_map(self, map_dir, map_name):
@@ -285,7 +308,7 @@ class FourTowerSequentialFriendlyUnits():
         return action in self.get_available_actions(obs)
 
 
-
+    """
     def int_map_to_onehot(self, x, vocabulary=None):
         if vocabulary is None:
             # If no vocabulary is known, make a conservative assumption
@@ -296,6 +319,7 @@ class FourTowerSequentialFriendlyUnits():
             output_map[i][x == id] = 1.
        # print(output_map)
         return output_map
+    """
 """
 # Unit test for int_map_to_onehot
 x = np.zeros((84, 84), dtype=int)
