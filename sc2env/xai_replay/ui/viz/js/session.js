@@ -1,5 +1,4 @@
 var testingMode = false;
-var replaySessionConfig;
 var replayChoiceConfig;
 var selectedExplanationStep = undefined;
 var sessionIndexManager = undefined;
@@ -11,7 +10,7 @@ var treatmentID = undefined;
 
 // Since studyMode is controlled at front end, backend is unaware which mode and will always send 
 // questions if it finds them.  So, we need to check userStudyMode here.
-function handleStudyQuestions(studyQuestions){
+function handleStudyQuestions(studyQuestions){ //SC2_OK
     if (!userStudyMode) {
         return;
     }
@@ -50,7 +49,7 @@ function handleStudyQuestions(studyQuestions){
     renderDecisionPointLegend();
 }
 
-function promoteTutorialFileIfPresent(replayNames) {
+function promoteTutorialFileIfPresent(replayNames) {//SC2_OK
     var setAside = undefined;
     var result = [];
     for (var i in replayNames) {
@@ -70,7 +69,9 @@ function promoteTutorialFileIfPresent(replayNames) {
 
 var userStudyMode = false;
 var rewardDivMap = {};
-function handleReplayChoiceConfig(config){
+// accept the list of replay filenames
+function handleReplayChoiceConfig(config){//SC2_OK
+    $("#connectButton").remove();
     var replayNames = config.getReplayFilenamesList();
      // studyQuestionMode not yet set to check, just always check - unlikely to be a problem
     // make tutorial file the default
@@ -93,17 +94,17 @@ function handleReplayChoiceConfig(config){
     }
 }
 
-function isTutorial() {
+function isTutorial() {//SC2_OK
     return chosenFile.startsWith("tutorial");
 }
 var chosenFile;
 
-function loadSelectedReplayFile() {
+function loadSelectedReplayFile() {//SC2_OK
     var filename = $( "#replay-file-selector option:selected" ).text();
     loadReplayFile(filename);
 }
 
-function loadReplayFile(filename) {
+function loadReplayFile(filename) {//SC2_OK
     $("#cue-arrow-div").remove();
     if (userActionMonitor != undefined) {
         userActionMonitor.clickListener = undefined;
@@ -124,11 +125,9 @@ function loadReplayFile(filename) {
     currentExplManager = getExplanationsV2Manager();
     currentExplManager.setFilename(filename);
     currentExplManager.setUserStudyMode(false);
-    // start fresh with entities
-    cleanEntities();
 }
 
-function clearUIElementsForNewFile(){
+function clearUIElementsForNewFile(){//SC2_OK
     $("#action-list").empty();
     $("#why-button").remove();
     $("#explanation-control-panel").empty();
@@ -137,47 +136,42 @@ function clearUIElementsForNewFile(){
     rewardsDivMap = {};
 }
 //
-// SC2_CHANGE - this info will be sent in the json blob so it will become extractReplaySessionConfig(json_string)
+// SC2_TODO - this info will be sent in the json blob so it will become extractReplaySessionConfig(json_string)
 //
-function handleReplaySessionConfig(rsc, selectedStep) {
-	if (!rsc.hasStepCount()) {
-		dialog('Error no stepCount carried by ReplaySessionConfig');
-    }
-    if (rsc.getSuppressInteractivity()) {
-        liveModeInputBlocked = true;
+function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
+    //SC2_TODO - do we need to block user input (i removed setting that flag from this function)
+    currentSC2DataManager = getSC2DataManager(rsc);
+    malformedMessage = currentSC2DataManager.getMalformedMessage();
+	if (malformedMessage != undefined) {
+		alert(malformedMessage);
     }
 	var timelineWidth = expl_ctrl_canvas.width - 2*timelineMargin;
-	sessionIndexManager = getSessionIndexManager(rsc.getStepCount(), rsc.getExplanationStepsList(), timelineWidth);
+	sessionIndexManager = getSessionIndexManager(currentSC2DataManager.getStepCount(), currentSC2DataManager.getExplanationStepsList(), timelineWidth);
     sessionIndexManager.setReplaySequencerIndex(0);
-    currentExplManager.stepsWithExplanations = replaySessionConfig.getExplanationStepsList();
+    currentExplManager.stepsWithExplanations = currentSC2DataManager.getExplanationStepsList();
 }
 
-
-function handleVizInit(vizInit) {
-	$("#connectButton").remove();
-	if (vizInit.hasTestMode()) {
-		if (vizInit.getTestMode()) {
-			testingMode = true;
-		}
-    }
-	// ignoring gameboard width and height, assume 40 x 40
+function playNextFrameAfterDelay(){//SC2_TEST
+    window.setTimeout(playNextFrame, 400);
+}
+function playNextFrame(){//SC2_TEST
+    var frameInfo = currentSC2DataManager.getNextFrameInfo()
+    handleSC2Data(frameInfo);
+}
+function jumpToFrame(frameIndex){//SC2_TEST
+    currentSC2DataManager.setNextFrameAs(frameIndex);
+    playNextFrame();
 }
 
-//
-// SC2_CHANGE - no Viz packet comes in, but timing loop will trigger portion of this to be renamed handleSC2Data(frame_info)
-//
-function handleViz(vizData) {
-	entitiesList = vizData.getEntitiesList();
-	cumulativeRewardsMap = vizData.getCumulativeRewardsMap();
-	handleCumulativeRewards(cumulativeRewardsMap);
-    handleEntities(entitiesList);
+function handleSC2Data(frameInfo){//SC2_TEST
+    expressCumulativeRewards(frameInfo);
     var qm = activeStudyQuestionManager;
-	if (!jumpInProgress) {
+//	if (!jumpInProgress) {// SC2_TODO - is this correct?
         sessionIndexManager.incrementReplaySequencerIndex();
         if (userStudyMode) {
             // will ask for first DP
             qm.configureForCurrentStep();
-        }
+//        }
     }
     if (userStudyMode) {
         if (tabManager.hasShownUserId()){
@@ -205,13 +199,14 @@ function handleViz(vizData) {
 		controlsManager.reachedEndOfGame();
 	}
 }
+
 var totalsString = "total score";
 //
-// SC2_CHANGE rework to handle java object for the reward info,
+// SC2_TODO rework to handle java object for the reward info,
 // adding up reward info as we go forward and subtracting as we go backward
 //
-function handleCumulativeRewards(crm) {
-	var entryList = crm.getEntryList();
+function expressCumulativeRewards(frameInfo) { //SC2_TEST
+    entryList = currentSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;
 	//compute totals
 	for (var i in entryList ){
@@ -247,12 +242,12 @@ function handleCumulativeRewards(crm) {
   	}
 }
 
-function getRewardValueId(val) {
+function getRewardValueId(val) {//SC2_OK
 	var legalIdVal = convertNameToLegalId(val);
 	return 'reward'+legalIdVal;
 }
 
-function addCumRewardPair(index, key, val){
+function addCumRewardPair(index, key, val){//SC2_OK
 	var rewardKeyDiv = document.createElement("DIV");
 	rewardKeyDiv.setAttribute("class", "r" + index +"c0");
 	if (key == totalsString){
@@ -288,7 +283,7 @@ function addCumRewardPair(index, key, val){
     $("#cumulative-rewards").append(rewardValDiv);
 }
 //
-//  INITIAL ORDER OF ARRIVAL OF PACKETS
+//  INITIAL ORDER OF ARRIVAL OF PACKETS FOR YEAR 1 SYSTEM
 //
 //  1. ReplayChoiceConfig   (list of filenames)
 //  2. ReplaySessionConfig
@@ -305,7 +300,7 @@ function addCumRewardPair(index, key, val){
 //
 
 //
-// SC2_CHANGE fewer packets arrive.   New protocol will bew as follows:
+// SC2_TODO fewer packets arrive.   New protocol will bew as follows:
 //
 
 //  INITIAL ORDER OF ARRIVAL OF PACKETS
@@ -316,7 +311,7 @@ function addCumRewardPair(index, key, val){
 
 
 //
-// SC2_CHANGE remove deadcode, tweak for adjusted code
+// SC2_TODO remove deadcode, tweak for adjusted code
 //
 function handleScaiiPacket(sPacket) {
 	var result = undefined;
@@ -325,12 +320,11 @@ function handleScaiiPacket(sPacket) {
 		replayChoiceConfig = config;
 		handleReplayChoiceConfig(config);
 	}
-	else if (sPacket.hasReplaySessionConfig()) {
+	else if (sPacket.hasSC2ReplaySessionConfig()) {
 		//console.log("-----got replaySessionConfig");
-		var config = sPacket.getReplaySessionConfig();
+		var config = sPacket.getSC2ReplaySessionConfig();
 		replaySessionConfig = config;
-		//var selectedStep = undefined;
-		handleReplaySessionConfig(config,undefined);
+		handleSC2ReplaySessionConfig(config,undefined);
 	}
 	else if (sPacket.hasExplDetails()) {
 		//console.log('has expl details');
@@ -344,24 +338,14 @@ function handleScaiiPacket(sPacket) {
 		console.log("-----got errorPkt");
 		console.log(sPacket.getErr().getDescription())
 	}
-	else if (sPacket.hasUserCommand()) {
+    else if (sPacket.hasUserCommand()) {//SC2_TODO - there will be no SELCT_FILE_COMPLETE form the backend
+                                        // so we need to figure out where to put the below userStudyMode clde
 		var userCommand = sPacket.getUserCommand();
 		var commandType = userCommand.getCommandType();
-		if (commandType == proto.scaii.common.UserCommand.UserCommandType.JUMP_COMPLETED) {
-			//console.log("-----got jump completed message");
-            controlsManager.jumpCompleted();
-            if (userStudyMode) {
-                tabManager.finalStepsForChangeToTab();
-			}
-			//
-			//  SC2_CHANGE  we need the following line somewhere else
-			//
-            currentExplManager.setCurrentStepAfterJump(sessionIndexManager.getCurrentIndex());
-		}
-		else if (commandType == proto.scaii.common.UserCommand.UserCommandType.SELECT_FILE_COMPLETE){
+		if (commandType == proto.scaii.common.UserCommand.UserCommandType.SELECT_FILE_COMPLETE){
 
 			//
-			//  SC2_CHANGE  we need the following code blocks somewhere else
+			//  SC2_TODO  we need the following code blocks somewhere else
 			//
             controlsManager.doneLoadReplayFile();
             if (userStudyMode){

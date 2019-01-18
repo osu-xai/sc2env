@@ -153,7 +153,7 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 		this.setWaitCursor();
 	}
 
-	manager.doneLoadReplayFile = function () {
+	manager.doneLoadReplayFile = function () {// SC2_TODO - this needs to be called at end of handleSC2ReplaySessionConfig
 		userInputBlocked = false;
 		this.expressResumeButton();
 		this.enablePauseResume();
@@ -186,13 +186,13 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	//
 	//   JUMP
 	//
-	manager.userJumped = function () {
+	manager.userJumped = function () {//SC2_TODO - no longer needed since atomic?
 		jumpInProgress = true;
 		userInputBlocked = true;
 		// no pending action for this, re-enablingcontrols happenes when we get a JUMP_COMPLETED message from replay
 	}
 
-	manager.jumpCompleted = function () {
+	manager.jumpCompleted = function () {//SC2_TODO - no longer needed since atomic?
 		jumpInProgress = false;
 		userInputBlocked = false;
 		//this.expressResumeButton(); // pause automatically engaged in Replay when jump completed.
