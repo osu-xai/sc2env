@@ -494,25 +494,21 @@ function getOverlayOpacityBySaliencyRGBAStringQuantized(saliencyValue, gameboard
 function processSaliencyMapClick(e, ch){
     var x = e.offsetX;
     var y = e.offsetY;
-    var shapeId = getClosestInRangeShapeId(gameboard_ctx, x, y);
+    var unitId = currentSC2DataManager.getClosestUnitInRange(x, y);
     var logLine = templateMap["clickSaliencyMap"];
-    if (shapeId != undefined){
-        //targetClickHandler(e, "clickEntity:" + shapeLogStrings[shapeId] + "_" + getQuadrantName(x,y));
+    if (unitId != undefined){
         logLine = logLine.replace("<REGION>", "saliencyMap");
         logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
-        logLine = logLine.replace("<SHAPE_LOG>", shapeLogStrings[shapeId]);
-        logLine = logLine.replace("<QUADRANT_NAME>", getQuadrantName(x,y));
+        logLine = logLine.replace("<SHAPE_LOG>", shapeLogStrings[unitId]);
+        logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
         targetClickHandler(e, logLine);
-        //targetClickHandler(e, "clickSaliencyMap:" + ch.name + "_(" + shapeLogStrings[shapeId] + "_" + getQuadrantName(x,y)+ ")");
     }
    else {
-        //targetClickHandler(e, "clickGameQuadrant:" + getQuadrantName(x,y));
         logLine = logLine.replace("<REGION>", "saliencyMap");
         logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
         logLine = logLine.replace("<SHAPE_LOG>", "NA");
-        logLine = logLine.replace("<QUADRANT_NAME>", getQuadrantName(x,y));
+        logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
         targetClickHandler(e, logLine);
-        //targetClickHandler(e, "clickSaliencyMap:" + ch.name + "_(" + getQuadrantName(x,y) + ")");
     }
     if (userStudyMode){
         processOutlineAndOverlayUserStudyMode(ch);

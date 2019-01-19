@@ -64,7 +64,8 @@ function createHPToolTip(shapeInfo) {
     
         hpDiv.onclick = function(e) {
             highlightShapeForIdForClickCollectionFeedback(si.shapeId);
-            var targetName = "hitpoints-" + getQuadrantName() + "-" + shapeLogStrings[si.shapeId];
+            //SC2_TODO whay no x,y args to getSC2QuadrantName
+            var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + shapeLogStrings[si.shapeId];
             targetClickHandler(e, "clickHitPoints:" + targetName);
         };
 

@@ -5,6 +5,7 @@ var sessionIndexManager = undefined;
 var activeStudyQuestionManager = undefined;
 var stateMonitor = undefined;
 var userActionMonitor = undefined;
+var currentSC2DataManager = undefined;
 
 var treatmentID = undefined;
 
@@ -120,7 +121,7 @@ function loadReplayFile(filename) {//SC2_OK
     stageUserCommand(userCommand);
     clearUIElementsForNewFile();
 	drawExplanationTimeline();
-	clearGameBoards();
+	clearGameBoard();
     cleanExplanationUI();
     currentExplManager = getExplanationsV2Manager();
     currentExplManager.setFilename(filename);

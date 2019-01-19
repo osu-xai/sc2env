@@ -16,5 +16,8 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     dm.getCumulativeRewards = function() {
         alert('sc2DataManager.getCumulativeRewards unimplemented')
     }
+    dm.getClosestUnitInRange = function(canvasX, canvasY) {
+        alert('sc2DataManager.getClosestUnitInRange unimplemented')
+    }
     return dm;
 }
