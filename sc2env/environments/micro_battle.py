@@ -25,8 +25,8 @@ UNIT_ID_LIST = [
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
 class MicroBattleEnvironment(gym.Env):
-    def __init__(self):
-        self.sc2env = make_sc2env()
+    def __init__(self, render=False):
+        self.sc2env = make_sc2env(render)
         self.action_space = Discrete(self.actions())
 
     def reset(self):
@@ -62,7 +62,7 @@ class MicroBattleEnvironment(gym.Env):
 
     def actions(self):
         # No action choice: all units attack at once
-        return 1
+        return 2
 
     def layers(self):
         # One-hot unit ids plus metadata
@@ -71,17 +71,19 @@ class MicroBattleEnvironment(gym.Env):
 
 # Create the low-level SC2Env object, which we wrap with
 #  a high level Gym-style environment
-def make_sc2env():
+def make_sc2env(render=False):
+    rgb_dimensions = False
+    if render:
+        rgb_dimensions=sc2_env.Dimensions(
+            screen=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
+            minimap=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE))
     env_args = {
         'agent_interface_format': sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
                 screen=(MAP_SIZE, MAP_SIZE),
                 minimap=(MAP_SIZE, MAP_SIZE)
             ),
-            rgb_dimensions=sc2_env.Dimensions(
-                screen=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
-                minimap=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
-            ),
+            rgb_dimensions=rgb_dimensions,
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,

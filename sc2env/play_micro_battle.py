@@ -1,3 +1,4 @@
+import time
 import json
 import numpy as np
 import os
@@ -11,19 +12,20 @@ from sc2env.environments.micro_battle import MicroBattleEnvironment
 
 def train_agent(train_episodes=100):
     # This environment teaches win/loss outcomes vs different enemies
-    env = MicroBattleEnvironment()
+    env = MicroBattleEnvironment(render=True)
     agent = ConvNetQLearningAgent(num_input_layers=env.layers(), num_actions=env.actions())
     demo_state = env.reset()
 
     # Train agent
     for i in range(train_episodes):
-        play_episode(env, agent)
+        states, actions, rewards = play_episode(env, agent)
         # TODO: add this episode to a replay buffer
         # TODO: simultaneously, train a network on the replay buffer
     print('Finished playing {} episodes'.format(train_episodes))
 
 
 def play_episode(env, agent):
+    start_time = time.time()
     states, actions, rewards = [], [], []
     state = env.reset()
     done = False
@@ -33,8 +35,10 @@ def play_episode(env, agent):
         state, reward, done, info = env.step(action)
         actions.append(action)
         rewards.append(reward)
+        imutil.show(np.array(state[3]))
     states.append(state)
-    print('Finished episode in {} actions'.format(len(actions)))
+    print('Finished episode ({} actions) in {:.3f} sec'.format(
+        len(actions), time.time() - start_time))
     return states, actions, rewards
 
 
