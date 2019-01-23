@@ -46,9 +46,9 @@ function processTimelineClick(e) {
 	var clickX = e.offsetX - timelineMargin;
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
 	var targetStepString = "" + replaySequenceTargetStep;
-	var logLine = templateMap["expl-control-canvas"];
-	logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
-	targetClickHandler(e, logLine);
+	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
+	//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
+	//SC2_DEFERRED targetClickHandler(e, logLine);
     jumpToStep(targetStepString);
 }
 function stageUserCommand(userCommand) {
@@ -58,9 +58,9 @@ function stageUserCommand(userCommand) {
 }
 var tryPause = function (e) {
 	if (!userInputBlocked) {
-		var logLine = templateMap["pauseButton"];
-		logLine = logLine.replace("<TIME_LINE_PAUSE>", "NA");
-		targetClickHandler(e, logLine);
+		//SC2_DEFERRED var logLine = templateMap["pauseButton"];
+		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_PAUSE>", "NA");
+		//SC2_DEFERRED targetClickHandler(e, logLine);
 		pauseGame();
 	}
 }
@@ -71,9 +71,9 @@ function pauseGame() {
 
 var tryResume = function (e) {
 	if (!userInputBlocked) {
-		var logLine = templateMap["playButton"];
-		logLine = logLine.replace("<TIME_LINE_PLAY>", "NA");
-		targetClickHandler(e, logLine);
+		//SC2_DEFERRED var logLine = templateMap["playButton"];
+		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_PLAY>", "NA");
+		//SC2_DEFERRED targetClickHandler(e, logLine);
 		resumeGame();
 	}
 }
@@ -93,9 +93,9 @@ function resumeGame() {
 
 var tryRewind = function (e) {
 	if (!userInputBlocked) {
-		var logLine = templateMap["rewindButton"];
-		logLine = logLine.replace("<TIME_LINE_RWND>", "NA");
-		targetClickHandler(e, logLine);
+		//SC2_DEFERRED var logLine = templateMap["rewindButton"];
+		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_RWND>", "NA");
+		//SC2_DEFERRED targetClickHandler(e, logLine);
 		rewindGame();
 	}
 }

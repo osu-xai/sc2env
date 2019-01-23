@@ -3,8 +3,8 @@ var replayChoiceConfig;
 var selectedExplanationStep = undefined;
 var sessionIndexManager = undefined;
 var activeStudyQuestionManager = undefined;
-var stateMonitor = undefined;
-var userActionMonitor = undefined;
+//SC2_DEFERRED var stateMonitor = undefined;
+//SC2_DEFERRED var userActionMonitor = undefined;
 var activeSC2DataManager = undefined;
 
 var treatmentID = undefined;
@@ -33,13 +33,13 @@ function handleStudyQuestions(studyQuestions){ //SC2_OK
         tabManager.setStudyQuestionManagerForCurrentTab(activeStudyQuestionManager);
     }
 
-    if (userActionMonitor == undefined) {  userActionMonitor = getUserActionMonitor(); }
-    if (stateMonitor == undefined)      {  stateMonitor =      getStateMonitor();      }
+    //SC2_DEFERRED if (userActionMonitor == undefined) {  userActionMonitor = getUserActionMonitor(); }
+    //SC2_DEFERRED if (stateMonitor == undefined)      {  stateMonitor =      getStateMonitor();      }
 	
 	console.log(treatmentID);
     console.log(answerFilename);
-    stateMonitor.currentReplayFileName = chosenFile;
-    stateMonitor.logFileName = answerFilename;
+    //SC2_DEFERRED stateMonitor.currentReplayFileName = chosenFile;
+    //SC2_DEFERRED stateMonitor.logFileName = answerFilename;
     // make div to hold the winning action name
     var winningActionLabel = document.createElement("div");
 	winningActionLabel.setAttribute("style", "margin-top:8px;margin-left:30px;font-family:Arial;font-weight:bold;font-size:14px;");
@@ -107,9 +107,11 @@ function loadSelectedReplayFile() {//SC2_OK
 
 function loadReplayFile(filename) {//SC2_OK
     $("#cue-arrow-div").remove();
-    if (userActionMonitor != undefined) {
-        userActionMonitor.clickListener = undefined;
-    }
+    //SC2_DEFERRED
+    // if (userActionMonitor != undefined) {
+    //     userActionMonitor.clickListener = undefined;
+    // }
+    //SC2_DEFERRED_END
     clearStudyQuestionMode();
 	controlsManager.startLoadReplayFile();
 	chosenFile = filename;
@@ -262,9 +264,9 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	}
 	
 	rewardKeyDiv.innerHTML = key;
-	var logLineLabel = templateMap["touchCumRewardLabel"];
-	logLineLabel = logLineLabel.replace("<CUM_LBL>", key);
-    rewardKeyDiv.onclick = function(e) {targetClickHandler(e, logLineLabel);};
+	//SC2_DEFERRED var logLineLabel = templateMap["touchCumRewardLabel"];
+	//SC2_DEFERRED logLineLabel = logLineLabel.replace("<CUM_LBL>", key);
+    //SC2_DEFERRED rewardKeyDiv.onclick = function(e) {targetClickHandler(e, logLineLabel);};
 	$("#cumulative-rewards").append(rewardKeyDiv);
 
 	var rewardValDiv = document.createElement("DIV");
@@ -281,9 +283,9 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	}
 	
 	rewardValDiv.innerHTML = val;
-	var logLineValue = templateMap["touchCumRewardValueFor"];
-	logLineValue = logLineValue.replace("<CUM_VAL>", key);
-    rewardValDiv.onclick = function(e) {targetClickHandler(e, logLineValue);};
+	//SC2_DEFERRED var logLineValue = templateMap["touchCumRewardValueFor"];
+	//SC2_DEFERRED logLineValue = logLineValue.replace("<CUM_VAL>", key);
+    //SC2_DEFERRED rewardValDiv.onclick = function(e) {targetClickHandler(e, logLineValue);};
     $("#cumulative-rewards").append(rewardValDiv);
 }
 //
@@ -356,8 +358,8 @@ function handleScaiiPacket(sPacket) {
                 if (!hasShownWelcomeScreen){
                     // can't be tab hop, must be first screen shown
 					clearLoadingScreen();
-					var logLine = stateMonitor.getWaitForResearcherStart()
-                    stateMonitor.setUserAction(logLine);	
+					//SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherStart()
+                    //SC2_DEFERRED stateMonitor.setUserAction(logLine);	
                     showUserIdScreen();
                 }
                 else {

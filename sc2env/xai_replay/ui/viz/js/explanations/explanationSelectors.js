@@ -56,8 +56,8 @@ function configureExplanationSelectorDiamond(decisionPointNumber,step){
 		
         boldThisStepInLegend(step);
         if (userStudyMode){
-            userActionMonitor.stepToDecisionPoint(step);
-            stateMonitor.setDecisionPoint(step);
+            //SC2_DEFERRED userActionMonitor.stepToDecisionPoint(step);
+            //SC2_DEFERRED stateMonitor.setDecisionPoint(step);
 		}
         selectedDecisionStep = step;
 	}

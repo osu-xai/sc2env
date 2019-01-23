@@ -192,15 +192,17 @@ function getQuestionAccessManager(decisionPointSteps, maxStep) {
         var rightBlockDiv = document.createElement("DIV");
         rightBlockDiv.setAttribute("id", "right-block-div");
         rightBlockDiv.setAttribute("style", "position:absolute;left:" + x3 + "px;top:" + y + "px;z-index:" + zIndexMap["clickBlockerRectangle"] + ";background:" + gradientBars + ";width:" + width2 + "px;height:" + height + "px;");
-        rightBlockDiv.onclick = function(e) {
-            if (userStudyMode){
-                var logLine = templateMap["right-block-div"];
-                logLine = logLine.replace("<TIME_LINE_BLCKR>", "NA");
-                targetClickHandler(e, logLine);
-                regionClickHandlerGameArea(e);
-                userActionMonitor.globalClick(e.clientX, e.clientY);
-            }
-        }
+        //SC2_DEFERRED
+        // rightBlockDiv.onclick = function(e) {
+        //     if (userStudyMode){
+        //         var logLine = templateMap["right-block-div"];
+        //         logLine = logLine.replace("<TIME_LINE_BLCKR>", "NA");
+        //         targetClickHandler(e, logLine);
+        //         regionClickHandlerGameArea(e);
+        //         userActionMonitor.globalClick(e.clientX, e.clientY);
+        //     }
+        // }
+        //SC2_DEFERRED_END
         $("body").append(rightBlockDiv);
     }
 
@@ -232,15 +234,17 @@ function getQuestionAccessManager(decisionPointSteps, maxStep) {
         rightBlockDiv.setAttribute("id", "right-block-div");
         rightBlockDiv.setAttribute("style", "position:absolute;left:" + x2 + "px;top:" + y + "px;z-index:" + zIndexMap["clickBlockerRectangle"] 
                                           + ";background:" + gradientBars + ";width:" + width2 + "px;height:" + height + "px;");
-        rightBlockDiv.onclick = function(e) {
-            if (userStudyMode){
-                var logLine = templateMap["right-block-div"];
-                logLine = logLine.replace("<TIME_LINE_BLCKR>", "NA");
-                targetClickHandler(e, logLine);
-                regionClickHandlerGameArea(e);
-                userActionMonitor.globalClick(e.clientX, e.clientY);
-            }
-        }
+        //SC2_DEFERRED
+        // rightBlockDiv.onclick = function(e) {
+        //     if (userStudyMode){
+        //         var logLine = templateMap["right-block-div"];
+        //         logLine = logLine.replace("<TIME_LINE_BLCKR>", "NA");
+        //         targetClickHandler(e, logLine);
+        //         regionClickHandlerGameArea(e);
+        //         userActionMonitor.globalClick(e.clientX, e.clientY);
+        //     }
+        // }
+        //SC2_DEFERRED_END
         $("body").append(rightBlockDiv);
     }
     qam.blockFinalStep = function(rangePair) {
@@ -262,15 +266,17 @@ function getQuestionAccessManager(decisionPointSteps, maxStep) {
         rightBlockDiv.setAttribute("id", "right-block-div");
         rightBlockDiv.setAttribute("style", "position:absolute;left:" + x2 + "px;top:" + y + "px;z-index:" + zIndexMap["clickBlockerRectangle"] 
                                           + ";background:" + gradientBars + ";width:" + width2 + "px;height:" + height + "px;");
-        rightBlockDiv.onclick = function(e) {
-            if (userStudyMode){
-                var logLine = templateMap["right-block-div"];
-                logLine = logLine.replace("<TIME_LINE_BLCKR>", "NA");
-                targetClickHandler(e, logLine);
-                regionClickHandlerGameArea(e);
-                userActionMonitor.globalClick(e.clientX, e.clientY);
-            }
-        }
+        //SC2_DEFERRED
+        // rightBlockDiv.onclick = function(e) {
+        //     if (userStudyMode){
+        //         var logLine = templateMap["right-block-div"];
+        //         logLine = logLine.replace("<TIME_LINE_BLCKR>", "NA");
+        //         targetClickHandler(e, logLine);
+        //         regionClickHandlerGameArea(e);
+        //         userActionMonitor.globalClick(e.clientX, e.clientY);
+        //     }
+        // }
+        //SC2_DEFERRED_END
         $("body").append(rightBlockDiv);
     }
 

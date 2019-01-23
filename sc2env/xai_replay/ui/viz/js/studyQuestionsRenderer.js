@@ -283,7 +283,7 @@ function getStudyQuestionRenderer(questions) {
                 // clickAckDiv.innerHTML = "(click wasregistered)";
                 // $("#save-button-row").append(clickAckDiv);
             };
-            stateMonitor.setClickListener(listener);
+            //SC2_DEFERRED stateMonitor.setClickListener(listener);
         }
     }
 
@@ -410,8 +410,8 @@ function getStudyQuestionRenderer(questions) {
         next.setAttribute("style", "margin-left:280px;font-family:Arial;font-size:18px;padding:10px;");
         next.innerHTML = "Continue";
         next.onclick = function(e) {
-            var logLine = stateMonitor.getWaitForResearcherEnd()
-            stateMonitor.setUserAction(logLine);
+            //SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherEnd()
+            //SC2_DEFERRED stateMonitor.setUserAction(logLine);
             $("#user-wait-div").remove();
         }
         $("#user-wait-button-row").append(next);
@@ -488,8 +488,8 @@ function showUserIdScreen(){
     next.innerHTML = "Start";
     next.onclick = function() {
         clearUserIdScreen();
-        var logLine = stateMonitor.getWaitForResearcherEnd()
-        stateMonitor.setUserAction(logLine);
+        //SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherEnd()
+        //SC2_DEFERRED stateMonitor.setUserAction(logLine);
     }
     $("#user-id-button-row").append(next);
     hasShownWelcomeScreen = true;

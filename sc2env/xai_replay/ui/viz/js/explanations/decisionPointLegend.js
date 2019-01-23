@@ -55,15 +55,15 @@ function addLabelForAction(title, index, step){
 		if (!isUserInputBlocked()){
             if (userStudyMode){
                 if (activeStudyQuestionManager.accessManager.isBeyondCurrentRange(step)){
-					var logLine = templateMap["clickActionLabelDenied"];
-					logLine = logLine.replace("<CLCK_ACT_D>", escapeAnswerFileDelimetersFromTextString(fullName));
-					targetClickHandler(evt, logLine);
+					//SC2_DEFERRED var logLine = templateMap["clickActionLabelDenied"];
+					//SC2_DEFERRED logLine = logLine.replace("<CLCK_ACT_D>", escapeAnswerFileDelimetersFromTextString(fullName));
+					//SC2_DEFERRED targetClickHandler(evt, logLine);
                     return;
                 }
                 else {
-					var logLine = templateMap["clickActionLabel"];
-					logLine = logLine.replace("<CLCK_ACT>", escapeAnswerFileDelimetersFromTextString(fullName));
-					targetClickHandler(evt, logLine);
+					//SC2_DEFERRED var logLine = templateMap["clickActionLabel"];
+					//SC2_DEFERRED logLine = logLine.replace("<CLCK_ACT>", escapeAnswerFileDelimetersFromTextString(fullName));
+					//SC2_DEFERRED targetClickHandler(evt, logLine);
                 }
             }
             jumpToStep(step);

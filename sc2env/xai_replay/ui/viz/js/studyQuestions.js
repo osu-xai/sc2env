@@ -153,10 +153,10 @@ function getStudyQuestionManager(questions, userId, treatmentId) {
         }
         if (shouldAskQuestion) {
             this.mostRecentlyPosedQuestion = qid;
-            var logLine = templateMap["showQuestion"];
-            logLine = logLine.replace("<SHOW_Q>", qid);
-            stateMonitor.setUserAction(logLine);
-            stateMonitor.setQuestionId(qid);
+            //SC2_DEFERRED var logLine = templateMap["showQuestion"];
+            //SC2_DEFERRED logLine = logLine.replace("<SHOW_Q>", qid);
+            //SC2_DEFERRED stateMonitor.setUserAction(logLine);
+            //SC2_DEFERRED stateMonitor.setQuestionId(qid);
             var qu = this.questionMap[qid];
             var currentStep = this.squim.getCurrentStep();
             this.renderer.poseQuestion(qu, this.squim.getCurrentDecisionPointNumber(), currentStep);
@@ -170,8 +170,8 @@ function getStudyQuestionManager(questions, userId, treatmentId) {
             }
             else if (currentStep == "summary") {
                 if (!tabManager.hasNextTab()) {
-                    var logLine = stateMonitor.getWaitForResearcherStart()
-                    stateMonitor.setUserAction(logLine);
+                    //SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherStart()
+                    //SC2_DEFERRED stateMonitor.setUserAction(logLine);
                     this.renderer.renderWaitScreen();
                 }
                 this.accessManager.setRelationToFinalDecisionPoint("finalStep");
@@ -202,8 +202,8 @@ function getStudyQuestionManager(questions, userId, treatmentId) {
     }
 
     sqm.makeUserWaitForInstructions = function(){
-        var logLine = stateMonitor.getWaitForResearcherStart()
-        stateMonitor.setUserAction(logLine);
+        //SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherStart()
+        //SC2_DEFERRED stateMonitor.setUserAction(logLine);
         this.renderer.renderWaitScreen();
     }
     
@@ -304,7 +304,7 @@ function acceptAnswer(e) {
     tabManager.noteQuestionWasAnswered(questionId);
     var currentQuestionIndexAtStep = getQuestionIndexFromQuestionId(questionId);
     var clickInfo = renderer.collectClickInfo();
-    userActionMonitor.clickListener = undefined;
+    //SC2_DEFERRED userActionMonitor.clickListener = undefined;
     var squim = activeStudyQuestionManager.squim;
     if (clickInfo == undefined){
         clickInfo = "NA";
@@ -320,15 +320,15 @@ function acceptAnswer(e) {
         return;
     }
     renderer.removeMissingQuestionInfoMessage();
-
-    var logLine = templateMap["button-save"];
-    logLine = logLine.replace("<CLCK_STEP>", currentStep);
-    logLine = logLine.replace("<Q_INDEX_STEP>", currentQuestionIndexAtStep);
-    logLine = logLine.replace("<USR_TXT_Q1>", answer);
-    logLine = logLine.replace("<USR_TXT_Q2>", followupAnswer);
-    logLine = logLine.replace("<USR_CLCK_Q>", clickInfo);
-    targetClickHandler(e, logLine);
-
+    //SC2_DEFERRED 
+    // var logLine = templateMap["button-save"];
+    // logLine = logLine.replace("<CLCK_STEP>", currentStep);
+    // logLine = logLine.replace("<Q_INDEX_STEP>", currentQuestionIndexAtStep);
+    // logLine = logLine.replace("<USR_TXT_Q1>", answer);
+    // logLine = logLine.replace("<USR_TXT_Q2>", followupAnswer);
+    // logLine = logLine.replace("<USR_CLCK_Q>", clickInfo);
+    // targetClickHandler(e, logLine);
+    //SC2_DEFERRED 
     renderer.forgetQuestion();
     currentExplManager.noteQuestionWasAnswered();
     if (squim.hasMoreQuestionsAtThisStep()) {
