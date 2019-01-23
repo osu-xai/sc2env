@@ -5,7 +5,7 @@ var sessionIndexManager = undefined;
 var activeStudyQuestionManager = undefined;
 var stateMonitor = undefined;
 var userActionMonitor = undefined;
-var currentSC2DataManager = undefined;
+var activeSC2DataManager = undefined;
 
 var treatmentID = undefined;
 
@@ -141,26 +141,29 @@ function clearUIElementsForNewFile(){//SC2_OK
 //
 function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     //SC2_TODO - do we need to block user input (i removed setting that flag from this function)
-    currentSC2DataManager = getSC2DataManager(rsc);
-    malformedMessage = currentSC2DataManager.getMalformedMessage();
+    activeSC2DataManager = getSC2DataManager(rsc);
+    activeSC2UIManager = getSC2UIManager(activeSC2DataManager);
+    activeSC2VideoManager = getSC2VideoManager(activeSC2DataManager.getVideoFilepath())
+    malformedMessage = activeSC2DataManager.getMalformedMessage();
 	if (malformedMessage != undefined) {
 		alert(malformedMessage);
     }
 	var timelineWidth = expl_ctrl_canvas.width - 2*timelineMargin;
-	sessionIndexManager = getSessionIndexManager(currentSC2DataManager.getStepCount(), currentSC2DataManager.getExplanationStepsList(), timelineWidth);
+	sessionIndexManager = getSessionIndexManager(activeSC2DataManager.getStepCount(), activeSC2DataManager.getExplanationStepsList(), timelineWidth);
     sessionIndexManager.setReplaySequencerIndex(0);
-    currentExplManager.stepsWithExplanations = currentSC2DataManager.getExplanationStepsList();
+    currentExplManager.stepsWithExplanations = activeSC2DataManager.getExplanationStepsList();
+    controlsManager.doneLoadReplayFile(); //SC2_TODO - verify this is the right place for this
 }
 
 function playNextFrameAfterDelay(){//SC2_TEST
     window.setTimeout(playNextFrame, 400);
 }
 function playNextFrame(){//SC2_TEST
-    var frameInfo = currentSC2DataManager.getNextFrameInfo()
+    var frameInfo = activeSC2DataManager.getNextFrameInfo()
     handleSC2Data(frameInfo);
 }
 function jumpToFrame(frameIndex){//SC2_TEST
-    currentSC2DataManager.setNextFrameAs(frameIndex);
+    activeSC2DataManager.setNextFrameAs(frameIndex);
     playNextFrame();
 }
 
@@ -207,7 +210,7 @@ var totalsString = "total score";
 // adding up reward info as we go forward and subtracting as we go backward
 //
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
-    entryList = currentSC2DataManager.getCumulativeRewards(frameInfo);
+    entryList = activeSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;
 	//compute totals
 	for (var i in entryList ){

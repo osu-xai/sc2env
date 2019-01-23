@@ -8,7 +8,7 @@ function getSaliencyV2UIMap() {
     uimap.outlinesForSaliencyMap = {};
     uimap.currentlyHighlightedSaliencyMapKey = undefined;
 	uimap.renderSaliencyMap = function(canvas, ctx, channel, gameboardFlag){
-		renderState(canvas, channel.dpEntityList, gameScaleFactor, 0, 0,false);
+		//SC2 - nothing needed on saliency maps - renderState(canvas, channel.dpEntityList, gameScaleFactor, 0, 0,false);
 		this.overlaySaliencyMapOntoGameReplica(ctx, channel, 0, gameboardFlag);
 	}	
   
@@ -494,12 +494,12 @@ function getOverlayOpacityBySaliencyRGBAStringQuantized(saliencyValue, gameboard
 function processSaliencyMapClick(e, ch){
     var x = e.offsetX;
     var y = e.offsetY;
-    var unitId = currentSC2DataManager.getClosestUnitInRange(x, y);
+    var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
     var logLine = templateMap["clickSaliencyMap"];
     if (unitId != undefined){
         logLine = logLine.replace("<REGION>", "saliencyMap");
         logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
-        logLine = logLine.replace("<SHAPE_LOG>", shapeLogStrings[unitId]);
+        logLine = logLine.replace("<SHAPE_LOG>", unitLogStrings[unitId]);
         logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
         targetClickHandler(e, logLine);
     }

@@ -332,7 +332,7 @@ function acceptAnswer(e) {
     renderer.forgetQuestion();
     currentExplManager.noteQuestionWasAnswered();
     if (squim.hasMoreQuestionsAtThisStep()) {
-        renderState(gameboard_canvas, masterEntities, gameScaleFactor, 0, 0, true);
+        activeSC2UIManager.renderStateForCurrentStep();
         asqm.poseNextQuestion();
     }
     else {

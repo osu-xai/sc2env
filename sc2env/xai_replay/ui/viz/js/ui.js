@@ -167,7 +167,7 @@ function initUI() { //SC2_TEST
 }
 
 function highlightShapeInRange(x,y) {//SC2_TEST
-    var unitId = currentSC2DataManager.getClosestUnitInRange(x, y);
+    var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 	if (unitId != undefined){
         highlightUnitForClickCollectionFeedback(unitId); //SC2_TODO move highlightShapeForIdForClickCollectionFeedback to highlightUnitForClickCollectionFeedback
     }
@@ -178,11 +178,11 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	gameboard_canvas.addEventListener('click', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
-		var unitId = currentSC2DataManager.getClosestUnitInRange(x, y);
+		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 		if (unitId != undefined){
 			highlightUnitForClickCollectionFeedback(unitId);
 			var logLine = templateMap["gameboard"];
-			logLine = logLine.replace("<CLCK_GAME_ENTITY>", shapeLogStrings[unitId]);//SC2_TODO changeport shapeLogStrings to unitLogStrings
+			logLine = logLine.replace("<CLCK_GAME_ENTITY>", unitLogStrings[unitId]);
 			logLine = logLine.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
             logLine = logLine.replace("<GAME_COORD_X>", x);
 			logLine = logLine.replace("<GAME_COORD_Y>", y);
@@ -204,7 +204,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
-		var unitId = currentSC2DataManager.getClosestUnitInRange(x, y);
+		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 		if (unitId == undefined) {
 			// we're not inside an object, so hide all the "all_metadata" tooltips
 			hideAllTooltips(evt);
@@ -217,7 +217,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
             //we're inside one, keep it visible
             if (hoveredAllDataToolTipIds[tooltipId] != "show") {
 				var logLine = templateMap["showEntityTooltip"];
-				logLine = logLine.replace("<ENTITY_INFO>", shapeLogStrings[unitId]);
+				logLine = logLine.replace("<ENTITY_INFO>", unitLogStrings[unitId]);
 				logLine = logLine.replace("<TIP_QUADRANT>", getSC2QuadrantName(x,y));
 				targetHoverHandler(evt, logLine);
             }
