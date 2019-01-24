@@ -87,7 +87,7 @@ def make_sc2env(render=False):
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 8,
+        'step_mul': 4,
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
     register_map(maps_dir, env_args['map_name'])
