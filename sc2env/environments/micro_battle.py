@@ -13,7 +13,7 @@ from sc2env.representation import expand_pysc2_to_neural_input
 MAP_NAME = 'MicroBattle'
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
-END_BATTLE_RESET_TIMESTEPS = 5
+END_BATTLE_RESET_TIMESTEPS = 10
 
 UNIT_ID_LIST = [
     48,  # marine
