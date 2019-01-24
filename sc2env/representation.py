@@ -18,6 +18,8 @@ DEFAULT_SC2_UNITS = [
     107, # hydra
     108, # mutalisk
     109, # ultra
+    51, # marauder
+    110, # roach
 ]
 
 
