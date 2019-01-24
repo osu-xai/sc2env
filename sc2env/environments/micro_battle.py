@@ -13,13 +13,14 @@ from sc2env.representation import expand_pysc2_to_neural_input
 MAP_NAME = 'MicroBattle'
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
+END_BATTLE_RESET_TIMESTEPS = 5
 
 UNIT_ID_LIST = [
     48,  # marine
     73,  # zealot
     105, # zergling
-    107, # hydra
-    109, # ultra
+    #107, # hydra
+    #109, # ultra
 ]
 
 # A simple environment similar to SCAII-RTS Towers
@@ -34,16 +35,23 @@ class MicroBattleEnvironment(gym.Env):
         # This runs the ResetEpisode trigger built into the map
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.last_timestep = self.sc2env.step([action])[0]
+        # Wait a few frames for particle effects to finish
+        self.noop()
+        self.noop()
         state, reward, done, info = unpack_timestep(self.last_timestep)
+        self.timesteps_since_battle_end = 0
         return state
 
     def step(self, action):
-        # TODO
-
-        # Wait for a while
+        # TODO: take action
+        # For now, actions have no effect.
         self.noop()
 
-        return unpack_timestep(self.last_timestep)
+        state, reward, battle_done, info = unpack_timestep(self.last_timestep)
+        if battle_done:
+            self.timesteps_since_battle_end += 1
+        episode_done = self.timesteps_since_battle_end > END_BATTLE_RESET_TIMESTEPS
+        return state, reward, episode_done, info
 
     def noop(self):
         sc2_action = actions.FUNCTIONS.no_op()
@@ -118,7 +126,6 @@ def unpack_timestep(timestep):
     living_players = np.unique(player_relative)
     friendlies_alive = 1 in living_players
     enemies_alive = 4 in living_players
-
     done = not enemies_alive or not friendlies_alive
 
     # The info dict can include reward decompositions when available
