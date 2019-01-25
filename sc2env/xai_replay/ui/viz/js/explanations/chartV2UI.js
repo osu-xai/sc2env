@@ -405,7 +405,7 @@ function getChartV2UI() {
 
 		if (mode == "outlineT3") {
 			ctx.clearRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
-			ctx.lineWidth = shape_outline_width;
+			ctx.lineWidth = 0;
 			ctx.strokeStyle = "white";
 			ctx.strokeRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
 
@@ -441,7 +441,7 @@ function getChartV2UI() {
 	
         } else if (mode == "outline") {
 			ctx.clearRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
-			ctx.lineWidth = shape_outline_width;
+			ctx.lineWidth = 0;
 			ctx.strokeStyle = "white";
 			ctx.strokeRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
 		
@@ -449,7 +449,7 @@ function getChartV2UI() {
 			ctx.fillRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
 		} else if (mode == "gradient") {
 			ctx.clearRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
-			ctx.lineWidth = shape_outline_width;
+			ctx.lineWidth = 0;
 			ctx.strokeStyle = bar.color;
 
 			ctx.strokeRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
@@ -462,7 +462,7 @@ function getChartV2UI() {
 			ctx.fillStyle = ctx.createPattern(pattern, 'repeat');
 			ctx.fillRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);
 		} else {
-			ctx.lineWidth = shape_outline_width;
+			ctx.lineWidth = 0;
 			ctx.strokeStyle = bar.color;
 
 			ctx.strokeRect(upperLeftOriginX, upperLeftOriginY, bar.width, bar.height);

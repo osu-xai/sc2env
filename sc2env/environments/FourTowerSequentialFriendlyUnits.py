@@ -267,9 +267,9 @@ class FourTowerSequentialFriendlyUnits():
         if dead:
 
             state = observation[3]['feature_screen']
-            player_id = np.array(state[4])
-            player_id[np.array(state[6]) == 73] = 3
-            state[4] = player_id.tolist()
+            player_relative = np.array(state[5])
+            player_relative[np.array(state[6]) == 73] = 3
+            state[5] = player_relative.tolist()
 
             agent_units_position = np.array(state[6]) == 83
             
@@ -277,7 +277,7 @@ class FourTowerSequentialFriendlyUnits():
                 nps = np.array(s)
                 nps[agent_units_position] = 0
                 state[i] = nps.tolist()
-            state = self.getOneHotState(state)
+            state = getOneHotState(state,self.input_screen_features)
             state = np.reshape(state, (1, -1))
 
             self.end_state = state

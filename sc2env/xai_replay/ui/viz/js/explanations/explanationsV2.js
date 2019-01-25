@@ -30,7 +30,7 @@ function askBackendForExplanationRewardInfo(stepNumber) {
 		//console.log("no need to move - already at step with explanation");
 	}
 	else {
-		jumpToStep(stepNumber);//FIXME - can get rid of this?
+		jumpToStep(stepNumber);//SC2_TODO - can get rid of this?
 	}
 }
 

@@ -1,6 +1,6 @@
 
 //
-// SC2_CHANGE - do we need these?  If not, can ditch google lib.  If so, why did missing ones not cause problems
+// SC2_TODO - do we need these?  If not, can ditch google lib.  If so, why did missing ones not cause problems
 //
 goog.require('proto.scaii.common.ExplanationPoint');
 goog.require('proto.scaii.common.MultiMessage');

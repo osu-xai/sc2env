@@ -1,22 +1,21 @@
 
-function highlightShapeForIdForClickCollectionFeedback(shapeId){
+function highlightUnitForClickCollectionFeedback(unit){ 
     if (userStudyMode){
-        var info = shapeInfoForHighlighting[shapeId];
+        var info = shapeInfoForHighlighting[shapeId];//SC2_TODO port to unit input
         if (info != undefined) {
             highlightShapeForClickCollectionFeedback(info);
         }
     }
 }
-
-function highlightShapeForClickCollectionFeedback(info){
+function highlightShapeForClickCollectionFeedback(info){//SC2_TODO port to unit input
     if (activeStudyQuestionManager.renderer.controlsWaitingForClick.length == 0) {
         return;
     }
     var legalClickTargetRegions = activeStudyQuestionManager.getLegalInstrumentationTargetsForCurrentQuestion();
     if (activeStudyQuestionManager.renderer.isLegalRegionToClickOn("target:gameboard", legalClickTargetRegions)){
         // redraw from scratch in case this is our second click andwe have to delete evidence of prior click
-        renderState(gameboard_canvas, masterEntities, gameScaleFactor, 0, 0, true);
-        if (info.type == "rect") {
+        activeSC2UIManager.renderStateForCurrentStep();
+        if (info.type == "rect") { //SC2_TODO - how outline to reflect selection
             drawRect(info, "outline");
         }
         else if (info.type == "kite") {
@@ -32,9 +31,5 @@ function highlightShapeForClickCollectionFeedback(info){
             drawTriangle(info, "outline");
         }
     }
-}
-
-function clearHighlightedShapesOnGameboard(){
-    renderState(gameboard_canvas, masterEntities, gameScaleFactor, 0, 0, true);
 }
 

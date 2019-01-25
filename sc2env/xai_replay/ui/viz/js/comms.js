@@ -6,7 +6,7 @@ var userInfoScaiiPackets = [];
 
 // calls connect and paints "working" dots.  If connect fails, it calls tryConnect again
 function tryConnect(dots, attemptCount) {
-	clearGameBoards();
+	clearGameBoard();
 	gameboard_ctx.font = "40px Arial";
 	if (dots == '.') {
 		dots = '..';

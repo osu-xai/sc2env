@@ -12,6 +12,7 @@ from pysc2.agents import base_agent
 from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps
+from sc2env.representation import *
 
 from sc2env.pysc2_util import register_map
 
@@ -27,7 +28,7 @@ class FourTowersSequentialEnvironment():
           map_name=MAP_NAME,
           players=[sc2_env.Agent(sc2_env.Race.terran)],
           agent_interface_format=features.AgentInterfaceFormat(
-              feature_dimensions=features.Dimensions(screen=84, minimap=64),
+              feature_dimensions=features.Dimensions(screen=40, minimap=30),
               use_feature_units=True),
           step_mul=16,
           game_steps_per_episode=0,
@@ -68,9 +69,12 @@ class FourTowersSequentialEnvironment():
         self.last_timestep = self.sc2_env.step([action])[0]
         observation, state, reward, done, info = self.unpack_timestep(self.last_timestep)
         self.current_obs = observation
-        state = self.int_map_to_onehot(state)
+        #state = self.int_map_to_onehot(state)
         state = np.array(state)
-        self.actions_taken = 0 
+        self.actions_taken = 0
+        state = observation[3]['feature_screen']
+        state = expand_pysc2_to_neural_input(state)
+        state = np.reshape(state, (1, -1))
         return state
 
     def noop(self):
@@ -86,11 +90,11 @@ class FourTowersSequentialEnvironment():
             if action == 0:
                 action = actions.FUNCTIONS.Attack_screen("now", [0,0])
             elif action == 1:
-                action = actions.FUNCTIONS.Attack_screen("now", [83,0])
+                action = actions.FUNCTIONS.Attack_screen("now", [39,0])
             elif action == 2:
-                action = actions.FUNCTIONS.Attack_screen("now", [0,83])
+                action = actions.FUNCTIONS.Attack_screen("now", [0,39])
             elif action == 3:
-                action = actions.FUNCTIONS.Attack_screen("now", [83,83])
+                action = actions.FUNCTIONS.Attack_screen("now", [39,39])
             elif action == 4:
                 action = actions.FUNCTIONS.no_op()
             else:
@@ -108,8 +112,16 @@ class FourTowersSequentialEnvironment():
         observation, state, reward, done_null, info = self.unpack_timestep(self.last_timestep)
         self.current_obs = observation
 
-        state = self.int_map_to_onehot(state)
+        #state = self.int_map_to_onehot(state)
+        state = observation[3]['feature_screen']
+        # print(np.unique(np.array(state[6])))
+        state = expand_pysc2_to_neural_input(state)
+        # print('STATE SHAPE')
+        # print(state.shape)
+        state = np.reshape(state, (1, -1))
         state = np.array(state)
+        # print('STATE SHAPE')
+        # print(state.shape)
 
         #########################
 
@@ -128,7 +140,7 @@ class FourTowersSequentialEnvironment():
             if x.unit_type == 1922:
                 roach_reward = x.health
             if x.unit_type == 1923:
-                zergling_reward = x.health 
+                zergling_reward = x.health
             if x.unit_type == 1924:
                 damageByRoach = x.health
             if x.unit_type == 1925:
@@ -181,8 +193,8 @@ class FourTowersSequentialEnvironment():
     def get_vespene_gas_count(self, obs):
         return 0
 
-    def unpack_timestep(self, timestep):  
-        observation = timestep 
+    def unpack_timestep(self, timestep):
+        observation = timestep
         state = timestep.observation.feature_screen[6]
         reward = timestep.observation.score_cumulative[0]
         done = timestep.last()
