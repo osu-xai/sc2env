@@ -10,7 +10,9 @@ from pysc2.agents import base_agent
 from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps
-from sc2env.representation import *
+#from sc2env.representation import *
+from sc2env.utility import *
+
 
 
 from sc2env.pysc2_util import register_map
@@ -178,7 +180,9 @@ class FourTowersSequentialMultiUnitEnvironment():
                 rewards.append(x.health)
                 unit_types.append(x.unit_type)
         state = observation[3]['feature_screen']
-        state = expand_pysc2_to_neural_input(state)
+        #state = expand_pysc2_to_neural_input(state)
+        input_screen_feature = {'PLAYER_RELATIVE': [1,3,16], 'UNIT_TYPE':SIMPLE_SC2_UNITS, 'HIT_POINT':0, 'HIT_POINT_RATIO': 0, 'UNIT_DENSITY':0}
+        state = getOneHotState(state, input_screen_feature)
         # print('STATE SHAPE:')
         # print(state.shape)
         state = np.reshape(state, (1, -1))
@@ -363,7 +367,9 @@ class FourTowersSequentialMultiUnitEnvironment():
                 state.append(0.0)
         # print(len(state))
         state = observation[3]['feature_screen']
-        state = expand_pysc2_to_neural_input(state)
+        #state = expand_pysc2_to_neural_input(state)
+        input_screen_feature = {'PLAYER_RELATIVE': [1,3,16], 'UNIT_TYPE':SIMPLE_SC2_UNITS, 'HIT_POINT':0, 'HIT_POINT_RATIO': 0, 'UNIT_DENSITY':0}
+        state = getOneHotState(state, input_screen_feature)
         state = np.reshape(state, (1, -1))
         return state, reward, done, dead, info
 
