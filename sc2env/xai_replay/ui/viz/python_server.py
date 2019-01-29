@@ -18,9 +18,3 @@ class Serv(http.server.SimpleHTTPRequestHandler):
 
 httpd = http.server.HTTPServer(('localhost', PORT), Serv)
 httpd.serve_forever()
-
-# def start_server():
-#     print("Do nothing for now")
-
-# if __name__ == "__main__":
-#     start_server()

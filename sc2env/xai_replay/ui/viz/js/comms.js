@@ -34,6 +34,7 @@ var connect = function (dots, attemptCount) {
 	};
 
 	dealer.onmessage = function (message) {
+		console.log(message)
 		try {
 			sessionState = "inProgress";
 			var s = message.data;
