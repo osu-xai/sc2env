@@ -62,8 +62,8 @@ message ReplayChoiceConfig {
 
 message SC2ReplaySessionConfig {
 	required string json_data = 1;
-	repeated ExplanationPoint explanations = 1;
-	repeated string reward_types = 2;
+	repeated ExplanationPoint explanations = 2;
+	repeated string reward_types = 3;
 }
 
 // Configures a module (e.g. backend) to begin recording, logging how often 
@@ -83,5 +83,4 @@ message Record {
 message ExplanationDetails {
 	optional uint32 step = 1;
     optional ExplanationPoint expl_point = 2;
-	optional ChartInfo chart = 3;
 }
