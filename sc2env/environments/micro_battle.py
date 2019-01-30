@@ -19,8 +19,6 @@ UNIT_ID_LIST = [
     48,  # marine
     73,  # zealot
     105, # zergling
-    #107, # hydra
-    #109, # ultra
 ]
 
 # A simple environment similar to SCAII-RTS Towers
@@ -43,11 +41,20 @@ class MicroBattleEnvironment(gym.Env):
         return state
 
     def step(self, action):
-        # TODO: take action
-        # For now, actions have no effect.
-        self.noop()
+        if not self.can_attack():
+            # Nothing to do: no controllable units are present
+            sc2_action = actions.FUNCTIONS.no_op()
+        elif action == 0:
+            # Move back toward the spawn point
+            sc2_action = actions.FUNCTIONS.Move_screen('now', (1.0, 32.0))
+        elif action == 1:
+            # Attack toward the right
+            sc2_action = actions.FUNCTIONS.Attack_screen('now', (63.0, 32.0))
+
+        self.last_timestep = self.sc2env.step([sc2_action])[0]
 
         state, reward, battle_done, info = unpack_timestep(self.last_timestep)
+
         if battle_done:
             self.timesteps_since_battle_end += 1
         episode_done = self.timesteps_since_battle_end > END_BATTLE_RESET_TIMESTEPS
@@ -61,7 +68,7 @@ class MicroBattleEnvironment(gym.Env):
         available_actions = self.last_timestep.observation.available_actions
         return actions.FUNCTIONS.Attack_minimap.id in available_actions
 
-    def render(self):
+    def render(self, *args, **kwargs):
         import imutil
         state, reward, done, info = unpack_timestep(self.last_timestep)
         feature_map, feature_screen, rgb_map, rgb_screen = state
@@ -69,7 +76,7 @@ class MicroBattleEnvironment(gym.Env):
         imutil.show(visual, save=False)
 
     def actions(self):
-        # No action choice: all units attack at once
+        # Two actions: attack or retreat
         return 2
 
     def layers(self):
