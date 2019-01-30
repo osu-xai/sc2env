@@ -6,26 +6,26 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 
-goog.provide('proto.sc2env.replay.Bar');
-goog.provide('proto.sc2env.replay.BarChart');
-goog.provide('proto.sc2env.replay.BarGroup');
-goog.provide('proto.sc2env.replay.ExplanationDetails');
-goog.provide('proto.sc2env.replay.ExplanationPoint');
-goog.provide('proto.sc2env.replay.ExplanationPoints');
-goog.provide('proto.sc2env.replay.Layer');
-goog.provide('proto.sc2env.replay.Layers');
-goog.provide('proto.sc2env.replay.LogFileEntry');
-goog.provide('proto.sc2env.replay.MultiMessage');
-goog.provide('proto.sc2env.replay.Record');
-goog.provide('proto.sc2env.replay.ReplayChoiceConfig');
-goog.provide('proto.sc2env.replay.SC2ReplaySessionConfig');
-goog.provide('proto.sc2env.replay.Saliency');
-goog.provide('proto.sc2env.replay.ScaiiPacket');
-goog.provide('proto.sc2env.replay.StudyQuestion');
-goog.provide('proto.sc2env.replay.StudyQuestionAnswer');
-goog.provide('proto.sc2env.replay.StudyQuestions');
-goog.provide('proto.sc2env.replay.UserCommand');
-goog.provide('proto.sc2env.replay.UserCommand.UserCommandType');
+goog.provide('proto.Bar');
+goog.provide('proto.BarChart');
+goog.provide('proto.BarGroup');
+goog.provide('proto.ExplanationDetails');
+goog.provide('proto.ExplanationPoint');
+goog.provide('proto.ExplanationPoints');
+goog.provide('proto.Layer');
+goog.provide('proto.Layers');
+goog.provide('proto.LogFileEntry');
+goog.provide('proto.MultiMessage');
+goog.provide('proto.Record');
+goog.provide('proto.ReplayChoiceConfig');
+goog.provide('proto.SC2ReplaySessionConfig');
+goog.provide('proto.Saliency');
+goog.provide('proto.ScaiiPacket');
+goog.provide('proto.StudyQuestion');
+goog.provide('proto.StudyQuestionAnswer');
+goog.provide('proto.StudyQuestions');
+goog.provide('proto.UserCommand');
+goog.provide('proto.UserCommand.UserCommandType');
 
 goog.require('jspb.Message');
 goog.require('jspb.BinaryReader');
@@ -42,19 +42,19 @@ goog.require('jspb.BinaryWriter');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.StudyQuestions = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.StudyQuestions.repeatedFields_, null);
+proto.StudyQuestions = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.StudyQuestions.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.StudyQuestions, jspb.Message);
+goog.inherits(proto.StudyQuestions, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.StudyQuestions.displayName = 'proto.sc2env.replay.StudyQuestions';
+  proto.StudyQuestions.displayName = 'proto.StudyQuestions';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.StudyQuestions.repeatedFields_ = [1];
+proto.StudyQuestions.repeatedFields_ = [1];
 
 
 
@@ -69,8 +69,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.StudyQuestions.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.StudyQuestions.toObject(opt_includeInstance, this);
+proto.StudyQuestions.prototype.toObject = function(opt_includeInstance) {
+  return proto.StudyQuestions.toObject(opt_includeInstance, this);
 };
 
 
@@ -79,13 +79,13 @@ proto.sc2env.replay.StudyQuestions.prototype.toObject = function(opt_includeInst
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.StudyQuestions} msg The msg instance to transform.
+ * @param {!proto.StudyQuestions} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.StudyQuestions.toObject = function(includeInstance, msg) {
+proto.StudyQuestions.toObject = function(includeInstance, msg) {
   var f, obj = {
     studyQuestionsList: jspb.Message.toObjectList(msg.getStudyQuestionsList(),
-    proto.sc2env.replay.StudyQuestion.toObject, includeInstance),
+    proto.StudyQuestion.toObject, includeInstance),
     userId: jspb.Message.getField(msg, 2),
     treatmentId: jspb.Message.getField(msg, 3),
     answerFilename: jspb.Message.getField(msg, 4)
@@ -102,23 +102,23 @@ proto.sc2env.replay.StudyQuestions.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.StudyQuestions}
+ * @return {!proto.StudyQuestions}
  */
-proto.sc2env.replay.StudyQuestions.deserializeBinary = function(bytes) {
+proto.StudyQuestions.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.StudyQuestions;
-  return proto.sc2env.replay.StudyQuestions.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.StudyQuestions;
+  return proto.StudyQuestions.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.StudyQuestions} msg The message object to deserialize into.
+ * @param {!proto.StudyQuestions} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.StudyQuestions}
+ * @return {!proto.StudyQuestions}
  */
-proto.sc2env.replay.StudyQuestions.deserializeBinaryFromReader = function(msg, reader) {
+proto.StudyQuestions.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -126,8 +126,8 @@ proto.sc2env.replay.StudyQuestions.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.sc2env.replay.StudyQuestion;
-      reader.readMessage(value,proto.sc2env.replay.StudyQuestion.deserializeBinaryFromReader);
+      var value = new proto.StudyQuestion;
+      reader.readMessage(value,proto.StudyQuestion.deserializeBinaryFromReader);
       msg.getStudyQuestionsList().push(value);
       msg.setStudyQuestionsList(msg.getStudyQuestionsList());
       break;
@@ -155,10 +155,10 @@ proto.sc2env.replay.StudyQuestions.deserializeBinaryFromReader = function(msg, r
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.StudyQuestions} message
+ * @param {!proto.StudyQuestions} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.StudyQuestions.serializeBinaryToWriter = function(message, writer) {
+proto.StudyQuestions.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -167,7 +167,7 @@ proto.sc2env.replay.StudyQuestions.serializeBinaryToWriter = function(message, w
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.StudyQuestions.prototype.serializeBinary = function() {
+proto.StudyQuestions.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -179,14 +179,14 @@ proto.sc2env.replay.StudyQuestions.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.StudyQuestions.prototype.serializeBinaryToWriter = function (writer) {
+proto.StudyQuestions.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getStudyQuestionsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.sc2env.replay.StudyQuestion.serializeBinaryToWriter
+      proto.StudyQuestion.serializeBinaryToWriter
     );
   }
   f = jspb.Message.getField(this, 2);
@@ -215,10 +215,10 @@ proto.sc2env.replay.StudyQuestions.prototype.serializeBinaryToWriter = function 
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.StudyQuestions} The clone.
+ * @return {!proto.StudyQuestions} The clone.
  */
-proto.sc2env.replay.StudyQuestions.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.StudyQuestions} */ (jspb.Message.cloneMessage(this));
+proto.StudyQuestions.prototype.cloneMessage = function() {
+  return /** @type {!proto.StudyQuestions} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -226,21 +226,21 @@ proto.sc2env.replay.StudyQuestions.prototype.cloneMessage = function() {
  * repeated StudyQuestion study_questions = 1;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.StudyQuestion>}
+ * @return {!Array.<!proto.StudyQuestion>}
  */
-proto.sc2env.replay.StudyQuestions.prototype.getStudyQuestionsList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.StudyQuestion>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.StudyQuestion, 1));
+proto.StudyQuestions.prototype.getStudyQuestionsList = function() {
+  return /** @type{!Array.<!proto.StudyQuestion>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.StudyQuestion, 1));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.StudyQuestion>} value  */
-proto.sc2env.replay.StudyQuestions.prototype.setStudyQuestionsList = function(value) {
+/** @param {Array.<!proto.StudyQuestion>} value  */
+proto.StudyQuestions.prototype.setStudyQuestionsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
-proto.sc2env.replay.StudyQuestions.prototype.clearStudyQuestionsList = function() {
+proto.StudyQuestions.prototype.clearStudyQuestionsList = function() {
   this.setStudyQuestionsList([]);
 };
 
@@ -249,18 +249,18 @@ proto.sc2env.replay.StudyQuestions.prototype.clearStudyQuestionsList = function(
  * required string user_id = 2;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestions.prototype.getUserId = function() {
+proto.StudyQuestions.prototype.getUserId = function() {
   return /** @type {string} */ (!this.hasUserId() ? "" : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestions.prototype.setUserId = function(value) {
+proto.StudyQuestions.prototype.setUserId = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.StudyQuestions.prototype.clearUserId = function() {
+proto.StudyQuestions.prototype.clearUserId = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -269,7 +269,7 @@ proto.sc2env.replay.StudyQuestions.prototype.clearUserId = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestions.prototype.hasUserId = function() {
+proto.StudyQuestions.prototype.hasUserId = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -278,18 +278,18 @@ proto.sc2env.replay.StudyQuestions.prototype.hasUserId = function() {
  * required string treatment_id = 3;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestions.prototype.getTreatmentId = function() {
+proto.StudyQuestions.prototype.getTreatmentId = function() {
   return /** @type {string} */ (!this.hasTreatmentId() ? "" : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestions.prototype.setTreatmentId = function(value) {
+proto.StudyQuestions.prototype.setTreatmentId = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.StudyQuestions.prototype.clearTreatmentId = function() {
+proto.StudyQuestions.prototype.clearTreatmentId = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -298,7 +298,7 @@ proto.sc2env.replay.StudyQuestions.prototype.clearTreatmentId = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestions.prototype.hasTreatmentId = function() {
+proto.StudyQuestions.prototype.hasTreatmentId = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -307,18 +307,18 @@ proto.sc2env.replay.StudyQuestions.prototype.hasTreatmentId = function() {
  * required string answer_filename = 4;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestions.prototype.getAnswerFilename = function() {
+proto.StudyQuestions.prototype.getAnswerFilename = function() {
   return /** @type {string} */ (!this.hasAnswerFilename() ? "" : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestions.prototype.setAnswerFilename = function(value) {
+proto.StudyQuestions.prototype.setAnswerFilename = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.StudyQuestions.prototype.clearAnswerFilename = function() {
+proto.StudyQuestions.prototype.clearAnswerFilename = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -327,7 +327,7 @@ proto.sc2env.replay.StudyQuestions.prototype.clearAnswerFilename = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestions.prototype.hasAnswerFilename = function() {
+proto.StudyQuestions.prototype.hasAnswerFilename = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -343,19 +343,19 @@ proto.sc2env.replay.StudyQuestions.prototype.hasAnswerFilename = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.StudyQuestion = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.StudyQuestion.repeatedFields_, null);
+proto.StudyQuestion = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.StudyQuestion.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.StudyQuestion, jspb.Message);
+goog.inherits(proto.StudyQuestion, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.StudyQuestion.displayName = 'proto.sc2env.replay.StudyQuestion';
+  proto.StudyQuestion.displayName = 'proto.StudyQuestion';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.StudyQuestion.repeatedFields_ = [3];
+proto.StudyQuestion.repeatedFields_ = [3];
 
 
 
@@ -370,8 +370,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.StudyQuestion.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.StudyQuestion.toObject(opt_includeInstance, this);
+proto.StudyQuestion.prototype.toObject = function(opt_includeInstance) {
+  return proto.StudyQuestion.toObject(opt_includeInstance, this);
 };
 
 
@@ -380,10 +380,10 @@ proto.sc2env.replay.StudyQuestion.prototype.toObject = function(opt_includeInsta
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.StudyQuestion} msg The msg instance to transform.
+ * @param {!proto.StudyQuestion} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.StudyQuestion.toObject = function(includeInstance, msg) {
+proto.StudyQuestion.toObject = function(includeInstance, msg) {
   var f, obj = {
     step: jspb.Message.getField(msg, 1),
     question: jspb.Message.getField(msg, 2),
@@ -403,23 +403,23 @@ proto.sc2env.replay.StudyQuestion.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.StudyQuestion}
+ * @return {!proto.StudyQuestion}
  */
-proto.sc2env.replay.StudyQuestion.deserializeBinary = function(bytes) {
+proto.StudyQuestion.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.StudyQuestion;
-  return proto.sc2env.replay.StudyQuestion.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.StudyQuestion;
+  return proto.StudyQuestion.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.StudyQuestion} msg The message object to deserialize into.
+ * @param {!proto.StudyQuestion} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.StudyQuestion}
+ * @return {!proto.StudyQuestion}
  */
-proto.sc2env.replay.StudyQuestion.deserializeBinaryFromReader = function(msg, reader) {
+proto.StudyQuestion.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -459,10 +459,10 @@ proto.sc2env.replay.StudyQuestion.deserializeBinaryFromReader = function(msg, re
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.StudyQuestion} message
+ * @param {!proto.StudyQuestion} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.StudyQuestion.serializeBinaryToWriter = function(message, writer) {
+proto.StudyQuestion.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -471,7 +471,7 @@ proto.sc2env.replay.StudyQuestion.serializeBinaryToWriter = function(message, wr
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.StudyQuestion.prototype.serializeBinary = function() {
+proto.StudyQuestion.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -483,7 +483,7 @@ proto.sc2env.replay.StudyQuestion.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.StudyQuestion.prototype.serializeBinaryToWriter = function (writer) {
+proto.StudyQuestion.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -525,10 +525,10 @@ proto.sc2env.replay.StudyQuestion.prototype.serializeBinaryToWriter = function (
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.StudyQuestion} The clone.
+ * @return {!proto.StudyQuestion} The clone.
  */
-proto.sc2env.replay.StudyQuestion.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.StudyQuestion} */ (jspb.Message.cloneMessage(this));
+proto.StudyQuestion.prototype.cloneMessage = function() {
+  return /** @type {!proto.StudyQuestion} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -536,18 +536,18 @@ proto.sc2env.replay.StudyQuestion.prototype.cloneMessage = function() {
  * required string step = 1;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestion.prototype.getStep = function() {
+proto.StudyQuestion.prototype.getStep = function() {
   return /** @type {string} */ (!this.hasStep() ? "" : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestion.prototype.setStep = function(value) {
+proto.StudyQuestion.prototype.setStep = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.StudyQuestion.prototype.clearStep = function() {
+proto.StudyQuestion.prototype.clearStep = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -556,7 +556,7 @@ proto.sc2env.replay.StudyQuestion.prototype.clearStep = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestion.prototype.hasStep = function() {
+proto.StudyQuestion.prototype.hasStep = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -565,18 +565,18 @@ proto.sc2env.replay.StudyQuestion.prototype.hasStep = function() {
  * required string question = 2;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestion.prototype.getQuestion = function() {
+proto.StudyQuestion.prototype.getQuestion = function() {
   return /** @type {string} */ (!this.hasQuestion() ? "" : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestion.prototype.setQuestion = function(value) {
+proto.StudyQuestion.prototype.setQuestion = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.StudyQuestion.prototype.clearQuestion = function() {
+proto.StudyQuestion.prototype.clearQuestion = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -585,7 +585,7 @@ proto.sc2env.replay.StudyQuestion.prototype.clearQuestion = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestion.prototype.hasQuestion = function() {
+proto.StudyQuestion.prototype.hasQuestion = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -596,18 +596,18 @@ proto.sc2env.replay.StudyQuestion.prototype.hasQuestion = function() {
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<string>}
  */
-proto.sc2env.replay.StudyQuestion.prototype.getAnswersList = function() {
+proto.StudyQuestion.prototype.getAnswersList = function() {
   return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 3));
 };
 
 
 /** @param {Array.<string>} value  */
-proto.sc2env.replay.StudyQuestion.prototype.setAnswersList = function(value) {
+proto.StudyQuestion.prototype.setAnswersList = function(value) {
   jspb.Message.setField(this, 3, value || []);
 };
 
 
-proto.sc2env.replay.StudyQuestion.prototype.clearAnswersList = function() {
+proto.StudyQuestion.prototype.clearAnswersList = function() {
   jspb.Message.setField(this, 3, []);
 };
 
@@ -616,18 +616,18 @@ proto.sc2env.replay.StudyQuestion.prototype.clearAnswersList = function() {
  * required string question_id_for_step = 4;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestion.prototype.getQuestionIdForStep = function() {
+proto.StudyQuestion.prototype.getQuestionIdForStep = function() {
   return /** @type {string} */ (!this.hasQuestionIdForStep() ? "" : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestion.prototype.setQuestionIdForStep = function(value) {
+proto.StudyQuestion.prototype.setQuestionIdForStep = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.StudyQuestion.prototype.clearQuestionIdForStep = function() {
+proto.StudyQuestion.prototype.clearQuestionIdForStep = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -636,7 +636,7 @@ proto.sc2env.replay.StudyQuestion.prototype.clearQuestionIdForStep = function() 
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestion.prototype.hasQuestionIdForStep = function() {
+proto.StudyQuestion.prototype.hasQuestionIdForStep = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -645,18 +645,18 @@ proto.sc2env.replay.StudyQuestion.prototype.hasQuestionIdForStep = function() {
  * required string question_type = 5;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestion.prototype.getQuestionType = function() {
+proto.StudyQuestion.prototype.getQuestionType = function() {
   return /** @type {string} */ (!this.hasQuestionType() ? "" : jspb.Message.getField(this, 5));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestion.prototype.setQuestionType = function(value) {
+proto.StudyQuestion.prototype.setQuestionType = function(value) {
   jspb.Message.setField(this, 5, value);
 };
 
 
-proto.sc2env.replay.StudyQuestion.prototype.clearQuestionType = function() {
+proto.StudyQuestion.prototype.clearQuestionType = function() {
   jspb.Message.setField(this, 5, undefined);
 };
 
@@ -665,7 +665,7 @@ proto.sc2env.replay.StudyQuestion.prototype.clearQuestionType = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestion.prototype.hasQuestionType = function() {
+proto.StudyQuestion.prototype.hasQuestionType = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
@@ -681,12 +681,12 @@ proto.sc2env.replay.StudyQuestion.prototype.hasQuestionType = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.StudyQuestionAnswer = function(opt_data) {
+proto.StudyQuestionAnswer = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.StudyQuestionAnswer, jspb.Message);
+goog.inherits(proto.StudyQuestionAnswer, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.StudyQuestionAnswer.displayName = 'proto.sc2env.replay.StudyQuestionAnswer';
+  proto.StudyQuestionAnswer.displayName = 'proto.StudyQuestionAnswer';
 }
 
 
@@ -701,8 +701,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.StudyQuestionAnswer.toObject(opt_includeInstance, this);
+proto.StudyQuestionAnswer.prototype.toObject = function(opt_includeInstance) {
+  return proto.StudyQuestionAnswer.toObject(opt_includeInstance, this);
 };
 
 
@@ -711,10 +711,10 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.toObject = function(opt_includ
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.StudyQuestionAnswer} msg The msg instance to transform.
+ * @param {!proto.StudyQuestionAnswer} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.StudyQuestionAnswer.toObject = function(includeInstance, msg) {
+proto.StudyQuestionAnswer.toObject = function(includeInstance, msg) {
   var f, obj = {
     step: jspb.Message.getField(msg, 1),
     questionNumber: jspb.Message.getField(msg, 2),
@@ -735,23 +735,23 @@ proto.sc2env.replay.StudyQuestionAnswer.toObject = function(includeInstance, msg
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.StudyQuestionAnswer}
+ * @return {!proto.StudyQuestionAnswer}
  */
-proto.sc2env.replay.StudyQuestionAnswer.deserializeBinary = function(bytes) {
+proto.StudyQuestionAnswer.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.StudyQuestionAnswer;
-  return proto.sc2env.replay.StudyQuestionAnswer.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.StudyQuestionAnswer;
+  return proto.StudyQuestionAnswer.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.StudyQuestionAnswer} msg The message object to deserialize into.
+ * @param {!proto.StudyQuestionAnswer} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.StudyQuestionAnswer}
+ * @return {!proto.StudyQuestionAnswer}
  */
-proto.sc2env.replay.StudyQuestionAnswer.deserializeBinaryFromReader = function(msg, reader) {
+proto.StudyQuestionAnswer.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -794,10 +794,10 @@ proto.sc2env.replay.StudyQuestionAnswer.deserializeBinaryFromReader = function(m
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.StudyQuestionAnswer} message
+ * @param {!proto.StudyQuestionAnswer} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.StudyQuestionAnswer.serializeBinaryToWriter = function(message, writer) {
+proto.StudyQuestionAnswer.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -806,7 +806,7 @@ proto.sc2env.replay.StudyQuestionAnswer.serializeBinaryToWriter = function(messa
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.serializeBinary = function() {
+proto.StudyQuestionAnswer.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -818,7 +818,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.serializeBinaryToWriter = function (writer) {
+proto.StudyQuestionAnswer.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -867,10 +867,10 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.serializeBinaryToWriter = func
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.StudyQuestionAnswer} The clone.
+ * @return {!proto.StudyQuestionAnswer} The clone.
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.StudyQuestionAnswer} */ (jspb.Message.cloneMessage(this));
+proto.StudyQuestionAnswer.prototype.cloneMessage = function() {
+  return /** @type {!proto.StudyQuestionAnswer} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -878,18 +878,18 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.cloneMessage = function() {
  * required string step = 1;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.getStep = function() {
+proto.StudyQuestionAnswer.prototype.getStep = function() {
   return /** @type {string} */ (!this.hasStep() ? "" : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.setStep = function(value) {
+proto.StudyQuestionAnswer.prototype.setStep = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.StudyQuestionAnswer.prototype.clearStep = function() {
+proto.StudyQuestionAnswer.prototype.clearStep = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -898,7 +898,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.clearStep = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.hasStep = function() {
+proto.StudyQuestionAnswer.prototype.hasStep = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -907,18 +907,18 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.hasStep = function() {
  * required string question_number = 2;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.getQuestionNumber = function() {
+proto.StudyQuestionAnswer.prototype.getQuestionNumber = function() {
   return /** @type {string} */ (!this.hasQuestionNumber() ? "" : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.setQuestionNumber = function(value) {
+proto.StudyQuestionAnswer.prototype.setQuestionNumber = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.StudyQuestionAnswer.prototype.clearQuestionNumber = function() {
+proto.StudyQuestionAnswer.prototype.clearQuestionNumber = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -927,7 +927,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.clearQuestionNumber = function
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.hasQuestionNumber = function() {
+proto.StudyQuestionAnswer.prototype.hasQuestionNumber = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -936,18 +936,18 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.hasQuestionNumber = function()
  * required string question = 3;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.getQuestion = function() {
+proto.StudyQuestionAnswer.prototype.getQuestion = function() {
   return /** @type {string} */ (!this.hasQuestion() ? "" : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.setQuestion = function(value) {
+proto.StudyQuestionAnswer.prototype.setQuestion = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.StudyQuestionAnswer.prototype.clearQuestion = function() {
+proto.StudyQuestionAnswer.prototype.clearQuestion = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -956,7 +956,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.clearQuestion = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.hasQuestion = function() {
+proto.StudyQuestionAnswer.prototype.hasQuestion = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -965,18 +965,18 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.hasQuestion = function() {
  * required string answer = 4;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.getAnswer = function() {
+proto.StudyQuestionAnswer.prototype.getAnswer = function() {
   return /** @type {string} */ (!this.hasAnswer() ? "" : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.setAnswer = function(value) {
+proto.StudyQuestionAnswer.prototype.setAnswer = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.StudyQuestionAnswer.prototype.clearAnswer = function() {
+proto.StudyQuestionAnswer.prototype.clearAnswer = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -985,7 +985,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.clearAnswer = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.hasAnswer = function() {
+proto.StudyQuestionAnswer.prototype.hasAnswer = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -994,18 +994,18 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.hasAnswer = function() {
  * required string user_id = 5;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.getUserId = function() {
+proto.StudyQuestionAnswer.prototype.getUserId = function() {
   return /** @type {string} */ (!this.hasUserId() ? "" : jspb.Message.getField(this, 5));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.setUserId = function(value) {
+proto.StudyQuestionAnswer.prototype.setUserId = function(value) {
   jspb.Message.setField(this, 5, value);
 };
 
 
-proto.sc2env.replay.StudyQuestionAnswer.prototype.clearUserId = function() {
+proto.StudyQuestionAnswer.prototype.clearUserId = function() {
   jspb.Message.setField(this, 5, undefined);
 };
 
@@ -1014,7 +1014,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.clearUserId = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.hasUserId = function() {
+proto.StudyQuestionAnswer.prototype.hasUserId = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
@@ -1023,18 +1023,18 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.hasUserId = function() {
  * required string treatment_id = 6;
  * @return {string}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.getTreatmentId = function() {
+proto.StudyQuestionAnswer.prototype.getTreatmentId = function() {
   return /** @type {string} */ (!this.hasTreatmentId() ? "" : jspb.Message.getField(this, 6));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.setTreatmentId = function(value) {
+proto.StudyQuestionAnswer.prototype.setTreatmentId = function(value) {
   jspb.Message.setField(this, 6, value);
 };
 
 
-proto.sc2env.replay.StudyQuestionAnswer.prototype.clearTreatmentId = function() {
+proto.StudyQuestionAnswer.prototype.clearTreatmentId = function() {
   jspb.Message.setField(this, 6, undefined);
 };
 
@@ -1043,7 +1043,7 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.clearTreatmentId = function() 
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.StudyQuestionAnswer.prototype.hasTreatmentId = function() {
+proto.StudyQuestionAnswer.prototype.hasTreatmentId = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
@@ -1059,12 +1059,12 @@ proto.sc2env.replay.StudyQuestionAnswer.prototype.hasTreatmentId = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.LogFileEntry = function(opt_data) {
+proto.LogFileEntry = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.LogFileEntry, jspb.Message);
+goog.inherits(proto.LogFileEntry, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.LogFileEntry.displayName = 'proto.sc2env.replay.LogFileEntry';
+  proto.LogFileEntry.displayName = 'proto.LogFileEntry';
 }
 
 
@@ -1079,8 +1079,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.LogFileEntry.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.LogFileEntry.toObject(opt_includeInstance, this);
+proto.LogFileEntry.prototype.toObject = function(opt_includeInstance) {
+  return proto.LogFileEntry.toObject(opt_includeInstance, this);
 };
 
 
@@ -1089,10 +1089,10 @@ proto.sc2env.replay.LogFileEntry.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.LogFileEntry} msg The msg instance to transform.
+ * @param {!proto.LogFileEntry} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.LogFileEntry.toObject = function(includeInstance, msg) {
+proto.LogFileEntry.toObject = function(includeInstance, msg) {
   var f, obj = {
     filename: jspb.Message.getField(msg, 1),
     entry: jspb.Message.getField(msg, 2),
@@ -1110,23 +1110,23 @@ proto.sc2env.replay.LogFileEntry.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.LogFileEntry}
+ * @return {!proto.LogFileEntry}
  */
-proto.sc2env.replay.LogFileEntry.deserializeBinary = function(bytes) {
+proto.LogFileEntry.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.LogFileEntry;
-  return proto.sc2env.replay.LogFileEntry.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.LogFileEntry;
+  return proto.LogFileEntry.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.LogFileEntry} msg The message object to deserialize into.
+ * @param {!proto.LogFileEntry} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.LogFileEntry}
+ * @return {!proto.LogFileEntry}
  */
-proto.sc2env.replay.LogFileEntry.deserializeBinaryFromReader = function(msg, reader) {
+proto.LogFileEntry.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1157,10 +1157,10 @@ proto.sc2env.replay.LogFileEntry.deserializeBinaryFromReader = function(msg, rea
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.LogFileEntry} message
+ * @param {!proto.LogFileEntry} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.LogFileEntry.serializeBinaryToWriter = function(message, writer) {
+proto.LogFileEntry.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -1169,7 +1169,7 @@ proto.sc2env.replay.LogFileEntry.serializeBinaryToWriter = function(message, wri
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.LogFileEntry.prototype.serializeBinary = function() {
+proto.LogFileEntry.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -1181,7 +1181,7 @@ proto.sc2env.replay.LogFileEntry.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.LogFileEntry.prototype.serializeBinaryToWriter = function (writer) {
+proto.LogFileEntry.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -1209,10 +1209,10 @@ proto.sc2env.replay.LogFileEntry.prototype.serializeBinaryToWriter = function (w
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.LogFileEntry} The clone.
+ * @return {!proto.LogFileEntry} The clone.
  */
-proto.sc2env.replay.LogFileEntry.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.LogFileEntry} */ (jspb.Message.cloneMessage(this));
+proto.LogFileEntry.prototype.cloneMessage = function() {
+  return /** @type {!proto.LogFileEntry} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -1220,18 +1220,18 @@ proto.sc2env.replay.LogFileEntry.prototype.cloneMessage = function() {
  * required string filename = 1;
  * @return {string}
  */
-proto.sc2env.replay.LogFileEntry.prototype.getFilename = function() {
+proto.LogFileEntry.prototype.getFilename = function() {
   return /** @type {string} */ (!this.hasFilename() ? "" : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.LogFileEntry.prototype.setFilename = function(value) {
+proto.LogFileEntry.prototype.setFilename = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.LogFileEntry.prototype.clearFilename = function() {
+proto.LogFileEntry.prototype.clearFilename = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -1240,7 +1240,7 @@ proto.sc2env.replay.LogFileEntry.prototype.clearFilename = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.LogFileEntry.prototype.hasFilename = function() {
+proto.LogFileEntry.prototype.hasFilename = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -1249,18 +1249,18 @@ proto.sc2env.replay.LogFileEntry.prototype.hasFilename = function() {
  * required string entry = 2;
  * @return {string}
  */
-proto.sc2env.replay.LogFileEntry.prototype.getEntry = function() {
+proto.LogFileEntry.prototype.getEntry = function() {
   return /** @type {string} */ (!this.hasEntry() ? "" : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.LogFileEntry.prototype.setEntry = function(value) {
+proto.LogFileEntry.prototype.setEntry = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.LogFileEntry.prototype.clearEntry = function() {
+proto.LogFileEntry.prototype.clearEntry = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -1269,7 +1269,7 @@ proto.sc2env.replay.LogFileEntry.prototype.clearEntry = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.LogFileEntry.prototype.hasEntry = function() {
+proto.LogFileEntry.prototype.hasEntry = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -1280,18 +1280,18 @@ proto.sc2env.replay.LogFileEntry.prototype.hasEntry = function() {
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
-proto.sc2env.replay.LogFileEntry.prototype.getIsLastLine = function() {
+proto.LogFileEntry.prototype.getIsLastLine = function() {
   return /** @type {boolean} */ (!this.hasIsLastLine() ? false : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {boolean|undefined} value  */
-proto.sc2env.replay.LogFileEntry.prototype.setIsLastLine = function(value) {
+proto.LogFileEntry.prototype.setIsLastLine = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.LogFileEntry.prototype.clearIsLastLine = function() {
+proto.LogFileEntry.prototype.clearIsLastLine = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -1300,7 +1300,7 @@ proto.sc2env.replay.LogFileEntry.prototype.clearIsLastLine = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.LogFileEntry.prototype.hasIsLastLine = function() {
+proto.LogFileEntry.prototype.hasIsLastLine = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -1316,19 +1316,19 @@ proto.sc2env.replay.LogFileEntry.prototype.hasIsLastLine = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.ExplanationPoints = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.ExplanationPoints.repeatedFields_, null);
+proto.ExplanationPoints = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.ExplanationPoints.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.ExplanationPoints, jspb.Message);
+goog.inherits(proto.ExplanationPoints, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.ExplanationPoints.displayName = 'proto.sc2env.replay.ExplanationPoints';
+  proto.ExplanationPoints.displayName = 'proto.ExplanationPoints';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.ExplanationPoints.repeatedFields_ = [1];
+proto.ExplanationPoints.repeatedFields_ = [1];
 
 
 
@@ -1343,8 +1343,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.ExplanationPoints.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.ExplanationPoints.toObject(opt_includeInstance, this);
+proto.ExplanationPoints.prototype.toObject = function(opt_includeInstance) {
+  return proto.ExplanationPoints.toObject(opt_includeInstance, this);
 };
 
 
@@ -1353,13 +1353,13 @@ proto.sc2env.replay.ExplanationPoints.prototype.toObject = function(opt_includeI
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.ExplanationPoints} msg The msg instance to transform.
+ * @param {!proto.ExplanationPoints} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.ExplanationPoints.toObject = function(includeInstance, msg) {
+proto.ExplanationPoints.toObject = function(includeInstance, msg) {
   var f, obj = {
     explanationPointsList: jspb.Message.toObjectList(msg.getExplanationPointsList(),
-    proto.sc2env.replay.ExplanationPoint.toObject, includeInstance)
+    proto.ExplanationPoint.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1373,23 +1373,23 @@ proto.sc2env.replay.ExplanationPoints.toObject = function(includeInstance, msg) 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.ExplanationPoints}
+ * @return {!proto.ExplanationPoints}
  */
-proto.sc2env.replay.ExplanationPoints.deserializeBinary = function(bytes) {
+proto.ExplanationPoints.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.ExplanationPoints;
-  return proto.sc2env.replay.ExplanationPoints.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ExplanationPoints;
+  return proto.ExplanationPoints.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.ExplanationPoints} msg The message object to deserialize into.
+ * @param {!proto.ExplanationPoints} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.ExplanationPoints}
+ * @return {!proto.ExplanationPoints}
  */
-proto.sc2env.replay.ExplanationPoints.deserializeBinaryFromReader = function(msg, reader) {
+proto.ExplanationPoints.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1397,8 +1397,8 @@ proto.sc2env.replay.ExplanationPoints.deserializeBinaryFromReader = function(msg
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.sc2env.replay.ExplanationPoint;
-      reader.readMessage(value,proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader);
+      var value = new proto.ExplanationPoint;
+      reader.readMessage(value,proto.ExplanationPoint.deserializeBinaryFromReader);
       msg.getExplanationPointsList().push(value);
       msg.setExplanationPointsList(msg.getExplanationPointsList());
       break;
@@ -1414,10 +1414,10 @@ proto.sc2env.replay.ExplanationPoints.deserializeBinaryFromReader = function(msg
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.ExplanationPoints} message
+ * @param {!proto.ExplanationPoints} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ExplanationPoints.serializeBinaryToWriter = function(message, writer) {
+proto.ExplanationPoints.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -1426,7 +1426,7 @@ proto.sc2env.replay.ExplanationPoints.serializeBinaryToWriter = function(message
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.ExplanationPoints.prototype.serializeBinary = function() {
+proto.ExplanationPoints.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -1438,14 +1438,14 @@ proto.sc2env.replay.ExplanationPoints.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ExplanationPoints.prototype.serializeBinaryToWriter = function (writer) {
+proto.ExplanationPoints.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getExplanationPointsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.sc2env.replay.ExplanationPoint.serializeBinaryToWriter
+      proto.ExplanationPoint.serializeBinaryToWriter
     );
   }
 };
@@ -1453,10 +1453,10 @@ proto.sc2env.replay.ExplanationPoints.prototype.serializeBinaryToWriter = functi
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.ExplanationPoints} The clone.
+ * @return {!proto.ExplanationPoints} The clone.
  */
-proto.sc2env.replay.ExplanationPoints.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.ExplanationPoints} */ (jspb.Message.cloneMessage(this));
+proto.ExplanationPoints.prototype.cloneMessage = function() {
+  return /** @type {!proto.ExplanationPoints} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -1464,21 +1464,21 @@ proto.sc2env.replay.ExplanationPoints.prototype.cloneMessage = function() {
  * repeated ExplanationPoint explanation_points = 1;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.ExplanationPoint>}
+ * @return {!Array.<!proto.ExplanationPoint>}
  */
-proto.sc2env.replay.ExplanationPoints.prototype.getExplanationPointsList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.ExplanationPoint>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.ExplanationPoint, 1));
+proto.ExplanationPoints.prototype.getExplanationPointsList = function() {
+  return /** @type{!Array.<!proto.ExplanationPoint>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.ExplanationPoint, 1));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.ExplanationPoint>} value  */
-proto.sc2env.replay.ExplanationPoints.prototype.setExplanationPointsList = function(value) {
+/** @param {Array.<!proto.ExplanationPoint>} value  */
+proto.ExplanationPoints.prototype.setExplanationPointsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoints.prototype.clearExplanationPointsList = function() {
+proto.ExplanationPoints.prototype.clearExplanationPointsList = function() {
   this.setExplanationPointsList([]);
 };
 
@@ -1494,12 +1494,12 @@ proto.sc2env.replay.ExplanationPoints.prototype.clearExplanationPointsList = fun
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.ExplanationPoint = function(opt_data) {
+proto.ExplanationPoint = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.ExplanationPoint, jspb.Message);
+goog.inherits(proto.ExplanationPoint, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.ExplanationPoint.displayName = 'proto.sc2env.replay.ExplanationPoint';
+  proto.ExplanationPoint.displayName = 'proto.ExplanationPoint';
 }
 
 
@@ -1514,8 +1514,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.ExplanationPoint.toObject(opt_includeInstance, this);
+proto.ExplanationPoint.prototype.toObject = function(opt_includeInstance) {
+  return proto.ExplanationPoint.toObject(opt_includeInstance, this);
 };
 
 
@@ -1524,17 +1524,17 @@ proto.sc2env.replay.ExplanationPoint.prototype.toObject = function(opt_includeIn
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.ExplanationPoint} msg The msg instance to transform.
+ * @param {!proto.ExplanationPoint} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.ExplanationPoint.toObject = function(includeInstance, msg) {
+proto.ExplanationPoint.toObject = function(includeInstance, msg) {
   var f, obj = {
     step: jspb.Message.getField(msg, 1),
     id: jspb.Message.getField(msg, 2),
     title: jspb.Message.getField(msg, 3),
     description: jspb.Message.getField(msg, 4),
-    saliency: (f = msg.getSaliency()) && proto.sc2env.replay.Saliency.toObject(includeInstance, f),
-    barChart: (f = msg.getBarChart()) && proto.sc2env.replay.BarChart.toObject(includeInstance, f)
+    saliency: (f = msg.getSaliency()) && proto.Saliency.toObject(includeInstance, f),
+    barChart: (f = msg.getBarChart()) && proto.BarChart.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1548,23 +1548,23 @@ proto.sc2env.replay.ExplanationPoint.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.ExplanationPoint}
+ * @return {!proto.ExplanationPoint}
  */
-proto.sc2env.replay.ExplanationPoint.deserializeBinary = function(bytes) {
+proto.ExplanationPoint.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.ExplanationPoint;
-  return proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ExplanationPoint;
+  return proto.ExplanationPoint.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.ExplanationPoint} msg The message object to deserialize into.
+ * @param {!proto.ExplanationPoint} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.ExplanationPoint}
+ * @return {!proto.ExplanationPoint}
  */
-proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader = function(msg, reader) {
+proto.ExplanationPoint.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1588,13 +1588,13 @@ proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader = function(msg,
       msg.setDescription(value);
       break;
     case 5:
-      var value = new proto.sc2env.replay.Saliency;
-      reader.readMessage(value,proto.sc2env.replay.Saliency.deserializeBinaryFromReader);
+      var value = new proto.Saliency;
+      reader.readMessage(value,proto.Saliency.deserializeBinaryFromReader);
       msg.setSaliency(value);
       break;
     case 6:
-      var value = new proto.sc2env.replay.BarChart;
-      reader.readMessage(value,proto.sc2env.replay.BarChart.deserializeBinaryFromReader);
+      var value = new proto.BarChart;
+      reader.readMessage(value,proto.BarChart.deserializeBinaryFromReader);
       msg.setBarChart(value);
       break;
     default:
@@ -1609,10 +1609,10 @@ proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader = function(msg,
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.ExplanationPoint} message
+ * @param {!proto.ExplanationPoint} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ExplanationPoint.serializeBinaryToWriter = function(message, writer) {
+proto.ExplanationPoint.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -1621,7 +1621,7 @@ proto.sc2env.replay.ExplanationPoint.serializeBinaryToWriter = function(message,
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.serializeBinary = function() {
+proto.ExplanationPoint.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -1633,7 +1633,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ExplanationPoint.prototype.serializeBinaryToWriter = function (writer) {
+proto.ExplanationPoint.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -1668,7 +1668,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.serializeBinaryToWriter = functio
     writer.writeMessage(
       5,
       f,
-      proto.sc2env.replay.Saliency.serializeBinaryToWriter
+      proto.Saliency.serializeBinaryToWriter
     );
   }
   f = this.getBarChart();
@@ -1676,7 +1676,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.serializeBinaryToWriter = functio
     writer.writeMessage(
       6,
       f,
-      proto.sc2env.replay.BarChart.serializeBinaryToWriter
+      proto.BarChart.serializeBinaryToWriter
     );
   }
 };
@@ -1684,10 +1684,10 @@ proto.sc2env.replay.ExplanationPoint.prototype.serializeBinaryToWriter = functio
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.ExplanationPoint} The clone.
+ * @return {!proto.ExplanationPoint} The clone.
  */
-proto.sc2env.replay.ExplanationPoint.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.ExplanationPoint} */ (jspb.Message.cloneMessage(this));
+proto.ExplanationPoint.prototype.cloneMessage = function() {
+  return /** @type {!proto.ExplanationPoint} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -1695,18 +1695,18 @@ proto.sc2env.replay.ExplanationPoint.prototype.cloneMessage = function() {
  * optional uint32 step = 1;
  * @return {number}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.getStep = function() {
+proto.ExplanationPoint.prototype.getStep = function() {
   return /** @type {number} */ (!this.hasStep() ? 0 : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {number?|undefined} value  */
-proto.sc2env.replay.ExplanationPoint.prototype.setStep = function(value) {
+proto.ExplanationPoint.prototype.setStep = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoint.prototype.clearStep = function() {
+proto.ExplanationPoint.prototype.clearStep = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -1715,7 +1715,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.clearStep = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.hasStep = function() {
+proto.ExplanationPoint.prototype.hasStep = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -1724,18 +1724,18 @@ proto.sc2env.replay.ExplanationPoint.prototype.hasStep = function() {
  * optional uint32 id = 2;
  * @return {number}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.getId = function() {
+proto.ExplanationPoint.prototype.getId = function() {
   return /** @type {number} */ (!this.hasId() ? 0 : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {number?|undefined} value  */
-proto.sc2env.replay.ExplanationPoint.prototype.setId = function(value) {
+proto.ExplanationPoint.prototype.setId = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoint.prototype.clearId = function() {
+proto.ExplanationPoint.prototype.clearId = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -1744,7 +1744,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.clearId = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.hasId = function() {
+proto.ExplanationPoint.prototype.hasId = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -1753,18 +1753,18 @@ proto.sc2env.replay.ExplanationPoint.prototype.hasId = function() {
  * optional string title = 3;
  * @return {string}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.getTitle = function() {
+proto.ExplanationPoint.prototype.getTitle = function() {
   return /** @type {string} */ (!this.hasTitle() ? "" : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.ExplanationPoint.prototype.setTitle = function(value) {
+proto.ExplanationPoint.prototype.setTitle = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoint.prototype.clearTitle = function() {
+proto.ExplanationPoint.prototype.clearTitle = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -1773,7 +1773,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.clearTitle = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.hasTitle = function() {
+proto.ExplanationPoint.prototype.hasTitle = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -1782,18 +1782,18 @@ proto.sc2env.replay.ExplanationPoint.prototype.hasTitle = function() {
  * optional string description = 4;
  * @return {string}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.getDescription = function() {
+proto.ExplanationPoint.prototype.getDescription = function() {
   return /** @type {string} */ (!this.hasDescription() ? "" : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.ExplanationPoint.prototype.setDescription = function(value) {
+proto.ExplanationPoint.prototype.setDescription = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoint.prototype.clearDescription = function() {
+proto.ExplanationPoint.prototype.clearDescription = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -1802,28 +1802,28 @@ proto.sc2env.replay.ExplanationPoint.prototype.clearDescription = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.hasDescription = function() {
+proto.ExplanationPoint.prototype.hasDescription = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
 
 /**
  * optional Saliency saliency = 5;
- * @return {proto.sc2env.replay.Saliency}
+ * @return {proto.Saliency}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.getSaliency = function() {
-  return /** @type{proto.sc2env.replay.Saliency} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.Saliency, 5));
+proto.ExplanationPoint.prototype.getSaliency = function() {
+  return /** @type{proto.Saliency} */ (
+    jspb.Message.getWrapperField(this, proto.Saliency, 5));
 };
 
 
-/** @param {proto.sc2env.replay.Saliency|undefined} value  */
-proto.sc2env.replay.ExplanationPoint.prototype.setSaliency = function(value) {
+/** @param {proto.Saliency|undefined} value  */
+proto.ExplanationPoint.prototype.setSaliency = function(value) {
   jspb.Message.setWrapperField(this, 5, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoint.prototype.clearSaliency = function() {
+proto.ExplanationPoint.prototype.clearSaliency = function() {
   this.setSaliency(undefined);
 };
 
@@ -1832,28 +1832,28 @@ proto.sc2env.replay.ExplanationPoint.prototype.clearSaliency = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.hasSaliency = function() {
+proto.ExplanationPoint.prototype.hasSaliency = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
 
 /**
  * optional BarChart bar_chart = 6;
- * @return {proto.sc2env.replay.BarChart}
+ * @return {proto.BarChart}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.getBarChart = function() {
-  return /** @type{proto.sc2env.replay.BarChart} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.BarChart, 6));
+proto.ExplanationPoint.prototype.getBarChart = function() {
+  return /** @type{proto.BarChart} */ (
+    jspb.Message.getWrapperField(this, proto.BarChart, 6));
 };
 
 
-/** @param {proto.sc2env.replay.BarChart|undefined} value  */
-proto.sc2env.replay.ExplanationPoint.prototype.setBarChart = function(value) {
+/** @param {proto.BarChart|undefined} value  */
+proto.ExplanationPoint.prototype.setBarChart = function(value) {
   jspb.Message.setWrapperField(this, 6, value);
 };
 
 
-proto.sc2env.replay.ExplanationPoint.prototype.clearBarChart = function() {
+proto.ExplanationPoint.prototype.clearBarChart = function() {
   this.setBarChart(undefined);
 };
 
@@ -1862,7 +1862,7 @@ proto.sc2env.replay.ExplanationPoint.prototype.clearBarChart = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationPoint.prototype.hasBarChart = function() {
+proto.ExplanationPoint.prototype.hasBarChart = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
@@ -1878,19 +1878,19 @@ proto.sc2env.replay.ExplanationPoint.prototype.hasBarChart = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.BarChart = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.BarChart.repeatedFields_, null);
+proto.BarChart = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.BarChart.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.BarChart, jspb.Message);
+goog.inherits(proto.BarChart, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.BarChart.displayName = 'proto.sc2env.replay.BarChart';
+  proto.BarChart.displayName = 'proto.BarChart';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.BarChart.repeatedFields_ = [1];
+proto.BarChart.repeatedFields_ = [1];
 
 
 
@@ -1905,8 +1905,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.BarChart.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.BarChart.toObject(opt_includeInstance, this);
+proto.BarChart.prototype.toObject = function(opt_includeInstance) {
+  return proto.BarChart.toObject(opt_includeInstance, this);
 };
 
 
@@ -1915,13 +1915,13 @@ proto.sc2env.replay.BarChart.prototype.toObject = function(opt_includeInstance) 
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.BarChart} msg The msg instance to transform.
+ * @param {!proto.BarChart} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.BarChart.toObject = function(includeInstance, msg) {
+proto.BarChart.toObject = function(includeInstance, msg) {
   var f, obj = {
     groupsList: jspb.Message.toObjectList(msg.getGroupsList(),
-    proto.sc2env.replay.BarGroup.toObject, includeInstance),
+    proto.BarGroup.toObject, includeInstance),
     title: jspb.Message.getField(msg, 2),
     vTitle: jspb.Message.getField(msg, 3),
     hTitle: jspb.Message.getField(msg, 4)
@@ -1938,23 +1938,23 @@ proto.sc2env.replay.BarChart.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.BarChart}
+ * @return {!proto.BarChart}
  */
-proto.sc2env.replay.BarChart.deserializeBinary = function(bytes) {
+proto.BarChart.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.BarChart;
-  return proto.sc2env.replay.BarChart.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.BarChart;
+  return proto.BarChart.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.BarChart} msg The message object to deserialize into.
+ * @param {!proto.BarChart} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.BarChart}
+ * @return {!proto.BarChart}
  */
-proto.sc2env.replay.BarChart.deserializeBinaryFromReader = function(msg, reader) {
+proto.BarChart.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1962,8 +1962,8 @@ proto.sc2env.replay.BarChart.deserializeBinaryFromReader = function(msg, reader)
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.sc2env.replay.BarGroup;
-      reader.readMessage(value,proto.sc2env.replay.BarGroup.deserializeBinaryFromReader);
+      var value = new proto.BarGroup;
+      reader.readMessage(value,proto.BarGroup.deserializeBinaryFromReader);
       msg.getGroupsList().push(value);
       msg.setGroupsList(msg.getGroupsList());
       break;
@@ -1991,10 +1991,10 @@ proto.sc2env.replay.BarChart.deserializeBinaryFromReader = function(msg, reader)
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.BarChart} message
+ * @param {!proto.BarChart} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.BarChart.serializeBinaryToWriter = function(message, writer) {
+proto.BarChart.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -2003,7 +2003,7 @@ proto.sc2env.replay.BarChart.serializeBinaryToWriter = function(message, writer)
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.BarChart.prototype.serializeBinary = function() {
+proto.BarChart.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -2015,14 +2015,14 @@ proto.sc2env.replay.BarChart.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.BarChart.prototype.serializeBinaryToWriter = function (writer) {
+proto.BarChart.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getGroupsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.sc2env.replay.BarGroup.serializeBinaryToWriter
+      proto.BarGroup.serializeBinaryToWriter
     );
   }
   f = jspb.Message.getField(this, 2);
@@ -2051,10 +2051,10 @@ proto.sc2env.replay.BarChart.prototype.serializeBinaryToWriter = function (write
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.BarChart} The clone.
+ * @return {!proto.BarChart} The clone.
  */
-proto.sc2env.replay.BarChart.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.BarChart} */ (jspb.Message.cloneMessage(this));
+proto.BarChart.prototype.cloneMessage = function() {
+  return /** @type {!proto.BarChart} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -2062,21 +2062,21 @@ proto.sc2env.replay.BarChart.prototype.cloneMessage = function() {
  * repeated BarGroup groups = 1;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.BarGroup>}
+ * @return {!Array.<!proto.BarGroup>}
  */
-proto.sc2env.replay.BarChart.prototype.getGroupsList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.BarGroup>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.BarGroup, 1));
+proto.BarChart.prototype.getGroupsList = function() {
+  return /** @type{!Array.<!proto.BarGroup>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.BarGroup, 1));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.BarGroup>} value  */
-proto.sc2env.replay.BarChart.prototype.setGroupsList = function(value) {
+/** @param {Array.<!proto.BarGroup>} value  */
+proto.BarChart.prototype.setGroupsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
-proto.sc2env.replay.BarChart.prototype.clearGroupsList = function() {
+proto.BarChart.prototype.clearGroupsList = function() {
   this.setGroupsList([]);
 };
 
@@ -2085,18 +2085,18 @@ proto.sc2env.replay.BarChart.prototype.clearGroupsList = function() {
  * optional string title = 2;
  * @return {string}
  */
-proto.sc2env.replay.BarChart.prototype.getTitle = function() {
+proto.BarChart.prototype.getTitle = function() {
   return /** @type {string} */ (!this.hasTitle() ? "" : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.BarChart.prototype.setTitle = function(value) {
+proto.BarChart.prototype.setTitle = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.BarChart.prototype.clearTitle = function() {
+proto.BarChart.prototype.clearTitle = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -2105,7 +2105,7 @@ proto.sc2env.replay.BarChart.prototype.clearTitle = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.BarChart.prototype.hasTitle = function() {
+proto.BarChart.prototype.hasTitle = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -2114,18 +2114,18 @@ proto.sc2env.replay.BarChart.prototype.hasTitle = function() {
  * optional string v_title = 3;
  * @return {string}
  */
-proto.sc2env.replay.BarChart.prototype.getVTitle = function() {
+proto.BarChart.prototype.getVTitle = function() {
   return /** @type {string} */ (!this.hasVTitle() ? "" : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.BarChart.prototype.setVTitle = function(value) {
+proto.BarChart.prototype.setVTitle = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.BarChart.prototype.clearVTitle = function() {
+proto.BarChart.prototype.clearVTitle = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -2134,7 +2134,7 @@ proto.sc2env.replay.BarChart.prototype.clearVTitle = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.BarChart.prototype.hasVTitle = function() {
+proto.BarChart.prototype.hasVTitle = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -2143,18 +2143,18 @@ proto.sc2env.replay.BarChart.prototype.hasVTitle = function() {
  * optional string h_title = 4;
  * @return {string}
  */
-proto.sc2env.replay.BarChart.prototype.getHTitle = function() {
+proto.BarChart.prototype.getHTitle = function() {
   return /** @type {string} */ (!this.hasHTitle() ? "" : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.BarChart.prototype.setHTitle = function(value) {
+proto.BarChart.prototype.setHTitle = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.BarChart.prototype.clearHTitle = function() {
+proto.BarChart.prototype.clearHTitle = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -2163,7 +2163,7 @@ proto.sc2env.replay.BarChart.prototype.clearHTitle = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.BarChart.prototype.hasHTitle = function() {
+proto.BarChart.prototype.hasHTitle = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -2179,19 +2179,19 @@ proto.sc2env.replay.BarChart.prototype.hasHTitle = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.BarGroup = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.BarGroup.repeatedFields_, null);
+proto.BarGroup = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.BarGroup.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.BarGroup, jspb.Message);
+goog.inherits(proto.BarGroup, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.BarGroup.displayName = 'proto.sc2env.replay.BarGroup';
+  proto.BarGroup.displayName = 'proto.BarGroup';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.BarGroup.repeatedFields_ = [2];
+proto.BarGroup.repeatedFields_ = [2];
 
 
 
@@ -2206,8 +2206,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.BarGroup.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.BarGroup.toObject(opt_includeInstance, this);
+proto.BarGroup.prototype.toObject = function(opt_includeInstance) {
+  return proto.BarGroup.toObject(opt_includeInstance, this);
 };
 
 
@@ -2216,14 +2216,14 @@ proto.sc2env.replay.BarGroup.prototype.toObject = function(opt_includeInstance) 
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.BarGroup} msg The msg instance to transform.
+ * @param {!proto.BarGroup} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.BarGroup.toObject = function(includeInstance, msg) {
+proto.BarGroup.toObject = function(includeInstance, msg) {
   var f, obj = {
     value: jspb.Message.getOptionalFloatingPointField(msg, 1),
     barsList: jspb.Message.toObjectList(msg.getBarsList(),
-    proto.sc2env.replay.Bar.toObject, includeInstance),
+    proto.Bar.toObject, includeInstance),
     saliencyId: jspb.Message.getField(msg, 3),
     name: jspb.Message.getField(msg, 4)
   };
@@ -2239,23 +2239,23 @@ proto.sc2env.replay.BarGroup.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.BarGroup}
+ * @return {!proto.BarGroup}
  */
-proto.sc2env.replay.BarGroup.deserializeBinary = function(bytes) {
+proto.BarGroup.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.BarGroup;
-  return proto.sc2env.replay.BarGroup.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.BarGroup;
+  return proto.BarGroup.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.BarGroup} msg The message object to deserialize into.
+ * @param {!proto.BarGroup} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.BarGroup}
+ * @return {!proto.BarGroup}
  */
-proto.sc2env.replay.BarGroup.deserializeBinaryFromReader = function(msg, reader) {
+proto.BarGroup.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2267,8 +2267,8 @@ proto.sc2env.replay.BarGroup.deserializeBinaryFromReader = function(msg, reader)
       msg.setValue(value);
       break;
     case 2:
-      var value = new proto.sc2env.replay.Bar;
-      reader.readMessage(value,proto.sc2env.replay.Bar.deserializeBinaryFromReader);
+      var value = new proto.Bar;
+      reader.readMessage(value,proto.Bar.deserializeBinaryFromReader);
       msg.getBarsList().push(value);
       msg.setBarsList(msg.getBarsList());
       break;
@@ -2292,10 +2292,10 @@ proto.sc2env.replay.BarGroup.deserializeBinaryFromReader = function(msg, reader)
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.BarGroup} message
+ * @param {!proto.BarGroup} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.BarGroup.serializeBinaryToWriter = function(message, writer) {
+proto.BarGroup.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -2304,7 +2304,7 @@ proto.sc2env.replay.BarGroup.serializeBinaryToWriter = function(message, writer)
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.BarGroup.prototype.serializeBinary = function() {
+proto.BarGroup.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -2316,7 +2316,7 @@ proto.sc2env.replay.BarGroup.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.BarGroup.prototype.serializeBinaryToWriter = function (writer) {
+proto.BarGroup.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -2330,7 +2330,7 @@ proto.sc2env.replay.BarGroup.prototype.serializeBinaryToWriter = function (write
     writer.writeRepeatedMessage(
       2,
       f,
-      proto.sc2env.replay.Bar.serializeBinaryToWriter
+      proto.Bar.serializeBinaryToWriter
     );
   }
   f = jspb.Message.getField(this, 3);
@@ -2352,10 +2352,10 @@ proto.sc2env.replay.BarGroup.prototype.serializeBinaryToWriter = function (write
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.BarGroup} The clone.
+ * @return {!proto.BarGroup} The clone.
  */
-proto.sc2env.replay.BarGroup.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.BarGroup} */ (jspb.Message.cloneMessage(this));
+proto.BarGroup.prototype.cloneMessage = function() {
+  return /** @type {!proto.BarGroup} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -2363,18 +2363,18 @@ proto.sc2env.replay.BarGroup.prototype.cloneMessage = function() {
  * optional double value = 1;
  * @return {number}
  */
-proto.sc2env.replay.BarGroup.prototype.getValue = function() {
+proto.BarGroup.prototype.getValue = function() {
   return /** @type {number} */ (!this.hasValue() ? 0.0 : +jspb.Message.getField(this, 1));
 };
 
 
 /** @param {number?|undefined} value  */
-proto.sc2env.replay.BarGroup.prototype.setValue = function(value) {
+proto.BarGroup.prototype.setValue = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.BarGroup.prototype.clearValue = function() {
+proto.BarGroup.prototype.clearValue = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -2383,7 +2383,7 @@ proto.sc2env.replay.BarGroup.prototype.clearValue = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.BarGroup.prototype.hasValue = function() {
+proto.BarGroup.prototype.hasValue = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2392,21 +2392,21 @@ proto.sc2env.replay.BarGroup.prototype.hasValue = function() {
  * repeated Bar bars = 2;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.Bar>}
+ * @return {!Array.<!proto.Bar>}
  */
-proto.sc2env.replay.BarGroup.prototype.getBarsList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.Bar>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.Bar, 2));
+proto.BarGroup.prototype.getBarsList = function() {
+  return /** @type{!Array.<!proto.Bar>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.Bar, 2));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.Bar>} value  */
-proto.sc2env.replay.BarGroup.prototype.setBarsList = function(value) {
+/** @param {Array.<!proto.Bar>} value  */
+proto.BarGroup.prototype.setBarsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
-proto.sc2env.replay.BarGroup.prototype.clearBarsList = function() {
+proto.BarGroup.prototype.clearBarsList = function() {
   this.setBarsList([]);
 };
 
@@ -2415,18 +2415,18 @@ proto.sc2env.replay.BarGroup.prototype.clearBarsList = function() {
  * optional string saliency_id = 3;
  * @return {string}
  */
-proto.sc2env.replay.BarGroup.prototype.getSaliencyId = function() {
+proto.BarGroup.prototype.getSaliencyId = function() {
   return /** @type {string} */ (!this.hasSaliencyId() ? "" : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.BarGroup.prototype.setSaliencyId = function(value) {
+proto.BarGroup.prototype.setSaliencyId = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.BarGroup.prototype.clearSaliencyId = function() {
+proto.BarGroup.prototype.clearSaliencyId = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -2435,7 +2435,7 @@ proto.sc2env.replay.BarGroup.prototype.clearSaliencyId = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.BarGroup.prototype.hasSaliencyId = function() {
+proto.BarGroup.prototype.hasSaliencyId = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -2444,18 +2444,18 @@ proto.sc2env.replay.BarGroup.prototype.hasSaliencyId = function() {
  * optional string name = 4;
  * @return {string}
  */
-proto.sc2env.replay.BarGroup.prototype.getName = function() {
+proto.BarGroup.prototype.getName = function() {
   return /** @type {string} */ (!this.hasName() ? "" : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.BarGroup.prototype.setName = function(value) {
+proto.BarGroup.prototype.setName = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.BarGroup.prototype.clearName = function() {
+proto.BarGroup.prototype.clearName = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -2464,7 +2464,7 @@ proto.sc2env.replay.BarGroup.prototype.clearName = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.BarGroup.prototype.hasName = function() {
+proto.BarGroup.prototype.hasName = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -2480,12 +2480,12 @@ proto.sc2env.replay.BarGroup.prototype.hasName = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.Bar = function(opt_data) {
+proto.Bar = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.Bar, jspb.Message);
+goog.inherits(proto.Bar, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.Bar.displayName = 'proto.sc2env.replay.Bar';
+  proto.Bar.displayName = 'proto.Bar';
 }
 
 
@@ -2500,8 +2500,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.Bar.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.Bar.toObject(opt_includeInstance, this);
+proto.Bar.prototype.toObject = function(opt_includeInstance) {
+  return proto.Bar.toObject(opt_includeInstance, this);
 };
 
 
@@ -2510,10 +2510,10 @@ proto.sc2env.replay.Bar.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.Bar} msg The msg instance to transform.
+ * @param {!proto.Bar} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.Bar.toObject = function(includeInstance, msg) {
+proto.Bar.toObject = function(includeInstance, msg) {
   var f, obj = {
     value: +jspb.Message.getField(msg, 1),
     saliencyId: jspb.Message.getField(msg, 2),
@@ -2531,23 +2531,23 @@ proto.sc2env.replay.Bar.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.Bar}
+ * @return {!proto.Bar}
  */
-proto.sc2env.replay.Bar.deserializeBinary = function(bytes) {
+proto.Bar.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.Bar;
-  return proto.sc2env.replay.Bar.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.Bar;
+  return proto.Bar.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.Bar} msg The message object to deserialize into.
+ * @param {!proto.Bar} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.Bar}
+ * @return {!proto.Bar}
  */
-proto.sc2env.replay.Bar.deserializeBinaryFromReader = function(msg, reader) {
+proto.Bar.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2578,10 +2578,10 @@ proto.sc2env.replay.Bar.deserializeBinaryFromReader = function(msg, reader) {
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.Bar} message
+ * @param {!proto.Bar} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Bar.serializeBinaryToWriter = function(message, writer) {
+proto.Bar.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -2590,7 +2590,7 @@ proto.sc2env.replay.Bar.serializeBinaryToWriter = function(message, writer) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.Bar.prototype.serializeBinary = function() {
+proto.Bar.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -2602,7 +2602,7 @@ proto.sc2env.replay.Bar.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Bar.prototype.serializeBinaryToWriter = function (writer) {
+proto.Bar.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -2630,10 +2630,10 @@ proto.sc2env.replay.Bar.prototype.serializeBinaryToWriter = function (writer) {
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.Bar} The clone.
+ * @return {!proto.Bar} The clone.
  */
-proto.sc2env.replay.Bar.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.Bar} */ (jspb.Message.cloneMessage(this));
+proto.Bar.prototype.cloneMessage = function() {
+  return /** @type {!proto.Bar} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -2641,18 +2641,18 @@ proto.sc2env.replay.Bar.prototype.cloneMessage = function() {
  * required double value = 1;
  * @return {number}
  */
-proto.sc2env.replay.Bar.prototype.getValue = function() {
+proto.Bar.prototype.getValue = function() {
   return /** @type {number} */ (!this.hasValue() ? 0.0 : +jspb.Message.getField(this, 1));
 };
 
 
 /** @param {number|undefined} value  */
-proto.sc2env.replay.Bar.prototype.setValue = function(value) {
+proto.Bar.prototype.setValue = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.Bar.prototype.clearValue = function() {
+proto.Bar.prototype.clearValue = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -2661,7 +2661,7 @@ proto.sc2env.replay.Bar.prototype.clearValue = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Bar.prototype.hasValue = function() {
+proto.Bar.prototype.hasValue = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2670,18 +2670,18 @@ proto.sc2env.replay.Bar.prototype.hasValue = function() {
  * optional string saliency_id = 2;
  * @return {string}
  */
-proto.sc2env.replay.Bar.prototype.getSaliencyId = function() {
+proto.Bar.prototype.getSaliencyId = function() {
   return /** @type {string} */ (!this.hasSaliencyId() ? "" : jspb.Message.getField(this, 2));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.Bar.prototype.setSaliencyId = function(value) {
+proto.Bar.prototype.setSaliencyId = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.sc2env.replay.Bar.prototype.clearSaliencyId = function() {
+proto.Bar.prototype.clearSaliencyId = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -2690,7 +2690,7 @@ proto.sc2env.replay.Bar.prototype.clearSaliencyId = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Bar.prototype.hasSaliencyId = function() {
+proto.Bar.prototype.hasSaliencyId = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -2699,18 +2699,18 @@ proto.sc2env.replay.Bar.prototype.hasSaliencyId = function() {
  * optional string name = 3;
  * @return {string}
  */
-proto.sc2env.replay.Bar.prototype.getName = function() {
+proto.Bar.prototype.getName = function() {
   return /** @type {string} */ (!this.hasName() ? "" : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.Bar.prototype.setName = function(value) {
+proto.Bar.prototype.setName = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.Bar.prototype.clearName = function() {
+proto.Bar.prototype.clearName = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -2719,7 +2719,7 @@ proto.sc2env.replay.Bar.prototype.clearName = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Bar.prototype.hasName = function() {
+proto.Bar.prototype.hasName = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -2735,19 +2735,19 @@ proto.sc2env.replay.Bar.prototype.hasName = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.Layer = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.Layer.repeatedFields_, null);
+proto.Layer = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.Layer.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.Layer, jspb.Message);
+goog.inherits(proto.Layer, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.Layer.displayName = 'proto.sc2env.replay.Layer';
+  proto.Layer.displayName = 'proto.Layer';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.Layer.repeatedFields_ = [2];
+proto.Layer.repeatedFields_ = [2];
 
 
 
@@ -2762,8 +2762,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.Layer.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.Layer.toObject(opt_includeInstance, this);
+proto.Layer.prototype.toObject = function(opt_includeInstance) {
+  return proto.Layer.toObject(opt_includeInstance, this);
 };
 
 
@@ -2772,10 +2772,10 @@ proto.sc2env.replay.Layer.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.Layer} msg The msg instance to transform.
+ * @param {!proto.Layer} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.Layer.toObject = function(includeInstance, msg) {
+proto.Layer.toObject = function(includeInstance, msg) {
   var f, obj = {
     name: jspb.Message.getField(msg, 1),
     cellsList: jspb.Message.getRepeatedFloatingPointField(msg, 2),
@@ -2794,23 +2794,23 @@ proto.sc2env.replay.Layer.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.Layer}
+ * @return {!proto.Layer}
  */
-proto.sc2env.replay.Layer.deserializeBinary = function(bytes) {
+proto.Layer.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.Layer;
-  return proto.sc2env.replay.Layer.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.Layer;
+  return proto.Layer.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.Layer} msg The message object to deserialize into.
+ * @param {!proto.Layer} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.Layer}
+ * @return {!proto.Layer}
  */
-proto.sc2env.replay.Layer.deserializeBinaryFromReader = function(msg, reader) {
+proto.Layer.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2846,10 +2846,10 @@ proto.sc2env.replay.Layer.deserializeBinaryFromReader = function(msg, reader) {
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.Layer} message
+ * @param {!proto.Layer} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Layer.serializeBinaryToWriter = function(message, writer) {
+proto.Layer.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -2858,7 +2858,7 @@ proto.sc2env.replay.Layer.serializeBinaryToWriter = function(message, writer) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.Layer.prototype.serializeBinary = function() {
+proto.Layer.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -2870,7 +2870,7 @@ proto.sc2env.replay.Layer.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Layer.prototype.serializeBinaryToWriter = function (writer) {
+proto.Layer.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -2905,10 +2905,10 @@ proto.sc2env.replay.Layer.prototype.serializeBinaryToWriter = function (writer) 
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.Layer} The clone.
+ * @return {!proto.Layer} The clone.
  */
-proto.sc2env.replay.Layer.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.Layer} */ (jspb.Message.cloneMessage(this));
+proto.Layer.prototype.cloneMessage = function() {
+  return /** @type {!proto.Layer} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -2916,18 +2916,18 @@ proto.sc2env.replay.Layer.prototype.cloneMessage = function() {
  * optional string name = 1;
  * @return {string}
  */
-proto.sc2env.replay.Layer.prototype.getName = function() {
+proto.Layer.prototype.getName = function() {
   return /** @type {string} */ (!this.hasName() ? "" : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {string?|undefined} value  */
-proto.sc2env.replay.Layer.prototype.setName = function(value) {
+proto.Layer.prototype.setName = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.Layer.prototype.clearName = function() {
+proto.Layer.prototype.clearName = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -2936,7 +2936,7 @@ proto.sc2env.replay.Layer.prototype.clearName = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Layer.prototype.hasName = function() {
+proto.Layer.prototype.hasName = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2947,18 +2947,18 @@ proto.sc2env.replay.Layer.prototype.hasName = function() {
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<number>}
  */
-proto.sc2env.replay.Layer.prototype.getCellsList = function() {
+proto.Layer.prototype.getCellsList = function() {
   return /** @type {!Array.<number>} */ (jspb.Message.getRepeatedFloatingPointField(this, 2));
 };
 
 
 /** @param {Array.<number>} value  */
-proto.sc2env.replay.Layer.prototype.setCellsList = function(value) {
+proto.Layer.prototype.setCellsList = function(value) {
   jspb.Message.setField(this, 2, value || []);
 };
 
 
-proto.sc2env.replay.Layer.prototype.clearCellsList = function() {
+proto.Layer.prototype.clearCellsList = function() {
   jspb.Message.setField(this, 2, []);
 };
 
@@ -2967,18 +2967,18 @@ proto.sc2env.replay.Layer.prototype.clearCellsList = function() {
  * optional uint32 width = 3;
  * @return {number}
  */
-proto.sc2env.replay.Layer.prototype.getWidth = function() {
+proto.Layer.prototype.getWidth = function() {
   return /** @type {number} */ (!this.hasWidth() ? 0 : jspb.Message.getField(this, 3));
 };
 
 
 /** @param {number?|undefined} value  */
-proto.sc2env.replay.Layer.prototype.setWidth = function(value) {
+proto.Layer.prototype.setWidth = function(value) {
   jspb.Message.setField(this, 3, value);
 };
 
 
-proto.sc2env.replay.Layer.prototype.clearWidth = function() {
+proto.Layer.prototype.clearWidth = function() {
   jspb.Message.setField(this, 3, undefined);
 };
 
@@ -2987,7 +2987,7 @@ proto.sc2env.replay.Layer.prototype.clearWidth = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Layer.prototype.hasWidth = function() {
+proto.Layer.prototype.hasWidth = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
@@ -2996,18 +2996,18 @@ proto.sc2env.replay.Layer.prototype.hasWidth = function() {
  * optional uint32 height = 4;
  * @return {number}
  */
-proto.sc2env.replay.Layer.prototype.getHeight = function() {
+proto.Layer.prototype.getHeight = function() {
   return /** @type {number} */ (!this.hasHeight() ? 0 : jspb.Message.getField(this, 4));
 };
 
 
 /** @param {number?|undefined} value  */
-proto.sc2env.replay.Layer.prototype.setHeight = function(value) {
+proto.Layer.prototype.setHeight = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
-proto.sc2env.replay.Layer.prototype.clearHeight = function() {
+proto.Layer.prototype.clearHeight = function() {
   jspb.Message.setField(this, 4, undefined);
 };
 
@@ -3016,7 +3016,7 @@ proto.sc2env.replay.Layer.prototype.clearHeight = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Layer.prototype.hasHeight = function() {
+proto.Layer.prototype.hasHeight = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
@@ -3032,19 +3032,19 @@ proto.sc2env.replay.Layer.prototype.hasHeight = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.Layers = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.Layers.repeatedFields_, null);
+proto.Layers = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.Layers.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.Layers, jspb.Message);
+goog.inherits(proto.Layers, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.Layers.displayName = 'proto.sc2env.replay.Layers';
+  proto.Layers.displayName = 'proto.Layers';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.Layers.repeatedFields_ = [1];
+proto.Layers.repeatedFields_ = [1];
 
 
 
@@ -3059,8 +3059,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.Layers.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.Layers.toObject(opt_includeInstance, this);
+proto.Layers.prototype.toObject = function(opt_includeInstance) {
+  return proto.Layers.toObject(opt_includeInstance, this);
 };
 
 
@@ -3069,13 +3069,13 @@ proto.sc2env.replay.Layers.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.Layers} msg The msg instance to transform.
+ * @param {!proto.Layers} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.Layers.toObject = function(includeInstance, msg) {
+proto.Layers.toObject = function(includeInstance, msg) {
   var f, obj = {
     layersList: jspb.Message.toObjectList(msg.getLayersList(),
-    proto.sc2env.replay.Layer.toObject, includeInstance)
+    proto.Layer.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -3089,23 +3089,23 @@ proto.sc2env.replay.Layers.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.Layers}
+ * @return {!proto.Layers}
  */
-proto.sc2env.replay.Layers.deserializeBinary = function(bytes) {
+proto.Layers.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.Layers;
-  return proto.sc2env.replay.Layers.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.Layers;
+  return proto.Layers.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.Layers} msg The message object to deserialize into.
+ * @param {!proto.Layers} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.Layers}
+ * @return {!proto.Layers}
  */
-proto.sc2env.replay.Layers.deserializeBinaryFromReader = function(msg, reader) {
+proto.Layers.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3113,8 +3113,8 @@ proto.sc2env.replay.Layers.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.sc2env.replay.Layer;
-      reader.readMessage(value,proto.sc2env.replay.Layer.deserializeBinaryFromReader);
+      var value = new proto.Layer;
+      reader.readMessage(value,proto.Layer.deserializeBinaryFromReader);
       msg.getLayersList().push(value);
       msg.setLayersList(msg.getLayersList());
       break;
@@ -3130,10 +3130,10 @@ proto.sc2env.replay.Layers.deserializeBinaryFromReader = function(msg, reader) {
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.Layers} message
+ * @param {!proto.Layers} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Layers.serializeBinaryToWriter = function(message, writer) {
+proto.Layers.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -3142,7 +3142,7 @@ proto.sc2env.replay.Layers.serializeBinaryToWriter = function(message, writer) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.Layers.prototype.serializeBinary = function() {
+proto.Layers.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -3154,14 +3154,14 @@ proto.sc2env.replay.Layers.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Layers.prototype.serializeBinaryToWriter = function (writer) {
+proto.Layers.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getLayersList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.sc2env.replay.Layer.serializeBinaryToWriter
+      proto.Layer.serializeBinaryToWriter
     );
   }
 };
@@ -3169,10 +3169,10 @@ proto.sc2env.replay.Layers.prototype.serializeBinaryToWriter = function (writer)
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.Layers} The clone.
+ * @return {!proto.Layers} The clone.
  */
-proto.sc2env.replay.Layers.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.Layers} */ (jspb.Message.cloneMessage(this));
+proto.Layers.prototype.cloneMessage = function() {
+  return /** @type {!proto.Layers} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -3180,21 +3180,21 @@ proto.sc2env.replay.Layers.prototype.cloneMessage = function() {
  * repeated Layer layers = 1;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.Layer>}
+ * @return {!Array.<!proto.Layer>}
  */
-proto.sc2env.replay.Layers.prototype.getLayersList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.Layer>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.Layer, 1));
+proto.Layers.prototype.getLayersList = function() {
+  return /** @type{!Array.<!proto.Layer>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.Layer, 1));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.Layer>} value  */
-proto.sc2env.replay.Layers.prototype.setLayersList = function(value) {
+/** @param {Array.<!proto.Layer>} value  */
+proto.Layers.prototype.setLayersList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
-proto.sc2env.replay.Layers.prototype.clearLayersList = function() {
+proto.Layers.prototype.clearLayersList = function() {
   this.setLayersList([]);
 };
 
@@ -3210,12 +3210,12 @@ proto.sc2env.replay.Layers.prototype.clearLayersList = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.Saliency = function(opt_data) {
+proto.Saliency = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.Saliency, jspb.Message);
+goog.inherits(proto.Saliency, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.Saliency.displayName = 'proto.sc2env.replay.Saliency';
+  proto.Saliency.displayName = 'proto.Saliency';
 }
 
 
@@ -3230,8 +3230,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.Saliency.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.Saliency.toObject(opt_includeInstance, this);
+proto.Saliency.prototype.toObject = function(opt_includeInstance) {
+  return proto.Saliency.toObject(opt_includeInstance, this);
 };
 
 
@@ -3240,10 +3240,10 @@ proto.sc2env.replay.Saliency.prototype.toObject = function(opt_includeInstance) 
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.Saliency} msg The msg instance to transform.
+ * @param {!proto.Saliency} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.Saliency.toObject = function(includeInstance, msg) {
+proto.Saliency.toObject = function(includeInstance, msg) {
   var f, obj = {
     saliencyMapMap: (f = msg.getSaliencyMapMap(true)) ? f.toArray() : []
   };
@@ -3259,23 +3259,23 @@ proto.sc2env.replay.Saliency.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.Saliency}
+ * @return {!proto.Saliency}
  */
-proto.sc2env.replay.Saliency.deserializeBinary = function(bytes) {
+proto.Saliency.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.Saliency;
-  return proto.sc2env.replay.Saliency.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.Saliency;
+  return proto.Saliency.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.Saliency} msg The message object to deserialize into.
+ * @param {!proto.Saliency} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.Saliency}
+ * @return {!proto.Saliency}
  */
-proto.sc2env.replay.Saliency.deserializeBinaryFromReader = function(msg, reader) {
+proto.Saliency.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3285,7 +3285,7 @@ proto.sc2env.replay.Saliency.deserializeBinaryFromReader = function(msg, reader)
     case 1:
       var value = msg.getSaliencyMapMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.sc2env.replay.Layers.deserializeBinaryFromReader);
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.Layers.deserializeBinaryFromReader);
          });
       break;
     default:
@@ -3300,10 +3300,10 @@ proto.sc2env.replay.Saliency.deserializeBinaryFromReader = function(msg, reader)
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.Saliency} message
+ * @param {!proto.Saliency} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Saliency.serializeBinaryToWriter = function(message, writer) {
+proto.Saliency.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -3312,7 +3312,7 @@ proto.sc2env.replay.Saliency.serializeBinaryToWriter = function(message, writer)
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.Saliency.prototype.serializeBinary = function() {
+proto.Saliency.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -3324,21 +3324,21 @@ proto.sc2env.replay.Saliency.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Saliency.prototype.serializeBinaryToWriter = function (writer) {
+proto.Saliency.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getSaliencyMapMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.sc2env.replay.Layers.serializeBinaryToWriter);
+    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.Layers.serializeBinaryToWriter);
   }
 };
 
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.Saliency} The clone.
+ * @return {!proto.Saliency} The clone.
  */
-proto.sc2env.replay.Saliency.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.Saliency} */ (jspb.Message.cloneMessage(this));
+proto.Saliency.prototype.cloneMessage = function() {
+  return /** @type {!proto.Saliency} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -3346,12 +3346,12 @@ proto.sc2env.replay.Saliency.prototype.cloneMessage = function() {
  * map<string, Layers> saliency_map = 1;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
- * @return {!jspb.Map<string,!proto.sc2env.replay.Layers>}
+ * @return {!jspb.Map<string,!proto.Layers>}
  */
-proto.sc2env.replay.Saliency.prototype.getSaliencyMapMap = function(opt_noLazyCreate) {
-  return /** @type {!jspb.Map<string,!proto.sc2env.replay.Layers>} */ (
+proto.Saliency.prototype.getSaliencyMapMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,!proto.Layers>} */ (
       jspb.Message.getMapField(this, 1, opt_noLazyCreate,
-      proto.sc2env.replay.Layers));
+      proto.Layers));
 };
 
 
@@ -3366,19 +3366,19 @@ proto.sc2env.replay.Saliency.prototype.getSaliencyMapMap = function(opt_noLazyCr
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.MultiMessage = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.MultiMessage.repeatedFields_, null);
+proto.MultiMessage = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.MultiMessage.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.MultiMessage, jspb.Message);
+goog.inherits(proto.MultiMessage, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.MultiMessage.displayName = 'proto.sc2env.replay.MultiMessage';
+  proto.MultiMessage.displayName = 'proto.MultiMessage';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.MultiMessage.repeatedFields_ = [1];
+proto.MultiMessage.repeatedFields_ = [1];
 
 
 
@@ -3393,8 +3393,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.MultiMessage.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.MultiMessage.toObject(opt_includeInstance, this);
+proto.MultiMessage.prototype.toObject = function(opt_includeInstance) {
+  return proto.MultiMessage.toObject(opt_includeInstance, this);
 };
 
 
@@ -3403,13 +3403,13 @@ proto.sc2env.replay.MultiMessage.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.MultiMessage} msg The msg instance to transform.
+ * @param {!proto.MultiMessage} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.MultiMessage.toObject = function(includeInstance, msg) {
+proto.MultiMessage.toObject = function(includeInstance, msg) {
   var f, obj = {
     packetsList: jspb.Message.toObjectList(msg.getPacketsList(),
-    proto.sc2env.replay.ScaiiPacket.toObject, includeInstance)
+    proto.ScaiiPacket.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -3423,23 +3423,23 @@ proto.sc2env.replay.MultiMessage.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.MultiMessage}
+ * @return {!proto.MultiMessage}
  */
-proto.sc2env.replay.MultiMessage.deserializeBinary = function(bytes) {
+proto.MultiMessage.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.MultiMessage;
-  return proto.sc2env.replay.MultiMessage.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.MultiMessage;
+  return proto.MultiMessage.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.MultiMessage} msg The message object to deserialize into.
+ * @param {!proto.MultiMessage} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.MultiMessage}
+ * @return {!proto.MultiMessage}
  */
-proto.sc2env.replay.MultiMessage.deserializeBinaryFromReader = function(msg, reader) {
+proto.MultiMessage.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3447,8 +3447,8 @@ proto.sc2env.replay.MultiMessage.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.sc2env.replay.ScaiiPacket;
-      reader.readMessage(value,proto.sc2env.replay.ScaiiPacket.deserializeBinaryFromReader);
+      var value = new proto.ScaiiPacket;
+      reader.readMessage(value,proto.ScaiiPacket.deserializeBinaryFromReader);
       msg.getPacketsList().push(value);
       msg.setPacketsList(msg.getPacketsList());
       break;
@@ -3464,10 +3464,10 @@ proto.sc2env.replay.MultiMessage.deserializeBinaryFromReader = function(msg, rea
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.MultiMessage} message
+ * @param {!proto.MultiMessage} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.MultiMessage.serializeBinaryToWriter = function(message, writer) {
+proto.MultiMessage.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -3476,7 +3476,7 @@ proto.sc2env.replay.MultiMessage.serializeBinaryToWriter = function(message, wri
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.MultiMessage.prototype.serializeBinary = function() {
+proto.MultiMessage.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -3488,14 +3488,14 @@ proto.sc2env.replay.MultiMessage.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.MultiMessage.prototype.serializeBinaryToWriter = function (writer) {
+proto.MultiMessage.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getPacketsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.sc2env.replay.ScaiiPacket.serializeBinaryToWriter
+      proto.ScaiiPacket.serializeBinaryToWriter
     );
   }
 };
@@ -3503,10 +3503,10 @@ proto.sc2env.replay.MultiMessage.prototype.serializeBinaryToWriter = function (w
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.MultiMessage} The clone.
+ * @return {!proto.MultiMessage} The clone.
  */
-proto.sc2env.replay.MultiMessage.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.MultiMessage} */ (jspb.Message.cloneMessage(this));
+proto.MultiMessage.prototype.cloneMessage = function() {
+  return /** @type {!proto.MultiMessage} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -3514,21 +3514,21 @@ proto.sc2env.replay.MultiMessage.prototype.cloneMessage = function() {
  * repeated ScaiiPacket packets = 1;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.ScaiiPacket>}
+ * @return {!Array.<!proto.ScaiiPacket>}
  */
-proto.sc2env.replay.MultiMessage.prototype.getPacketsList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.ScaiiPacket>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.ScaiiPacket, 1));
+proto.MultiMessage.prototype.getPacketsList = function() {
+  return /** @type{!Array.<!proto.ScaiiPacket>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.ScaiiPacket, 1));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.ScaiiPacket>} value  */
-proto.sc2env.replay.MultiMessage.prototype.setPacketsList = function(value) {
+/** @param {Array.<!proto.ScaiiPacket>} value  */
+proto.MultiMessage.prototype.setPacketsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
-proto.sc2env.replay.MultiMessage.prototype.clearPacketsList = function() {
+proto.MultiMessage.prototype.clearPacketsList = function() {
   this.setPacketsList([]);
 };
 
@@ -3544,12 +3544,12 @@ proto.sc2env.replay.MultiMessage.prototype.clearPacketsList = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.ScaiiPacket = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.sc2env.replay.ScaiiPacket.oneofGroups_);
+proto.ScaiiPacket = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.ScaiiPacket.oneofGroups_);
 };
-goog.inherits(proto.sc2env.replay.ScaiiPacket, jspb.Message);
+goog.inherits(proto.ScaiiPacket, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.ScaiiPacket.displayName = 'proto.sc2env.replay.ScaiiPacket';
+  proto.ScaiiPacket.displayName = 'proto.ScaiiPacket';
 }
 /**
  * Oneof group definitions for this message. Each group defines the field
@@ -3559,12 +3559,12 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.sc2env.replay.ScaiiPacket.oneofGroups_ = [[1,2,3,4,5,6,7]];
+proto.ScaiiPacket.oneofGroups_ = [[1,2,3,4,5,6,7]];
 
 /**
  * @enum {number}
  */
-proto.sc2env.replay.ScaiiPacket.SpecificMsgCase = {
+proto.ScaiiPacket.SpecificMsgCase = {
   SPECIFIC_MSG_NOT_SET: 0,
   USER_COMMAND: 1,
   REPLAY_SESSION_CONFIG: 2,
@@ -3576,10 +3576,10 @@ proto.sc2env.replay.ScaiiPacket.SpecificMsgCase = {
 };
 
 /**
- * @return {proto.sc2env.replay.ScaiiPacket.SpecificMsgCase}
+ * @return {proto.ScaiiPacket.SpecificMsgCase}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getSpecificMsgCase = function() {
-  return /** @type {proto.sc2env.replay.ScaiiPacket.SpecificMsgCase} */(jspb.Message.computeOneofCase(this, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0]));
+proto.ScaiiPacket.prototype.getSpecificMsgCase = function() {
+  return /** @type {proto.ScaiiPacket.SpecificMsgCase} */(jspb.Message.computeOneofCase(this, proto.ScaiiPacket.oneofGroups_[0]));
 };
 
 
@@ -3595,8 +3595,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.ScaiiPacket.toObject(opt_includeInstance, this);
+proto.ScaiiPacket.prototype.toObject = function(opt_includeInstance) {
+  return proto.ScaiiPacket.toObject(opt_includeInstance, this);
 };
 
 
@@ -3605,18 +3605,18 @@ proto.sc2env.replay.ScaiiPacket.prototype.toObject = function(opt_includeInstanc
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.ScaiiPacket} msg The msg instance to transform.
+ * @param {!proto.ScaiiPacket} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.ScaiiPacket.toObject = function(includeInstance, msg) {
+proto.ScaiiPacket.toObject = function(includeInstance, msg) {
   var f, obj = {
-    userCommand: (f = msg.getUserCommand()) && proto.sc2env.replay.UserCommand.toObject(includeInstance, f),
-    replaySessionConfig: (f = msg.getReplaySessionConfig()) && proto.sc2env.replay.SC2ReplaySessionConfig.toObject(includeInstance, f),
-    explDetails: (f = msg.getExplDetails()) && proto.sc2env.replay.ExplanationDetails.toObject(includeInstance, f),
-    replayChoiceConfig: (f = msg.getReplayChoiceConfig()) && proto.sc2env.replay.ReplayChoiceConfig.toObject(includeInstance, f),
-    studyQuestions: (f = msg.getStudyQuestions()) && proto.sc2env.replay.StudyQuestions.toObject(includeInstance, f),
-    studyQuestionAnswer: (f = msg.getStudyQuestionAnswer()) && proto.sc2env.replay.StudyQuestionAnswer.toObject(includeInstance, f),
-    logFileEntry: (f = msg.getLogFileEntry()) && proto.sc2env.replay.LogFileEntry.toObject(includeInstance, f)
+    userCommand: (f = msg.getUserCommand()) && proto.UserCommand.toObject(includeInstance, f),
+    replaySessionConfig: (f = msg.getReplaySessionConfig()) && proto.SC2ReplaySessionConfig.toObject(includeInstance, f),
+    explDetails: (f = msg.getExplDetails()) && proto.ExplanationDetails.toObject(includeInstance, f),
+    replayChoiceConfig: (f = msg.getReplayChoiceConfig()) && proto.ReplayChoiceConfig.toObject(includeInstance, f),
+    studyQuestions: (f = msg.getStudyQuestions()) && proto.StudyQuestions.toObject(includeInstance, f),
+    studyQuestionAnswer: (f = msg.getStudyQuestionAnswer()) && proto.StudyQuestionAnswer.toObject(includeInstance, f),
+    logFileEntry: (f = msg.getLogFileEntry()) && proto.LogFileEntry.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3630,23 +3630,23 @@ proto.sc2env.replay.ScaiiPacket.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.ScaiiPacket}
+ * @return {!proto.ScaiiPacket}
  */
-proto.sc2env.replay.ScaiiPacket.deserializeBinary = function(bytes) {
+proto.ScaiiPacket.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.ScaiiPacket;
-  return proto.sc2env.replay.ScaiiPacket.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ScaiiPacket;
+  return proto.ScaiiPacket.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.ScaiiPacket} msg The message object to deserialize into.
+ * @param {!proto.ScaiiPacket} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.ScaiiPacket}
+ * @return {!proto.ScaiiPacket}
  */
-proto.sc2env.replay.ScaiiPacket.deserializeBinaryFromReader = function(msg, reader) {
+proto.ScaiiPacket.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3654,38 +3654,38 @@ proto.sc2env.replay.ScaiiPacket.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.sc2env.replay.UserCommand;
-      reader.readMessage(value,proto.sc2env.replay.UserCommand.deserializeBinaryFromReader);
+      var value = new proto.UserCommand;
+      reader.readMessage(value,proto.UserCommand.deserializeBinaryFromReader);
       msg.setUserCommand(value);
       break;
     case 2:
-      var value = new proto.sc2env.replay.SC2ReplaySessionConfig;
-      reader.readMessage(value,proto.sc2env.replay.SC2ReplaySessionConfig.deserializeBinaryFromReader);
+      var value = new proto.SC2ReplaySessionConfig;
+      reader.readMessage(value,proto.SC2ReplaySessionConfig.deserializeBinaryFromReader);
       msg.setReplaySessionConfig(value);
       break;
     case 3:
-      var value = new proto.sc2env.replay.ExplanationDetails;
-      reader.readMessage(value,proto.sc2env.replay.ExplanationDetails.deserializeBinaryFromReader);
+      var value = new proto.ExplanationDetails;
+      reader.readMessage(value,proto.ExplanationDetails.deserializeBinaryFromReader);
       msg.setExplDetails(value);
       break;
     case 4:
-      var value = new proto.sc2env.replay.ReplayChoiceConfig;
-      reader.readMessage(value,proto.sc2env.replay.ReplayChoiceConfig.deserializeBinaryFromReader);
+      var value = new proto.ReplayChoiceConfig;
+      reader.readMessage(value,proto.ReplayChoiceConfig.deserializeBinaryFromReader);
       msg.setReplayChoiceConfig(value);
       break;
     case 5:
-      var value = new proto.sc2env.replay.StudyQuestions;
-      reader.readMessage(value,proto.sc2env.replay.StudyQuestions.deserializeBinaryFromReader);
+      var value = new proto.StudyQuestions;
+      reader.readMessage(value,proto.StudyQuestions.deserializeBinaryFromReader);
       msg.setStudyQuestions(value);
       break;
     case 6:
-      var value = new proto.sc2env.replay.StudyQuestionAnswer;
-      reader.readMessage(value,proto.sc2env.replay.StudyQuestionAnswer.deserializeBinaryFromReader);
+      var value = new proto.StudyQuestionAnswer;
+      reader.readMessage(value,proto.StudyQuestionAnswer.deserializeBinaryFromReader);
       msg.setStudyQuestionAnswer(value);
       break;
     case 7:
-      var value = new proto.sc2env.replay.LogFileEntry;
-      reader.readMessage(value,proto.sc2env.replay.LogFileEntry.deserializeBinaryFromReader);
+      var value = new proto.LogFileEntry;
+      reader.readMessage(value,proto.LogFileEntry.deserializeBinaryFromReader);
       msg.setLogFileEntry(value);
       break;
     default:
@@ -3700,10 +3700,10 @@ proto.sc2env.replay.ScaiiPacket.deserializeBinaryFromReader = function(msg, read
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.ScaiiPacket} message
+ * @param {!proto.ScaiiPacket} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ScaiiPacket.serializeBinaryToWriter = function(message, writer) {
+proto.ScaiiPacket.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -3712,7 +3712,7 @@ proto.sc2env.replay.ScaiiPacket.serializeBinaryToWriter = function(message, writ
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.serializeBinary = function() {
+proto.ScaiiPacket.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -3724,14 +3724,14 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (writer) {
+proto.ScaiiPacket.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getUserCommand();
   if (f != null) {
     writer.writeMessage(
       1,
       f,
-      proto.sc2env.replay.UserCommand.serializeBinaryToWriter
+      proto.UserCommand.serializeBinaryToWriter
     );
   }
   f = this.getReplaySessionConfig();
@@ -3739,7 +3739,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
     writer.writeMessage(
       2,
       f,
-      proto.sc2env.replay.SC2ReplaySessionConfig.serializeBinaryToWriter
+      proto.SC2ReplaySessionConfig.serializeBinaryToWriter
     );
   }
   f = this.getExplDetails();
@@ -3747,7 +3747,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
     writer.writeMessage(
       3,
       f,
-      proto.sc2env.replay.ExplanationDetails.serializeBinaryToWriter
+      proto.ExplanationDetails.serializeBinaryToWriter
     );
   }
   f = this.getReplayChoiceConfig();
@@ -3755,7 +3755,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
     writer.writeMessage(
       4,
       f,
-      proto.sc2env.replay.ReplayChoiceConfig.serializeBinaryToWriter
+      proto.ReplayChoiceConfig.serializeBinaryToWriter
     );
   }
   f = this.getStudyQuestions();
@@ -3763,7 +3763,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
     writer.writeMessage(
       5,
       f,
-      proto.sc2env.replay.StudyQuestions.serializeBinaryToWriter
+      proto.StudyQuestions.serializeBinaryToWriter
     );
   }
   f = this.getStudyQuestionAnswer();
@@ -3771,7 +3771,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
     writer.writeMessage(
       6,
       f,
-      proto.sc2env.replay.StudyQuestionAnswer.serializeBinaryToWriter
+      proto.StudyQuestionAnswer.serializeBinaryToWriter
     );
   }
   f = this.getLogFileEntry();
@@ -3779,7 +3779,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
     writer.writeMessage(
       7,
       f,
-      proto.sc2env.replay.LogFileEntry.serializeBinaryToWriter
+      proto.LogFileEntry.serializeBinaryToWriter
     );
   }
 };
@@ -3787,30 +3787,30 @@ proto.sc2env.replay.ScaiiPacket.prototype.serializeBinaryToWriter = function (wr
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.ScaiiPacket} The clone.
+ * @return {!proto.ScaiiPacket} The clone.
  */
-proto.sc2env.replay.ScaiiPacket.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.ScaiiPacket} */ (jspb.Message.cloneMessage(this));
+proto.ScaiiPacket.prototype.cloneMessage = function() {
+  return /** @type {!proto.ScaiiPacket} */ (jspb.Message.cloneMessage(this));
 };
 
 
 /**
  * optional UserCommand user_command = 1;
- * @return {proto.sc2env.replay.UserCommand}
+ * @return {proto.UserCommand}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getUserCommand = function() {
-  return /** @type{proto.sc2env.replay.UserCommand} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.UserCommand, 1));
+proto.ScaiiPacket.prototype.getUserCommand = function() {
+  return /** @type{proto.UserCommand} */ (
+    jspb.Message.getWrapperField(this, proto.UserCommand, 1));
 };
 
 
-/** @param {proto.sc2env.replay.UserCommand|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setUserCommand = function(value) {
-  jspb.Message.setOneofWrapperField(this, 1, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.UserCommand|undefined} value  */
+proto.ScaiiPacket.prototype.setUserCommand = function(value) {
+  jspb.Message.setOneofWrapperField(this, 1, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearUserCommand = function() {
+proto.ScaiiPacket.prototype.clearUserCommand = function() {
   this.setUserCommand(undefined);
 };
 
@@ -3819,28 +3819,28 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearUserCommand = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasUserCommand = function() {
+proto.ScaiiPacket.prototype.hasUserCommand = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
  * optional SC2ReplaySessionConfig replay_session_config = 2;
- * @return {proto.sc2env.replay.SC2ReplaySessionConfig}
+ * @return {proto.SC2ReplaySessionConfig}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getReplaySessionConfig = function() {
-  return /** @type{proto.sc2env.replay.SC2ReplaySessionConfig} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.SC2ReplaySessionConfig, 2));
+proto.ScaiiPacket.prototype.getReplaySessionConfig = function() {
+  return /** @type{proto.SC2ReplaySessionConfig} */ (
+    jspb.Message.getWrapperField(this, proto.SC2ReplaySessionConfig, 2));
 };
 
 
-/** @param {proto.sc2env.replay.SC2ReplaySessionConfig|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setReplaySessionConfig = function(value) {
-  jspb.Message.setOneofWrapperField(this, 2, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.SC2ReplaySessionConfig|undefined} value  */
+proto.ScaiiPacket.prototype.setReplaySessionConfig = function(value) {
+  jspb.Message.setOneofWrapperField(this, 2, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearReplaySessionConfig = function() {
+proto.ScaiiPacket.prototype.clearReplaySessionConfig = function() {
   this.setReplaySessionConfig(undefined);
 };
 
@@ -3849,28 +3849,28 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearReplaySessionConfig = function() 
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasReplaySessionConfig = function() {
+proto.ScaiiPacket.prototype.hasReplaySessionConfig = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
 
 /**
  * optional ExplanationDetails expl_details = 3;
- * @return {proto.sc2env.replay.ExplanationDetails}
+ * @return {proto.ExplanationDetails}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getExplDetails = function() {
-  return /** @type{proto.sc2env.replay.ExplanationDetails} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.ExplanationDetails, 3));
+proto.ScaiiPacket.prototype.getExplDetails = function() {
+  return /** @type{proto.ExplanationDetails} */ (
+    jspb.Message.getWrapperField(this, proto.ExplanationDetails, 3));
 };
 
 
-/** @param {proto.sc2env.replay.ExplanationDetails|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setExplDetails = function(value) {
-  jspb.Message.setOneofWrapperField(this, 3, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.ExplanationDetails|undefined} value  */
+proto.ScaiiPacket.prototype.setExplDetails = function(value) {
+  jspb.Message.setOneofWrapperField(this, 3, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearExplDetails = function() {
+proto.ScaiiPacket.prototype.clearExplDetails = function() {
   this.setExplDetails(undefined);
 };
 
@@ -3879,28 +3879,28 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearExplDetails = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasExplDetails = function() {
+proto.ScaiiPacket.prototype.hasExplDetails = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 
 
 /**
  * optional ReplayChoiceConfig replay_choice_config = 4;
- * @return {proto.sc2env.replay.ReplayChoiceConfig}
+ * @return {proto.ReplayChoiceConfig}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getReplayChoiceConfig = function() {
-  return /** @type{proto.sc2env.replay.ReplayChoiceConfig} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.ReplayChoiceConfig, 4));
+proto.ScaiiPacket.prototype.getReplayChoiceConfig = function() {
+  return /** @type{proto.ReplayChoiceConfig} */ (
+    jspb.Message.getWrapperField(this, proto.ReplayChoiceConfig, 4));
 };
 
 
-/** @param {proto.sc2env.replay.ReplayChoiceConfig|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setReplayChoiceConfig = function(value) {
-  jspb.Message.setOneofWrapperField(this, 4, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.ReplayChoiceConfig|undefined} value  */
+proto.ScaiiPacket.prototype.setReplayChoiceConfig = function(value) {
+  jspb.Message.setOneofWrapperField(this, 4, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearReplayChoiceConfig = function() {
+proto.ScaiiPacket.prototype.clearReplayChoiceConfig = function() {
   this.setReplayChoiceConfig(undefined);
 };
 
@@ -3909,28 +3909,28 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearReplayChoiceConfig = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasReplayChoiceConfig = function() {
+proto.ScaiiPacket.prototype.hasReplayChoiceConfig = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
 
 /**
  * optional StudyQuestions study_questions = 5;
- * @return {proto.sc2env.replay.StudyQuestions}
+ * @return {proto.StudyQuestions}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getStudyQuestions = function() {
-  return /** @type{proto.sc2env.replay.StudyQuestions} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.StudyQuestions, 5));
+proto.ScaiiPacket.prototype.getStudyQuestions = function() {
+  return /** @type{proto.StudyQuestions} */ (
+    jspb.Message.getWrapperField(this, proto.StudyQuestions, 5));
 };
 
 
-/** @param {proto.sc2env.replay.StudyQuestions|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setStudyQuestions = function(value) {
-  jspb.Message.setOneofWrapperField(this, 5, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.StudyQuestions|undefined} value  */
+proto.ScaiiPacket.prototype.setStudyQuestions = function(value) {
+  jspb.Message.setOneofWrapperField(this, 5, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearStudyQuestions = function() {
+proto.ScaiiPacket.prototype.clearStudyQuestions = function() {
   this.setStudyQuestions(undefined);
 };
 
@@ -3939,28 +3939,28 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearStudyQuestions = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasStudyQuestions = function() {
+proto.ScaiiPacket.prototype.hasStudyQuestions = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
 
 /**
  * optional StudyQuestionAnswer study_question_answer = 6;
- * @return {proto.sc2env.replay.StudyQuestionAnswer}
+ * @return {proto.StudyQuestionAnswer}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getStudyQuestionAnswer = function() {
-  return /** @type{proto.sc2env.replay.StudyQuestionAnswer} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.StudyQuestionAnswer, 6));
+proto.ScaiiPacket.prototype.getStudyQuestionAnswer = function() {
+  return /** @type{proto.StudyQuestionAnswer} */ (
+    jspb.Message.getWrapperField(this, proto.StudyQuestionAnswer, 6));
 };
 
 
-/** @param {proto.sc2env.replay.StudyQuestionAnswer|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setStudyQuestionAnswer = function(value) {
-  jspb.Message.setOneofWrapperField(this, 6, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.StudyQuestionAnswer|undefined} value  */
+proto.ScaiiPacket.prototype.setStudyQuestionAnswer = function(value) {
+  jspb.Message.setOneofWrapperField(this, 6, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearStudyQuestionAnswer = function() {
+proto.ScaiiPacket.prototype.clearStudyQuestionAnswer = function() {
   this.setStudyQuestionAnswer(undefined);
 };
 
@@ -3969,28 +3969,28 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearStudyQuestionAnswer = function() 
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasStudyQuestionAnswer = function() {
+proto.ScaiiPacket.prototype.hasStudyQuestionAnswer = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
 
 /**
  * optional LogFileEntry log_file_entry = 7;
- * @return {proto.sc2env.replay.LogFileEntry}
+ * @return {proto.LogFileEntry}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.getLogFileEntry = function() {
-  return /** @type{proto.sc2env.replay.LogFileEntry} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.LogFileEntry, 7));
+proto.ScaiiPacket.prototype.getLogFileEntry = function() {
+  return /** @type{proto.LogFileEntry} */ (
+    jspb.Message.getWrapperField(this, proto.LogFileEntry, 7));
 };
 
 
-/** @param {proto.sc2env.replay.LogFileEntry|undefined} value  */
-proto.sc2env.replay.ScaiiPacket.prototype.setLogFileEntry = function(value) {
-  jspb.Message.setOneofWrapperField(this, 7, proto.sc2env.replay.ScaiiPacket.oneofGroups_[0], value);
+/** @param {proto.LogFileEntry|undefined} value  */
+proto.ScaiiPacket.prototype.setLogFileEntry = function(value) {
+  jspb.Message.setOneofWrapperField(this, 7, proto.ScaiiPacket.oneofGroups_[0], value);
 };
 
 
-proto.sc2env.replay.ScaiiPacket.prototype.clearLogFileEntry = function() {
+proto.ScaiiPacket.prototype.clearLogFileEntry = function() {
   this.setLogFileEntry(undefined);
 };
 
@@ -3999,7 +3999,7 @@ proto.sc2env.replay.ScaiiPacket.prototype.clearLogFileEntry = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ScaiiPacket.prototype.hasLogFileEntry = function() {
+proto.ScaiiPacket.prototype.hasLogFileEntry = function() {
   return jspb.Message.getField(this, 7) != null;
 };
 
@@ -4015,19 +4015,19 @@ proto.sc2env.replay.ScaiiPacket.prototype.hasLogFileEntry = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.UserCommand = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.UserCommand.repeatedFields_, null);
+proto.UserCommand = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.UserCommand.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.UserCommand, jspb.Message);
+goog.inherits(proto.UserCommand, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.UserCommand.displayName = 'proto.sc2env.replay.UserCommand';
+  proto.UserCommand.displayName = 'proto.UserCommand';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.UserCommand.repeatedFields_ = [2];
+proto.UserCommand.repeatedFields_ = [2];
 
 
 
@@ -4042,8 +4042,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.UserCommand.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.UserCommand.toObject(opt_includeInstance, this);
+proto.UserCommand.prototype.toObject = function(opt_includeInstance) {
+  return proto.UserCommand.toObject(opt_includeInstance, this);
 };
 
 
@@ -4052,10 +4052,10 @@ proto.sc2env.replay.UserCommand.prototype.toObject = function(opt_includeInstanc
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.UserCommand} msg The msg instance to transform.
+ * @param {!proto.UserCommand} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.UserCommand.toObject = function(includeInstance, msg) {
+proto.UserCommand.toObject = function(includeInstance, msg) {
   var f, obj = {
     commandType: jspb.Message.getField(msg, 1),
     argsList: jspb.Message.getField(msg, 2)
@@ -4072,23 +4072,23 @@ proto.sc2env.replay.UserCommand.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.UserCommand}
+ * @return {!proto.UserCommand}
  */
-proto.sc2env.replay.UserCommand.deserializeBinary = function(bytes) {
+proto.UserCommand.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.UserCommand;
-  return proto.sc2env.replay.UserCommand.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.UserCommand;
+  return proto.UserCommand.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.UserCommand} msg The message object to deserialize into.
+ * @param {!proto.UserCommand} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.UserCommand}
+ * @return {!proto.UserCommand}
  */
-proto.sc2env.replay.UserCommand.deserializeBinaryFromReader = function(msg, reader) {
+proto.UserCommand.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4096,7 +4096,7 @@ proto.sc2env.replay.UserCommand.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!proto.sc2env.replay.UserCommand.UserCommandType} */ (reader.readEnum());
+      var value = /** @type {!proto.UserCommand.UserCommandType} */ (reader.readEnum());
       msg.setCommandType(value);
       break;
     case 2:
@@ -4116,10 +4116,10 @@ proto.sc2env.replay.UserCommand.deserializeBinaryFromReader = function(msg, read
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.UserCommand} message
+ * @param {!proto.UserCommand} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.UserCommand.serializeBinaryToWriter = function(message, writer) {
+proto.UserCommand.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -4128,7 +4128,7 @@ proto.sc2env.replay.UserCommand.serializeBinaryToWriter = function(message, writ
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.UserCommand.prototype.serializeBinary = function() {
+proto.UserCommand.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -4140,7 +4140,7 @@ proto.sc2env.replay.UserCommand.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.UserCommand.prototype.serializeBinaryToWriter = function (writer) {
+proto.UserCommand.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -4161,29 +4161,29 @@ proto.sc2env.replay.UserCommand.prototype.serializeBinaryToWriter = function (wr
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.UserCommand} The clone.
+ * @return {!proto.UserCommand} The clone.
  */
-proto.sc2env.replay.UserCommand.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.UserCommand} */ (jspb.Message.cloneMessage(this));
+proto.UserCommand.prototype.cloneMessage = function() {
+  return /** @type {!proto.UserCommand} */ (jspb.Message.cloneMessage(this));
 };
 
 
 /**
  * required UserCommandType command_type = 1;
- * @return {!proto.sc2env.replay.UserCommand.UserCommandType}
+ * @return {!proto.UserCommand.UserCommandType}
  */
-proto.sc2env.replay.UserCommand.prototype.getCommandType = function() {
-  return /** @type {!proto.sc2env.replay.UserCommand.UserCommandType} */ (!this.hasCommandType() ? 0 : jspb.Message.getField(this, 1));
+proto.UserCommand.prototype.getCommandType = function() {
+  return /** @type {!proto.UserCommand.UserCommandType} */ (!this.hasCommandType() ? 0 : jspb.Message.getField(this, 1));
 };
 
 
-/** @param {proto.sc2env.replay.UserCommand.UserCommandType|undefined} value  */
-proto.sc2env.replay.UserCommand.prototype.setCommandType = function(value) {
+/** @param {proto.UserCommand.UserCommandType|undefined} value  */
+proto.UserCommand.prototype.setCommandType = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.UserCommand.prototype.clearCommandType = function() {
+proto.UserCommand.prototype.clearCommandType = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -4192,7 +4192,7 @@ proto.sc2env.replay.UserCommand.prototype.clearCommandType = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.UserCommand.prototype.hasCommandType = function() {
+proto.UserCommand.prototype.hasCommandType = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -4203,18 +4203,18 @@ proto.sc2env.replay.UserCommand.prototype.hasCommandType = function() {
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<string>}
  */
-proto.sc2env.replay.UserCommand.prototype.getArgsList = function() {
+proto.UserCommand.prototype.getArgsList = function() {
   return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 2));
 };
 
 
 /** @param {Array.<string>} value  */
-proto.sc2env.replay.UserCommand.prototype.setArgsList = function(value) {
+proto.UserCommand.prototype.setArgsList = function(value) {
   jspb.Message.setField(this, 2, value || []);
 };
 
 
-proto.sc2env.replay.UserCommand.prototype.clearArgsList = function() {
+proto.UserCommand.prototype.clearArgsList = function() {
   jspb.Message.setField(this, 2, []);
 };
 
@@ -4222,7 +4222,7 @@ proto.sc2env.replay.UserCommand.prototype.clearArgsList = function() {
 /**
  * @enum {number}
  */
-proto.sc2env.replay.UserCommand.UserCommandType = {
+proto.UserCommand.UserCommandType = {
   NONE: 0,
   EXPLAIN: 1,
   POLL_FOR_COMMANDS: 5,
@@ -4241,19 +4241,19 @@ proto.sc2env.replay.UserCommand.UserCommandType = {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.ReplayChoiceConfig = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.ReplayChoiceConfig.repeatedFields_, null);
+proto.ReplayChoiceConfig = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.ReplayChoiceConfig.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.ReplayChoiceConfig, jspb.Message);
+goog.inherits(proto.ReplayChoiceConfig, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.ReplayChoiceConfig.displayName = 'proto.sc2env.replay.ReplayChoiceConfig';
+  proto.ReplayChoiceConfig.displayName = 'proto.ReplayChoiceConfig';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.ReplayChoiceConfig.repeatedFields_ = [1];
+proto.ReplayChoiceConfig.repeatedFields_ = [1];
 
 
 
@@ -4268,8 +4268,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.ReplayChoiceConfig.toObject(opt_includeInstance, this);
+proto.ReplayChoiceConfig.prototype.toObject = function(opt_includeInstance) {
+  return proto.ReplayChoiceConfig.toObject(opt_includeInstance, this);
 };
 
 
@@ -4278,10 +4278,10 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.toObject = function(opt_include
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.ReplayChoiceConfig} msg The msg instance to transform.
+ * @param {!proto.ReplayChoiceConfig} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.ReplayChoiceConfig.toObject = function(includeInstance, msg) {
+proto.ReplayChoiceConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
     replayFilenamesList: jspb.Message.getField(msg, 1),
     userStudyMode: jspb.Message.getField(msg, 6)
@@ -4298,23 +4298,23 @@ proto.sc2env.replay.ReplayChoiceConfig.toObject = function(includeInstance, msg)
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.ReplayChoiceConfig}
+ * @return {!proto.ReplayChoiceConfig}
  */
-proto.sc2env.replay.ReplayChoiceConfig.deserializeBinary = function(bytes) {
+proto.ReplayChoiceConfig.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.ReplayChoiceConfig;
-  return proto.sc2env.replay.ReplayChoiceConfig.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ReplayChoiceConfig;
+  return proto.ReplayChoiceConfig.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.ReplayChoiceConfig} msg The message object to deserialize into.
+ * @param {!proto.ReplayChoiceConfig} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.ReplayChoiceConfig}
+ * @return {!proto.ReplayChoiceConfig}
  */
-proto.sc2env.replay.ReplayChoiceConfig.deserializeBinaryFromReader = function(msg, reader) {
+proto.ReplayChoiceConfig.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4342,10 +4342,10 @@ proto.sc2env.replay.ReplayChoiceConfig.deserializeBinaryFromReader = function(ms
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.ReplayChoiceConfig} message
+ * @param {!proto.ReplayChoiceConfig} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ReplayChoiceConfig.serializeBinaryToWriter = function(message, writer) {
+proto.ReplayChoiceConfig.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -4354,7 +4354,7 @@ proto.sc2env.replay.ReplayChoiceConfig.serializeBinaryToWriter = function(messag
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.serializeBinary = function() {
+proto.ReplayChoiceConfig.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -4366,7 +4366,7 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.serializeBinaryToWriter = function (writer) {
+proto.ReplayChoiceConfig.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = this.getReplayFilenamesList();
   if (f.length > 0) {
@@ -4387,10 +4387,10 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.serializeBinaryToWriter = funct
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.ReplayChoiceConfig} The clone.
+ * @return {!proto.ReplayChoiceConfig} The clone.
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.ReplayChoiceConfig} */ (jspb.Message.cloneMessage(this));
+proto.ReplayChoiceConfig.prototype.cloneMessage = function() {
+  return /** @type {!proto.ReplayChoiceConfig} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -4400,18 +4400,18 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.cloneMessage = function() {
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<string>}
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.getReplayFilenamesList = function() {
+proto.ReplayChoiceConfig.prototype.getReplayFilenamesList = function() {
   return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 1));
 };
 
 
 /** @param {Array.<string>} value  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.setReplayFilenamesList = function(value) {
+proto.ReplayChoiceConfig.prototype.setReplayFilenamesList = function(value) {
   jspb.Message.setField(this, 1, value || []);
 };
 
 
-proto.sc2env.replay.ReplayChoiceConfig.prototype.clearReplayFilenamesList = function() {
+proto.ReplayChoiceConfig.prototype.clearReplayFilenamesList = function() {
   jspb.Message.setField(this, 1, []);
 };
 
@@ -4422,18 +4422,18 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.clearReplayFilenamesList = func
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.getUserStudyMode = function() {
+proto.ReplayChoiceConfig.prototype.getUserStudyMode = function() {
   return /** @type {boolean} */ (!this.hasUserStudyMode() ? false : jspb.Message.getField(this, 6));
 };
 
 
 /** @param {boolean|undefined} value  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.setUserStudyMode = function(value) {
+proto.ReplayChoiceConfig.prototype.setUserStudyMode = function(value) {
   jspb.Message.setField(this, 6, value);
 };
 
 
-proto.sc2env.replay.ReplayChoiceConfig.prototype.clearUserStudyMode = function() {
+proto.ReplayChoiceConfig.prototype.clearUserStudyMode = function() {
   jspb.Message.setField(this, 6, undefined);
 };
 
@@ -4442,7 +4442,7 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.clearUserStudyMode = function()
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ReplayChoiceConfig.prototype.hasUserStudyMode = function() {
+proto.ReplayChoiceConfig.prototype.hasUserStudyMode = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
@@ -4458,19 +4458,19 @@ proto.sc2env.replay.ReplayChoiceConfig.prototype.hasUserStudyMode = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.SC2ReplaySessionConfig = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sc2env.replay.SC2ReplaySessionConfig.repeatedFields_, null);
+proto.SC2ReplaySessionConfig = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.SC2ReplaySessionConfig.repeatedFields_, null);
 };
-goog.inherits(proto.sc2env.replay.SC2ReplaySessionConfig, jspb.Message);
+goog.inherits(proto.SC2ReplaySessionConfig, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.SC2ReplaySessionConfig.displayName = 'proto.sc2env.replay.SC2ReplaySessionConfig';
+  proto.SC2ReplaySessionConfig.displayName = 'proto.SC2ReplaySessionConfig';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.repeatedFields_ = [2,3];
+proto.SC2ReplaySessionConfig.repeatedFields_ = [2,3];
 
 
 
@@ -4485,8 +4485,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.SC2ReplaySessionConfig.toObject(opt_includeInstance, this);
+proto.SC2ReplaySessionConfig.prototype.toObject = function(opt_includeInstance) {
+  return proto.SC2ReplaySessionConfig.toObject(opt_includeInstance, this);
 };
 
 
@@ -4495,14 +4495,14 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.toObject = function(opt_inc
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.SC2ReplaySessionConfig} msg The msg instance to transform.
+ * @param {!proto.SC2ReplaySessionConfig} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.toObject = function(includeInstance, msg) {
+proto.SC2ReplaySessionConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
     jsonData: jspb.Message.getField(msg, 1),
     explanationsList: jspb.Message.toObjectList(msg.getExplanationsList(),
-    proto.sc2env.replay.ExplanationPoint.toObject, includeInstance),
+    proto.ExplanationPoint.toObject, includeInstance),
     rewardTypesList: jspb.Message.getField(msg, 3)
   };
 
@@ -4517,23 +4517,23 @@ proto.sc2env.replay.SC2ReplaySessionConfig.toObject = function(includeInstance, 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.SC2ReplaySessionConfig}
+ * @return {!proto.SC2ReplaySessionConfig}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.deserializeBinary = function(bytes) {
+proto.SC2ReplaySessionConfig.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.SC2ReplaySessionConfig;
-  return proto.sc2env.replay.SC2ReplaySessionConfig.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.SC2ReplaySessionConfig;
+  return proto.SC2ReplaySessionConfig.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.SC2ReplaySessionConfig} msg The message object to deserialize into.
+ * @param {!proto.SC2ReplaySessionConfig} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.SC2ReplaySessionConfig}
+ * @return {!proto.SC2ReplaySessionConfig}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.deserializeBinaryFromReader = function(msg, reader) {
+proto.SC2ReplaySessionConfig.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4545,8 +4545,8 @@ proto.sc2env.replay.SC2ReplaySessionConfig.deserializeBinaryFromReader = functio
       msg.setJsonData(value);
       break;
     case 2:
-      var value = new proto.sc2env.replay.ExplanationPoint;
-      reader.readMessage(value,proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader);
+      var value = new proto.ExplanationPoint;
+      reader.readMessage(value,proto.ExplanationPoint.deserializeBinaryFromReader);
       msg.getExplanationsList().push(value);
       msg.setExplanationsList(msg.getExplanationsList());
       break;
@@ -4567,10 +4567,10 @@ proto.sc2env.replay.SC2ReplaySessionConfig.deserializeBinaryFromReader = functio
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.SC2ReplaySessionConfig} message
+ * @param {!proto.SC2ReplaySessionConfig} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.serializeBinaryToWriter = function(message, writer) {
+proto.SC2ReplaySessionConfig.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -4579,7 +4579,7 @@ proto.sc2env.replay.SC2ReplaySessionConfig.serializeBinaryToWriter = function(me
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.serializeBinary = function() {
+proto.SC2ReplaySessionConfig.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -4591,7 +4591,7 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.serializeBinary = function(
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.serializeBinaryToWriter = function (writer) {
+proto.SC2ReplaySessionConfig.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -4605,7 +4605,7 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.serializeBinaryToWriter = f
     writer.writeRepeatedMessage(
       2,
       f,
-      proto.sc2env.replay.ExplanationPoint.serializeBinaryToWriter
+      proto.ExplanationPoint.serializeBinaryToWriter
     );
   }
   f = this.getRewardTypesList();
@@ -4620,10 +4620,10 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.serializeBinaryToWriter = f
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.SC2ReplaySessionConfig} The clone.
+ * @return {!proto.SC2ReplaySessionConfig} The clone.
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.SC2ReplaySessionConfig} */ (jspb.Message.cloneMessage(this));
+proto.SC2ReplaySessionConfig.prototype.cloneMessage = function() {
+  return /** @type {!proto.SC2ReplaySessionConfig} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -4631,18 +4631,18 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.cloneMessage = function() {
  * required string json_data = 1;
  * @return {string}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.getJsonData = function() {
+proto.SC2ReplaySessionConfig.prototype.getJsonData = function() {
   return /** @type {string} */ (!this.hasJsonData() ? "" : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {string|undefined} value  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.setJsonData = function(value) {
+proto.SC2ReplaySessionConfig.prototype.setJsonData = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.clearJsonData = function() {
+proto.SC2ReplaySessionConfig.prototype.clearJsonData = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -4651,7 +4651,7 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.clearJsonData = function() 
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.hasJsonData = function() {
+proto.SC2ReplaySessionConfig.prototype.hasJsonData = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -4660,21 +4660,21 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.hasJsonData = function() {
  * repeated ExplanationPoint explanations = 2;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.sc2env.replay.ExplanationPoint>}
+ * @return {!Array.<!proto.ExplanationPoint>}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.getExplanationsList = function() {
-  return /** @type{!Array.<!proto.sc2env.replay.ExplanationPoint>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.sc2env.replay.ExplanationPoint, 2));
+proto.SC2ReplaySessionConfig.prototype.getExplanationsList = function() {
+  return /** @type{!Array.<!proto.ExplanationPoint>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.ExplanationPoint, 2));
 };
 
 
-/** @param {Array.<!proto.sc2env.replay.ExplanationPoint>} value  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.setExplanationsList = function(value) {
+/** @param {Array.<!proto.ExplanationPoint>} value  */
+proto.SC2ReplaySessionConfig.prototype.setExplanationsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.clearExplanationsList = function() {
+proto.SC2ReplaySessionConfig.prototype.clearExplanationsList = function() {
   this.setExplanationsList([]);
 };
 
@@ -4685,18 +4685,18 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.clearExplanationsList = fun
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<string>}
  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.getRewardTypesList = function() {
+proto.SC2ReplaySessionConfig.prototype.getRewardTypesList = function() {
   return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 3));
 };
 
 
 /** @param {Array.<string>} value  */
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.setRewardTypesList = function(value) {
+proto.SC2ReplaySessionConfig.prototype.setRewardTypesList = function(value) {
   jspb.Message.setField(this, 3, value || []);
 };
 
 
-proto.sc2env.replay.SC2ReplaySessionConfig.prototype.clearRewardTypesList = function() {
+proto.SC2ReplaySessionConfig.prototype.clearRewardTypesList = function() {
   jspb.Message.setField(this, 3, []);
 };
 
@@ -4712,12 +4712,12 @@ proto.sc2env.replay.SC2ReplaySessionConfig.prototype.clearRewardTypesList = func
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.Record = function(opt_data) {
+proto.Record = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.Record, jspb.Message);
+goog.inherits(proto.Record, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.Record.displayName = 'proto.sc2env.replay.Record';
+  proto.Record.displayName = 'proto.Record';
 }
 
 
@@ -4732,8 +4732,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.Record.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.Record.toObject(opt_includeInstance, this);
+proto.Record.prototype.toObject = function(opt_includeInstance) {
+  return proto.Record.toObject(opt_includeInstance, this);
 };
 
 
@@ -4742,10 +4742,10 @@ proto.sc2env.replay.Record.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.Record} msg The msg instance to transform.
+ * @param {!proto.Record} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.Record.toObject = function(includeInstance, msg) {
+proto.Record.toObject = function(includeInstance, msg) {
   var f, obj = {
     keyframeInterval: jspb.Message.getField(msg, 1)
   };
@@ -4761,23 +4761,23 @@ proto.sc2env.replay.Record.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.Record}
+ * @return {!proto.Record}
  */
-proto.sc2env.replay.Record.deserializeBinary = function(bytes) {
+proto.Record.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.Record;
-  return proto.sc2env.replay.Record.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.Record;
+  return proto.Record.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.Record} msg The message object to deserialize into.
+ * @param {!proto.Record} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.Record}
+ * @return {!proto.Record}
  */
-proto.sc2env.replay.Record.deserializeBinaryFromReader = function(msg, reader) {
+proto.Record.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4800,10 +4800,10 @@ proto.sc2env.replay.Record.deserializeBinaryFromReader = function(msg, reader) {
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.Record} message
+ * @param {!proto.Record} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Record.serializeBinaryToWriter = function(message, writer) {
+proto.Record.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -4812,7 +4812,7 @@ proto.sc2env.replay.Record.serializeBinaryToWriter = function(message, writer) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.Record.prototype.serializeBinary = function() {
+proto.Record.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -4824,7 +4824,7 @@ proto.sc2env.replay.Record.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.Record.prototype.serializeBinaryToWriter = function (writer) {
+proto.Record.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -4838,10 +4838,10 @@ proto.sc2env.replay.Record.prototype.serializeBinaryToWriter = function (writer)
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.Record} The clone.
+ * @return {!proto.Record} The clone.
  */
-proto.sc2env.replay.Record.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.Record} */ (jspb.Message.cloneMessage(this));
+proto.Record.prototype.cloneMessage = function() {
+  return /** @type {!proto.Record} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -4849,18 +4849,18 @@ proto.sc2env.replay.Record.prototype.cloneMessage = function() {
  * required uint32 keyframe_interval = 1;
  * @return {number}
  */
-proto.sc2env.replay.Record.prototype.getKeyframeInterval = function() {
+proto.Record.prototype.getKeyframeInterval = function() {
   return /** @type {number} */ (!this.hasKeyframeInterval() ? 0 : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {number|undefined} value  */
-proto.sc2env.replay.Record.prototype.setKeyframeInterval = function(value) {
+proto.Record.prototype.setKeyframeInterval = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.Record.prototype.clearKeyframeInterval = function() {
+proto.Record.prototype.clearKeyframeInterval = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -4869,7 +4869,7 @@ proto.sc2env.replay.Record.prototype.clearKeyframeInterval = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.Record.prototype.hasKeyframeInterval = function() {
+proto.Record.prototype.hasKeyframeInterval = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -4885,12 +4885,12 @@ proto.sc2env.replay.Record.prototype.hasKeyframeInterval = function() {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.sc2env.replay.ExplanationDetails = function(opt_data) {
+proto.ExplanationDetails = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.sc2env.replay.ExplanationDetails, jspb.Message);
+goog.inherits(proto.ExplanationDetails, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.sc2env.replay.ExplanationDetails.displayName = 'proto.sc2env.replay.ExplanationDetails';
+  proto.ExplanationDetails.displayName = 'proto.ExplanationDetails';
 }
 
 
@@ -4905,8 +4905,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sc2env.replay.ExplanationDetails.prototype.toObject = function(opt_includeInstance) {
-  return proto.sc2env.replay.ExplanationDetails.toObject(opt_includeInstance, this);
+proto.ExplanationDetails.prototype.toObject = function(opt_includeInstance) {
+  return proto.ExplanationDetails.toObject(opt_includeInstance, this);
 };
 
 
@@ -4915,13 +4915,13 @@ proto.sc2env.replay.ExplanationDetails.prototype.toObject = function(opt_include
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sc2env.replay.ExplanationDetails} msg The msg instance to transform.
+ * @param {!proto.ExplanationDetails} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.sc2env.replay.ExplanationDetails.toObject = function(includeInstance, msg) {
+proto.ExplanationDetails.toObject = function(includeInstance, msg) {
   var f, obj = {
     step: jspb.Message.getField(msg, 1),
-    explPoint: (f = msg.getExplPoint()) && proto.sc2env.replay.ExplanationPoint.toObject(includeInstance, f)
+    explPoint: (f = msg.getExplPoint()) && proto.ExplanationPoint.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4935,23 +4935,23 @@ proto.sc2env.replay.ExplanationDetails.toObject = function(includeInstance, msg)
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sc2env.replay.ExplanationDetails}
+ * @return {!proto.ExplanationDetails}
  */
-proto.sc2env.replay.ExplanationDetails.deserializeBinary = function(bytes) {
+proto.ExplanationDetails.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sc2env.replay.ExplanationDetails;
-  return proto.sc2env.replay.ExplanationDetails.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.ExplanationDetails;
+  return proto.ExplanationDetails.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sc2env.replay.ExplanationDetails} msg The message object to deserialize into.
+ * @param {!proto.ExplanationDetails} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sc2env.replay.ExplanationDetails}
+ * @return {!proto.ExplanationDetails}
  */
-proto.sc2env.replay.ExplanationDetails.deserializeBinaryFromReader = function(msg, reader) {
+proto.ExplanationDetails.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4963,8 +4963,8 @@ proto.sc2env.replay.ExplanationDetails.deserializeBinaryFromReader = function(ms
       msg.setStep(value);
       break;
     case 2:
-      var value = new proto.sc2env.replay.ExplanationPoint;
-      reader.readMessage(value,proto.sc2env.replay.ExplanationPoint.deserializeBinaryFromReader);
+      var value = new proto.ExplanationPoint;
+      reader.readMessage(value,proto.ExplanationPoint.deserializeBinaryFromReader);
       msg.setExplPoint(value);
       break;
     default:
@@ -4979,10 +4979,10 @@ proto.sc2env.replay.ExplanationDetails.deserializeBinaryFromReader = function(ms
 /**
  * Class method variant: serializes the given message to binary data
  * (in protobuf wire format), writing to the given BinaryWriter.
- * @param {!proto.sc2env.replay.ExplanationDetails} message
+ * @param {!proto.ExplanationDetails} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ExplanationDetails.serializeBinaryToWriter = function(message, writer) {
+proto.ExplanationDetails.serializeBinaryToWriter = function(message, writer) {
   message.serializeBinaryToWriter(writer);
 };
 
@@ -4991,7 +4991,7 @@ proto.sc2env.replay.ExplanationDetails.serializeBinaryToWriter = function(messag
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sc2env.replay.ExplanationDetails.prototype.serializeBinary = function() {
+proto.ExplanationDetails.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
   this.serializeBinaryToWriter(writer);
   return writer.getResultBuffer();
@@ -5003,7 +5003,7 @@ proto.sc2env.replay.ExplanationDetails.prototype.serializeBinary = function() {
  * writing to the given BinaryWriter.
  * @param {!jspb.BinaryWriter} writer
  */
-proto.sc2env.replay.ExplanationDetails.prototype.serializeBinaryToWriter = function (writer) {
+proto.ExplanationDetails.prototype.serializeBinaryToWriter = function (writer) {
   var f = undefined;
   f = jspb.Message.getField(this, 1);
   if (f != null) {
@@ -5017,7 +5017,7 @@ proto.sc2env.replay.ExplanationDetails.prototype.serializeBinaryToWriter = funct
     writer.writeMessage(
       2,
       f,
-      proto.sc2env.replay.ExplanationPoint.serializeBinaryToWriter
+      proto.ExplanationPoint.serializeBinaryToWriter
     );
   }
 };
@@ -5025,10 +5025,10 @@ proto.sc2env.replay.ExplanationDetails.prototype.serializeBinaryToWriter = funct
 
 /**
  * Creates a deep clone of this proto. No data is shared with the original.
- * @return {!proto.sc2env.replay.ExplanationDetails} The clone.
+ * @return {!proto.ExplanationDetails} The clone.
  */
-proto.sc2env.replay.ExplanationDetails.prototype.cloneMessage = function() {
-  return /** @type {!proto.sc2env.replay.ExplanationDetails} */ (jspb.Message.cloneMessage(this));
+proto.ExplanationDetails.prototype.cloneMessage = function() {
+  return /** @type {!proto.ExplanationDetails} */ (jspb.Message.cloneMessage(this));
 };
 
 
@@ -5036,18 +5036,18 @@ proto.sc2env.replay.ExplanationDetails.prototype.cloneMessage = function() {
  * optional uint32 step = 1;
  * @return {number}
  */
-proto.sc2env.replay.ExplanationDetails.prototype.getStep = function() {
+proto.ExplanationDetails.prototype.getStep = function() {
   return /** @type {number} */ (!this.hasStep() ? 0 : jspb.Message.getField(this, 1));
 };
 
 
 /** @param {number?|undefined} value  */
-proto.sc2env.replay.ExplanationDetails.prototype.setStep = function(value) {
+proto.ExplanationDetails.prototype.setStep = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.sc2env.replay.ExplanationDetails.prototype.clearStep = function() {
+proto.ExplanationDetails.prototype.clearStep = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -5056,28 +5056,28 @@ proto.sc2env.replay.ExplanationDetails.prototype.clearStep = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationDetails.prototype.hasStep = function() {
+proto.ExplanationDetails.prototype.hasStep = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
  * optional ExplanationPoint expl_point = 2;
- * @return {proto.sc2env.replay.ExplanationPoint}
+ * @return {proto.ExplanationPoint}
  */
-proto.sc2env.replay.ExplanationDetails.prototype.getExplPoint = function() {
-  return /** @type{proto.sc2env.replay.ExplanationPoint} */ (
-    jspb.Message.getWrapperField(this, proto.sc2env.replay.ExplanationPoint, 2));
+proto.ExplanationDetails.prototype.getExplPoint = function() {
+  return /** @type{proto.ExplanationPoint} */ (
+    jspb.Message.getWrapperField(this, proto.ExplanationPoint, 2));
 };
 
 
-/** @param {proto.sc2env.replay.ExplanationPoint|undefined} value  */
-proto.sc2env.replay.ExplanationDetails.prototype.setExplPoint = function(value) {
+/** @param {proto.ExplanationPoint|undefined} value  */
+proto.ExplanationDetails.prototype.setExplPoint = function(value) {
   jspb.Message.setWrapperField(this, 2, value);
 };
 
 
-proto.sc2env.replay.ExplanationDetails.prototype.clearExplPoint = function() {
+proto.ExplanationDetails.prototype.clearExplPoint = function() {
   this.setExplPoint(undefined);
 };
 
@@ -5086,7 +5086,7 @@ proto.sc2env.replay.ExplanationDetails.prototype.clearExplPoint = function() {
  * Returns whether this field is set.
  * @return{!boolean}
  */
-proto.sc2env.replay.ExplanationDetails.prototype.hasExplPoint = function() {
+proto.ExplanationDetails.prototype.hasExplPoint = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 

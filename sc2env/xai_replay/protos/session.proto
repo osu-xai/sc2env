@@ -1,6 +1,14 @@
 syntax = "proto2";
 
-package sc2env.replay;
+// This is the command to compile the protos for python:
+// cd sc2env/sc2env/xai_replay
+// protoc --proto_path=protos/ --python_out=test_proto_out protos/session.proto protos/explanation.proto protos/user_study.proto
+
+// This is the command to compile the protos for js:
+// cd sc2env/sc2env/xai_replay
+// protoc --proto_path=protos/ --js_out=library=vizProtos,binary:ui/viz/js/ protos/session.proto protos/explanation.proto protos/user_study.proto 
+
+// package sc2env.replay;
 
 import "user_study.proto";
 import "explanation.proto";

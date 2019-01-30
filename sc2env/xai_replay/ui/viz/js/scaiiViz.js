@@ -2,9 +2,9 @@
 //
 // SC2_TODO - do we need these?  If not, can ditch google lib.  If so, why did missing ones not cause problems
 //
-goog.require('proto.scaii.common.ExplanationPoint');
-goog.require('proto.scaii.common.MultiMessage');
-goog.require('proto.scaii.common.ScaiiPacket');
+// goog.require('proto.scaii.common.ExplanationPoint');
+// goog.require('proto.scaii.common.MultiMessage');
+// goog.require('proto.scaii.common.ScaiiPacket');
 
 /**
 * Copyright (c) 2017-present, Oregon State University, Inc.

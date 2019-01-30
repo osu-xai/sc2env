@@ -38,11 +38,11 @@ var connect = function (dots, attemptCount) {
 		try {
 			sessionState = "inProgress";
 			var s = message.data;
-			var sPacket = proto.scaii.common.ScaiiPacket.deserializeBinary(s);
+			var sPacket = proto.ScaiiPacket.deserializeBinary(s);
 			var multiMessageToReturn = handleScaiiPacket(sPacket);
 			if (multiMessageToReturn == undefined) {
 				//always need to send a packet back - far side is waiting
-				var mm = new proto.scaii.common.MultiMessage;
+				var mm = new proto.MultiMessage;
 				dealer.send(mm.serializeBinary());
 			}
 			else {

@@ -17,9 +17,9 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='explanation.proto',
-  package='sc2env.replay',
+  package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x11\x65xplanation.proto\x12\rsc2env.replay\"P\n\x11\x45xplanationPoints\x12;\n\x12\x65xplanation_points\x18\x01 \x03(\x0b\x32\x1f.sc2env.replay.ExplanationPoint\"\xa7\x01\n\x10\x45xplanationPoint\x12\x0c\n\x04step\x18\x01 \x01(\r\x12\n\n\x02id\x18\x02 \x01(\r\x12\r\n\x05title\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12)\n\x08saliency\x18\x05 \x01(\x0b\x32\x17.sc2env.replay.Saliency\x12*\n\tbar_chart\x18\x06 \x01(\x0b\x32\x17.sc2env.replay.BarChart\"d\n\x08\x42\x61rChart\x12\'\n\x06groups\x18\x01 \x03(\x0b\x32\x17.sc2env.replay.BarGroup\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07v_title\x18\x03 \x01(\t\x12\x0f\n\x07h_title\x18\x04 \x01(\t\"^\n\x08\x42\x61rGroup\x12\r\n\x05value\x18\x01 \x01(\x01\x12 \n\x04\x62\x61rs\x18\x02 \x03(\x0b\x32\x12.sc2env.replay.Bar\x12\x13\n\x0bsaliency_id\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"7\n\x03\x42\x61r\x12\r\n\x05value\x18\x01 \x02(\x01\x12\x13\n\x0bsaliency_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\"C\n\x05Layer\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x63\x65lls\x18\x02 \x03(\x01\x12\r\n\x05width\x18\x03 \x01(\r\x12\x0e\n\x06height\x18\x04 \x01(\r\".\n\x06Layers\x12$\n\x06layers\x18\x01 \x03(\x0b\x32\x14.sc2env.replay.Layer\"\x95\x01\n\x08Saliency\x12>\n\x0csaliency_map\x18\x01 \x03(\x0b\x32(.sc2env.replay.Saliency.SaliencyMapEntry\x1aI\n\x10SaliencyMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.sc2env.replay.Layers:\x02\x38\x01')
+  serialized_pb=_b('\n\x11\x65xplanation.proto\"B\n\x11\x45xplanationPoints\x12-\n\x12\x65xplanation_points\x18\x01 \x03(\x0b\x32\x11.ExplanationPoint\"\x8b\x01\n\x10\x45xplanationPoint\x12\x0c\n\x04step\x18\x01 \x01(\r\x12\n\n\x02id\x18\x02 \x01(\r\x12\r\n\x05title\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x1b\n\x08saliency\x18\x05 \x01(\x0b\x32\t.Saliency\x12\x1c\n\tbar_chart\x18\x06 \x01(\x0b\x32\t.BarChart\"V\n\x08\x42\x61rChart\x12\x19\n\x06groups\x18\x01 \x03(\x0b\x32\t.BarGroup\x12\r\n\x05title\x18\x02 \x01(\t\x12\x0f\n\x07v_title\x18\x03 \x01(\t\x12\x0f\n\x07h_title\x18\x04 \x01(\t\"P\n\x08\x42\x61rGroup\x12\r\n\x05value\x18\x01 \x01(\x01\x12\x12\n\x04\x62\x61rs\x18\x02 \x03(\x0b\x32\x04.Bar\x12\x13\n\x0bsaliency_id\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"7\n\x03\x42\x61r\x12\r\n\x05value\x18\x01 \x02(\x01\x12\x13\n\x0bsaliency_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\"C\n\x05Layer\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x63\x65lls\x18\x02 \x03(\x01\x12\r\n\x05width\x18\x03 \x01(\r\x12\x0e\n\x06height\x18\x04 \x01(\r\" \n\x06Layers\x12\x16\n\x06layers\x18\x01 \x03(\x0b\x32\x06.Layer\"y\n\x08Saliency\x12\x30\n\x0csaliency_map\x18\x01 \x03(\x0b\x32\x1a.Saliency.SaliencyMapEntry\x1a;\n\x10SaliencyMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x16\n\x05value\x18\x02 \x01(\x0b\x32\x07.Layers:\x02\x38\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -28,13 +28,13 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _EXPLANATIONPOINTS = _descriptor.Descriptor(
   name='ExplanationPoints',
-  full_name='sc2env.replay.ExplanationPoints',
+  full_name='ExplanationPoints',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='explanation_points', full_name='sc2env.replay.ExplanationPoints.explanation_points', index=0,
+      name='explanation_points', full_name='ExplanationPoints.explanation_points', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -52,55 +52,55 @@ _EXPLANATIONPOINTS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=36,
-  serialized_end=116,
+  serialized_start=21,
+  serialized_end=87,
 )
 
 
 _EXPLANATIONPOINT = _descriptor.Descriptor(
   name='ExplanationPoint',
-  full_name='sc2env.replay.ExplanationPoint',
+  full_name='ExplanationPoint',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='step', full_name='sc2env.replay.ExplanationPoint.step', index=0,
+      name='step', full_name='ExplanationPoint.step', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='id', full_name='sc2env.replay.ExplanationPoint.id', index=1,
+      name='id', full_name='ExplanationPoint.id', index=1,
       number=2, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='title', full_name='sc2env.replay.ExplanationPoint.title', index=2,
+      name='title', full_name='ExplanationPoint.title', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='description', full_name='sc2env.replay.ExplanationPoint.description', index=3,
+      name='description', full_name='ExplanationPoint.description', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='saliency', full_name='sc2env.replay.ExplanationPoint.saliency', index=4,
+      name='saliency', full_name='ExplanationPoint.saliency', index=4,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='bar_chart', full_name='sc2env.replay.ExplanationPoint.bar_chart', index=5,
+      name='bar_chart', full_name='ExplanationPoint.bar_chart', index=5,
       number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -118,41 +118,41 @@ _EXPLANATIONPOINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=119,
-  serialized_end=286,
+  serialized_start=90,
+  serialized_end=229,
 )
 
 
 _BARCHART = _descriptor.Descriptor(
   name='BarChart',
-  full_name='sc2env.replay.BarChart',
+  full_name='BarChart',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='groups', full_name='sc2env.replay.BarChart.groups', index=0,
+      name='groups', full_name='BarChart.groups', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='title', full_name='sc2env.replay.BarChart.title', index=1,
+      name='title', full_name='BarChart.title', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='v_title', full_name='sc2env.replay.BarChart.v_title', index=2,
+      name='v_title', full_name='BarChart.v_title', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='h_title', full_name='sc2env.replay.BarChart.h_title', index=3,
+      name='h_title', full_name='BarChart.h_title', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -170,41 +170,41 @@ _BARCHART = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=288,
-  serialized_end=388,
+  serialized_start=231,
+  serialized_end=317,
 )
 
 
 _BARGROUP = _descriptor.Descriptor(
   name='BarGroup',
-  full_name='sc2env.replay.BarGroup',
+  full_name='BarGroup',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='value', full_name='sc2env.replay.BarGroup.value', index=0,
+      name='value', full_name='BarGroup.value', index=0,
       number=1, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='bars', full_name='sc2env.replay.BarGroup.bars', index=1,
+      name='bars', full_name='BarGroup.bars', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='saliency_id', full_name='sc2env.replay.BarGroup.saliency_id', index=2,
+      name='saliency_id', full_name='BarGroup.saliency_id', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='name', full_name='sc2env.replay.BarGroup.name', index=3,
+      name='name', full_name='BarGroup.name', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -222,34 +222,34 @@ _BARGROUP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=390,
-  serialized_end=484,
+  serialized_start=319,
+  serialized_end=399,
 )
 
 
 _BAR = _descriptor.Descriptor(
   name='Bar',
-  full_name='sc2env.replay.Bar',
+  full_name='Bar',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='value', full_name='sc2env.replay.Bar.value', index=0,
+      name='value', full_name='Bar.value', index=0,
       number=1, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='saliency_id', full_name='sc2env.replay.Bar.saliency_id', index=1,
+      name='saliency_id', full_name='Bar.saliency_id', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='name', full_name='sc2env.replay.Bar.name', index=2,
+      name='name', full_name='Bar.name', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -267,41 +267,41 @@ _BAR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=486,
-  serialized_end=541,
+  serialized_start=401,
+  serialized_end=456,
 )
 
 
 _LAYER = _descriptor.Descriptor(
   name='Layer',
-  full_name='sc2env.replay.Layer',
+  full_name='Layer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='name', full_name='sc2env.replay.Layer.name', index=0,
+      name='name', full_name='Layer.name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cells', full_name='sc2env.replay.Layer.cells', index=1,
+      name='cells', full_name='Layer.cells', index=1,
       number=2, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='width', full_name='sc2env.replay.Layer.width', index=2,
+      name='width', full_name='Layer.width', index=2,
       number=3, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='height', full_name='sc2env.replay.Layer.height', index=3,
+      name='height', full_name='Layer.height', index=3,
       number=4, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -319,20 +319,20 @@ _LAYER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=543,
-  serialized_end=610,
+  serialized_start=458,
+  serialized_end=525,
 )
 
 
 _LAYERS = _descriptor.Descriptor(
   name='Layers',
-  full_name='sc2env.replay.Layers',
+  full_name='Layers',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='layers', full_name='sc2env.replay.Layers.layers', index=0,
+      name='layers', full_name='Layers.layers', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -350,27 +350,27 @@ _LAYERS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=612,
-  serialized_end=658,
+  serialized_start=527,
+  serialized_end=559,
 )
 
 
 _SALIENCY_SALIENCYMAPENTRY = _descriptor.Descriptor(
   name='SaliencyMapEntry',
-  full_name='sc2env.replay.Saliency.SaliencyMapEntry',
+  full_name='Saliency.SaliencyMapEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='sc2env.replay.Saliency.SaliencyMapEntry.key', index=0,
+      name='key', full_name='Saliency.SaliencyMapEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='value', full_name='sc2env.replay.Saliency.SaliencyMapEntry.value', index=1,
+      name='value', full_name='Saliency.SaliencyMapEntry.value', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -388,19 +388,19 @@ _SALIENCY_SALIENCYMAPENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=737,
-  serialized_end=810,
+  serialized_start=623,
+  serialized_end=682,
 )
 
 _SALIENCY = _descriptor.Descriptor(
   name='Saliency',
-  full_name='sc2env.replay.Saliency',
+  full_name='Saliency',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='saliency_map', full_name='sc2env.replay.Saliency.saliency_map', index=0,
+      name='saliency_map', full_name='Saliency.saliency_map', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -418,8 +418,8 @@ _SALIENCY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=661,
-  serialized_end=810,
+  serialized_start=561,
+  serialized_end=682,
 )
 
 _EXPLANATIONPOINTS.fields_by_name['explanation_points'].message_type = _EXPLANATIONPOINT
@@ -443,49 +443,49 @@ DESCRIPTOR.message_types_by_name['Saliency'] = _SALIENCY
 ExplanationPoints = _reflection.GeneratedProtocolMessageType('ExplanationPoints', (_message.Message,), dict(
   DESCRIPTOR = _EXPLANATIONPOINTS,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.ExplanationPoints)
+  # @@protoc_insertion_point(class_scope:ExplanationPoints)
   ))
 _sym_db.RegisterMessage(ExplanationPoints)
 
 ExplanationPoint = _reflection.GeneratedProtocolMessageType('ExplanationPoint', (_message.Message,), dict(
   DESCRIPTOR = _EXPLANATIONPOINT,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.ExplanationPoint)
+  # @@protoc_insertion_point(class_scope:ExplanationPoint)
   ))
 _sym_db.RegisterMessage(ExplanationPoint)
 
 BarChart = _reflection.GeneratedProtocolMessageType('BarChart', (_message.Message,), dict(
   DESCRIPTOR = _BARCHART,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.BarChart)
+  # @@protoc_insertion_point(class_scope:BarChart)
   ))
 _sym_db.RegisterMessage(BarChart)
 
 BarGroup = _reflection.GeneratedProtocolMessageType('BarGroup', (_message.Message,), dict(
   DESCRIPTOR = _BARGROUP,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.BarGroup)
+  # @@protoc_insertion_point(class_scope:BarGroup)
   ))
 _sym_db.RegisterMessage(BarGroup)
 
 Bar = _reflection.GeneratedProtocolMessageType('Bar', (_message.Message,), dict(
   DESCRIPTOR = _BAR,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.Bar)
+  # @@protoc_insertion_point(class_scope:Bar)
   ))
 _sym_db.RegisterMessage(Bar)
 
 Layer = _reflection.GeneratedProtocolMessageType('Layer', (_message.Message,), dict(
   DESCRIPTOR = _LAYER,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.Layer)
+  # @@protoc_insertion_point(class_scope:Layer)
   ))
 _sym_db.RegisterMessage(Layer)
 
 Layers = _reflection.GeneratedProtocolMessageType('Layers', (_message.Message,), dict(
   DESCRIPTOR = _LAYERS,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.Layers)
+  # @@protoc_insertion_point(class_scope:Layers)
   ))
 _sym_db.RegisterMessage(Layers)
 
@@ -494,12 +494,12 @@ Saliency = _reflection.GeneratedProtocolMessageType('Saliency', (_message.Messag
   SaliencyMapEntry = _reflection.GeneratedProtocolMessageType('SaliencyMapEntry', (_message.Message,), dict(
     DESCRIPTOR = _SALIENCY_SALIENCYMAPENTRY,
     __module__ = 'explanation_pb2'
-    # @@protoc_insertion_point(class_scope:sc2env.replay.Saliency.SaliencyMapEntry)
+    # @@protoc_insertion_point(class_scope:Saliency.SaliencyMapEntry)
     ))
   ,
   DESCRIPTOR = _SALIENCY,
   __module__ = 'explanation_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.Saliency)
+  # @@protoc_insertion_point(class_scope:Saliency)
   ))
 _sym_db.RegisterMessage(Saliency)
 _sym_db.RegisterMessage(Saliency.SaliencyMapEntry)

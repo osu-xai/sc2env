@@ -324,9 +324,9 @@ function handleScaiiPacket(sPacket) {
 		replayChoiceConfig = config;
 		handleReplayChoiceConfig(config);
 	}
-	else if (sPacket.hasSC2ReplaySessionConfig()) {
+	else if (sPacket.hasReplaySessionConfig()) {
 		//console.log("-----got replaySessionConfig");
-		var config = sPacket.getSC2ReplaySessionConfig();
+		var config = sPacket.getReplaySessionConfig();
 		replaySessionConfig = config;
 		handleSC2ReplaySessionConfig(config,undefined);
 	}
@@ -338,10 +338,10 @@ function handleScaiiPacket(sPacket) {
     else if(sPacket.hasStudyQuestions()) {
         handleStudyQuestions(sPacket.getStudyQuestions());
     }
-	else if (sPacket.hasErr()) {
-		console.log("-----got errorPkt");
-		console.log(sPacket.getErr().getDescription())
-	}
+	// else if (sPacket.hasErr()) {
+	// 	console.log("-----got errorPkt");
+	// 	console.log(sPacket.getErr().getDescription())
+	// }
     else if (sPacket.hasUserCommand()) {//SC2_TODO - there will be no SELCT_FILE_COMPLETE form the backend
                                         // so we need to figure out where to put the below userStudyMode clde
 		var userCommand = sPacket.getUserCommand();

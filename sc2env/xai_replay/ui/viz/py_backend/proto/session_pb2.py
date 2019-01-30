@@ -19,9 +19,9 @@ import explanation_pb2 as explanation__pb2
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='session.proto',
-  package='sc2env.replay',
+  package='',
   syntax='proto2',
-  serialized_pb=_b('\n\rsession.proto\x12\rsc2env.replay\x1a\x10user_study.proto\x1a\x11\x65xplanation.proto\";\n\x0cMultiMessage\x12+\n\x07packets\x18\x01 \x03(\x0b\x32\x1a.sc2env.replay.ScaiiPacket\"\xcd\x03\n\x0bScaiiPacket\x12\x32\n\x0cuser_command\x18\x01 \x01(\x0b\x32\x1a.sc2env.replay.UserCommandH\x00\x12\x46\n\x15replay_session_config\x18\x02 \x01(\x0b\x32%.sc2env.replay.SC2ReplaySessionConfigH\x00\x12\x39\n\x0c\x65xpl_details\x18\x03 \x01(\x0b\x32!.sc2env.replay.ExplanationDetailsH\x00\x12\x41\n\x14replay_choice_config\x18\x04 \x01(\x0b\x32!.sc2env.replay.ReplayChoiceConfigH\x00\x12\x38\n\x0fstudy_questions\x18\x05 \x01(\x0b\x32\x1d.sc2env.replay.StudyQuestionsH\x00\x12\x43\n\x15study_question_answer\x18\x06 \x01(\x0b\x32\".sc2env.replay.StudyQuestionAnswerH\x00\x12\x35\n\x0elog_file_entry\x18\x07 \x01(\x0b\x32\x1b.sc2env.replay.LogFileEntryH\x00\x42\x0e\n\x0cspecific_msg\"\xbe\x01\n\x0bUserCommand\x12@\n\x0c\x63ommand_type\x18\x01 \x02(\x0e\x32*.sc2env.replay.UserCommand.UserCommandType\x12\x0c\n\x04\x61rgs\x18\x02 \x03(\t\"_\n\x0fUserCommandType\x12\x08\n\x04NONE\x10\x00\x12\x0b\n\x07\x45XPLAIN\x10\x01\x12\x15\n\x11POLL_FOR_COMMANDS\x10\x05\x12\r\n\tSET_SPEED\x10\x08\x12\x0f\n\x0bSELECT_FILE\x10\t\"G\n\x12ReplayChoiceConfig\x12\x18\n\x10replay_filenames\x18\x01 \x03(\t\x12\x17\n\x0fuser_study_mode\x18\x06 \x02(\x08\"x\n\x16SC2ReplaySessionConfig\x12\x11\n\tjson_data\x18\x01 \x02(\t\x12\x35\n\x0c\x65xplanations\x18\x02 \x03(\x0b\x32\x1f.sc2env.replay.ExplanationPoint\x12\x14\n\x0creward_types\x18\x03 \x03(\t\"#\n\x06Record\x12\x19\n\x11keyframe_interval\x18\x01 \x02(\r\"W\n\x12\x45xplanationDetails\x12\x0c\n\x04step\x18\x01 \x01(\r\x12\x33\n\nexpl_point\x18\x02 \x01(\x0b\x32\x1f.sc2env.replay.ExplanationPoint')
+  serialized_pb=_b('\n\rsession.proto\x1a\x10user_study.proto\x1a\x11\x65xplanation.proto\"-\n\x0cMultiMessage\x12\x1d\n\x07packets\x18\x01 \x03(\x0b\x32\x0c.ScaiiPacket\"\xeb\x02\n\x0bScaiiPacket\x12$\n\x0cuser_command\x18\x01 \x01(\x0b\x32\x0c.UserCommandH\x00\x12\x38\n\x15replay_session_config\x18\x02 \x01(\x0b\x32\x17.SC2ReplaySessionConfigH\x00\x12+\n\x0c\x65xpl_details\x18\x03 \x01(\x0b\x32\x13.ExplanationDetailsH\x00\x12\x33\n\x14replay_choice_config\x18\x04 \x01(\x0b\x32\x13.ReplayChoiceConfigH\x00\x12*\n\x0fstudy_questions\x18\x05 \x01(\x0b\x32\x0f.StudyQuestionsH\x00\x12\x35\n\x15study_question_answer\x18\x06 \x01(\x0b\x32\x14.StudyQuestionAnswerH\x00\x12\'\n\x0elog_file_entry\x18\x07 \x01(\x0b\x32\r.LogFileEntryH\x00\x42\x0e\n\x0cspecific_msg\"\xb0\x01\n\x0bUserCommand\x12\x32\n\x0c\x63ommand_type\x18\x01 \x02(\x0e\x32\x1c.UserCommand.UserCommandType\x12\x0c\n\x04\x61rgs\x18\x02 \x03(\t\"_\n\x0fUserCommandType\x12\x08\n\x04NONE\x10\x00\x12\x0b\n\x07\x45XPLAIN\x10\x01\x12\x15\n\x11POLL_FOR_COMMANDS\x10\x05\x12\r\n\tSET_SPEED\x10\x08\x12\x0f\n\x0bSELECT_FILE\x10\t\"G\n\x12ReplayChoiceConfig\x12\x18\n\x10replay_filenames\x18\x01 \x03(\t\x12\x17\n\x0fuser_study_mode\x18\x06 \x02(\x08\"j\n\x16SC2ReplaySessionConfig\x12\x11\n\tjson_data\x18\x01 \x02(\t\x12\'\n\x0c\x65xplanations\x18\x02 \x03(\x0b\x32\x11.ExplanationPoint\x12\x14\n\x0creward_types\x18\x03 \x03(\t\"#\n\x06Record\x12\x19\n\x11keyframe_interval\x18\x01 \x02(\r\"I\n\x12\x45xplanationDetails\x12\x0c\n\x04step\x18\x01 \x01(\r\x12%\n\nexpl_point\x18\x02 \x01(\x0b\x32\x11.ExplanationPoint')
   ,
   dependencies=[user__study__pb2.DESCRIPTOR,explanation__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -30,7 +30,7 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _USERCOMMAND_USERCOMMANDTYPE = _descriptor.EnumDescriptor(
   name='UserCommandType',
-  full_name='sc2env.replay.UserCommand.UserCommandType',
+  full_name='UserCommand.UserCommandType',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -57,21 +57,21 @@ _USERCOMMAND_USERCOMMANDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=690,
-  serialized_end=785,
+  serialized_start=549,
+  serialized_end=644,
 )
 _sym_db.RegisterEnumDescriptor(_USERCOMMAND_USERCOMMANDTYPE)
 
 
 _MULTIMESSAGE = _descriptor.Descriptor(
   name='MultiMessage',
-  full_name='sc2env.replay.MultiMessage',
+  full_name='MultiMessage',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='packets', full_name='sc2env.replay.MultiMessage.packets', index=0,
+      name='packets', full_name='MultiMessage.packets', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -89,62 +89,62 @@ _MULTIMESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=69,
-  serialized_end=128,
+  serialized_start=54,
+  serialized_end=99,
 )
 
 
 _SCAIIPACKET = _descriptor.Descriptor(
   name='ScaiiPacket',
-  full_name='sc2env.replay.ScaiiPacket',
+  full_name='ScaiiPacket',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='user_command', full_name='sc2env.replay.ScaiiPacket.user_command', index=0,
+      name='user_command', full_name='ScaiiPacket.user_command', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='replay_session_config', full_name='sc2env.replay.ScaiiPacket.replay_session_config', index=1,
+      name='replay_session_config', full_name='ScaiiPacket.replay_session_config', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='expl_details', full_name='sc2env.replay.ScaiiPacket.expl_details', index=2,
+      name='expl_details', full_name='ScaiiPacket.expl_details', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='replay_choice_config', full_name='sc2env.replay.ScaiiPacket.replay_choice_config', index=3,
+      name='replay_choice_config', full_name='ScaiiPacket.replay_choice_config', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='study_questions', full_name='sc2env.replay.ScaiiPacket.study_questions', index=4,
+      name='study_questions', full_name='ScaiiPacket.study_questions', index=4,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='study_question_answer', full_name='sc2env.replay.ScaiiPacket.study_question_answer', index=5,
+      name='study_question_answer', full_name='ScaiiPacket.study_question_answer', index=5,
       number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='log_file_entry', full_name='sc2env.replay.ScaiiPacket.log_file_entry', index=6,
+      name='log_file_entry', full_name='ScaiiPacket.log_file_entry', index=6,
       number=7, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -162,30 +162,30 @@ _SCAIIPACKET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='specific_msg', full_name='sc2env.replay.ScaiiPacket.specific_msg',
+      name='specific_msg', full_name='ScaiiPacket.specific_msg',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=131,
-  serialized_end=592,
+  serialized_start=102,
+  serialized_end=465,
 )
 
 
 _USERCOMMAND = _descriptor.Descriptor(
   name='UserCommand',
-  full_name='sc2env.replay.UserCommand',
+  full_name='UserCommand',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='command_type', full_name='sc2env.replay.UserCommand.command_type', index=0,
+      name='command_type', full_name='UserCommand.command_type', index=0,
       number=1, type=14, cpp_type=8, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='args', full_name='sc2env.replay.UserCommand.args', index=1,
+      name='args', full_name='UserCommand.args', index=1,
       number=2, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -204,27 +204,27 @@ _USERCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=595,
-  serialized_end=785,
+  serialized_start=468,
+  serialized_end=644,
 )
 
 
 _REPLAYCHOICECONFIG = _descriptor.Descriptor(
   name='ReplayChoiceConfig',
-  full_name='sc2env.replay.ReplayChoiceConfig',
+  full_name='ReplayChoiceConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='replay_filenames', full_name='sc2env.replay.ReplayChoiceConfig.replay_filenames', index=0,
+      name='replay_filenames', full_name='ReplayChoiceConfig.replay_filenames', index=0,
       number=1, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_study_mode', full_name='sc2env.replay.ReplayChoiceConfig.user_study_mode', index=1,
+      name='user_study_mode', full_name='ReplayChoiceConfig.user_study_mode', index=1,
       number=6, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -242,34 +242,34 @@ _REPLAYCHOICECONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=787,
-  serialized_end=858,
+  serialized_start=646,
+  serialized_end=717,
 )
 
 
 _SC2REPLAYSESSIONCONFIG = _descriptor.Descriptor(
   name='SC2ReplaySessionConfig',
-  full_name='sc2env.replay.SC2ReplaySessionConfig',
+  full_name='SC2ReplaySessionConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='json_data', full_name='sc2env.replay.SC2ReplaySessionConfig.json_data', index=0,
+      name='json_data', full_name='SC2ReplaySessionConfig.json_data', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='explanations', full_name='sc2env.replay.SC2ReplaySessionConfig.explanations', index=1,
+      name='explanations', full_name='SC2ReplaySessionConfig.explanations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='reward_types', full_name='sc2env.replay.SC2ReplaySessionConfig.reward_types', index=2,
+      name='reward_types', full_name='SC2ReplaySessionConfig.reward_types', index=2,
       number=3, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -287,20 +287,20 @@ _SC2REPLAYSESSIONCONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=860,
-  serialized_end=980,
+  serialized_start=719,
+  serialized_end=825,
 )
 
 
 _RECORD = _descriptor.Descriptor(
   name='Record',
-  full_name='sc2env.replay.Record',
+  full_name='Record',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='keyframe_interval', full_name='sc2env.replay.Record.keyframe_interval', index=0,
+      name='keyframe_interval', full_name='Record.keyframe_interval', index=0,
       number=1, type=13, cpp_type=3, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -318,27 +318,27 @@ _RECORD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=982,
-  serialized_end=1017,
+  serialized_start=827,
+  serialized_end=862,
 )
 
 
 _EXPLANATIONDETAILS = _descriptor.Descriptor(
   name='ExplanationDetails',
-  full_name='sc2env.replay.ExplanationDetails',
+  full_name='ExplanationDetails',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='step', full_name='sc2env.replay.ExplanationDetails.step', index=0,
+      name='step', full_name='ExplanationDetails.step', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='expl_point', full_name='sc2env.replay.ExplanationDetails.expl_point', index=1,
+      name='expl_point', full_name='ExplanationDetails.expl_point', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -356,8 +356,8 @@ _EXPLANATIONDETAILS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1019,
-  serialized_end=1106,
+  serialized_start=864,
+  serialized_end=937,
 )
 
 _MULTIMESSAGE.fields_by_name['packets'].message_type = _SCAIIPACKET
@@ -404,49 +404,49 @@ DESCRIPTOR.message_types_by_name['ExplanationDetails'] = _EXPLANATIONDETAILS
 MultiMessage = _reflection.GeneratedProtocolMessageType('MultiMessage', (_message.Message,), dict(
   DESCRIPTOR = _MULTIMESSAGE,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.MultiMessage)
+  # @@protoc_insertion_point(class_scope:MultiMessage)
   ))
 _sym_db.RegisterMessage(MultiMessage)
 
 ScaiiPacket = _reflection.GeneratedProtocolMessageType('ScaiiPacket', (_message.Message,), dict(
   DESCRIPTOR = _SCAIIPACKET,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.ScaiiPacket)
+  # @@protoc_insertion_point(class_scope:ScaiiPacket)
   ))
 _sym_db.RegisterMessage(ScaiiPacket)
 
 UserCommand = _reflection.GeneratedProtocolMessageType('UserCommand', (_message.Message,), dict(
   DESCRIPTOR = _USERCOMMAND,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.UserCommand)
+  # @@protoc_insertion_point(class_scope:UserCommand)
   ))
 _sym_db.RegisterMessage(UserCommand)
 
 ReplayChoiceConfig = _reflection.GeneratedProtocolMessageType('ReplayChoiceConfig', (_message.Message,), dict(
   DESCRIPTOR = _REPLAYCHOICECONFIG,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.ReplayChoiceConfig)
+  # @@protoc_insertion_point(class_scope:ReplayChoiceConfig)
   ))
 _sym_db.RegisterMessage(ReplayChoiceConfig)
 
 SC2ReplaySessionConfig = _reflection.GeneratedProtocolMessageType('SC2ReplaySessionConfig', (_message.Message,), dict(
   DESCRIPTOR = _SC2REPLAYSESSIONCONFIG,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.SC2ReplaySessionConfig)
+  # @@protoc_insertion_point(class_scope:SC2ReplaySessionConfig)
   ))
 _sym_db.RegisterMessage(SC2ReplaySessionConfig)
 
 Record = _reflection.GeneratedProtocolMessageType('Record', (_message.Message,), dict(
   DESCRIPTOR = _RECORD,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.Record)
+  # @@protoc_insertion_point(class_scope:Record)
   ))
 _sym_db.RegisterMessage(Record)
 
 ExplanationDetails = _reflection.GeneratedProtocolMessageType('ExplanationDetails', (_message.Message,), dict(
   DESCRIPTOR = _EXPLANATIONDETAILS,
   __module__ = 'session_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.ExplanationDetails)
+  # @@protoc_insertion_point(class_scope:ExplanationDetails)
   ))
 _sym_db.RegisterMessage(ExplanationDetails)
 

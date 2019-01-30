@@ -6,7 +6,7 @@ PORT = 8000
 class Serv(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
-            self.path = '/index.html'
+            self.path = '../index.html'
         try:
             file_to_open = open(self.path[1:]).read()
             self.send_response(200)

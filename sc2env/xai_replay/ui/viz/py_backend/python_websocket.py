@@ -1,13 +1,24 @@
 import asyncio
 import websockets
+#import .proto/session_pb2
+#import explanation_pb2
+#from .proto import session_pb2
+#import proto
+from proto.session_pb2 import ScaiiPacket
 
 async def hello(websocket, path):
-    got_it = "strinngggg"
-    await websocket.send(got_it)
+    sp = ScaiiPacket()
 
-    name = await websocket.recv()
-    print(name)
+    byt = sp.SerializeToString()
+    
+    await websocket.send(byt)
 
-start_server = websockets.serve(hello, 'localhost', 6112)
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+    #rec = await websocket.recv()
+    #mm = ParseFromString(rec) 
+    #print(mm)
+
+
+if __name__ == "__main__":
+    start_server = websockets.serve(hello, 'localhost', 6112)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()

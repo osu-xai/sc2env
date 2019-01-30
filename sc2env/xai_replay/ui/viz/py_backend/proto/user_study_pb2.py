@@ -17,9 +17,9 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='user_study.proto',
-  package='sc2env.replay',
+  package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x10user_study.proto\x12\rsc2env.replay\"\x87\x01\n\x0eStudyQuestions\x12\x35\n\x0fstudy_questions\x18\x01 \x03(\x0b\x32\x1c.sc2env.replay.StudyQuestion\x12\x0f\n\x07user_id\x18\x02 \x02(\t\x12\x14\n\x0ctreatment_id\x18\x03 \x02(\t\x12\x17\n\x0f\x61nswer_filename\x18\x04 \x02(\t\"u\n\rStudyQuestion\x12\x0c\n\x04step\x18\x01 \x02(\t\x12\x10\n\x08question\x18\x02 \x02(\t\x12\x0f\n\x07\x61nswers\x18\x03 \x03(\t\x12\x1c\n\x14question_id_for_step\x18\x04 \x02(\t\x12\x15\n\rquestion_type\x18\x05 \x02(\t\"\x85\x01\n\x13StudyQuestionAnswer\x12\x0c\n\x04step\x18\x01 \x02(\t\x12\x17\n\x0fquestion_number\x18\x02 \x02(\t\x12\x10\n\x08question\x18\x03 \x02(\t\x12\x0e\n\x06\x61nswer\x18\x04 \x02(\t\x12\x0f\n\x07user_id\x18\x05 \x02(\t\x12\x14\n\x0ctreatment_id\x18\x06 \x02(\t\"E\n\x0cLogFileEntry\x12\x10\n\x08\x66ilename\x18\x01 \x02(\t\x12\r\n\x05\x65ntry\x18\x02 \x02(\t\x12\x14\n\x0cis_last_line\x18\x03 \x02(\x08')
+  serialized_pb=_b('\n\x10user_study.proto\"y\n\x0eStudyQuestions\x12\'\n\x0fstudy_questions\x18\x01 \x03(\x0b\x32\x0e.StudyQuestion\x12\x0f\n\x07user_id\x18\x02 \x02(\t\x12\x14\n\x0ctreatment_id\x18\x03 \x02(\t\x12\x17\n\x0f\x61nswer_filename\x18\x04 \x02(\t\"u\n\rStudyQuestion\x12\x0c\n\x04step\x18\x01 \x02(\t\x12\x10\n\x08question\x18\x02 \x02(\t\x12\x0f\n\x07\x61nswers\x18\x03 \x03(\t\x12\x1c\n\x14question_id_for_step\x18\x04 \x02(\t\x12\x15\n\rquestion_type\x18\x05 \x02(\t\"\x85\x01\n\x13StudyQuestionAnswer\x12\x0c\n\x04step\x18\x01 \x02(\t\x12\x17\n\x0fquestion_number\x18\x02 \x02(\t\x12\x10\n\x08question\x18\x03 \x02(\t\x12\x0e\n\x06\x61nswer\x18\x04 \x02(\t\x12\x0f\n\x07user_id\x18\x05 \x02(\t\x12\x14\n\x0ctreatment_id\x18\x06 \x02(\t\"E\n\x0cLogFileEntry\x12\x10\n\x08\x66ilename\x18\x01 \x02(\t\x12\r\n\x05\x65ntry\x18\x02 \x02(\t\x12\x14\n\x0cis_last_line\x18\x03 \x02(\x08')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -28,34 +28,34 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _STUDYQUESTIONS = _descriptor.Descriptor(
   name='StudyQuestions',
-  full_name='sc2env.replay.StudyQuestions',
+  full_name='StudyQuestions',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='study_questions', full_name='sc2env.replay.StudyQuestions.study_questions', index=0,
+      name='study_questions', full_name='StudyQuestions.study_questions', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_id', full_name='sc2env.replay.StudyQuestions.user_id', index=1,
+      name='user_id', full_name='StudyQuestions.user_id', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='treatment_id', full_name='sc2env.replay.StudyQuestions.treatment_id', index=2,
+      name='treatment_id', full_name='StudyQuestions.treatment_id', index=2,
       number=3, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='answer_filename', full_name='sc2env.replay.StudyQuestions.answer_filename', index=3,
+      name='answer_filename', full_name='StudyQuestions.answer_filename', index=3,
       number=4, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -73,48 +73,48 @@ _STUDYQUESTIONS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=36,
-  serialized_end=171,
+  serialized_start=20,
+  serialized_end=141,
 )
 
 
 _STUDYQUESTION = _descriptor.Descriptor(
   name='StudyQuestion',
-  full_name='sc2env.replay.StudyQuestion',
+  full_name='StudyQuestion',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='step', full_name='sc2env.replay.StudyQuestion.step', index=0,
+      name='step', full_name='StudyQuestion.step', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='question', full_name='sc2env.replay.StudyQuestion.question', index=1,
+      name='question', full_name='StudyQuestion.question', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='answers', full_name='sc2env.replay.StudyQuestion.answers', index=2,
+      name='answers', full_name='StudyQuestion.answers', index=2,
       number=3, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='question_id_for_step', full_name='sc2env.replay.StudyQuestion.question_id_for_step', index=3,
+      name='question_id_for_step', full_name='StudyQuestion.question_id_for_step', index=3,
       number=4, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='question_type', full_name='sc2env.replay.StudyQuestion.question_type', index=4,
+      name='question_type', full_name='StudyQuestion.question_type', index=4,
       number=5, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -132,55 +132,55 @@ _STUDYQUESTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=173,
-  serialized_end=290,
+  serialized_start=143,
+  serialized_end=260,
 )
 
 
 _STUDYQUESTIONANSWER = _descriptor.Descriptor(
   name='StudyQuestionAnswer',
-  full_name='sc2env.replay.StudyQuestionAnswer',
+  full_name='StudyQuestionAnswer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='step', full_name='sc2env.replay.StudyQuestionAnswer.step', index=0,
+      name='step', full_name='StudyQuestionAnswer.step', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='question_number', full_name='sc2env.replay.StudyQuestionAnswer.question_number', index=1,
+      name='question_number', full_name='StudyQuestionAnswer.question_number', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='question', full_name='sc2env.replay.StudyQuestionAnswer.question', index=2,
+      name='question', full_name='StudyQuestionAnswer.question', index=2,
       number=3, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='answer', full_name='sc2env.replay.StudyQuestionAnswer.answer', index=3,
+      name='answer', full_name='StudyQuestionAnswer.answer', index=3,
       number=4, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_id', full_name='sc2env.replay.StudyQuestionAnswer.user_id', index=4,
+      name='user_id', full_name='StudyQuestionAnswer.user_id', index=4,
       number=5, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='treatment_id', full_name='sc2env.replay.StudyQuestionAnswer.treatment_id', index=5,
+      name='treatment_id', full_name='StudyQuestionAnswer.treatment_id', index=5,
       number=6, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -198,34 +198,34 @@ _STUDYQUESTIONANSWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=293,
-  serialized_end=426,
+  serialized_start=263,
+  serialized_end=396,
 )
 
 
 _LOGFILEENTRY = _descriptor.Descriptor(
   name='LogFileEntry',
-  full_name='sc2env.replay.LogFileEntry',
+  full_name='LogFileEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='filename', full_name='sc2env.replay.LogFileEntry.filename', index=0,
+      name='filename', full_name='LogFileEntry.filename', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='entry', full_name='sc2env.replay.LogFileEntry.entry', index=1,
+      name='entry', full_name='LogFileEntry.entry', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='is_last_line', full_name='sc2env.replay.LogFileEntry.is_last_line', index=2,
+      name='is_last_line', full_name='LogFileEntry.is_last_line', index=2,
       number=3, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -243,8 +243,8 @@ _LOGFILEENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=428,
-  serialized_end=497,
+  serialized_start=398,
+  serialized_end=467,
 )
 
 _STUDYQUESTIONS.fields_by_name['study_questions'].message_type = _STUDYQUESTION
@@ -256,28 +256,28 @@ DESCRIPTOR.message_types_by_name['LogFileEntry'] = _LOGFILEENTRY
 StudyQuestions = _reflection.GeneratedProtocolMessageType('StudyQuestions', (_message.Message,), dict(
   DESCRIPTOR = _STUDYQUESTIONS,
   __module__ = 'user_study_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.StudyQuestions)
+  # @@protoc_insertion_point(class_scope:StudyQuestions)
   ))
 _sym_db.RegisterMessage(StudyQuestions)
 
 StudyQuestion = _reflection.GeneratedProtocolMessageType('StudyQuestion', (_message.Message,), dict(
   DESCRIPTOR = _STUDYQUESTION,
   __module__ = 'user_study_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.StudyQuestion)
+  # @@protoc_insertion_point(class_scope:StudyQuestion)
   ))
 _sym_db.RegisterMessage(StudyQuestion)
 
 StudyQuestionAnswer = _reflection.GeneratedProtocolMessageType('StudyQuestionAnswer', (_message.Message,), dict(
   DESCRIPTOR = _STUDYQUESTIONANSWER,
   __module__ = 'user_study_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.StudyQuestionAnswer)
+  # @@protoc_insertion_point(class_scope:StudyQuestionAnswer)
   ))
 _sym_db.RegisterMessage(StudyQuestionAnswer)
 
 LogFileEntry = _reflection.GeneratedProtocolMessageType('LogFileEntry', (_message.Message,), dict(
   DESCRIPTOR = _LOGFILEENTRY,
   __module__ = 'user_study_pb2'
-  # @@protoc_insertion_point(class_scope:sc2env.replay.LogFileEntry)
+  # @@protoc_insertion_point(class_scope:LogFileEntry)
   ))
 _sym_db.RegisterMessage(LogFileEntry)
 
