@@ -5,8 +5,7 @@ var sessionIndexManager = undefined;
 var activeStudyQuestionManager = undefined;
 //SC2_DEFERRED var stateMonitor = undefined;
 //SC2_DEFERRED var userActionMonitor = undefined;
-var activeSC2DataManager = undefined;
-
+var relativeReplayDir = "./replays";
 var treatmentID = undefined;
 
 // Since studyMode is controlled at front end, backend is unaware which mode and will always send 
@@ -144,8 +143,8 @@ function clearUIElementsForNewFile(){//SC2_OK
 function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     //SC2_TODO - do we need to block user input (i removed setting that flag from this function)
     activeSC2DataManager = getSC2DataManager(rsc);
-    activeSC2UIManager = getSC2UIManager(activeSC2DataManager);
-    activeSC2VideoManager = getSC2VideoManager(activeSC2DataManager.getVideoFilepath())
+    activeSC2VideoManager = getSC2VideoManager(getVideoFilepath(chosenFile));
+    activeSC2UIManager = getSC2UIManager(activeSC2DataManager, activeSC2VideoManager);
     malformedMessage = activeSC2DataManager.getMalformedMessage();
 	if (malformedMessage != undefined) {
 		alert(malformedMessage);
@@ -157,17 +156,6 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     controlsManager.doneLoadReplayFile(); //SC2_TODO - verify this is the right place for this
 }
 
-function playNextFrameAfterDelay(){//SC2_TEST
-    window.setTimeout(playNextFrame, 400);
-}
-function playNextFrame(){//SC2_TEST
-    var frameInfo = activeSC2DataManager.getNextFrameInfo()
-    handleSC2Data(frameInfo);
-}
-function jumpToFrame(frameIndex){//SC2_TEST
-    activeSC2DataManager.setNextFrameAs(frameIndex);
-    playNextFrame();
-}
 
 function handleSC2Data(frameInfo){//SC2_TEST
     expressCumulativeRewards(frameInfo);
@@ -248,6 +236,9 @@ function expressCumulativeRewards(frameInfo) { //SC2_TEST
   	}
 }
 
+function getVideoFilepath(chosenFile){
+    return relativeReplayDir + "/" + chosenFile + ".mp4";
+}
 function getRewardValueId(val) {//SC2_OK
 	var legalIdVal = convertNameToLegalId(val);
 	return 'reward'+legalIdVal;

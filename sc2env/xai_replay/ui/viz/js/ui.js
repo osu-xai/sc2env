@@ -8,6 +8,7 @@ var gameboard_ctx = gameboard_canvas.getContext("2d");
 
 var zIndexMap = {};
 zIndexMap["explControl"] = 2;
+zIndexMap["inFrontOfVideo"] = 3;
 zIndexMap["saliencyHoverValue"] = 5;
 zIndexMap["clickBlockerRectangle"] = 10;
 zIndexMap["whyButton"] = 11;
@@ -64,6 +65,9 @@ function configureGameboardCanvas(){ //SC2_TODO - keeping gameboard canvas for n
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
+	var video = document.createElement("video");
+	$("#scaii-gameboard").append()
+	gameboard_canvas.setAttribute("style", "position:absolute;left:0px;top:0px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + gameboard_canvas.width + "px;height:" + gameboard_canvas.height + ";");
 	$("#scaii-gameboard").append(gameboard_canvas);
 }
 
@@ -176,6 +180,7 @@ function highlightShapeInRange(x,y) {//SC2_TEST
 function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// for hiding/showing tooltips
 	gameboard_canvas.addEventListener('click', function(evt) {
+		console.log("clicked!");
 		var x = evt.offsetX;
 		var y = evt.offsetY;
 		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
