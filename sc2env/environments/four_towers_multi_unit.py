@@ -10,6 +10,8 @@ from pysc2.agents import base_agent
 from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps
+from sc2env.representation import *
+
 
 from sc2env.pysc2_util import register_map
 
@@ -23,13 +25,13 @@ class FourTowersSequentialMultiUnitEnvironment():
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         register_map(maps_dir, MAP_NAME)
         aif=features.AgentInterfaceFormat(
-            feature_dimensions=features.Dimensions(screen=84, minimap=64),
+            feature_dimensions=features.Dimensions(screen=40, minimap=30),
             action_space=actions.ActionSpace.FEATURES,
         )
         step_mul_value = 16
         if generate_xai_replay:
             aif=features.AgentInterfaceFormat(
-                feature_dimensions=features.Dimensions(screen=84, minimap=64),
+                feature_dimensions=features.Dimensions(screen=40, minimap=30),
                 rgb_dimensions=sc2_env.Dimensions(
                 screen=(1520, 1280),
                 #screen=(2048, 2048),
@@ -82,7 +84,7 @@ class FourTowersSequentialMultiUnitEnvironment():
         self.last_timestep = self.sc2_env.step([action])[0]
         observation, state, reward, done, info = self.unpack_timestep(self.last_timestep)
         self.current_obs = observation
-        state = self.int_map_to_onehot(state)
+        #state = self.int_map_to_onehot(state)
         state = np.array(state)
         self.actions_taken = 0
         from s2clientprotocol import sc2api_pb2 as sc_pb
@@ -179,6 +181,11 @@ class FourTowersSequentialMultiUnitEnvironment():
                 losses = x.health
                 rewards.append(x.health)
                 unit_types.append(x.unit_type)
+        state = observation[3]['feature_screen']
+        state = expand_pysc2_to_neural_input(state)
+        # print('STATE SHAPE:')
+        # print(state.shape)
+        state = np.reshape(state, (1, -1))
         return state
 
     def noop(self):
@@ -194,11 +201,11 @@ class FourTowersSequentialMultiUnitEnvironment():
             if action == 0:
                 action = actions.FUNCTIONS.Attack_screen("now", [0,0])
             elif action == 1:
-                action = actions.FUNCTIONS.Attack_screen("now", [83,0])
+                action = actions.FUNCTIONS.Attack_screen("now", [39,0])
             elif action == 2:
-                action = actions.FUNCTIONS.Attack_screen("now", [0,83])
+                action = actions.FUNCTIONS.Attack_screen("now", [0,39])
             elif action == 3:
-                action = actions.FUNCTIONS.Attack_screen("now", [83,83])
+                action = actions.FUNCTIONS.Attack_screen("now", [39,39])
             elif action == 4:
                 action = actions.FUNCTIONS.no_op()
             else:
@@ -216,7 +223,7 @@ class FourTowersSequentialMultiUnitEnvironment():
         observation, state, reward, done_null, info = self.unpack_timestep(self.last_timestep)
         self.current_obs = observation
 
-        state = self.int_map_to_onehot(state)
+        # state = self.int_map_to_onehot(state)
         state = np.array(state)
 
         #########################
@@ -359,6 +366,9 @@ class FourTowersSequentialMultiUnitEnvironment():
             for x in range(current_len_state, 36):
                 state.append(0.0)
         # print(len(state))
+        state = observation[3]['feature_screen']
+        state = expand_pysc2_to_neural_input(state)
+        state = np.reshape(state, (1, -1))
         return state, reward, done, dead, info
 
     def get_mineral_count(self, obs):
