@@ -9,6 +9,8 @@ import imutil
 from sc2env.q_learning_agent import ConvNetQLearningAgent, to_tensor
 from sc2env.environments.micro_battle import MicroBattleEnvironment
 
+MAX_STEPS = 1000
+
 
 def train_agent(train_episodes=10):
     # This environment teaches win/loss outcomes vs different enemies
@@ -31,12 +33,15 @@ def play_episode(env, agent, episode_num=0):
     state = env.reset()
     done = False
     vid = imutil.Video('training_episode_{:04d}.mp4'.format(episode_num))
-    while not done:
+    for t in range(MAX_STEPS):
+        if done:
+            break
         action = agent.step(state)
         states.append(state)
         state, reward, done, info = env.step(action)
         actions.append(action)
         rewards.append(reward)
+        caption = 't={} reward={}'.format(t, reward)
         vid.write_frame(state[3], normalize=False)
     vid.finish()
     states.append(state)
