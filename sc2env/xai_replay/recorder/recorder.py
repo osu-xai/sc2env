@@ -111,6 +111,16 @@ class XaiReplayRecorder():
             # take picture
             self.save_game_rgb_screen(observation)
 
+    def record_final_frame_of_action(self, state):
+        self.game_clock_tick += 1
+        observation = self.get_observation()
+        frame_info = {}
+        frame_info["frame_info_type"] = "final_frame_of_action"
+        self.gather_common_state(frame_info, observation)
+        self.frames.append(frame_info)
+        # take picture
+        self.save_game_rgb_screen(observation)
+
     def done_recording(self):
         #print("HERE COMES THE JSON")
         #print(self.frames)
