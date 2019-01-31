@@ -2,7 +2,7 @@
 
 Simplified strategic StarCraft II environments for reinforcement learning.
 
-![Screenshot of the Macro Strategy Task](https://github.com/lwneal/starcraft-rl/raw/master/screenshot_macro_strategy_task.jpg)
+![Screenshot of the Macro Strategy Task](https://github.com/osu-xai/sc2env/raw/master/static/screenshot_macro_strategy_task.jpg)
 
 ## Requirements
 
@@ -26,11 +26,31 @@ Rendered game screenshots and feature maps should be generated as a set of .jpg 
 
 ### Tactical Decision Making
 
+![Animated screenshot of SimpleTactical-v0](https://github.com/osu-xai/sc2env/raw/master/static/simple_tactical.gif)
+
 Action Space: Discrete(4). Attack one of four quadrants, each containing a group of enemy units.
 
 Observation Space: Features, pixels, or structured unit list.
 
 Reward: Multiple-reward signal representing damage dealt to enemy unit types, one value per enemy unit type.
+
+Gym name: `SC2SimpleTactical-v0`
+
+
+### Micro Battle
+
+![Animated screenshot of MicroBattle-v0](https://github.com/osu-xai/sc2env/raw/master/static/micro_battle.gif)
+
+Action Space: Discrete(2). Retreat backward, or attack-move forward.
+
+Observation Space: Features and pixels.
+
+Reward: Multiple-reward signal: Points of damage dealt to enemies,
+points of damage taken by friendly units, value of enemies destroyed,
+value of friendly units destroyed.
+
+Gym name: `SC2MicroBattle-v0`
+
 
 ### Macro Strategy Task
 
@@ -41,8 +61,12 @@ Observation Space: Features and pixels.
 
 Reward: Binary win/loss
 
+Gym name: `SC2MacroStrategy-v0`
+
 
 ### Fog of War Task
+
+![Animated screenshot of MicroBattle-v0](https://github.com/osu-xai/sc2env/raw/master/static/fog_of_war.gif)
 
 Action Space: Discrete(8). Build two groups each consisting of one unit type: Rock, Paper, or Scissors.
 Alternatively take a Scout action to reveal the composition of the opponent's army, or a Counterintelligence action to nullify an opponent's Scout.
@@ -51,9 +75,49 @@ Observation Space: Features and pixels.
 
 Reward: Binary win/loss
 
-### Generating replays
+Gym name: `SC2FogOfWar-v0`
 
-To setup the environment so that you can generate replays of your own, ensure you have >= python 3.6.  Then install sc2env as above if you haven't already.  Then install abp using the instructions at https://github.com/osu-xai/abp.  Then, when ready to do replay, do this: git pull under both abp and sc2env to get the latest, then cd into abp and do:
+
+## OpenAI Gym Integration
+
+Each of the above environments can be initialized directly:
+
+```
+from sc2env.environments.micro_battle import MicroBattleEnvironment
+
+env = MicroBattleEnvironment()
+```
+
+or through OpenAI Gym:
+
+```
+import gym
+import sc2env
+
+env = gym.make('SC2MicroBattle-v0')
+```
+
+After initialization, each environment can be used as follows:
+
+```
+state = env.reset()
+done = False
+
+while not done:
+    action = env.action_space.sample()
+    state, reward, done, info = env.step(action)
+```
+
+See `play_simple_tactical.py` for an example of how to format `state` as
+input to a convolutional network.
+
+
+### Generating XAI replays
+
+To set up the environment so that you can generate replays of your own, ensure you have >= python 3.6.
+Then install sc2env as above if you haven't already.
+Then install abp using the instructions at https://github.com/osu-xai/abp.
+Then, when ready to do replay, do this: git pull under both abp and sc2env to get the latest, then cd into abp and do:
 
 ````
 cd ~/sc2/sc2env
@@ -75,7 +139,4 @@ python -m abp.trainer.task_runner -f tasks/four_towers_multi_unit/hra_recorded/v
 //- image dimensions - line 33
 //- step_mul  (the number of game cycles to run for every time step() is called on the environment ) - line 43
 ````
-
-
-
 
