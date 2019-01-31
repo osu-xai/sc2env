@@ -55,7 +55,7 @@ class FogOfWarMultiplayerEnvironment():
     incomplete information. Each agent trades off between building more
     units, and gathering information about the enemy's units.
     """
-    def __init__(self, render=False, video_filename=None, verbose=False, num_players=2):
+    def __init__(self, render=True, video_filename=None, verbose=False, num_players=2):
         if video_filename:
             render = True
         self.render = render

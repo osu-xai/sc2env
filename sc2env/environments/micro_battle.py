@@ -24,7 +24,7 @@ UNIT_ID_LIST = [
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
 class MicroBattleEnvironment(gym.Env):
-    def __init__(self, render=False):
+    def __init__(self, render=True):
         self.sc2env = make_sc2env(render)
         self.action_space = Discrete(self.actions())
 
