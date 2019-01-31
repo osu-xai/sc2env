@@ -132,7 +132,8 @@ def unpack_timestep(timestep):
     # For this game we use a simple reward: number of surviving friendly units
     reward = int(timestep.observation.player['army_count'])
 
-    done = timestep.last()
+    # This version of the map only runs for one timestep
+    done = True
 
     # The info dict can include reward decompositions when available
     info = {}
