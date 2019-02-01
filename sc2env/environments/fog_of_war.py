@@ -8,6 +8,8 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions
 
 from sc2env.pysc2_util import register_map
+import gym
+from gym.spaces.discrete import Discrete
 
 
 # These parameters are adjustable without changing the .SC2Map
@@ -49,13 +51,13 @@ action_to_name = {
 }
 
 
-class FogOfWarMultiplayerEnvironment():
+class FogOfWarMultiplayerEnvironment(gym.Env):
     """
     This environment pits two agents against each other in a game of
     incomplete information. Each agent trades off between building more
     units, and gathering information about the enemy's units.
     """
-    def __init__(self, render=False, video_filename=None, verbose=False, num_players=2):
+    def __init__(self, render=True, video_filename=None, verbose=False, num_players=2):
         if video_filename:
             render = True
         self.render = render
@@ -65,6 +67,7 @@ class FogOfWarMultiplayerEnvironment():
         if video_filename:
             self.video = imutil.VideoMaker(filename=video_filename)
         self.verbose = verbose
+        self.action_space = self.get_action_space()
 
     def reset(self):
         self.step_sc2env()
@@ -72,8 +75,7 @@ class FogOfWarMultiplayerEnvironment():
         state, reward, done, info = self.unpack_state()
         return state
 
-    def action_space(self):
-        from gym.spaces.discrete import Discrete
+    def get_action_space(self):
         return Discrete(len(action_to_name))
 
     # Step: Take an action and play the game out for ~10 seconds
@@ -98,7 +100,8 @@ class FogOfWarMultiplayerEnvironment():
             if self.num_players > 1 and action_player2 > 0:
                 player2_ability_id = action_to_ability_id[action_player2]
                 self.use_custom_ability(player2_ability_id, 2)
-            if self.render:
+
+            if self.video:
                 # Move forward 5 ticks at a time
                 self.sc2env._step_mul = 5
                 for i in range(FIVE_SECONDS // self.sc2env._step_mul):

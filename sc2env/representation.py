@@ -2,7 +2,7 @@ import numpy as np
 
 
 # If you do not supply a unit list, this default will be used.
-# Note: this defautl list should be the union of all unit IDs we use
+# Note: this default list should be the union of all unit IDs we use
 DEFAULT_SC2_UNITS = [
     48,  # marine
     51,  # marauder
