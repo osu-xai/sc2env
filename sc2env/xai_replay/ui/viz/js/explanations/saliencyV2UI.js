@@ -402,7 +402,7 @@ function populateSaliencyQuestionSelector(){
 	radioCombinedSaliency.onclick = function(e) {
         currentExplManager.saliencyCombined = true;
         if (userStudyMode){
-            targetClickHandler(e, "setSaliencyView:combinedSaliency");
+            //SC2_DEFERRED targetClickHandler(e, "setSaliencyView:combinedSaliency");
         }
         removeAnySaliencyOverlaysFromGameboard();
         currentExplManager.render("live");
@@ -425,7 +425,7 @@ function populateSaliencyQuestionSelector(){
 	radioDetailedSaliency.onclick = function(e) {
         currentExplManager.saliencyCombined = false;
         if (userStudyMode){
-            targetClickHandler(e, "setSaliencyView:detailedSaliency");
+            //SC2_DEFERRED targetClickHandler(e, "setSaliencyView:detailedSaliency");
         }
         removeAnySaliencyOverlaysFromGameboard();
         currentExplManager.render("live");

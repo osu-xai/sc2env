@@ -3,10 +3,9 @@ var replayChoiceConfig;
 var selectedExplanationStep = undefined;
 var sessionIndexManager = undefined;
 var activeStudyQuestionManager = undefined;
-var stateMonitor = undefined;
-var userActionMonitor = undefined;
-var activeSC2DataManager = undefined;
-
+//SC2_DEFERRED var stateMonitor = undefined;
+//SC2_DEFERRED var userActionMonitor = undefined;
+var relativeReplayDir = "./replays";
 var treatmentID = undefined;
 
 // Since studyMode is controlled at front end, backend is unaware which mode and will always send 
@@ -33,13 +32,13 @@ function handleStudyQuestions(studyQuestions){ //SC2_OK
         tabManager.setStudyQuestionManagerForCurrentTab(activeStudyQuestionManager);
     }
 
-    if (userActionMonitor == undefined) {  userActionMonitor = getUserActionMonitor(); }
-    if (stateMonitor == undefined)      {  stateMonitor =      getStateMonitor();      }
+    //SC2_DEFERRED if (userActionMonitor == undefined) {  userActionMonitor = getUserActionMonitor(); }
+    //SC2_DEFERRED if (stateMonitor == undefined)      {  stateMonitor =      getStateMonitor();      }
 	
 	console.log(treatmentID);
     console.log(answerFilename);
-    stateMonitor.currentReplayFileName = chosenFile;
-    stateMonitor.logFileName = answerFilename;
+    //SC2_DEFERRED stateMonitor.currentReplayFileName = chosenFile;
+    //SC2_DEFERRED stateMonitor.logFileName = answerFilename;
     // make div to hold the winning action name
     var winningActionLabel = document.createElement("div");
 	winningActionLabel.setAttribute("style", "margin-top:8px;margin-left:30px;font-family:Arial;font-weight:bold;font-size:14px;");
@@ -107,16 +106,18 @@ function loadSelectedReplayFile() {//SC2_OK
 
 function loadReplayFile(filename) {//SC2_OK
     $("#cue-arrow-div").remove();
-    if (userActionMonitor != undefined) {
-        userActionMonitor.clickListener = undefined;
-    }
+    //SC2_DEFERRED
+    // if (userActionMonitor != undefined) {
+    //     userActionMonitor.clickListener = undefined;
+    // }
+    //SC2_DEFERRED_END
     clearStudyQuestionMode();
 	controlsManager.startLoadReplayFile();
 	chosenFile = filename;
 	//console.log("    file selected: " + chosenFile);
 	var args = [chosenFile];
-	var userCommand = new proto.scaii.common.UserCommand;
-	userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.SELECT_FILE);
+	var userCommand = new proto.UserCommand;
+	userCommand.setCommandType(proto.UserCommand.UserCommandType.SELECT_FILE);
 	userCommand.setArgsList(args);
     stageUserCommand(userCommand);
     clearUIElementsForNewFile();
@@ -142,8 +143,8 @@ function clearUIElementsForNewFile(){//SC2_OK
 function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     //SC2_TODO - do we need to block user input (i removed setting that flag from this function)
     activeSC2DataManager = getSC2DataManager(rsc);
-    activeSC2UIManager = getSC2UIManager(activeSC2DataManager);
-    activeSC2VideoManager = getSC2VideoManager(activeSC2DataManager.getVideoFilepath())
+    activeSC2VideoManager = getSC2VideoManager(getVideoFilepath(chosenFile));
+    activeSC2UIManager = getSC2UIManager(activeSC2DataManager, activeSC2VideoManager);
     malformedMessage = activeSC2DataManager.getMalformedMessage();
 	if (malformedMessage != undefined) {
 		alert(malformedMessage);
@@ -155,17 +156,6 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     controlsManager.doneLoadReplayFile(); //SC2_TODO - verify this is the right place for this
 }
 
-function playNextFrameAfterDelay(){//SC2_TEST
-    window.setTimeout(playNextFrame, 400);
-}
-function playNextFrame(){//SC2_TEST
-    var frameInfo = activeSC2DataManager.getNextFrameInfo()
-    handleSC2Data(frameInfo);
-}
-function jumpToFrame(frameIndex){//SC2_TEST
-    activeSC2DataManager.setNextFrameAs(frameIndex);
-    playNextFrame();
-}
 
 function handleSC2Data(frameInfo){//SC2_TEST
     expressCumulativeRewards(frameInfo);
@@ -246,6 +236,9 @@ function expressCumulativeRewards(frameInfo) { //SC2_TEST
   	}
 }
 
+function getVideoFilepath(chosenFile){
+    return relativeReplayDir + "/" + chosenFile + ".mp4";
+}
 function getRewardValueId(val) {//SC2_OK
 	var legalIdVal = convertNameToLegalId(val);
 	return 'reward'+legalIdVal;
@@ -262,9 +255,9 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	}
 	
 	rewardKeyDiv.innerHTML = key;
-	var logLineLabel = templateMap["touchCumRewardLabel"];
-	logLineLabel = logLineLabel.replace("<CUM_LBL>", key);
-    rewardKeyDiv.onclick = function(e) {targetClickHandler(e, logLineLabel);};
+	//SC2_DEFERRED var logLineLabel = templateMap["touchCumRewardLabel"];
+	//SC2_DEFERRED logLineLabel = logLineLabel.replace("<CUM_LBL>", key);
+    //SC2_DEFERRED rewardKeyDiv.onclick = function(e) {targetClickHandler(e, logLineLabel);};
 	$("#cumulative-rewards").append(rewardKeyDiv);
 
 	var rewardValDiv = document.createElement("DIV");
@@ -281,9 +274,9 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	}
 	
 	rewardValDiv.innerHTML = val;
-	var logLineValue = templateMap["touchCumRewardValueFor"];
-	logLineValue = logLineValue.replace("<CUM_VAL>", key);
-    rewardValDiv.onclick = function(e) {targetClickHandler(e, logLineValue);};
+	//SC2_DEFERRED var logLineValue = templateMap["touchCumRewardValueFor"];
+	//SC2_DEFERRED logLineValue = logLineValue.replace("<CUM_VAL>", key);
+    //SC2_DEFERRED rewardValDiv.onclick = function(e) {targetClickHandler(e, logLineValue);};
     $("#cumulative-rewards").append(rewardValDiv);
 }
 //
@@ -324,9 +317,9 @@ function handleScaiiPacket(sPacket) {
 		replayChoiceConfig = config;
 		handleReplayChoiceConfig(config);
 	}
-	else if (sPacket.hasSC2ReplaySessionConfig()) {
+	else if (sPacket.hasReplaySessionConfig()) {
 		//console.log("-----got replaySessionConfig");
-		var config = sPacket.getSC2ReplaySessionConfig();
+		var config = sPacket.getReplaySessionConfig();
 		replaySessionConfig = config;
 		handleSC2ReplaySessionConfig(config,undefined);
 	}
@@ -338,15 +331,15 @@ function handleScaiiPacket(sPacket) {
     else if(sPacket.hasStudyQuestions()) {
         handleStudyQuestions(sPacket.getStudyQuestions());
     }
-	else if (sPacket.hasErr()) {
-		console.log("-----got errorPkt");
-		console.log(sPacket.getErr().getDescription())
-	}
+	// else if (sPacket.hasErr()) {
+	// 	console.log("-----got errorPkt");
+	// 	console.log(sPacket.getErr().getDescription())
+	// }
     else if (sPacket.hasUserCommand()) {//SC2_TODO - there will be no SELCT_FILE_COMPLETE form the backend
                                         // so we need to figure out where to put the below userStudyMode clde
 		var userCommand = sPacket.getUserCommand();
 		var commandType = userCommand.getCommandType();
-		if (commandType == proto.scaii.common.UserCommand.UserCommandType.SELECT_FILE_COMPLETE){
+		if (commandType == proto.UserCommand.UserCommandType.SELECT_FILE_COMPLETE){
 
 			//
 			//  SC2_TODO  we need the following code blocks somewhere else
@@ -356,8 +349,8 @@ function handleScaiiPacket(sPacket) {
                 if (!hasShownWelcomeScreen){
                     // can't be tab hop, must be first screen shown
 					clearLoadingScreen();
-					var logLine = stateMonitor.getWaitForResearcherStart()
-                    stateMonitor.setUserAction(logLine);	
+					//SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherStart()
+                    //SC2_DEFERRED stateMonitor.setUserAction(logLine);	
                     showUserIdScreen();
                 }
                 else {

@@ -14,8 +14,8 @@ function getStateMonitor() {
     sm.emitLogLine = function (logLine) {
         if (this.logFileName != undefined) {
             if (!this.sentHeader) {
-                var pkt = new proto.scaii.common.ScaiiPacket;
-                var lfeHeader = new proto.scaii.common.LogFileEntry;
+                var pkt = new proto.ScaiiPacket;
+                var lfeHeader = new proto.LogFileEntry;
                 var header = this.getHeader();
                 lfeHeader.setEntry(header);
                 lfeHeader.setFilename(this.logFileName);
@@ -24,8 +24,8 @@ function getStateMonitor() {
                 userInfoScaiiPackets.push(pkt);
                 this.sentHeader = true;
             }
-            var pkt = new proto.scaii.common.ScaiiPacket;
-            var lfe = new proto.scaii.common.LogFileEntry;
+            var pkt = new proto.ScaiiPacket;
+            var lfe = new proto.LogFileEntry;
             var date = this.getDate();
             var time = this.getTime();
             var sec = this.getSecondsSince1970();

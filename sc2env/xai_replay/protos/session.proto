@@ -1,6 +1,14 @@
 syntax = "proto2";
 
-package sc2env.replay;
+// This is the command to compile the protos for python:
+// cd sc2env/sc2env/xai_replay
+// protoc --proto_path=protos/ --python_out=test_proto_out protos/session.proto protos/explanation.proto protos/user_study.proto
+
+// This is the command to compile the protos for js:
+// cd sc2env/sc2env/xai_replay
+// protoc --proto_path=protos/ --js_out=library=vizProtos,binary:ui/viz/js/ protos/session.proto protos/explanation.proto protos/user_study.proto 
+
+// package sc2env.replay;
 
 import "user_study.proto";
 import "explanation.proto";
@@ -62,8 +70,8 @@ message ReplayChoiceConfig {
 
 message SC2ReplaySessionConfig {
 	required string json_data = 1;
-	repeated ExplanationPoint explanations = 1;
-	repeated string reward_types = 2;
+	repeated ExplanationPoint explanations = 2;
+	repeated string reward_types = 3;
 }
 
 // Configures a module (e.g. backend) to begin recording, logging how often 
@@ -83,5 +91,4 @@ message Record {
 message ExplanationDetails {
 	optional uint32 step = 1;
     optional ExplanationPoint expl_point = 2;
-	optional ChartInfo chart = 3;
 }
