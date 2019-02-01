@@ -8,6 +8,7 @@ var gameboard_ctx = gameboard_canvas.getContext("2d");
 
 var zIndexMap = {};
 zIndexMap["explControl"] = 2;
+zIndexMap["inFrontOfVideo"] = 3;
 zIndexMap["saliencyHoverValue"] = 5;
 zIndexMap["clickBlockerRectangle"] = 10;
 zIndexMap["whyButton"] = 11;
@@ -64,6 +65,9 @@ function configureGameboardCanvas(){ //SC2_TODO - keeping gameboard canvas for n
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
+	var video = document.createElement("video");
+	$("#scaii-gameboard").append()
+	gameboard_canvas.setAttribute("style", "position:absolute;left:0px;top:0px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + gameboard_canvas.width + "px;height:" + gameboard_canvas.height + ";");
 	$("#scaii-gameboard").append(gameboard_canvas);
 }
 
@@ -176,17 +180,20 @@ function highlightShapeInRange(x,y) {//SC2_TEST
 function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// for hiding/showing tooltips
 	gameboard_canvas.addEventListener('click', function(evt) {
+		console.log("clicked!");
 		var x = evt.offsetX;
 		var y = evt.offsetY;
 		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 		if (unitId != undefined){
 			highlightUnitForClickCollectionFeedback(unitId);
-			var logLine = templateMap["gameboard"];
-			logLine = logLine.replace("<CLCK_GAME_ENTITY>", unitLogStrings[unitId]);
-			logLine = logLine.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
-            logLine = logLine.replace("<GAME_COORD_X>", x);
-			logLine = logLine.replace("<GAME_COORD_Y>", y);
-            targetClickHandler(evt, logLine);
+			//SC2_DEFERRED 
+			// var logLine = templateMap["gameboard"];
+			// logLine = logLine.replace("<CLCK_GAME_ENTITY>", unitLogStrings[unitId]);
+			// logLine = logLine.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
+            // logLine = logLine.replace("<GAME_COORD_X>", x);
+			// logLine = logLine.replace("<GAME_COORD_Y>", y);
+			// targetClickHandler(evt, logLine);
+			//SC2_DEFERRED_END
 			// $("#metadata_hp" + shapeId).toggleClass('tooltip-invisible');
 			// if (selectedToolTipIds[shapeId] == "show") {
 			// 	selectedToolTipIds[shapeId] = "hide";
@@ -195,9 +202,9 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 			// 	selectedToolTipIds[shapeId] = "show";
 			// }
 		} else {
-			var logBackground = templateMap["gameboardBackground"];
-			logBackground = logBackground.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
-			specifiedTargetClickHandler("gameboardBackground", logBackground);
+			//SC2_DEFERRED var logBackground = templateMap["gameboardBackground"];
+			//SC2_DEFERRED logBackground = logBackground.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
+			//SC2_DEFERRED specifiedTargetClickHandler("gameboardBackground", logBackground);
 		}
 	});
 	  
@@ -208,18 +215,18 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		if (unitId == undefined) {
 			// we're not inside an object, so hide all the "all_metadata" tooltips
 			hideAllTooltips(evt);
-			var logLine = templateMap["hideEntityTooltips"];
-			logLine = logLine.replace("<HIDE_TOOL>", "all")
-            targetHoverHandler(evt, logLine);
+			//SC2_DEFERRED var logLine = templateMap["hideEntityTooltips"];
+			//SC2_DEFERRED logLine = logLine.replace("<HIDE_TOOL>", "all")
+            //SC2_DEFERRED targetHoverHandler(evt, logLine);
 		}
 		else {
             var tooltipId = "metadata_all" + unitId; // SC2_TODO make sure tooltipId is consistent everywhere
             //we're inside one, keep it visible
             if (hoveredAllDataToolTipIds[tooltipId] != "show") {
-				var logLine = templateMap["showEntityTooltip"];
-				logLine = logLine.replace("<ENTITY_INFO>", unitLogStrings[unitId]);
-				logLine = logLine.replace("<TIP_QUADRANT>", getSC2QuadrantName(x,y));
-				targetHoverHandler(evt, logLine);
+				//SC2_DEFERRED var logLine = templateMap["showEntityTooltip"];
+				//SC2_DEFERRED logLine = logLine.replace("<ENTITY_INFO>", unitLogStrings[unitId]);
+				//SC2_DEFERRED logLine = logLine.replace("<TIP_QUADRANT>", getSC2QuadrantName(x,y));
+				//SC2_DEFERRED targetHoverHandler(evt, logLine);
             }
             hideAllTooltips(evt);
             $("#" + tooltipId).removeClass('tooltip-invisible');
@@ -274,8 +281,8 @@ var configureSpeedSlider = function () {
 	speedSlider.oninput = function () {
 		var speedString = "" + this.value;
 		var args = [speedString];
-		var userCommand = new proto.scaii.common.UserCommand;
-		userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.SET_SPEED);
+		var userCommand = new proto.UserCommand;
+		userCommand.setCommandType(proto.UserCommand.UserCommandType.SET_SPEED);
 		userCommand.setArgsList(args);
 		stageUserCommand(userCommand);
 	}
@@ -309,11 +316,10 @@ expl_ctrl_canvas.addEventListener('click', function (event) {
 			}
 			else {
                 jumpToStep(matchingStep);
-				var logLine = templateMap["decisionPointList"];
-				logLine = logLine.replace("<TARGET>", "decisionPointList")
-				logLine = logLine.replace("<J_DP_NUM>", matchingStep);
-                //specifiedTargetClickHandler("decisionPointList", "jumpToDecisionPoint:" + matchingStep);
-                specifiedTargetClickHandler("decisionPointList", logLine);
+				//SC2_DEFERRED var logLine = templateMap["decisionPointList"];
+				//SC2_DEFERRED logLine = logLine.replace("<TARGET>", "decisionPointList")
+				//SC2_DEFERRED logLine = logLine.replace("<J_DP_NUM>", matchingStep);
+                //SC2_DEFERRED specifiedTargetClickHandler("decisionPointList", logLine);
 			}
         }
 	}

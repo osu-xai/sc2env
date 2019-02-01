@@ -6,7 +6,7 @@ function createMultiMessageFromPacket(scPkt){
 }
 
 function createMultiMessageFromPackets(scPkts){
-  var mm = new proto.scaii.common.MultiMessage;
+  var mm = new proto.MultiMessage;
   if (scPkts.length > 0){
 	var nextPkt = scPkts.shift();
     while (nextPkt != undefined){
