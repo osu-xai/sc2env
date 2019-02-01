@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='sc2env',
-    version='0.1.12',
+    version='0.1.13',
     description='Simple StarCraftII environments for reinforcement learning',
     long_description='A curriculum of custom-made StarCraftII environments for reinforcement learning.',
     author='Larry Neal',
