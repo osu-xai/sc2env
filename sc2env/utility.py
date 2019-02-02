@@ -16,7 +16,7 @@ SIMPLE_SC2_UNITS = {
     51,
     110}
 #the input_screen_feature is input dictionary of the layers of screen feature you want to do the one hot map 
-#input_screen_feature = {'PLAYER_RELATIVE': [1,3,16], 'HIT_POINT_RATIO': 0, 'UNIT_TYPE':SIMPLE_SC2_UNITS}
+#input_screen_feature = {'PLAYER_RELATIVE': [1,3,4], 'HIT_POINT_RATIO': 0, 'UNIT_TYPE':SIMPLE_SC2_UNITS}
 #SCREEN_SIZE = 40
 def getOneHotState(state, input_screen_feature):
     screen_size = state[0].shape[0]
