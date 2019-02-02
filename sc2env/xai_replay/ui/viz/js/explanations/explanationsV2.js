@@ -20,8 +20,8 @@ function handleExplanationDetails(explDetails){
 }
 
 function askBackendForExplanationRewardInfo(stepNumber) {
-	var userCommand = new proto.scaii.common.UserCommand;
-	userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.EXPLAIN);
+	var userCommand = new proto.UserCommand;
+	userCommand.setCommandType(proto.UserCommand.UserCommandType.EXPLAIN);
 	var args = ['' +stepNumber];
 	userCommand.setArgsList(args);
 	stageUserCommand(userCommand);
@@ -30,7 +30,7 @@ function askBackendForExplanationRewardInfo(stepNumber) {
 		//console.log("no need to move - already at step with explanation");
 	}
 	else {
-		jumpToStep(stepNumber);//FIXME - can get rid of this?
+		jumpToStep(stepNumber);//SC2_TODO - can get rid of this?
 	}
 }
 
@@ -44,17 +44,18 @@ function renderWhyButton(step, x, y){
     whyButton.setAttribute("style", 'z-index:' + zIndexMap["whyButton"] + ';position:relative;left:' + x + 'px;top:-17px;font-family:Arial;');
     $("#explanation-control-panel").append(whyButton);
     $("#" + buttonId).click(function(e) {
-        if (currentExplManager.chartVisible) {
-            var logLine = templateMap["hideWhy"];
-            logLine = logLine.replace("<HIDE_WHY>", "NA");
-            targetClickHandler(e, logLine);
-        }
-        else {
-            var logLine = templateMap["showWhy"];
-            logLine = logLine.replace("<SHW_WHY>", "NA");
-            targetClickHandler(e, logLine);
-        }
-        
+        //SC2_DEFERRED 
+        // if (currentExplManager.chartVisible) {
+        //     var logLine = templateMap["hideWhy"];
+        //     logLine = logLine.replace("<HIDE_WHY>", "NA");
+        //     targetClickHandler(e, logLine);
+        // }
+        // else {
+        //     var logLine = templateMap["showWhy"];
+        //     logLine = logLine.replace("<SHW_WHY>", "NA");
+        //     targetClickHandler(e, logLine);
+        // }
+        //SC2_DEFERRED_END
         e.preventDefault();
         processWhyClick(step);
     })
@@ -195,7 +196,7 @@ function getExplanationsV2Manager(){
         var clone = {};
         for (var i in masterEntities) {
             var entity = masterEntities[i];
-            var entityClone = new proto.scaii.common.Entity;
+            var entityClone = new proto.Entity;
             entityClone.setId(entity.getId());
             if (entity.hasPos()){
                 copyPos(entity, entityClone);

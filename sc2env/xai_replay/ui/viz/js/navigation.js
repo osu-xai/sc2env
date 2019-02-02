@@ -1,4 +1,3 @@
-var jumpInProgress = false;
 var userInputBlocked = false;
 var liveModeInputBlocked = false;
 
@@ -44,87 +43,67 @@ function showPositionOnTimeline(value) {
 }
 
 function processTimelineClick(e) {
-	controlsManager.userJumped();
 	var clickX = e.offsetX - timelineMargin;
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
 	var targetStepString = "" + replaySequenceTargetStep;
-	var logLine = templateMap["expl-control-canvas"];
-	logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
-	targetClickHandler(e, logLine);
+	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
+	//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
+	//SC2_DEFERRED targetClickHandler(e, logLine);
     jumpToStep(targetStepString);
 }
 function stageUserCommand(userCommand) {
-	var scaiiPkt = new proto.scaii.common.ScaiiPacket;
+	var scaiiPkt = new proto.ScaiiPacket;
 	scaiiPkt.setUserCommand(userCommand);
 	userCommandScaiiPackets.push(scaiiPkt);
 }
 var tryPause = function (e) {
 	if (!userInputBlocked) {
-		var logLine = templateMap["pauseButton"];
-		logLine = logLine.replace("<TIME_LINE_PAUSE>", "NA");
-		targetClickHandler(e, logLine);
+		//SC2_DEFERRED var logLine = templateMap["pauseButton"];
+		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_PAUSE>", "NA");
+		//SC2_DEFERRED targetClickHandler(e, logLine);
 		pauseGame();
 	}
 }
 function pauseGame() {
-	try {
-		controlsManager.userClickedPause();
-		var userCommand = new proto.scaii.common.UserCommand;
-		userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.PAUSE);
-		stageUserCommand(userCommand);
-	}
-	catch (err) {
-		alert(err.message);
-	}
+	controlsManager.userClickedPause();
+	//SC2_TODO new logic that disengages the loop driver
 }
 
 var tryResume = function (e) {
 	if (!userInputBlocked) {
-		var logLine = templateMap["playButton"];
-		logLine = logLine.replace("<TIME_LINE_PLAY>", "NA");
-		targetClickHandler(e, logLine);
+		//SC2_DEFERRED var logLine = templateMap["playButton"];
+		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_PLAY>", "NA");
+		//SC2_DEFERRED targetClickHandler(e, logLine);
 		resumeGame();
 	}
 }
 
 function resumeGame() {
-	try {
-		controlsManager.userClickedResume();
-		var userCommand = new proto.scaii.common.UserCommand;
-		userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.RESUME);
-		stageUserCommand(userCommand);
-		// if play button cue arrow present, remove it
-        $("#cue-arrow-div").remove();
-        if (userStudyMode){
-            if (activeStudyQuestionManager.allQuestionsAtDecisionPointAnswered) {
-                $('#q-and-a-div').empty();
-            }
-        }
-	}
-	catch (err) {
-		alert(err.message);
+	controlsManager.userClickedResume();
+	
+	//SC2_TODO - new logic that re-engages the driver loop
+	// if play button cue arrow present, remove it
+	$("#cue-arrow-div").remove();
+	if (userStudyMode){
+		if (activeStudyQuestionManager.allQuestionsAtDecisionPointAnswered) {
+			$('#q-and-a-div').empty();
+		}
 	}
 }
 
 var tryRewind = function (e) {
 	if (!userInputBlocked) {
-		var logLine = templateMap["rewindButton"];
-		logLine = logLine.replace("<TIME_LINE_RWND>", "NA");
-		targetClickHandler(e, logLine);
+		//SC2_DEFERRED var logLine = templateMap["rewindButton"];
+		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_RWND>", "NA");
+		//SC2_DEFERRED targetClickHandler(e, logLine);
 		rewindGame();
 	}
 }
 function rewindGame() {
 	pauseGame();
-	try {
-        controlsManager.userClickedRewind();
-        var userCommand = new proto.scaii.common.UserCommand;
-        userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.REWIND);
-        stageUserCommand(userCommand);
-	}
-	catch (err) {
-		alert(err.message);
-	}
+    controlsManager.userClickedRewind();
+	activeSC2DataManager.rewind();
+	activeSC2VideoManager.jumpToStep(1);//SC2_TODO - should this be 0 or 1?
 }
 var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	var manager = {};
@@ -153,7 +132,7 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 		this.setWaitCursor();
 	}
 
-	manager.doneLoadReplayFile = function () {// SC2_TODO - this needs to be called at end of handleSC2ReplaySessionConfig
+	manager.doneLoadReplayFile = function () {
 		userInputBlocked = false;
 		this.expressResumeButton();
 		this.enablePauseResume();
@@ -183,22 +162,6 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 			item.css("cursor", "default");
 		}
 	}
-	//
-	//   JUMP
-	//
-	manager.userJumped = function () {//SC2_TODO - no longer needed since atomic?
-		jumpInProgress = true;
-		userInputBlocked = true;
-		// no pending action for this, re-enablingcontrols happenes when we get a JUMP_COMPLETED message from replay
-	}
-
-	manager.jumpCompleted = function () {//SC2_TODO - no longer needed since atomic?
-		jumpInProgress = false;
-		userInputBlocked = false;
-		//this.expressResumeButton(); // pause automatically engaged in Replay when jump completed.
-		//this.enablePauseResume();
-	}
-
 	//
 	//  pause
 	//
@@ -324,15 +287,10 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
-    var userCommand = new proto.scaii.common.UserCommand;
-    userCommand.setCommandType(proto.scaii.common.UserCommand.UserCommandType.JUMP_TO_STEP);
-    var args = ['' +step];
-    userCommand.setArgsList(args);
-    stageUserCommand(userCommand);
-    controlsManager.userJumped();
-    cleanEntities();
+	activeSC2DataManager.jumpToStep(step);
+	activeSC2VideoManager.jumpToStep(step);
     cleanToolTips();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
-    }
+	}
 }

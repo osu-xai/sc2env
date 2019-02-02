@@ -8,7 +8,7 @@ function getSaliencyV2UIMap() {
     uimap.outlinesForSaliencyMap = {};
     uimap.currentlyHighlightedSaliencyMapKey = undefined;
 	uimap.renderSaliencyMap = function(canvas, ctx, channel, gameboardFlag){
-		renderState(canvas, channel.dpEntityList, gameScaleFactor, 0, 0,false);
+		//SC2 - nothing needed on saliency maps - renderState(canvas, channel.dpEntityList, gameScaleFactor, 0, 0,false);
 		this.overlaySaliencyMapOntoGameReplica(ctx, channel, 0, gameboardFlag);
 	}	
   
@@ -102,18 +102,18 @@ function getSaliencyV2UIMap() {
     uimap.addEventsToSaliencyCanvas = function(ch){
         ch.saliencyCanvas.addEventListener('mouseenter', function(evt) {
 			ch.valueSpan.setAttribute("style", 'visibility:hidden;');
-			var logLine = templateMap["startMouseOverSaliencyMap"];
-			logLine = logLine.replace("<REGION>", "saliencyMap");
-			logLine = logLine.replace("<SLNCY_NAME>", ch.name);
-			targetHoverHandler(evt, logLine);
+			//SC2_DEFERRED var logLine = templateMap["startMouseOverSaliencyMap"];
+			//SC2_DEFERRED logLine = logLine.replace("<REGION>", "saliencyMap");
+			//SC2_DEFERRED logLine = logLine.replace("<SLNCY_NAME>", ch.name);
+			//SC2_DEFERRED targetHoverHandler(evt, logLine);
         });
         
 		ch.saliencyCanvas.addEventListener('mouseleave', function(evt) {
             ch.valueSpan.setAttribute("style", 'visibility:hidden;');
-			var logLine = templateMap["endMouseOverSaliencyMap"];
-			logLine = logLine.replace("<REGION>", "saliencyMap");
-			logLine = logLine.replace("<SLNCY_NAME>", ch.name);
-			targetHoverHandler(evt, logLine);
+			//SC2_DEFERRED var logLine = templateMap["endMouseOverSaliencyMap"];
+			//SC2_DEFERRED logLine = logLine.replace("<REGION>", "saliencyMap");
+			//SC2_DEFERRED logLine = logLine.replace("<SLNCY_NAME>", ch.name);
+			//SC2_DEFERRED targetHoverHandler(evt, logLine);
         });
 
         if (!userStudyMode){
@@ -494,22 +494,24 @@ function getOverlayOpacityBySaliencyRGBAStringQuantized(saliencyValue, gameboard
 function processSaliencyMapClick(e, ch){
     var x = e.offsetX;
     var y = e.offsetY;
-    var unitId = currentSC2DataManager.getClosestUnitInRange(x, y);
-    var logLine = templateMap["clickSaliencyMap"];
-    if (unitId != undefined){
-        logLine = logLine.replace("<REGION>", "saliencyMap");
-        logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
-        logLine = logLine.replace("<SHAPE_LOG>", shapeLogStrings[unitId]);
-        logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
-        targetClickHandler(e, logLine);
-    }
-   else {
-        logLine = logLine.replace("<REGION>", "saliencyMap");
-        logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
-        logLine = logLine.replace("<SHAPE_LOG>", "NA");
-        logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
-        targetClickHandler(e, logLine);
-    }
+    var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+    //SC2_DEFERRED
+//     var logLine = templateMap["clickSaliencyMap"];
+//     if (unitId != undefined){
+//         logLine = logLine.replace("<REGION>", "saliencyMap");
+//         logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
+//         logLine = logLine.replace("<SHAPE_LOG>", unitLogStrings[unitId]);
+//         logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
+//         targetClickHandler(e, logLine);
+//     }
+//    else {
+//         logLine = logLine.replace("<REGION>", "saliencyMap");
+//         logLine = logLine.replace("<CLCK_SALNCY_MAP>", ch.name);
+//         logLine = logLine.replace("<SHAPE_LOG>", "NA");
+//         logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
+//         targetClickHandler(e, logLine);
+//     }
+    //SC2_DEFERRED_END
     if (userStudyMode){
         processOutlineAndOverlayUserStudyMode(ch);
     }

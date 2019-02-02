@@ -3,4 +3,4 @@ torch
 tqdm
 gym
 pysc2
-imutil
+imutil>=0.2.1

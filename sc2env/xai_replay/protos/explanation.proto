@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package sc2env.common;
+// package sc2env.replay;
 
 message ExplanationPoints {
 	repeated ExplanationPoint explanation_points = 1;
