@@ -67,8 +67,8 @@ function createHPToolTip(unitInfo) {
     hpDiv.onclick = function(e) {
         highlightUnitForClickCollectionFeedback(unit);
         //SC2_TODO whay no x,y args to getSC2QuadrantName
-        var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + unitLogStrings[getUnitIdFromTag(unit.tag)];
-        targetClickHandler(e, "clickHitPoints:" + targetName);
+        //SC2_DEFERRED var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + unitLogStrings[getUnitIdFromTag(unit.tag)];
+        //SC2_DEFERRED targetClickHandler(e, "clickHitPoints:" + targetName);
     };
 
     var hpRemainingDivWidth = hpWidgetWidth * unit.percentHPRemaining;

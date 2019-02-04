@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package sc2env.replay;
+// package sc2env.replay;
 
 message StudyQuestions {
     repeated StudyQuestion study_questions = 1;

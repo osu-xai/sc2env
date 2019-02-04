@@ -8,6 +8,8 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions
 
 from sc2env.pysc2_util import register_map
+import gym
+from gym.spaces.discrete import Discrete
 
 # These parameters are adjustable without changing the .SC2Map
 MAP_NAME = 'MacroStrategy'
@@ -29,31 +31,32 @@ action_to_ability_id = {
     2: 3773,
     3: 3775,
     4: 3777,
-    5: 3779,
-    6: 3781,
-    7: 3783,
-    8: 3785,
+    #5: 3779,
+    #6: 3781,
+    5: 3783,
+    6: 3785,
 }
 action_to_name = {
     0: "No-Op",
-    1: "Paper (reserves)",
-    2: "Paper (front)",
-    3: "Rock (reserves)",
-    4: "Rock (front)",
-    5: "Scissors (reserves)",
-    6: "Scissors (front)",
-    7: "Scout",
-    8: "Counterintelligence",
+    1: "Build Marines",
+    2: "Build Barracks",
+    3: "Build Robots",
+    4: "Build Robot Facility",
+    #5: "currently unused",
+    #6: "currently unused",
+    5: "Build SCV",
+    6: "Launch Missile",
 }
 
 
-class MacroStrategyMultiplayerEnvironment():
+class MacroStrategyMultiplayerEnvironment(gym.Env):
     """
-    This environment pits two agents against each other in a game of
-    incomplete information. Each agent trades off between building more
-    units, and gathering information about the enemy's units.
+    This environment models a simplified version of long-term strategy
+    in StarCraft II. The agent must learn to trade off immediate reward
+    (eg. destroying some enemy units with a missile strike) with long-
+    term reward (strengthening the economy to build more units over time).
     """
-    def __init__(self, render=False, video_filename=None, verbose=False, num_players=2):
+    def __init__(self, render=True, video_filename=None, verbose=False, num_players=2):
         if video_filename:
             render = True
         self.render = render
@@ -61,8 +64,9 @@ class MacroStrategyMultiplayerEnvironment():
         self.sc2env = make_sc2env(num_players, render=render)
         self.video = None
         if video_filename:
-            self.video = imutil.VideoMaker(filename=video_filename)
+            self.video = imutil.Video(filename=video_filename)
         self.verbose = verbose
+        self.action_space = self.get_action_space()
 
     def reset(self):
         self.sc2env.reset()
@@ -71,8 +75,7 @@ class MacroStrategyMultiplayerEnvironment():
         state, reward, done, info = self.unpack_state()
         return state
 
-    def action_space(self):
-        from gym.spaces.discrete import Discrete
+    def get_action_space(self):
         return Discrete(len(action_to_name))
 
     # Step: Take an action and play the game out for ~10 seconds

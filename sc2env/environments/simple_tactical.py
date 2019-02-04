@@ -24,7 +24,7 @@ UNIT_ID_LIST = [
 
 # A simple environment similar to SCAII-RTS Towers
 # Follows the interface of OpenAI Gym environments
-class SimpleTowersEnvironment(gym.Env):
+class SimpleTacticalEnvironment(gym.Env):
     def __init__(self):
         self.sc2env = make_sc2env()
         self.action_space = Discrete(self.actions())
@@ -132,7 +132,8 @@ def unpack_timestep(timestep):
     # For this game we use a simple reward: number of surviving friendly units
     reward = int(timestep.observation.player['army_count'])
 
-    done = timestep.last()
+    # This version of the map only runs for one timestep
+    done = True
 
     # The info dict can include reward decompositions when available
     info = {}

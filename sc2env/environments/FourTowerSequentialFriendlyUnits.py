@@ -95,6 +95,7 @@ class FourTowerSequentialFriendlyUnits():
         state = observation[3]['feature_screen']
         player_relative = np.array(state[5])
         player_relative[np.array(state[6]) == 73] = 3
+        player_relative[np.array(state[12]) == 1] = 3
         state[5] = player_relative.tolist()
  #       print(type(state))
         state = getOneHotState(state, self.input_screen_features)
@@ -166,14 +167,15 @@ class FourTowerSequentialFriendlyUnits():
 
         l = len(self.reward_types)
         for x in data:
-        	if x.shield == 199:
-        		sof = x.health
-        	elif x.shield > 100:
-        		rt = self.reward_types[int(x.shield - 101)]
-        		if 'damageToEnemy' in rt:
-        			self.decomposed_reward_dict[rt] = x.health - 1
-        		else:
-        			self.decomposed_reward_dict[rt] = (x.health - 1) * -1
+            if x.shield == 199:
+                sof = x.health
+            elif x.shield > 100:
+                rt = self.reward_types[int(x.shield - 101)]
+                #print(x.shield)
+                if 'damageToEnemy' in rt:
+                    self.decomposed_reward_dict[rt] = x.health - 1
+                else:
+                    self.decomposed_reward_dict[rt] = (x.health - 1) * -1
         return rewards, sof
         
     def noop(self):
@@ -223,6 +225,7 @@ class FourTowerSequentialFriendlyUnits():
         state = observation[3]['feature_screen']
         player_relative = np.array(state[5])
         player_relative[np.array(state[6]) == 73] = 3
+        player_relative[np.array(state[12]) == 1] = 3
         state[5] = player_relative.tolist()
         state = getOneHotState(state, self.input_screen_features)
         state = np.reshape(state, (1, -1))
@@ -269,6 +272,7 @@ class FourTowerSequentialFriendlyUnits():
             state = observation[3]['feature_screen']
             player_relative = np.array(state[5])
             player_relative[np.array(state[6]) == 73] = 3
+            player_relative[np.array(state[12]) == 1] = 3
             state[5] = player_relative.tolist()
 
             agent_units_position = np.array(state[6]) == 83

@@ -17,7 +17,7 @@ class XaiReplayRecorder():
         self.game_clock_tick = 0
         self.frames = []
         self.action_names = ['Top_Left', 'Top_Right', 'Bottom_Left', 'Bottom_Right']
-        self.video = imutil.VideoMaker(filename=self.video_filename)
+        self.video = imutil.Video(filename=self.video_filename)
         self.decision_point_number = 1
         self.tensor_action_key = tensor_action_key
         self.tensor_reward_key = tensor_reward_key
@@ -110,6 +110,16 @@ class XaiReplayRecorder():
             self.frames.append(frame_info)
             # take picture
             self.save_game_rgb_screen(observation)
+
+    def record_final_frame_of_action(self, state):
+        self.game_clock_tick += 1
+        observation = self.get_observation()
+        frame_info = {}
+        frame_info["frame_info_type"] = "final_frame_of_action"
+        self.gather_common_state(frame_info, observation)
+        self.frames.append(frame_info)
+        # take picture
+        self.save_game_rgb_screen(observation)
 
     def done_recording(self):
         #print("HERE COMES THE JSON")

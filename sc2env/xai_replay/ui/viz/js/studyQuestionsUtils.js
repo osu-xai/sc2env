@@ -43,8 +43,8 @@ function showUserIdScreen(){
     next.innerHTML = "Start";
     next.onclick = function() {
         clearUserIdScreen();
-        var logLine = stateMonitor.getWaitForResearcherEnd()
-        stateMonitor.setUserAction(logLine);
+        //SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherEnd()
+        //SC2_DEFERRED stateMonitor.setUserAction(logLine);
     }
     $("#user-id-button-row").append(next);
     hasShownWelcomeScreen = true;

@@ -136,9 +136,9 @@ function getChartV2UI() {
                 return;
             }
         }
-        var logLine = templateMap["selectedRewardBar"];
-        logLine = logLine.replace("<SLCT_RWRD_BAR>", rewardBarName);
-        chartTargetClickHandler("rewardBar", logLine);
+        //SC2_DEFERRED var logLine = templateMap["selectedRewardBar"];
+        //SC2_DEFERRED logLine = logLine.replace("<SLCT_RWRD_BAR>", rewardBarName);
+        //SC2_DEFERRED chartTargetClickHandler("rewardBar", logLine);
         if (rewardBarName != "None") {
             chartData.clearRewardBarSelections();
             chartData.selectSingleRewardBar(rewardBarName);
@@ -627,18 +627,18 @@ function addWhatButton() {
 
 	$("#what-button-div").append(whatButton);
 	$("#" + buttonId).click(function (e) {
-		if (currentExplManager.saliencyVisible) {
-			var logLine = templateMap["hideSaliency"];
-			logLine = logLine.replace("<HIDE_SALNCY>", "NA");
-			targetClickHandler(e, logLine);
-			//targetClickHandler(e,"hideSaliency:NA");
-		}
-		else {
-			var logLine = templateMap["showSaliency"];
-			logLine = logLine.replace("<SHW_SALNCY>", "NA");
-			targetClickHandler(e, logLine);
-			//targetClickHandler(e,"showSaliency:NA");
-		}
+		//SC2_DEFERRED
+		// if (currentExplManager.saliencyVisible) {
+		// 	var logLine = templateMap["hideSaliency"];
+		// 	logLine = logLine.replace("<HIDE_SALNCY>", "NA");
+		// 	targetClickHandler(e, logLine);
+		// }
+		// else {
+		// 	var logLine = templateMap["showSaliency"];
+		// 	logLine = logLine.replace("<SHW_SALNCY>", "NA");
+		// 	targetClickHandler(e, logLine);
+		// }
+		//SC2_DEFERRED_END
 		e.preventDefault();
 		processWhatClick();
 	})

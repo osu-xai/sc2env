@@ -64,8 +64,8 @@ function getTabManager() {
         var indexOfNextTab = Number(this.currentTabIndex) + 1;
         var ti = this.tabInfos[indexOfNextTab];
         this.openTab(ti.cssId, ti.fileName, ti.loadingMessage, true);
-        var logLine = stateMonitor.getWaitForResearcherStart()
-        stateMonitor.setUserAction(logLine);
+        //SC2_DEFERRED var logLine = stateMonitor.getWaitForResearcherStart()
+        //SC2_DEFERRED stateMonitor.setUserAction(logLine);
         activeStudyQuestionManager.renderer.renderWaitScreen();
     }
 
@@ -170,10 +170,12 @@ function getTabManager() {
                 this.applyRememberedQuestionInProgress(returnInfo);
                 // highlight any gameboard object that was clicked on
                 activeStudyQuestionManager.renderer.clickInfoFromUserActionMonitor = returnInfo.queuedUpClickInfo;
-                var coords = userActionMonitor.extractClickCoordinatesFromClickEvent(returnInfo.queuedUpClickInfo);
-                if (coords != undefined) {
-                    highlightShapeInRange(coords[0], coords[1]);
-                }
+                //SC2_DEFERRED
+                // var coords = userActionMonitor.extractClickCoordinatesFromClickEvent(returnInfo.queuedUpClickInfo);
+                // if (coords != undefined) {
+                //     highlightShapeInRange(coords[0], coords[1]);
+                // }
+                //SC2_DEFERRED_END
                 delete this.returnInfoForTab[this.targetTabId];
                 this.targetTabId = undefined;
                 clearLoadingScreen();
