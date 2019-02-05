@@ -50,14 +50,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 	var progressBarSegmentCount = stepSizeAsKnownInReplaySequencer - 1;
 	sim.progressBarSegmentCount = progressBarSegmentCount
 	sim.getStepCountToDisplay = function(){
-		if (this.replaySequencerIndex == 0) {
-			return undefined;
-		}
-		else {
-			// from one on up, the actual replaySequencerIndex will be what we want to display 
-			// as we are presenting the step sequence as starting at 1.
-			return this.replaySequencerIndex;
-		}
+		return this.replaySequencerIndex;
 	}
 	
 	sim.isAtGameStart = function() {

@@ -58,8 +58,8 @@ var mostRecentClickHadCtrlKeyDepressed;
 
 
 function configureGameboardCanvas(){ //gameboard canvas will be used to draw things in front of video
-	gameboard_canvas.width = sc2GameWidth;
-    gameboard_canvas.height = sc2GameHeight;
+	gameboard_canvas.width = sc2GameRenderWidth;
+    gameboard_canvas.height = sc2GameRenderHeight;
     gameboard_canvas.setAttribute("id","gameboard");
 	$("#scaii-gameboard").css("width", gameboard_canvas.width);
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
@@ -96,7 +96,7 @@ function configurePauseResumeButton(){
 	$("#pause-play-control").append(pauseResumeButton);
 	$("#pauseResumeButton").css("padding-top","2px");
 	$("#pauseResumeButton").css("padding-bottom","0px");
-	$("#pauseResumeButton").css("margin-left","158px");
+	$("#pauseResumeButton").css("margin-left","15px");
 	pauseResumeButton.onclick = tryPause;
 	$("#pauseResumeButton").css("opacity", "0.6");
 	pauseResumeButton.disabled = true;
@@ -133,14 +133,13 @@ function drawExplanationTimeline() {
 		$("#explanation-control-panel").append(expl_ctrl_canvas);
 	}
 	let ctx = expl_ctrl_ctx;
-	var can_width = 600;
 	
-	expl_ctrl_canvas.width = can_width;
+	expl_ctrl_canvas.width = gameContainerWidth;
 	ctx.beginPath();
 	ctx.moveTo(timelineMargin,explanationControlYPosition);
 	ctx.lineWidth = timelineHeight;
 	ctx.strokeStyle = 'darkgrey';
-	ctx.lineTo(can_width - timelineMargin,explanationControlYPosition);
+	ctx.lineTo(expl_ctrl_canvas.width - timelineMargin,explanationControlYPosition);
 	ctx.stroke();
 	ctx.restore();
 }
@@ -234,33 +233,58 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		}
   	});
 }
-function sizeNonGeneratedElements() { //SC2_TODO_GEOM - still have scaii-acronym?
-
-	$("#game-titled-container").css("width", "600px");
-	// first row should add to 600...
+function sizeNonGeneratedElements() { 
+	var percentWidthAcronym = .40;
+	var percentWidthReplayLabel = .25;
+	var percentWidthFileSelector = .35;
+	var acronymWidth      = gameContainerWidth * percentWidthAcronym;
+	var replayLabelWidth  = gameContainerWidth * percentWidthReplayLabel;
+	var fileSelectorWidth = gameContainerWidth * percentWidthFileSelector;
+	$("#game-titled-container").css("width", gameContainerWidth + "px");
 	// 150
 	$("#scaii-acronym").css("padding-left", "20px");
-	$("#scaii-acronym").css("width", "110px");
+	$("#scaii-acronym").css("width", acronymWidth + "px");
 	$("#scaii-acronym").css("padding-right", "20px");
 
 	// 150
-	$("#game-replay-label").css("width", "140px");
+	$("#game-replay-label").css("width", replayLabelWidth + "px");
 	$("#game-replay-label").css("padding-right", "10px");
 
 	// 300
-	$("#replay-file-selector").css("width", "300px");
+	$("#replay-file-selector").css("width", fileSelectorWidth + "px");
 
 	
 	$("#scaii-acronym").css("padding-top", "10px");
 	$("#scaii-acronym").css("padding-bottom", "10px");
 	$("#game-replay-label").css("padding-top", "10px");
     $("#game-replay-label").css("padding-bottom", "10px");
-    
-    
-    $("#reward-values-panel").css("height", gameboard_canvas.height + "px");
+	
+
+	var quadrantLabelWidth = 30;
+    $("#left-side-quadrant-labels").css("width", quadrantLabelWidth + "px");
+	$("#right-side-quadrant-labels").css("width", quadrantLabelWidth + "px");
     $("#left-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
-    $("#right-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
-    $("#playback-controls-panel").css("height", "30px");
+	$("#right-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
+
+	var rewardsPanelWidth = gameContainerWidth - gameboard_canvas.width - 2 * quadrantLabelWidth;
+	$("#reward-values-panel").css("height", gameboard_canvas.height + "px");
+	$("#reward-values-panel").css("width", rewardsPanelWidth + "px");
+	
+	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
+	var stepValueWidth = 100;
+	var stepValuePaddingLeft = centerPointOfVideo - stepValueWidth - 40;
+	$("#step-value").css("width", stepValueWidth + "px");
+	$("#step-value").css("padding-left", stepValuePaddingLeft + "px");
+	
+	
+	
+
+	//$("#playback-controls-panel").css("height", "30px");
+	$("#playback-controls-panel").css("margin-left", "10px");
+	$("#playback-controls-panel").css("margin-top", "10px");
+	$("#playback-controls-panel").css("margin-bottom", "10px");
+	
+
     $("#explanation-control-panel").css("height", "85px");
 }
 

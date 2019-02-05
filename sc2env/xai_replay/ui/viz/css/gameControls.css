@@ -6,12 +6,6 @@
 }
 
 
-#playback-controls-panel {
-	width: 460px;
-	margin-left: 40px;
-	margin-top: 20px;
-	margin-bottom: 15px;
-}
 
 .minor-label-text {
 	font-size: 14px;
@@ -63,6 +57,5 @@ progress::-webkit-progress-value { background: darkgrey; }
 progress::-moz-progress-bar { background: darkgrey; }
 
 #step-value {
-	width:200px;
 	text-align: left;
 }

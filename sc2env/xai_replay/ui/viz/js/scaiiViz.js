@@ -21,8 +21,8 @@ var main2 = function(){
 	activeSC2UIManager = getSC2UIManager(activeSC2DataManager, activeSC2VideoManager);
 	
 	video = document.createElement("video");
-	video.setAttribute("width", sc2GameWidth + "px");
-	video.setAttribute("height", sc2GameHeight + "px");
+	video.setAttribute("width", sc2GameRenderWidth + "px");
+	video.setAttribute("height", sc2GameRenderHeight + "px");
 	video.src = "./replays/test.mp4";
 	$("#scaii-gameboard").append(video);
 	

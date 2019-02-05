@@ -1,9 +1,27 @@
 // 1520 x 1280 is dimensions of video frame, try half that
-//var sc2GameWidth = 760;
-//var sc2GameHeight = 640;
+//var sc2GameRenderWidth = 760;
+//var sc2GameRenderHeight = 640;
 // try quarter that
-var sc2GameWidth = 380;
-var sc2GameHeight = 320;
+var roughlyHalfWidthOfUnit         = 0.3 //(assuming 40x40)
+var sc2GameUnitDimensionsX         = 40;
+var sc2GameUnitDimensionsY         = 40;
+var sc2GameOrigPixelWidth          = 1600;
+var sc2GameOrigPixelHeight         = 1600;
+var sc2GameOrigPixelViewableWidth  = 1520;
+var sc2GameOrigPixelViewableHeight = 1280;
+
+var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
+var sc2GameOrigPixelOffscreenToBottomY = (sc2GameOrigPixelHeight - sc2GameOrigPixelViewableHeight)/2;//160
+
+var videoScaleFactor = 0.4;
+var sc2GameOrigPixelViewableWidth_Scaled  = sc2GameOrigPixelViewableWidth * videoScaleFactor;
+var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * videoScaleFactor;
+
+var sc2GameRenderWidth  = sc2GameOrigPixelViewableWidth_Scaled;
+var sc2GameRenderHeight = sc2GameOrigPixelViewableHeight_Scaled;
+
+var gameContainerWidth = sc2GameRenderWidth + 360;
+
 var playInterval = 400;
 var framesPerSecond = 25;
 var recorderCaptureInterval = 8;
@@ -59,8 +77,8 @@ function createVideoElement(path){
     video = document.createElement("video");
 	//video.setAttribute("width", "760px");
 	//video.setAttribute("height", "640");
-	video.setAttribute("width", sc2GameWidth + "px");
-	video.setAttribute("height",sc2GameHeight + "px");
+	video.setAttribute("width", sc2GameRenderWidth + "px");
+	video.setAttribute("height",sc2GameRenderHeight + "px");
 	video.src = path;
 	$("#scaii-gameboard").append(video);
 	
@@ -90,8 +108,8 @@ function getTooltipColorRGBAForUnit(unitInfo){
     alert('getColorRGBAForUnit unimplemented')
 }
 function getSC2QuadrantName(x,y){
-    var halfWidth = sc2GameWidth / 2;
-    var halfHeight = sc2GameHeight / 2;
+    var halfWidth = sc2GameRenderWidth / 2;
+    var halfHeight = sc2GameRenderHeight / 2;
     if (x < halfWidth) {
         if (y < halfHeight) {
             return "upperLeftQuadrant";
@@ -109,41 +127,55 @@ function getSC2QuadrantName(x,y){
         }
     }
 }
-//SC2_TODO_GEOM reference dimensions specified elsewhere
-// assumes 1520 x 1280 video frame (1600 x 1600 game)
-function convertCanvasXToGamePixelX(canvasX, canvasWidth){
-    var xPercentAcrossCanvas = (Number(canvasX) / Number(canvasWidth));
-    //translate percent to 1520 x 1280 dimension 
-    var xPixelOn1520 = 1520 * xPercentAcrossCanvas;
-    // add the pixels not in view
-    var result = xPixelOn1520 + 40;
-    return result;
+
+
+
+
+//
+//  Translating canvas y coords to game unit y coords
+//  1. mouse hovers at y coord
+//  2. ycoord translated to %canvasY
+//  3. %canvasY translated to origGamePixelYHover = sc2GameOrigPixelOffscreenToBottomY + %canvasY*sc2GameOrigPixelViewableHeight)
+//  4. origGamePixelYHover translated to %origGameY = origGamePixelYHover / sc2GameOrigPixelHeight
+//  5. %origGameY converted to unitYHover = 40 * %origGameY
+//
+
+function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
+    //
+    //  Translating canvas x coords to game unit x coords
+    //  1. mouse hovers at x coord
+    //  2. xcoord translated to %canvasX
+    var percentCanvasX = (Number(canvasX) / Number(canvasWidth));
+
+    //  3. %canvasX translated to origGamePixelX = sc2GameOrigPixelOffscreenToLeftX + %canvasX*sc2GameOrigPixelViewableWidth)
+    var origGamePixelX = sc2GameOrigPixelOffscreenToLeftX + percentCanvasX * sc2GameOrigPixelViewableWidth;
+
+    //  4. origGamePixelX translated to %origGameX = origGamePixelX / sc2GameOrigPixelWidth
+    var percentGameX = origGamePixelX / sc2GameOrigPixelWidth;
+
+    //  5. %origGameX converted to unitSpaceX = 40 * %origGameX
+    var unitSpaceX = 40 * percentGameX;
+    return unitSpaceX;
 }
 
-// assumes 1520 x 1280 video frame (1600 x 1600 game)
-function convertCanvasYToGamePixelY(canvasY, canvasHeight){
-    var yPercentAcrossCanvas = (Number(canvasY) / Number(canvasHeight));
-    //translate percent to 1520 x 1280 dimension 
-    var yPixelOn1280 = 1280 * yPercentAcrossCanvas;
-    // add the pixels not in view
-    var result = yPixelOn1280 + 160;
-    return result;
-}
+function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
 
-// assumes 1520 x 1280 video frame (1600 x 1600 game)
-function convertGameXToGamePixelX(gameUnitX){
-    var gameXPercent = Number(gameUnitX) / 40;
-    var gamePixelX = 1600 * gameXPercent;
-    return gamePixelX;
-}
+    //
+    //  Translating canvas y coords to game unit y coords
+    //  1. mouse hovers at y coord
+    //  2. ycoord translated to %canvasY
+    var percentCanvasY = (Number(canvasY) / Number(canvasHeight));
 
-// assumes 1520 x 1280 video frame (1600 x 1600 game)
-function convertGameYToGamePixelY(gameUnitY){
-    var gameYPercent = Number(gameUnitY) / 40;
-    var gamePixelY = 1600 * gameYPercent;
-    return gamePixelY;
-}
+    //  3. %canvasY translated to origGamePixelY = sc2GameOrigPixelOffscreenToBottomY + %canvasY*sc2GameOrigPixelViewableHeight)
+    var origGamePixelY = sc2GameOrigPixelOffscreenToBottomY + percentCanvasY * sc2GameOrigPixelViewableHeight;
 
+    //  4. origGamePixelY translated to %origGameY = origGamePixelY / sc2GameOrigPixelHeight
+    var percentGameY = origGamePixelY / sc2GameOrigPixelHeight;
+
+    //  5. %origGameY converted to unitSpaceY = 40 * %origGameY
+    var unitSpaceY = 40 * percentGameY;
+    return unitSpaceY;
+}
 
 var frameNumber = 0;
 var frameCount = 92;

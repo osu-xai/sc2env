@@ -61,9 +61,9 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
         alert('sc2DataManager.getCumulativeRewards unimplemented')
     }
     dm.getClosestUnitInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST
-        var gameMousePixelX = convertCanvasXToGamePixelX(mouseCanvasX, sc2GameWidth);
-        var gameMousePixelY = convertCanvasYToGamePixelY(mouseCanvasY, sc2GameHeight);
-        var minDistance = 30;
+        var unitCoordX = translateCanvasXCoordToGameUnitXCoord(mouseCanvasX, gameboard_canvas.width);
+        var unitCoordY = translateCanvasYCoordToGameUnitYCoord(mouseCanvasY, gameboard_canvas.height);
+        var minDistance = roughlyHalfWidthOfUnit;
         var minDistanceUnit = undefined;
         var frame_info = this.frameInfos[sessionIndexManager.getCurrentIndex()];
         var units = frame_info["units"];
@@ -71,10 +71,9 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
             var unit = units[i];
             var gameUnitX = Number(unit["x"]);
             var gameUnitY = Number(unit["y"]);
-            var gameUnitPixelX = convertGameXToGamePixelX(gameUnitX);
-            var gameUnitPixelY = convertGameYToGamePixelY(gameUnitY);
-            var dx = gameMousePixelX - gameUnitPixelX;
-            var dy = gameMousePixelY - gameUnitPixelY;
+            
+            var dx = Math.abs(unitCoordX - gameUnitX);
+            var dy = Math.abs(unitCoordY - gameUnitY);
             var distance = Math.sqrt(dx * dx + dy * dy)
             if (distance < minDistance){
                 minDistance = distance;
