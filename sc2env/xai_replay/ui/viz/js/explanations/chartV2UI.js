@@ -611,9 +611,10 @@ function addWhatButton() {
 		// 	logLine = logLine.replace("<SHW_SALNCY>", "NA");
 		// 	targetClickHandler(e, logLine);
 		// }
+		//e.preventDefault();
+		//processWhatClick();
 		//SC2_DEFERRED_END
-		e.preventDefault();
-		processWhatClick();
+		alert("saliency maps for SC2 XAI Replay not yet integrated.");
 	})
 }
 
