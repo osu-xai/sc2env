@@ -174,44 +174,17 @@ function getChartV2UI() {
 		// NOTE: There are no tests for rendering the legend
 		for (var i in chartData.rewardNames) {
 			var desc = document.getElementById("legend-desc-" + i);
-			var damagedOrDestroyed = chartData.rewardNames[i].split(" ");
-			var type;
-			if (damagedOrDestroyed[1] == "Damaged") {
-				type = "score";
-			} else if (damagedOrDestroyed[1] == "Destroyed") {
-				if (damagedOrDestroyed[0] == "Enemy") {
-					type = "bonus";
-				} else {
-					type = "penalty";
-				}
+			var rewardName = chartData.rewardNames[i];
+			var type = scoreFlavor[rewardName];
+			if (type == undefined){
+				type = "???";
 			}
 			var descContent = document.createTextNode("This " + type);
 			desc.append(descContent);
 
 			var name = document.getElementById("legend-name-" + i);
 			//font stuff in here for css
-			var content = document.createTextNode("for " + chartData.rewardNames[i] + " on all future maps");
-			/**********************************************************************************************
-			 * Author: Andrew Anderson
-			 * Purpose: Changing Friend Damaged to "Friendly Fort Damaged" without trying to break things
-			 * Date made: 9/4/2018
-			 * Date mod:  9/4/2018
-			 **********************************************************************************************/
-			if ( chartData.rewardNames[i] == "Friend Damaged" ){
-				var content = document.createTextNode( "for Friendly Fort Damaged on all future maps" );
-			}
-			if ( chartData.rewardNames[i] == "Friend Destroyed" ){
-				var content = document.createTextNode( "for Friendly Fort Destroyed on all future maps" );
-			}
-			if ( chartData.rewardNames[i] == "Enemy Damaged" ){
-				var content = document.createTextNode( "for Enemy Fort Damaged on all future maps" );
-			}
-			if ( chartData.rewardNames[i] == "Enemy Destroyed" ){
-				var content = document.createTextNode( "for Enemy Fort Destroyed on all future maps" );
-			}
-			/**********************************************************************************************
-			 * 									END OF RENAMING
-			 *********************************************************************************************/
+			var content = document.createTextNode("for " + prettyPrintRewardName[rewardName] + " on all future maps");
 			name.appendChild(content);
 		}	
 		var totalName = document.getElementById("legend-total-name");
