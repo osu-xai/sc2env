@@ -57,9 +57,9 @@ var use_shape_color_for_outline = false;
 var mostRecentClickHadCtrlKeyDepressed;
 
 
-function configureGameboardCanvas(){ //SC2_TODO - keeping gameboard canvas for now as may use it to draw things in front of video
-	gameboard_canvas.width = sc2GameCanvasWidth;
-    gameboard_canvas.height = sc2GameCanvasHeight;
+function configureGameboardCanvas(){ //gameboard canvas will be used to draw things in front of video
+	gameboard_canvas.width = sc2GameWidth;
+    gameboard_canvas.height = sc2GameHeight;
     gameboard_canvas.setAttribute("id","gameboard");
 	$("#scaii-gameboard").css("width", gameboard_canvas.width);
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
@@ -173,7 +173,7 @@ function initUI() { //SC2_TEST
 function highlightShapeInRange(x,y) {//SC2_TEST
     var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 	if (unitId != undefined){
-        highlightUnitForClickCollectionFeedback(unitId); //SC2_TODO move highlightShapeForIdForClickCollectionFeedback to highlightUnitForClickCollectionFeedback
+        highlightUnitForClickCollectionFeedback(unitId); //SC2_TODO_STUDY move highlightShapeForIdForClickCollectionFeedback to highlightUnitForClickCollectionFeedback
     }
 }
 
@@ -214,27 +214,27 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 		if (unitId == undefined) {
 			// we're not inside an object, so hide all the "all_metadata" tooltips
-			hideAllTooltips(evt);
+			//SC2_TODO_TThideAllTooltips(evt);
 			//SC2_DEFERRED var logLine = templateMap["hideEntityTooltips"];
 			//SC2_DEFERRED logLine = logLine.replace("<HIDE_TOOL>", "all")
             //SC2_DEFERRED targetHoverHandler(evt, logLine);
 		}
 		else {
-            var tooltipId = "metadata_all" + unitId; // SC2_TODO make sure tooltipId is consistent everywhere
+            var tooltipId = "metadata_all" + unitId; // SC2_TODO_TT make sure tooltipId is consistent everywhere
             //we're inside one, keep it visible
-            if (hoveredAllDataToolTipIds[tooltipId] != "show") {
+            //SC2_TODO_TTif (hoveredAllDataToolTipIds[tooltipId] != "show") {
 				//SC2_DEFERRED var logLine = templateMap["showEntityTooltip"];
 				//SC2_DEFERRED logLine = logLine.replace("<ENTITY_INFO>", unitLogStrings[unitId]);
 				//SC2_DEFERRED logLine = logLine.replace("<TIP_QUADRANT>", getSC2QuadrantName(x,y));
 				//SC2_DEFERRED targetHoverHandler(evt, logLine);
-            }
-            hideAllTooltips(evt);
-            $("#" + tooltipId).removeClass('tooltip-invisible');
-			hoveredAllDataToolTipIds[tooltipId] = "show";
+            //SC2_TODO_TT}
+            //SC2_TODO_TThideAllTooltips(evt);
+            //SC2_TODO_TT$("#" + tooltipId).removeClass('tooltip-invisible');
+			//SC2_TODO_TThoveredAllDataToolTipIds[tooltipId] = "show";
 		}
   	});
 }
-function sizeNonGeneratedElements() { //SC2_TODO - still have scaii-acronym?
+function sizeNonGeneratedElements() { //SC2_TODO_GEOM - still have scaii-acronym?
 
 	$("#game-titled-container").css("width", "600px");
 	// first row should add to 600...
@@ -265,7 +265,7 @@ function sizeNonGeneratedElements() { //SC2_TODO - still have scaii-acronym?
 }
 
 function clearGameBoard() { //SC2_TEST (if anything is actually drawn there - health bars?)
-	cleanToolTips();
+	//SC2_TODO_TTcleanToolTips();
 	gameboard_ctx.clearRect(0, 0, gameboard_canvas.width, gameboard_canvas.height);
 }
 

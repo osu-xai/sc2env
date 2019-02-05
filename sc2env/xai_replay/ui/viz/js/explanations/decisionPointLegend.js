@@ -11,8 +11,8 @@ function renderDecisionPointLegend() {
 	legendLabel.innerHTML = "Decision Points: ";
 	$("#action-list").append(legendLabel);
 
-	var explanation_steps = activeSC2DataManager.getExplanationStepsList();//SC2_TODO - get this from the SC2DataManager
-    var explanation_titles = replaySessionConfig.getExplanationTitlesList();//SC2_TODO - get this from the SC2DataManager
+	var explanation_steps = activeSC2DataManager.getExplanationStepsList();
+    var explanation_titles = activeSC2DataManager.getExplanationTitlesList();
     if (userStudyMode) {
        explanation_titles = activeStudyQuestionManager.getExplanationTitles(explanation_steps, explanation_titles);
     }

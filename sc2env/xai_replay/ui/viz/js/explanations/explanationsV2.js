@@ -2,36 +2,36 @@ var currentExplManager = undefined;
 var currentExplanationStep = undefined;
 var saliencyLookupMap = {};
 
-function handleExplanationDetails(explDetails){
+function handleSaliencyDetails(explDetails){
 	if (explDetails.hasExplPoint()){
         explanationPoint = explDetails.getExplPoint();
-        var barChartMessage = explanationPoint.getBarChart();
-        var rawChart = convertProtobufChartToJSChart(barChartMessage);
+        //var barChartMessage = explanationPoint.getBarChart();
+        //var rawChart = convertProtobufChartToJSChart(barChartMessage);
         //ignore true data for testing
         //currentExplManager.setChartData(getSeeSawChart());
         var saliency = explanationPoint.getSaliency();
         saliencyLookupMap = saliency.getSaliencyMapMap();
-        var step = sessionIndexManager.getCurrentIndex();
-        currentExplManager.setChartData(rawChart, step);
+        
 	}
 	else {
 		console.log("MISSING expl point!");
 	}
 }
 
-function askBackendForExplanationRewardInfo(stepNumber) {
+function askBackendForExplanationSaliencyInfo(stepNumber) {
 	var userCommand = new proto.UserCommand;
 	userCommand.setCommandType(proto.UserCommand.UserCommandType.EXPLAIN);
 	var args = ['' +stepNumber];
 	userCommand.setArgsList(args);
 	stageUserCommand(userCommand);
 	currentExplanationStep = stepNumber;
-	if (stepNumber == sessionIndexManager.getCurrentIndex()) {
-		//console.log("no need to move - already at step with explanation");
-	}
-	else {
-		jumpToStep(stepNumber);//SC2_TODO - can get rid of this?
-	}
+	// if (stepNumber == sessionIndexManager.getCurrentIndex()) {
+	// 	//console.log("no need to move - already at step with explanation");
+	// }
+	// else {
+        
+	// 	jumpToStep(stepNumber);//SC2_TODO - can get rid of this?
+	// }
 }
 
 function renderWhyButton(step, x, y){

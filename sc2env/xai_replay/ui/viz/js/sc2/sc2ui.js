@@ -1,69 +1,80 @@
 // 1520 x 1280 is dimensions of video frame, try half that
-var sc2GameCanvasWidth = 760;
-var sc2GameCanvasHeight = 640;
+//var sc2GameWidth = 760;
+//var sc2GameHeight = 640;
+// try quarter that
+var sc2GameWidth = 380;
+var sc2GameHeight = 320;
 var playInterval = 400;
+var framesPerSecond = 25;
+var recorderCaptureInterval = 8;
+var videoPlaybackRate = 1 / recorderCaptureInterval;
+var relativeReplayDir = "./replays";
+var activeSC2UIManager = undefined;
 
-function getSC2UIManager(sc2DataManager, sc2VideoManager) {
+function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim = {};
     uim.dataManager = sc2DataManager;
-    uim.videoManager = sc2VideoManager;
-    uim.playState = "PAUSED";
-    uim.targetStep = undefined;
-    uim.play = function(){
-        this.playState = "PLAYING";
-        this.targetStep = undefined;
-        this.playNextFrameAfterDelay();
-    }
-    uim.playToStep = function(step){
-        this.playState = "PLAYING";
-        var validatedStep = this.dataManager.validateStep(step);
-        this.targetStep = validatedStep;
-    }
-    uim.pause = function(){
-        this.playState = "PAUSED";
-    }
+    uim.videoFilepath = getVideoFilepath(filenameRoot);
+    createVideoElement(uim.videoFilepath);
 
     uim.renderStateForCurrentStep = function() {
         clearGameBoard();
-        var unitInfos = this.dataManager.getUnitInfos(this.dataManager.getCurrentStep());
+        var unitInfos = this.dataManager.getUnitInfos(sessionIndexManager.getCurrentIndex());
         for (unitInfo in unitInfos){
-            createToolTips(unitInfo); //SC2_TODO - ensure don't create every time?
+            //SC2_TODO_TT createToolTips(unitInfo); //SC2_TODO_TT - ensure don't create every time?
         }
-        alert('sc2UIManager.renderStep finished?')
-    }
-
-    uim.playNextFrameAfterDelay = function(){//SC2_TEST
-        window.setTimeout(this.playNextFrame, playInterval);
-    }
-
-    uim.playNextFrame = function(){//SC2_TEST
-        var frameInfo = activeSC2DataManager.nextFrame()
-        handleSC2Data(frameInfo);
-        if (this.playState == "PLAYING"){
-            if (this.targetStep == undefined){
-                this.playNextFrameAfterDelay();
-            }
-            else{
-                
-                if (this.dataManager.getCurrentStep() == targetStep){
-                    // target step is defined - does match, we must have arrived at target, stop and clear targetStep
-                    this.targetStep = undefined;
-                }
-                else {
-                    // target step is defined - doesn't match, keep going
-                    this.playNextFrameAfterDelay();
-                }
-            }
-        }
+        console.log('renderStateForCurrentStep finished');
     }
 
     uim.jumpToFrame = function(frameIndex){//SC2_TEST
-        this.playState = "PAUSED";
-        activeSC2DataManager.setNextFrameAs(frameIndex);
-        this.playNextFrame();
+        var currentTime = frameIndex / framesPerSecond;
+		console.log("frame number " + frameIndex + " currentTime " + currentTime)
+        video.currentTime = currentTime;
+        this.renderStateForCurrentStep();
+        performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameIndex));
     }
 
+    uim.play = function(){
+        video.play();
+    }
+    uim.pause = function() {
+        video.pause();
+        var frameNumber = Math.floor(video.currentTime * framesPerSecond);
+        console.log('frameNumber ' + frameNumber + ' currentTime ' + this.currentTime + " FPS " + framesPerSecond);
+        sessionIndexManager.setReplaySequencerIndex(frameNumber);
+        activeSC2UIManager.jumpToFrame(frameNumber);
+    }
+    uim.jumpToFrame(0);
     return uim;
+}
+
+
+function getVideoFilepath(chosenFile){
+    return relativeReplayDir + "/" + chosenFile + ".mp4";
+}
+var video = undefined;
+
+function createVideoElement(path){
+    video = document.createElement("video");
+	//video.setAttribute("width", "760px");
+	//video.setAttribute("height", "640");
+	video.setAttribute("width", sc2GameWidth + "px");
+	video.setAttribute("height",sc2GameHeight + "px");
+	video.src = path;
+	$("#scaii-gameboard").append(video);
+	
+	video.addEventListener("timeupdate", function(){
+        // frames per second is 25.  Figure out frame number from currentTime
+        var frameNumber = Math.floor(video.currentTime * framesPerSecond);
+        console.log('frameNumber ' + frameNumber + ' currentTime ' + video.currentTime + " FPS " + framesPerSecond);
+        sessionIndexManager.setReplaySequencerIndex(frameNumber);
+        //activeSC2UIManager.jumpToFrame(frameNumber);
+	})
+	
+	initUI();
+	video.load();	
+	video.playbackRate = videoPlaybackRate;
+	//video.play();
 }
 
 function getTooltipY(unitInfo){
@@ -77,8 +88,8 @@ function getTooltipColorRGBAForUnit(unitInfo){
     alert('getColorRGBAForUnit unimplemented')
 }
 function getSC2QuadrantName(x,y){
-    var halfWidth = sc2GameCanvasWidth / 2;
-    var halfHeight = sc2GameCanvasHeight / 2;
+    var halfWidth = sc2GameWidth / 2;
+    var halfHeight = sc2GameHeight / 2;
     if (x < halfWidth) {
         if (y < halfHeight) {
             return "upperLeftQuadrant";
@@ -96,7 +107,7 @@ function getSC2QuadrantName(x,y){
         }
     }
 }
-
+//SC2_TODO_GEOM reference dimensions specified elsewhere
 // assumes 1520 x 1280 video frame (1600 x 1600 game)
 function convertCanvasXToGamePixelX(canvasX, canvasWidth){
     var xPercentAcrossCanvas = (Number(canvasX) / Number(canvasWidth));
@@ -129,4 +140,22 @@ function convertGameYToGamePixelY(gameUnitY){
     var gameYPercent = Number(gameUnitY) / 40;
     var gamePixelY = 1600 * gameYPercent;
     return gamePixelY;
+}
+
+
+var frameNumber = 0;
+var frameCount = 92;
+
+function vidStep(){
+	frameNumber += 1;
+	if (frameNumber > frameCount - 1){
+		//stop
+	}
+	else {
+		var currentTime = frameNumber / framesPerSecond;
+		console.log("frame number " + frameNumber + " currentTime " + currentTime)
+		video.currentTime = currentTime;
+		window.setTimeout(vidStep, 500);
+		//window.requestAnimationFrame(vidStep);
+	}
 }

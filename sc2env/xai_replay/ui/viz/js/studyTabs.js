@@ -156,7 +156,7 @@ function getTabManager() {
         }
     }
 
-    tm.finalStepsForChangeToTab = function(){//SC2_TODO this used to be called when a jump completed message came bac
+    tm.finalStepsForChangeToTab = function(){//SC2_TODO_STUDY this used to be called when a jump completed message came bac
                                             // now the jump should be do-able atomically so doesthis need to be re-done?
                                             // (this was called if userStudyMode was true)
         var returnInfo = this.returnInfoForTab[this.targetTabId];
