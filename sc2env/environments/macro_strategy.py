@@ -64,7 +64,7 @@ class MacroStrategyMultiplayerEnvironment(gym.Env):
         self.sc2env = make_sc2env(num_players, render=render)
         self.video = None
         if video_filename:
-            self.video = imutil.VideoMaker(filename=video_filename)
+            self.video = imutil.Video(filename=video_filename)
         self.verbose = verbose
         self.action_space = self.get_action_space()
 
