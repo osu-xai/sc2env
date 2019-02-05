@@ -13,7 +13,7 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
     dm.frameInfos = frameInfos;
     
     dm.malFormedMessage = validateFrameInfos(dm.frameInfos);
-    dm.stepCount = dm.frameInfos.length;
+    dm.stepCount = frameInfos.length;
     console.log("step count found to be "+ dm.stepCount);
 
     dm.getMalformedMessage = function() { //SC2_TEST
@@ -36,17 +36,20 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
     dm.getExplanationStepsList = function() { //SC2_TEST
         var stepsWithExplanations = [];
         var index = 0
-        for (frameInfo in this.frameInfos){
+        for (i in this.frameInfos){
+            var frameInfo = this.frameInfos[i];
             if (frameInfo["frame_info_type"] == "decision_point"){
                 stepsWithExplanations.push(index);
             }
+            index += 1;
         }
         return stepsWithExplanations;
     }
 
     dm.getExplanationTitlesList = function(){//SC2_TEST
         var actionNames = [];
-        for (frameInfo in this.frameInfos){
+        for (i in this.frameInfos){
+            var frameInfo = this.frameInfos[i];
             if (frameInfo["frame_info_type"] + "decision_point"){
                 actionnames.push(frameInfo["action"]);
             }
@@ -64,7 +67,8 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
         var minDistanceUnit = undefined;
         var frame_info = this.frameInfos[sessionIndexManager.getCurrentIndex()];
         var units = frame_info["units"];
-        for (unit in units){
+        for (i in units){
+            var unit = units[i];
             var gameUnitX = Number(unit["x"]);
             var gameUnitY = Number(unit["y"]);
             var gameUnitPixelX = convertGameXToGamePixelX(gameUnitX);
@@ -81,7 +85,7 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
     }
 
     dm.getFrameInfo = function(step){//SC2_TEST
-        if (step < this.step_count){
+        if (step < this.stepCount){
             return this.frameInfos[step];
         }
         else {
@@ -134,12 +138,13 @@ function convertSC2QValuesToJSChart(frameInfo){
     return chart;
 }
 
-function averageValuesInDictionary(dict){//SC2_TEST
+function averageValuesInDictionary(actionValues){//SC2_TEST
     var values = Object.values(actionValues);
     var valuesCount = values.length;
     var total = 0;
-    for (value in values){
-        total += value;
+    for (i in values){
+        var value = values[i];
+        total += Number(value);
     }
     var average = total / valuesCount;
     return average;
@@ -151,9 +156,10 @@ function collectActionInfo(actionName, actionValues){
     action.bars = [];
     action.saliencyId = undefined; //SC2_SALIENCY
     action.value = averageValuesInDictionary(actionValues);
-    var rewardNames = Object.keys(actionValues);
-    for (rewardName in rewardNames){
-        var bar = collectBarInfo(key, actionValues[key]);
+    var keys = Object.keys(actionValues);
+    for (i in keys){
+        var rewardName = keys[i];
+        var bar = collectBarInfo(rewardName, actionValues[rewardName]);
         action.bars.push(bar);
     }
     return action;

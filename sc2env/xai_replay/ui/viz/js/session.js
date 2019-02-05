@@ -145,6 +145,7 @@ function clearUIElementsForNewFile(){//SC2_OK
 //
 function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     console.log("handleSC2ReplaySessionConfig");
+	var timelineWidth = expl_ctrl_canvas.width - 2*timelineMargin;
     //SC2_TODO_NAV_TEST - ensure UI ignores clicks during fiule load
     activeSC2DataManager = getSC2DataManager(rsc);
     sessionIndexManager = getSessionIndexManager(activeSC2DataManager.getStepCount(), activeSC2DataManager.getExplanationStepsList(), timelineWidth);
@@ -154,7 +155,6 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
 	if (malformedMessage != undefined) {
 		alert(malformedMessage);
     }
-	var timelineWidth = expl_ctrl_canvas.width - 2*timelineMargin;
     currentExplManager.stepsWithExplanations = activeSC2DataManager.getExplanationStepsList();
     controlsManager.doneLoadReplayFile(); //SC2_TODO_NAV_TEST
     if (userStudyMode){

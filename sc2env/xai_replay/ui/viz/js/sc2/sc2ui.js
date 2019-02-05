@@ -20,7 +20,8 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.renderStateForCurrentStep = function() {
         clearGameBoard();
         var unitInfos = this.dataManager.getUnitInfos(sessionIndexManager.getCurrentIndex());
-        for (unitInfo in unitInfos){
+        for (i in unitInfos){
+            var unitInfo = unitInfos[i];
             //SC2_TODO_TT createToolTips(unitInfo); //SC2_TODO_TT - ensure don't create every time?
         }
         console.log('renderStateForCurrentStep finished');
@@ -67,6 +68,7 @@ function createVideoElement(path){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.floor(video.currentTime * framesPerSecond);
         console.log('frameNumber ' + frameNumber + ' currentTime ' + video.currentTime + " FPS " + framesPerSecond);
+        frameNumber = activeSC2DataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
         //activeSC2UIManager.jumpToFrame(frameNumber);
 	})

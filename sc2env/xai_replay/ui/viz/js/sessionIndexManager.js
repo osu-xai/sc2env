@@ -88,9 +88,9 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		this.replaySequencerIndex = index;
         //console.log('');
 
-        if (this.decisionPointSteps.includes(index)){
-            currentExplManager.captureEntitiesForDecisionPoint(index);
-        }
+        //SC2_TODO_SALif (this.decisionPointSteps.includes(index)){
+        //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);
+        //SC2_TODO_SAL}
         //console.log('replaySequencerIndex is now ' + index);
         var displayVal = this.getStepCountToDisplay();
         //console.log('display Step value : ' + displayVal);
