@@ -43,8 +43,8 @@ function cleanToolTips(){
   
 function createHPToolTip(unitInfo) {
     var unit = unitInfo;    
-    alert('createHPToolTip needs to refer to sc2 unit info')//SC2_TODO - rework this to reference proper fields
-    var percentHPRemaining = unit.health / unit.health_max;//SC2_TODO review calculation
+    alert('createHPToolTip needs to refer to sc2 unit info')//SC2_TODO_TT - rework this to reference proper fields
+    var percentHPRemaining = unit.health / unit.health_max;//SC2_TODO_TT review calculation
     console.log('percentHPRemaining calculation: health' + unit.health + ' max ' + unit.health_max + ' result ' + percentHPRemaining);
     var canvas_bounds = gameboard_canvas.getBoundingClientRect();
     var hpDiv = document.createElement("div");
@@ -66,7 +66,7 @@ function createHPToolTip(unitInfo) {
 
     hpDiv.onclick = function(e) {
         highlightUnitForClickCollectionFeedback(unit);
-        //SC2_TODO whay no x,y args to getSC2QuadrantName
+        //SC2_TODO_TT whay no x,y args to getSC2QuadrantName
         //SC2_DEFERRED var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + unitLogStrings[getUnitIdFromTag(unit.tag)];
         //SC2_DEFERRED targetClickHandler(e, "clickHitPoints:" + targetName);
     };
@@ -84,7 +84,7 @@ function createHPToolTip(unitInfo) {
 function getUnitIdFromTag(tag){
     return 'metadata_all'+tag;
 }
-function createAllDataToolTip(unitInfo) { //SC2_TODO - ready for test!
+function createAllDataToolTip(unitInfo) { //SC2_TODO_TT - ready for test!
     var unit = unitInfo;
     var unitId = getUnitIdFromTag(unit.tag);
     var canvas_bounds = gameboard_canvas.getBoundingClientRect();
@@ -107,7 +107,7 @@ function createAllDataToolTip(unitInfo) { //SC2_TODO - ready for test!
  
     tooltipInfo["Health Max"] = unit.health_max;
     tooltipInfo["Health"] = unit.health;
-    tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO make unit_type name pretty in tooltip
+    tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
     tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
     renderTooltipInfo(tooltipInfo, valuesDiv);
     unitLogStrings[unitId] = getShapeLogString(tooltipInfo);
@@ -208,7 +208,7 @@ function getLabelForInfo(s){
     label.innerHTML = s;
     return label;
 }
-function getDamageDealtStringForUnit(unitType){ // SC2_TODO - map damage dealt strings for SC2
+function getDamageDealtStringForUnit(unitType){ // SC2_TODO_TT - map damage dealt strings for SC2
     var result = "Attack Damage per step: ";
     if (unitType == "Tank"){
         return result + "Low";
@@ -273,7 +273,7 @@ function collectHitpointsForConciseMessage(ttInfo,nonDebugKeys){
     var hpString = "Health Points: " + hpFloored + " of " + maxHpFloored;
     return hpString;
 }
-function renameEntityInfoForIUI(s) { //SC2_TODO - rename unit types for SC2
+function renameEntityInfoForIUI(s) { //SC2_TODO_TT - rename unit types for SC2
     if (s == "Small Tower"){
         return "Small Fort";
     }

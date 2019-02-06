@@ -50,14 +50,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 	var progressBarSegmentCount = stepSizeAsKnownInReplaySequencer - 1;
 	sim.progressBarSegmentCount = progressBarSegmentCount
 	sim.getStepCountToDisplay = function(){
-		if (this.replaySequencerIndex == 0) {
-			return undefined;
-		}
-		else {
-			// from one on up, the actual replaySequencerIndex will be what we want to display 
-			// as we are presenting the step sequence as starting at 1.
-			return this.replaySequencerIndex;
-		}
+		return this.replaySequencerIndex;
 	}
 	
 	sim.isAtGameStart = function() {
@@ -88,9 +81,9 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		this.replaySequencerIndex = index;
         //console.log('');
 
-        if (this.decisionPointSteps.includes(index)){
-            currentExplManager.captureEntitiesForDecisionPoint(index);
-        }
+        //SC2_TODO_SALif (this.decisionPointSteps.includes(index)){
+        //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);
+        //SC2_TODO_SAL}
         //console.log('replaySequencerIndex is now ' + index);
         var displayVal = this.getStepCountToDisplay();
         //console.log('display Step value : ' + displayVal);

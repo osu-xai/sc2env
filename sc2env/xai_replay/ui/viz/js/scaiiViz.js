@@ -15,23 +15,29 @@
 * of patent rights can be found in the PATENTS file in the same directory.
 */
 
-var activeSC2DataManager = undefined;
-var activeSC2UIManager = undefined;
-var activeSC2VideoManager = undefined;
-
 var main2 = function(){
 	activeSC2DataManager = getSC2DataManagerFromJson(getTestJson());
     activeSC2VideoManager = getSC2VideoManager(getVideoFilepath("test"));
 	activeSC2UIManager = getSC2UIManager(activeSC2DataManager, activeSC2VideoManager);
 	
-	var video = document.createElement("video");
-	video.setAttribute("width", "760px");
-	video.setAttribute("height", "640");
+	video = document.createElement("video");
+	video.setAttribute("width", sc2GameRenderWidth + "px");
+	video.setAttribute("height", sc2GameRenderHeight + "px");
 	video.src = "./replays/test.mp4";
 	$("#scaii-gameboard").append(video);
 	
+	video.addEventListener("timeupdate", function(){
+		if (this.currentTime > 10.0){
+			this.pause();
+		}
+	})
+	
 	initUI();
-	video.load();
+	video.load();	
+	video.playbackRate = 0.125;
+	video.play();
+	//vidStep();
+	//window.requestAnimationFrame(vidStep);
 }
 var main = function () {
     runTests();
