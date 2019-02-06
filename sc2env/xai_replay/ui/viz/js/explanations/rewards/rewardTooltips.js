@@ -9,7 +9,7 @@ function getRewardBarTooltipManager(canvas, chartData){
         for (var i in this.chartData.actionRewardNames){
             var actionRewardName = this.chartData.actionRewardNames[i];
             var rewardBar = this.chartData.actionRewardForNameMap[actionRewardName];
-            var tooltipText = "Value of " + rewardBar.name + " is " + Math.floor(rewardBar.value);
+            var tooltipText = "Value of " + prettyPrintRewardName[rewardBar.name] + " is " + Math.floor(rewardBar.value);
             rewardBar.tooltipID = createTooltipDiv(tooltipText, rewardBar, this.canvas);
         }
     }

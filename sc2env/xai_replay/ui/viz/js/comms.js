@@ -23,6 +23,9 @@ function tryConnect(dots, attemptCount) {
 	connect(dots, attemptCount);
 }
 
+function sendScaiiPacket(scaiiPacket){
+	dealer.send(scaiiPacket.serializeBinary());
+}
 
 var connect = function (dots, attemptCount) {
 	dealer = new WebSocket('ws://localhost:6112');
@@ -39,15 +42,7 @@ var connect = function (dots, attemptCount) {
 			sessionState = "inProgress";
 			var s = message.data;
 			var sPacket = proto.ScaiiPacket.deserializeBinary(s);
-			var multiMessageToReturn = handleScaiiPacket(sPacket);
-			if (multiMessageToReturn == undefined) {
-				//always need to send a packet back - far side is waiting
-				var mm = new proto.MultiMessage;
-				dealer.send(mm.serializeBinary());
-			}
-			else {
-				dealer.send(multiMessageToReturn.serializeBinary());
-			}
+			handleScaiiPacket(sPacket);
 		}
 		catch (err) {
             console.log(err.stack);
