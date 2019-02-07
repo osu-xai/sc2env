@@ -29,7 +29,8 @@ class FourTowersFriendlyUnitsGroupDereward():
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
-                screen=(512, 512),
+                screen=(1024, 1024),
+                #screen=(512, 512),
                 minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
