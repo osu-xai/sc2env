@@ -18,15 +18,15 @@ class FourTowersFriendlyUnitsGroupDereward():
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         print("map director: " + str(maps_dir))
         register_map(maps_dir, map_name)
-        self.sc2_env = sc2_env.SC2Env(
-          map_name = map_name,
-          players = [sc2_env.Agent(sc2_env.Race.protoss)],
-          agent_interface_format = features.AgentInterfaceFormat(
+        self.agent_interface_format = features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
               camera_width_world_units = 28
               ),
-
+        self.sc2_env = sc2_env.SC2Env(
+          map_name = map_name,
+          players = [sc2_env.Agent(sc2_env.Race.protoss)],
+          agent_interface_format = self.agent_interface_format,
           step_mul = 16,
           game_steps_per_episode = 0,
           score_index = 0,
@@ -40,6 +40,7 @@ class FourTowersFriendlyUnitsGroupDereward():
         self.decomposed_rewards_mark = 0
         self.signal_of_finished = 1
         self.end_state = None
+        #self.agentInterfaceFormat = features.AgentInterfaceFormat()
 
         self.reward_types = reward_types
         self.decomposed_reward_dict = {}
@@ -74,7 +75,8 @@ class FourTowersFriendlyUnitsGroupDereward():
         state = np.reshape(state, (1, -1))
         
         self.end_state = None
-
+      #  print(self.agent_interface_format['camera_width_world_units'])
+      #  input()
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
