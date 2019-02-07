@@ -28,7 +28,7 @@ def main(render=False):
     state = env.reset()
     done = False
 
-    agent = RandomAgent(env.action_space())
+    agent = RandomAgent(env.action_space)
 
     while not done:
         # Our agent takes the state as input and selects actions to maximize reward
