@@ -11,7 +11,7 @@ import os
 import proto.session_pb2 as pb
 
 async def hello(websocket, path):
-    rc = pb.ReplayChoiceConfig(replay_filenames=["four_towers_friendly_units_group_dereward-512_512"], user_study_mode=False)
+    rc = pb.ReplayChoiceConfig(replay_filenames=["blurryMaybeHasEndingFrames", "four_towers_friendly_units_group_dereward-512_512"], user_study_mode=False)
 
     scaii_packet = pb.ScaiiPacket(replay_choice_config=rc)
     #session_config = pb.SC2ReplaySessionConfig()
