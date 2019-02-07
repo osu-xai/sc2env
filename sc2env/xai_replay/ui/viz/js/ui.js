@@ -65,9 +65,11 @@ function configureGameboardCanvas(){ //gameboard canvas will be used to draw thi
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
-	var video = document.createElement("video");
 	$("#scaii-gameboard").append()
-	gameboard_canvas.setAttribute("style", "position:absolute;left:0px;top:0px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + gameboard_canvas.width + "px;height:" + gameboard_canvas.height + ";");
+	var gameboardOffset = $("#scaii-gameboard").offset();
+	var gameboardTop = gameboardOffset.top;
+	var gameboardLeft = gameboardOffset.left;
+	gameboard_canvas.setAttribute("style", "position:absolute;left:" + gameboardLeft + "px;top:" + gameboardTop + "px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
 	$("#scaii-gameboard").append(gameboard_canvas);
 }
 
@@ -159,7 +161,9 @@ function initUI() { //SC2_TEST
         }
 	}, true);
 	
-	configureGameboardCanvas();
+	// configureGameboardCanvas here, so the blank gameboard appears before start button pressed.
+	// we call it again in sc2ui.js so the unit position math comes out right when creating tooltips
+	configureGameboardCanvas();// do this here, 
 	sizeNonGeneratedElements();
 	controlsManager.setControlsNotReady();
 	controlsManager.registerJQueryHandleForWaitCursor($("#tabbed-interface"));
@@ -184,52 +188,56 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		var y = evt.offsetY;
 		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 		if (unitId != undefined){
-			highlightUnitForClickCollectionFeedback(unitId);
-			//SC2_DEFERRED 
+			//SC2_TODO_STUDYhighlightUnitForClickCollectionFeedback(unitId);
+			//SC2_TODO_STUDY 
 			// var logLine = templateMap["gameboard"];
 			// logLine = logLine.replace("<CLCK_GAME_ENTITY>", unitLogStrings[unitId]);
 			// logLine = logLine.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
             // logLine = logLine.replace("<GAME_COORD_X>", x);
 			// logLine = logLine.replace("<GAME_COORD_Y>", y);
 			// targetClickHandler(evt, logLine);
-			//SC2_DEFERRED_END
-			// $("#metadata_hp" + shapeId).toggleClass('tooltip-invisible');
-			// if (selectedToolTipIds[shapeId] == "show") {
-			// 	selectedToolTipIds[shapeId] = "hide";
-			// }
-			// else {
-			// 	selectedToolTipIds[shapeId] = "show";
-			// }
+			//SC2_TODO_STUDY_END
+			$("#metadata_hp" + shapeId).toggleClass('tooltip-invisible');
+			if (selectedToolTipIds[shapeId] == "show") {
+			 	selectedToolTipIds[shapeId] = "hide";
+			}
+			else {
+			selectedToolTipIds[shapeId] = "show";
+			}
 		} else {
-			//SC2_DEFERRED var logBackground = templateMap["gameboardBackground"];
-			//SC2_DEFERRED logBackground = logBackground.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
-			//SC2_DEFERRED specifiedTargetClickHandler("gameboardBackground", logBackground);
+			//SC2_TODO_STUDY var logBackground = templateMap["gameboardBackground"];
+			//SC2_TODO_STUDY logBackground = logBackground.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
+			//SC2_TODO_STUDY specifiedTargetClickHandler("gameboardBackground", logBackground);
 		}
 	});
-	  
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
+		var x = evt.offsetX;
+		var y = evt.offsetY;
+		$("#step-value").html( x + " , " + y);
+	});
+	gameboard_canvas.addEventListener('mouseup', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
 		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
 		if (unitId == undefined) {
 			// we're not inside an object, so hide all the "all_metadata" tooltips
-			//SC2_TODO_TThideAllTooltips(evt);
+			hideAllTooltips(evt);
 			//SC2_DEFERRED var logLine = templateMap["hideEntityTooltips"];
 			//SC2_DEFERRED logLine = logLine.replace("<HIDE_TOOL>", "all")
             //SC2_DEFERRED targetHoverHandler(evt, logLine);
 		}
 		else {
-            var tooltipId = "metadata_all" + unitId; // SC2_TODO_TT make sure tooltipId is consistent everywhere
+            var tooltipId = "metadata_all" + unitId;
             //we're inside one, keep it visible
-            //SC2_TODO_TTif (hoveredAllDataToolTipIds[tooltipId] != "show") {
+            if (hoveredAllDataToolTipIds[tooltipId] != "show") {
 				//SC2_DEFERRED var logLine = templateMap["showEntityTooltip"];
 				//SC2_DEFERRED logLine = logLine.replace("<ENTITY_INFO>", unitLogStrings[unitId]);
 				//SC2_DEFERRED logLine = logLine.replace("<TIP_QUADRANT>", getSC2QuadrantName(x,y));
 				//SC2_DEFERRED targetHoverHandler(evt, logLine);
-            //SC2_TODO_TT}
-            //SC2_TODO_TThideAllTooltips(evt);
-            //SC2_TODO_TT$("#" + tooltipId).removeClass('tooltip-invisible');
-			//SC2_TODO_TThoveredAllDataToolTipIds[tooltipId] = "show";
+            }
+            hideAllTooltips(evt);
+            $("#" + tooltipId).removeClass('tooltip-invisible');
+			hoveredAllDataToolTipIds[tooltipId] = "show";
 		}
   	});
 }
@@ -288,8 +296,8 @@ function sizeNonGeneratedElements() {
     $("#explanation-control-panel").css("height", "85px");
 }
 
-function clearGameBoard() { //SC2_TEST (if anything is actually drawn there - health bars?)
-	//SC2_TODO_TTcleanToolTips();
+function clearGameBoard() { 
+	cleanToolTips();
 	gameboard_ctx.clearRect(0, 0, gameboard_canvas.width, gameboard_canvas.height);
 }
 

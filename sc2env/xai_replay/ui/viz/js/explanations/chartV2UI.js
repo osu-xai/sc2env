@@ -136,9 +136,9 @@ function getChartV2UI() {
                 return;
             }
         }
-        //SC2_DEFERRED var logLine = templateMap["selectedRewardBar"];
-        //SC2_DEFERRED logLine = logLine.replace("<SLCT_RWRD_BAR>", rewardBarName);
-        //SC2_DEFERRED chartTargetClickHandler("rewardBar", logLine);
+        //SC2_TODO_STUDY var logLine = templateMap["selectedRewardBar"];
+        //SC2_TODO_STUDY logLine = logLine.replace("<SLCT_RWRD_BAR>", rewardBarName);
+        //SC2_TODO_STUDY chartTargetClickHandler("rewardBar", logLine);
         if (rewardBarName != "None") {
             chartData.clearRewardBarSelections();
             chartData.selectSingleRewardBar(rewardBarName);
@@ -600,7 +600,7 @@ function addWhatButton() {
 
 	$("#what-button-div").append(whatButton);
 	$("#" + buttonId).click(function (e) {
-		//SC2_DEFERRED
+		//SC2_TODO_STUDY
 		// if (currentExplManager.saliencyVisible) {
 		// 	var logLine = templateMap["hideSaliency"];
 		// 	logLine = logLine.replace("<HIDE_SALNCY>", "NA");
@@ -611,9 +611,9 @@ function addWhatButton() {
 		// 	logLine = logLine.replace("<SHW_SALNCY>", "NA");
 		// 	targetClickHandler(e, logLine);
 		// }
-		//e.preventDefault();
-		//processWhatClick();
-		//SC2_DEFERRED_END
+		//SC2_TODO_STUDY_END
+		e.preventDefault();
+		//SC2_TODO_SALprocessWhatClick();
 		alert("saliency maps for SC2 XAI Replay not yet integrated.");
 	})
 }
