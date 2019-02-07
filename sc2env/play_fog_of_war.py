@@ -27,7 +27,7 @@ def main(render=False):
     else:
         env = fog_of_war.FogOfWarEnvironment(render=False, verbose=True)
 
-    agent = RandomAgent(env.action_space())
+    agent = RandomAgent(env.action_space)
     play_episode(agent, env)
 
 
