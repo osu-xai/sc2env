@@ -57,10 +57,10 @@ function createHPToolTip(unitInfo) {
         // position it relative to where origin of bounding box of gameboard is
     var y = getTooltipY(unitInfo) + canvas_bounds.top;
     var x = getTooltipX(unitInfo) + canvas_bounds.left;
-    var hpWidgetWidth = 4;
-    var hpWidgetHeight = 4;
+    var hpWidgetWidth = 8;
+    var hpWidgetHeight = 8;
     hpDiv.setAttribute("class", "flex-row");
-    hpDiv.setAttribute("style", 'background-color:white;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
+    hpDiv.setAttribute("style", 'background-color:black;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
     $("#scaii-gameboard").append(hpDiv);
 
     hpDiv.onclick = function(e) {

@@ -2,21 +2,22 @@
 //var sc2GameRenderWidth = 760;
 //var sc2GameRenderHeight = 640;
 // try quarter that
-var roughlyHalfWidthOfUnit         = 0.3 //(assuming 40x40)
-var sc2GameUnitDimensionsX         = 40;
-var sc2GameUnitDimensionsY         = 40;
-var sc2GameOrigPixelWidth          = 1600;
-var sc2GameOrigPixelHeight         = 1600;
-var sc2GameOrigPixelViewableWidth  = 1520;
-var sc2GameOrigPixelViewableHeight = 1280;
+var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05; 
+// var sc2GameUnitDimensionsX         = 40;
+// var sc2GameUnitDimensionsY         = 40;
+// var sc2GameOrigPixelWidth          = 1600;
+// var sc2GameOrigPixelHeight         = 1600;
+var sc2GameOrigPixelViewableWidth  = 512;
+var sc2GameOrigPixelViewableHeight = 512;
+var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 
-var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
-var sc2GameOrigPixelOffscreenToBottomY = (sc2GameOrigPixelHeight - sc2GameOrigPixelViewableHeight)/2;//160
+//var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
+//var sc2GameOrigPixelOffscreenToBottomY = (sc2GameOrigPixelHeight - sc2GameOrigPixelViewableHeight)/2;//160
 
-var videoScaleFactor = 0.4;
+var videoScaleFactor = 1;
 var sc2GameOrigPixelViewableWidth_Scaled  = sc2GameOrigPixelViewableWidth * videoScaleFactor;
 var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * videoScaleFactor;
-
+var roughlyHalfWidthOfUnitAsPixels = sc2GameOrigPixelViewableWidth_Scaled * roughlyHalfWidthOfUnitAsPercentageOfCanvas;
 var sc2GameRenderWidth  = sc2GameOrigPixelViewableWidth_Scaled;
 var sc2GameRenderHeight = sc2GameOrigPixelViewableHeight_Scaled;
 
@@ -109,12 +110,12 @@ function createVideoElement(path){
 
 function getTooltipY(unitInfo){
     //return translateUnitYToCanvasY(unitInfo.y) - 20.0;
-    return translateUnitYToCanvasY(unitInfo.y) - 2;
+    return translateUnitYToCanvasY(unitInfo.y) - 4;
 }
 
 function getTooltipX(unitInfo){
     //return translateUnitXToCanvasX(unitInfo.x) - 20.0;
-    return translateUnitXToCanvasX(unitInfo.x) - 2;
+    return translateUnitXToCanvasX(unitInfo.x) - 4;
 }
 function getTooltipColorRGBAForUnit(unitInfo){
     return "#ffffff";
@@ -141,21 +142,21 @@ function getSC2QuadrantName(x,y){
 }
 
 
-function translateUnitXToCanvasXOld(unitX){
-    var percentX = unitX / 40;
-    var origGameX = sc2GameOrigPixelWidth * percentX;
-    var canvasX = origGameX - sc2GameOrigPixelOffscreenToLeftX;
-    var scaledCanvasX = canvasX * videoScaleFactor;
-    return scaledCanvasX;
-}
+// function translateUnitXToCanvasXOld(unitX){
+//     var percentX = unitX / 40;
+//     var origGameX = sc2GameOrigPixelWidth * percentX;
+//     var canvasX = origGameX - sc2GameOrigPixelOffscreenToLeftX;
+//     var scaledCanvasX = canvasX * videoScaleFactor;
+//     return scaledCanvasX;
+// }
 
-function translateUnitYToCanvasYOld(unitY){
-    var percentY = unitY / 40;
-    var origGameY = sc2GameOrigPixelHeight * percentY;
-    var canvasY = origGameY - sc2GameOrigPixelOffscreenToBottomY;
-    var scaledCanvasY = canvasY * videoScaleFactor;
-    return scaledCanvasY;
-}
+// function translateUnitYToCanvasYOld(unitY){
+//     var percentY = unitY / 40;
+//     var origGameY = sc2GameOrigPixelHeight * percentY;
+//     var canvasY = origGameY - sc2GameOrigPixelOffscreenToBottomY;
+//     var scaledCanvasY = canvasY * videoScaleFactor;
+//     return scaledCanvasY;
+// }
 
 function translateUnitXToCanvasX(unitX){
     var unitXCamera = unitX - xEdgeToCamera;
@@ -182,31 +183,31 @@ function translateUnitYToCanvasY(unitY){
 //  5. %origGameY converted to unitYHover = 40 * %origGameY
 //
 
-function translateCanvasXCoordToGameUnitXCoordOld(canvasX, canvasWidth){
-    //
-    //  Translating canvas x coords to game unit x coords
-    //  1. mouse hovers at x coord
-    //  2. xcoord translated to %canvasX
-    var percentCanvasX = (Number(canvasX) / Number(canvasWidth));
+// function translateCanvasXCoordToGameUnitXCoordOld(canvasX, canvasWidth){
+//     //
+//     //  Translating canvas x coords to game unit x coords
+//     //  1. mouse hovers at x coord
+//     //  2. xcoord translated to %canvasX
+//     var percentCanvasX = (Number(canvasX) / Number(canvasWidth));
 
-    //  3. %canvasX translated to origGamePixelX = sc2GameOrigPixelOffscreenToLeftX + %canvasX*sc2GameOrigPixelViewableWidth)
-    var origGamePixelX = (sc2GameOrigPixelOffscreenToLeftX + percentCanvasX * sc2GameOrigPixelViewableWidth) / videoScaleFactor;
+//     //  3. %canvasX translated to origGamePixelX = sc2GameOrigPixelOffscreenToLeftX + %canvasX*sc2GameOrigPixelViewableWidth)
+//     var origGamePixelX = (sc2GameOrigPixelOffscreenToLeftX + percentCanvasX * sc2GameOrigPixelViewableWidth) / videoScaleFactor;
 
-    //  4. origGamePixelX translated to %origGameX = origGamePixelX / sc2GameOrigPixelWidth
-    var percentGameX = origGamePixelX / sc2GameOrigPixelWidth;
+//     //  4. origGamePixelX translated to %origGameX = origGamePixelX / sc2GameOrigPixelWidth
+//     var percentGameX = origGamePixelX / sc2GameOrigPixelWidth;
 
-    //  5. %origGameX converted to unitSpaceX = 40 * %origGameX
-    var unitSpaceX = 40 * percentGameX;
-    return unitSpaceX;
-}
+//     //  5. %origGameX converted to unitSpaceX = 40 * %origGameX
+//     var unitSpaceX = 40 * percentGameX;
+//     return unitSpaceX;
+// }
 
 // Cw = 24, Ch = 24
 // corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
 // XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
-var cameraWidth = 24;
-var cameraHeight = 24;
-var cameraOriginX = 20;
-var cameraOriginY = 20;
+var cameraWidth = 28;
+var cameraHeight = 28;
+var cameraOriginX = 28;
+var cameraOriginY = 28;
 var xEdgeToCamera = cameraOriginX - cameraWidth/2;
 var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 
@@ -231,24 +232,24 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
     return unitSpaceY;
 }
 
-function translateCanvasYCoordToGameUnitYCoordOld(canvasY, canvasHeight){
+// function translateCanvasYCoordToGameUnitYCoordOld(canvasY, canvasHeight){
 
-    //
-    //  Translating canvas y coords to game unit y coords
-    //  1. mouse hovers at y coord
-    //  2. ycoord translated to %canvasY
-    var percentCanvasY = (Number(canvasY) / Number(canvasHeight));
+//     //
+//     //  Translating canvas y coords to game unit y coords
+//     //  1. mouse hovers at y coord
+//     //  2. ycoord translated to %canvasY
+//     var percentCanvasY = (Number(canvasY) / Number(canvasHeight));
 
-    //  3. %canvasY translated to origGamePixelY = sc2GameOrigPixelOffscreenToBottomY + %canvasY*sc2GameOrigPixelViewableHeight)
-    var origGamePixelY = (sc2GameOrigPixelOffscreenToBottomY + (1  - percentCanvasY) * sc2GameOrigPixelViewableHeight) / videoScaleFactor;
+//     //  3. %canvasY translated to origGamePixelY = sc2GameOrigPixelOffscreenToBottomY + %canvasY*sc2GameOrigPixelViewableHeight)
+//     var origGamePixelY = (sc2GameOrigPixelOffscreenToBottomY + (1  - percentCanvasY) * sc2GameOrigPixelViewableHeight) / videoScaleFactor;
 
-    //  4. origGamePixelY translated to %origGameY = origGamePixelY / sc2GameOrigPixelHeight
-    var percentGameY = origGamePixelY / sc2GameOrigPixelHeight;
+//     //  4. origGamePixelY translated to %origGameY = origGamePixelY / sc2GameOrigPixelHeight
+//     var percentGameY = origGamePixelY / sc2GameOrigPixelHeight;
 
-    //  5. %origGameY converted to unitSpaceY = 40 * %origGameY
-    var unitSpaceY = 40 * percentGameY;
-    return unitSpaceY;
-}
+//     //  5. %origGameY converted to unitSpaceY = 40 * %origGameY
+//     var unitSpaceY = 40 * percentGameY;
+//     return unitSpaceY;
+// }
 
 var frameNumber = 0;
 var frameCount = 92;
