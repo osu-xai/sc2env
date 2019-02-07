@@ -296,9 +296,10 @@ function updateButtonsAfterJump() {
 function jumpToStep(step){
 	sessionIndexManager.setReplaySequencerIndex(step);
 	activeSC2UIManager.jumpToFrame(step);
-    //SC2_TODO_TTcleanToolTips();
+    cleanToolTips();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
 	}
-	//SC2_TODO_TT - need to reinstate tooltips here since not round-tripping to backend?
+	//need to reinstate tooltips here since not round-tripping to backend?
+	createToolTips();
 }

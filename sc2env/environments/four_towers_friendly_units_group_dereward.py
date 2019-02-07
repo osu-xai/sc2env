@@ -10,7 +10,7 @@ from sc2env.utility import getOneHotState
 import os
 
 SCREEN_SIZE = 40
-MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward'
+MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward_recorder'
 class FourTowersFriendlyUnitsGroupDereward():
     def __init__(self, reward_types, map_name = None, unit_type = [83, 52, 48], generate_xai_replay = False):
         if map_name is None:
@@ -22,16 +22,14 @@ class FourTowersFriendlyUnitsGroupDereward():
         aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              #camera_width_world_units = 28
+              camera_width_world_units = 28
               )
         step_mul_value = 16
         if generate_xai_replay:
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
-                screen=(1520, 1280),
-                #screen=(2048, 2048),
-                #screen=(256, 256),
+                screen=(512, 512),
                 minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
@@ -56,6 +54,7 @@ class FourTowersFriendlyUnitsGroupDereward():
         self.decomposed_rewards_mark = 0
         self.signal_of_finished = 1
         self.end_state = None
+        #self.agentInterfaceFormat = features.AgentInterfaceFormat()
 
         self.reward_types = reward_types
         self.decomposed_reward_dict = {}
@@ -90,7 +89,8 @@ class FourTowersFriendlyUnitsGroupDereward():
         state = np.reshape(state, (1, -1))
         
         self.end_state = None
-
+      #  print(self.agent_interface_format['camera_width_world_units'])
+      #  input()
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())

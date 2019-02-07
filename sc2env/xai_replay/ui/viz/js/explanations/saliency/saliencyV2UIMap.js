@@ -102,18 +102,18 @@ function getSaliencyV2UIMap() {
     uimap.addEventsToSaliencyCanvas = function(ch){
         ch.saliencyCanvas.addEventListener('mouseenter', function(evt) {
 			ch.valueSpan.setAttribute("style", 'visibility:hidden;');
-			//SC2_DEFERRED var logLine = templateMap["startMouseOverSaliencyMap"];
-			//SC2_DEFERRED logLine = logLine.replace("<REGION>", "saliencyMap");
-			//SC2_DEFERRED logLine = logLine.replace("<SLNCY_NAME>", ch.name);
-			//SC2_DEFERRED targetHoverHandler(evt, logLine);
+			//SC2_TODO_STUDY var logLine = templateMap["startMouseOverSaliencyMap"];
+			//SC2_TODO_STUDY logLine = logLine.replace("<REGION>", "saliencyMap");
+			//SC2_TODO_STUDY logLine = logLine.replace("<SLNCY_NAME>", ch.name);
+			//SC2_TODO_STUDY targetHoverHandler(evt, logLine);
         });
         
 		ch.saliencyCanvas.addEventListener('mouseleave', function(evt) {
             ch.valueSpan.setAttribute("style", 'visibility:hidden;');
-			//SC2_DEFERRED var logLine = templateMap["endMouseOverSaliencyMap"];
-			//SC2_DEFERRED logLine = logLine.replace("<REGION>", "saliencyMap");
-			//SC2_DEFERRED logLine = logLine.replace("<SLNCY_NAME>", ch.name);
-			//SC2_DEFERRED targetHoverHandler(evt, logLine);
+			//SC2_TODO_STUDY var logLine = templateMap["endMouseOverSaliencyMap"];
+			//SC2_TODO_STUDY logLine = logLine.replace("<REGION>", "saliencyMap");
+			//SC2_TODO_STUDY logLine = logLine.replace("<SLNCY_NAME>", ch.name);
+			//SC2_TODO_STUDY targetHoverHandler(evt, logLine);
         });
 
         if (!userStudyMode){
@@ -495,7 +495,7 @@ function processSaliencyMapClick(e, ch){
     var x = e.offsetX;
     var y = e.offsetY;
     var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
-    //SC2_DEFERRED
+    //SC2_TODO_STUDY
 //     var logLine = templateMap["clickSaliencyMap"];
 //     if (unitId != undefined){
 //         logLine = logLine.replace("<REGION>", "saliencyMap");
@@ -511,7 +511,7 @@ function processSaliencyMapClick(e, ch){
 //         logLine = logLine.replace("<QUADRANT_NAME>", getSC2QuadrantName(x,y));
 //         targetClickHandler(e, logLine);
 //     }
-    //SC2_DEFERRED_END
+    //SC2_TODO_STUDY_END
     if (userStudyMode){
         processOutlineAndOverlayUserStudyMode(ch);
     }
