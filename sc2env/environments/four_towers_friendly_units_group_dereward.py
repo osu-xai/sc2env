@@ -21,8 +21,9 @@ class FourTowersFriendlyUnitsGroupDereward():
         self.agent_interface_format = features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 28
-              ),
+              camera_width_world_units = 28,
+              #use_camera_position = True,
+              )
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
           players = [sc2_env.Agent(sc2_env.Race.protoss)],
@@ -75,8 +76,10 @@ class FourTowersFriendlyUnitsGroupDereward():
         state = np.reshape(state, (1, -1))
         
         self.end_state = None
-      #  print(self.agent_interface_format['camera_width_world_units'])
-      #  input()
+        #print(self.agent_interface_format.camera_width_world_units)
+        #print(self.agent_interface_format.use_camera_position)
+        #print(observation)
+        #input()
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
@@ -84,7 +87,7 @@ class FourTowersFriendlyUnitsGroupDereward():
 
         
         data = data.observation.raw_data.units
-
+ 
         rewards, sof = self.getRewards(data)
 
         self.signal_of_finished = sof
