@@ -30,7 +30,7 @@ class XaiReplayRecorder():
     def save_game_rgb_screen(self, observation): 
         rgb_screen = features.Feature.unpack_rgb_image(observation.observation.render_data.map).astype(np.int32)  
         #print(f"SAVING IMAGE")
-        self.video.write_frame(rgb_screen)
+        self.video.write_frame(rgb_screen, normalize=False)
 
     def record_decision_point(self, state, action, q_values, combined_q_values, reward):
         observation = self.get_observation()
