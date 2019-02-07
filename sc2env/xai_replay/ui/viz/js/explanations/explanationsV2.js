@@ -44,7 +44,7 @@ function renderWhyButton(step, x, y){
     whyButton.setAttribute("style", 'z-index:' + zIndexMap["whyButton"] + ';position:relative;left:' + x + 'px;top:-17px;font-family:Arial;');
     $("#explanation-control-panel").append(whyButton);
     $("#" + buttonId).click(function(e) {
-        //SC2_DEFERRED 
+        //SC2_TODO_STUDY 
         // if (currentExplManager.chartVisible) {
         //     var logLine = templateMap["hideWhy"];
         //     logLine = logLine.replace("<HIDE_WHY>", "NA");
@@ -55,7 +55,7 @@ function renderWhyButton(step, x, y){
         //     logLine = logLine.replace("<SHW_WHY>", "NA");
         //     targetClickHandler(e, logLine);
         // }
-        //SC2_DEFERRED_END
+        //SC2_TODO_STUDY_END
         e.preventDefault();
         processWhyClick(step);
     })

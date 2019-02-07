@@ -57,7 +57,7 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
         return actionnames;
     }
 
-    dm.getCumulativeRewards = function() {//SC2_DEFERRED
+    dm.getCumulativeRewards = function() {//SC2_TOTO_REW}
         alert('sc2DataManager.getCumulativeRewards unimplemented')
     }
     dm.getClosestUnitInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST

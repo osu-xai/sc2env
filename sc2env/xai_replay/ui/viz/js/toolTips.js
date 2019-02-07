@@ -2,7 +2,7 @@ var entityHPToolTipIds = [];
 //var selectedToolTipIds = {};
 var entityAllDataToolTipIds = [];
 var hoveredAllDataToolTipIds = {};
-
+var unitLogStrings = {};
 
 function createToolTips(unitInfo) {
     createHPToolTip(unitInfo);
@@ -43,8 +43,7 @@ function cleanToolTips(){
   
 function createHPToolTip(unitInfo) {
     var unit = unitInfo;    
-    alert('createHPToolTip needs to refer to sc2 unit info')//SC2_TODO_TT - rework this to reference proper fields
-    var percentHPRemaining = unit.health / unit.health_max;//SC2_TODO_TT review calculation
+    var percentHPRemaining = unit.health / unit.health_max;
     console.log('percentHPRemaining calculation: health' + unit.health + ' max ' + unit.health_max + ' result ' + percentHPRemaining);
     var canvas_bounds = gameboard_canvas.getBoundingClientRect();
     var hpDiv = document.createElement("div");
@@ -58,17 +57,17 @@ function createHPToolTip(unitInfo) {
         // position it relative to where origin of bounding box of gameboard is
     var y = getTooltipY(unitInfo) + canvas_bounds.top;
     var x = getTooltipX(unitInfo) + canvas_bounds.left;
-    var hpWidgetWidth = 20;
-    var hpWidgetHeight = 3;
+    var hpWidgetWidth = 4;
+    var hpWidgetHeight = 4;
     hpDiv.setAttribute("class", "flex-row");
-    hpDiv.setAttribute("style", 'background-color:black;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
+    hpDiv.setAttribute("style", 'background-color:white;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
     $("#scaii-gameboard").append(hpDiv);
 
     hpDiv.onclick = function(e) {
         highlightUnitForClickCollectionFeedback(unit);
-        //SC2_TODO_TT whay no x,y args to getSC2QuadrantName
-        //SC2_DEFERRED var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + unitLogStrings[getUnitIdFromTag(unit.tag)];
-        //SC2_DEFERRED targetClickHandler(e, "clickHitPoints:" + targetName);
+        //SC2_TODO_STUDY whay no x,y args to getSC2QuadrantName
+        //SC2_TODO_STUDY var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + unitLogStrings[getUnitIdFromTag(unit.tag)];
+        //SC2_TODO_STUDY targetClickHandler(e, "clickHitPoints:" + targetName);
     };
 
     var hpRemainingDivWidth = hpWidgetWidth * unit.percentHPRemaining;
@@ -84,7 +83,7 @@ function createHPToolTip(unitInfo) {
 function getUnitIdFromTag(tag){
     return 'metadata_all'+tag;
 }
-function createAllDataToolTip(unitInfo) { //SC2_TODO_TT - ready for test!
+function createAllDataToolTip(unitInfo) { 
     var unit = unitInfo;
     var unitId = getUnitIdFromTag(unit.tag);
     var canvas_bounds = gameboard_canvas.getBoundingClientRect();
@@ -97,8 +96,8 @@ function createAllDataToolTip(unitInfo) { //SC2_TODO_TT - ready for test!
     hoveredAllDataToolTipIds[unitId] = "hide";
     valuesDiv.setAttribute("id",unitId);
      // position it relative to where origin of bounding box of gameboard is
-    var y = unit.y + canvas_bounds.top + 20;
-    var x = unit.x + canvas_bounds.left + -125;
+    var y = translateUnitYToCanvasY(unit.y) + canvas_bounds.top + 20;
+    var x = translateUnitXToCanvasX(unit.x) + canvas_bounds.left + -125;
     valuesDiv.setAttribute("style", 'position:absolute;padding:4px;background-color:black;z-index:' + zIndexMap["tooltip"] + ';left:' + x + 'px;top:' + y + 'px;color:white;	display: flex;flex-direction: column;font-family:Arial');
     $("#scaii-gameboard").append(valuesDiv);
     entityAllDataToolTipIds.push(unitId);
