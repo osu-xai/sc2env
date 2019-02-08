@@ -79,7 +79,7 @@ class FourTowersFriendlyUnitsGroupDereward():
         observation = self.unpack_timestep(self.last_timestep)
         self.current_obs = observation
         self.actions_taken = 0
-        #np.set_printoptions(threshold=np.nan,linewidth=np.nan)
+        np.set_printoptions(threshold=np.nan,linewidth=np.nan)
 
         state = observation[3]['feature_screen']
         player_relative = np.array(state[5])
