@@ -10,8 +10,12 @@ import os
 #import proto.explanation_pb2
 import proto.session_pb2 as pb
 
+REPLAY_DIR_PATH = "../replays"
+
 async def hello(websocket, path):
-    rc = pb.ReplayChoiceConfig(replay_filenames=["four_towers_friendly_units_group_dereward-512_512"], user_study_mode=False)
+    replay_files = grab_replay_files(REPLAY_DIR_PATH)
+
+    rc = pb.ReplayChoiceConfig(replay_filenames=replay_files, user_study_mode=False)
 
     scaii_packet = pb.ScaiiPacket(replay_choice_config=rc)
     #session_config = pb.SC2ReplaySessionConfig()
@@ -52,24 +56,57 @@ async def hello(websocket, path):
                 args = responsePacket.user_command.args
                 filename = args[0]
                 
-                json = load_json_from_replay_datafile(filename)
-                rsc = pb.SC2ReplaySessionConfig(json_data=json)
-                scaii_packet = pb.ScaiiPacket(replay_session_config=rsc)
-                byt = scaii_packet.SerializeToString()
-                await websocket.send(byt)
+                json = load_json_from_replay_datafile(filename, REPLAY_DIR_PATH)
+                if json is None:
+                    print("ERROR - when grabbing json file")
+                else:
+                    rsc = pb.SC2ReplaySessionConfig(json_data=json)
+                    scaii_packet = pb.ScaiiPacket(replay_session_config=rsc)
+                    byt = scaii_packet.SerializeToString()
+                    await websocket.send(byt)
 
         
         #print [method for method in dir(responsePacket) if callable(getattr(responsePacket, method))]
         print(responsePacket)
 
-def load_json_from_replay_datafile(filename):
+def load_json_from_replay_datafile(filename, replay_dir_path):
     # files will be in ../replays
+    # navigate to ../replays and retrive file with same name as filename
+
     filename_with_extension = filename + '.json'
-    json_path = os.path.join('../replays', filename_with_extension)
-    f = open(json_path)
-    data = f.read()
-    f.close()
-    return data
+
+    if not os.path.exists(replay_dir_path):
+        print("ERROR: path to replays does not exist!")
+        return
+
+    files_in_dir = os.listdir(replay_dir_path)
+    for json_file in files_in_dir:
+        if json_file == filename_with_extension:
+            json_path = os.path.join(replay_dir_path, filename_with_extension)
+            f = open(json_path)
+            data = f.read()
+            f.close()
+            return data
+
+    print("ERROR: file not found in replays folder!")
+    return
+
+def grab_replay_files(replay_dir_path):
+    if not os.path.exists(replay_dir_path):
+        print("ERROR: path to replays does not exist!")
+        return []
+
+    replay_files = []
+    files_in_dir = os.listdir(replay_dir_path)
+    for json_file in files_in_dir:
+        if json_file.endswith(".json"):
+            no_extension = os.path.splitext(json_file)[0]
+            replay_files.append(no_extension)
+            
+    if (len(replay_files) == 0):
+        print("ERROR: In replays directory no files found or no files found of type '.json'")
+    return replay_files
+
 
 if __name__ == "__main__":
     start_server = websockets.serve(hello, 'localhost', 6112)
