@@ -35,7 +35,7 @@ class FourTowersFriendlyUnitsGroupDereward():
                 ),
                 action_space=actions.ActionSpace.FEATURES,
             )
-            step_mul_value = 8
+            step_mul_value = 4
         
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
