@@ -33,6 +33,7 @@ class FourTowersFriendlyUnitsGroupDereward():
                 minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
+                camera_width_world_units = 28,
             )
             step_mul_value = 4
         
