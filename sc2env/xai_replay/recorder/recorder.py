@@ -1,6 +1,7 @@
 import json
 import imutil
 import numpy as np
+import time
 from s2clientprotocol import sc2api_pb2 as sc_pb
 from pysc2.lib import features
 import sys
@@ -10,9 +11,12 @@ class XaiReplayRecorder():
     Creates a video and metadata file to support XAI replays UI for user studies
     """
     
-    def __init__(self, sc2_env, game_number, env_name, tensor_action_key, tensor_reward_key):
-        self.json_filename = env_name + "_" +  str(game_number) + ".json"
-        self.video_filename = env_name + "_" +  str(game_number) + ".mp4"
+    def __init__(self, sc2_env, game_number, env_name, tensor_action_key, tensor_reward_key, replay_dimension = 256):
+        #self.json_filename = env_name + "_" +  str(game_number) + ".json"
+        #self.video_filename = env_name + "_" +  str(game_number) + ".mp4"
+        time_string = "{}".format(int(time.time()))
+        self.json_filename = "game_" +  time_string + "_" + str(replay_dimension) + ".json"
+        self.video_filename = "game_" +  time_string + "_" + str(replay_dimension) + ".mp4"
         self.sc2_env = sc2_env
         self.game_clock_tick = 0
         self.frames = []
@@ -32,7 +36,7 @@ class XaiReplayRecorder():
         #print(f"SAVING IMAGE")
         self.video.write_frame(rgb_screen, normalize=False)
 
-    def record_decision_point(self, state, action, q_values, combined_q_values, reward):
+    def record_decision_point(self, action, q_values, combined_q_values, reward, cumulative_rewards):
         observation = self.get_observation()
         frame_info = {}
         if reward == [[]]:
@@ -40,6 +44,7 @@ class XaiReplayRecorder():
         else:
             frame_info["reward"] = reward.item()
         frame_info["action"] = self.action_names[action]
+        frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
         frame_info["frame_info_type"] = "decision_point"
         frame_info["decision_point_number"] = self.decision_point_number
         frame_info["q_values"] = self.create_rewards_dict_from_tensor(q_values)
@@ -99,12 +104,13 @@ class XaiReplayRecorder():
     
         
 
-    def record_game_clock_tick(self, state):
+    def record_game_clock_tick(self, cumulative_rewards):
         self.game_clock_tick += 1
         if True:
             observation = self.get_observation()
         #if (self.game_clock_tick % 17 == 0):
             frame_info = {}
+            frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
             frame_info["frame_info_type"] = "clock_tick"
             self.gather_common_state(frame_info, observation)
             self.frames.append(frame_info)
@@ -131,3 +137,9 @@ class XaiReplayRecorder():
         f.write("\n")
         f.close()
 
+
+def clone_rewards_dict(rd):
+    result = {}
+    for key, val in rd.items():
+        result[key] = val
+    return result

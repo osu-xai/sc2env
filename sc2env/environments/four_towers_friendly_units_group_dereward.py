@@ -12,7 +12,7 @@ import os
 SCREEN_SIZE = 40
 MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward_recorder'
 class FourTowersFriendlyUnitsGroupDereward():
-    def __init__(self, reward_types, map_name = None, unit_type = [83, 52, 48], generate_xai_replay = False):
+    def __init__(self, reward_types, map_name = None, unit_type = [83, 52, 48], generate_xai_replay = False, xai_replay_dimension = 256):
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
@@ -29,8 +29,7 @@ class FourTowersFriendlyUnitsGroupDereward():
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
-                screen=(1024, 1024),
-                #screen=(512, 512),
+                screen=(xai_replay_dimension, xai_replay_dimension),
                 minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
