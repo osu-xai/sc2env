@@ -1,10 +1,17 @@
+// Cw = 24, Ch = 24
+// corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
+// XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
+var cameraWidth = 28;
+var cameraHeight = 28;
+var cameraOriginX = 28;
+var cameraOriginY = 28;
+var xEdgeToCamera = cameraOriginX - cameraWidth/2;
+var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 // 1520 x 1280 is dimensions of video frame, try half that
 //var sc2GameRenderWidth = 760;
 //var sc2GameRenderHeight = 640;
 // try quarter that
-var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05; 
-// var sc2GameUnitDimensionsX         = 40;
-// var sc2GameUnitDimensionsY         = 40;
+var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.03; 
 // var sc2GameOrigPixelWidth          = 1600;
 // var sc2GameOrigPixelHeight         = 1600;
 var sc2GameOrigPixelViewableWidth  = 512;
@@ -17,11 +24,11 @@ var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 var videoScaleFactor = 1;
 var sc2GameOrigPixelViewableWidth_Scaled  = sc2GameOrigPixelViewableWidth * videoScaleFactor;
 var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * videoScaleFactor;
-var roughlyHalfWidthOfUnitAsPixels = sc2GameOrigPixelViewableWidth_Scaled * roughlyHalfWidthOfUnitAsPercentageOfCanvas;
+var roughlyHalfWidthOfUnitInGameUnits = cameraWidth * roughlyHalfWidthOfUnitAsPercentageOfCanvas;
 var sc2GameRenderWidth  = sc2GameOrigPixelViewableWidth_Scaled;
 var sc2GameRenderHeight = sc2GameOrigPixelViewableHeight_Scaled;
 
-var gameContainerWidth = sc2GameRenderWidth + 360;
+var gameContainerWidth = sc2GameRenderWidth + 520;
 
 //=================================================================================
 // Click comutation support V2
@@ -45,9 +52,10 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim = {};
     uim.dataManager = sc2DataManager;
     uim.videoFilepath = getVideoFilepath(filenameRoot);
+    uim.jumped = false;
     createVideoElement(uim.videoFilepath);
 
-    uim.renderStateForCurrentStep = function() {
+    uim.renderTooltipsForCurrentStep = function() {
         clearGameBoard();
         var unitInfos = this.dataManager.getUnitInfos(sessionIndexManager.getCurrentIndex());
         for (i in unitInfos){
@@ -56,23 +64,39 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         }
     }
 
-    uim.jumpToFrame = function(frameIndex){//SC2_TEST
-        var currentTime = frameIndex / framesPerSecond;
-		console.log("frame number " + frameIndex + " currentTime " + currentTime)
+    uim.renderStateForCurrentStep = function() {
+        alert("sc2UIManager.renderCurrentState not yet implemented - how treat this for study mode?")
+    }
+    uim.jumpToFrame = function(frameNumber){//SC2_TEST
+        this.pause();
+        var currentTime = frameNumber / framesPerSecond;
+        this.jumped = true;
+		//console.log("frame number " + frameIndex + " currentTime " + currentTime)
         video.currentTime = currentTime;
-        this.renderStateForCurrentStep();
-        performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameIndex));
+        // event will fire that will trigger expressFrameInfo
+        
+        //sessionIndexManager.setReplaySequencerIndex(frameNumber);
+       // this.renderStateForCurrentStep();
+        //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
 
+    uim.expressFrameInfo = function(frameNumber) {
+        frameNumber = this.dataManager.validateStep(frameNumber);
+        sessionIndexManager.setReplaySequencerIndex(frameNumber);
+        expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
+        userStudyAdjustmentsForFrameChange();
+        if (this.jumped){
+            this.renderTooltipsForCurrentStep();
+            this.jumped = false;
+        }
+        checkForEndOfGame()
+    }
     uim.play = function(){
         video.play();
     }
     uim.pause = function() {
         video.pause();
-        var frameNumber = Math.floor(video.currentTime * framesPerSecond);
-        console.log('frameNumber ' + frameNumber + ' currentTime ' + this.currentTime + " FPS " + framesPerSecond);
-        sessionIndexManager.setReplaySequencerIndex(frameNumber);
-        activeSC2UIManager.jumpToFrame(frameNumber);
+        this.renderTooltipsForCurrentStep();
     }
     uim.jumpToFrame(0);
     return uim;
@@ -85,41 +109,33 @@ function getVideoFilepath(chosenFile){
 var video = undefined;
 
 function createVideoElement(path){
+    var existingVideo = document.getElementById("video");
+    if (existingVideo != undefined){
+        // delete the old one, new one coming in...
+        existingVideo.remove();
+    }
     video = document.createElement("video");
-	//video.setAttribute("width", "760px");
-	//video.setAttribute("height", "640");
 	video.setAttribute("width", sc2GameRenderWidth + "px");
-	video.setAttribute("height",sc2GameRenderHeight + "px");
+    video.setAttribute("height",sc2GameRenderHeight + "px");
+    video.setAttribute("id","video");
 	video.src = path;
 	$("#scaii-gameboard").append(video);
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.floor(video.currentTime * framesPerSecond);
-        console.log('frameNumber ' + frameNumber + ' currentTime ' + video.currentTime + " FPS " + framesPerSecond);
-        frameNumber = activeSC2DataManager.validateStep(frameNumber);
-        sessionIndexManager.setReplaySequencerIndex(frameNumber);
-        //activeSC2UIManager.jumpToFrame(frameNumber);
+        activeSC2UIManager.expressFrameInfo(frameNumber);
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
 	configureGameboardCanvas();
 	video.load();	
 	video.playbackRate = videoPlaybackRate;
-	//video.play();
 }
 
-function getTooltipY(unitInfo){
-    //return translateUnitYToCanvasY(unitInfo.y) - 20.0;
-    return translateUnitYToCanvasY(unitInfo.y) - 4;
-}
-
-function getTooltipX(unitInfo){
-    //return translateUnitXToCanvasX(unitInfo.x) - 20.0;
-    return translateUnitXToCanvasX(unitInfo.x) - 4;
-}
 function getTooltipColorRGBAForUnit(unitInfo){
     return "#ffffff";
 }
+
 function getSC2QuadrantName(x,y){
     var halfWidth = sc2GameRenderWidth / 2;
     var halfHeight = sc2GameRenderHeight / 2;
@@ -162,7 +178,7 @@ function translateUnitXToCanvasX(unitX){
     var unitXCamera = unitX - xEdgeToCamera;
     var unitXPercentAcrossCanvas = unitXCamera / cameraWidth;
     var canvasX = gameboard_canvas.width * unitXPercentAcrossCanvas;
-    console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
+    //console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
     return canvasX;
 }
 
@@ -201,15 +217,7 @@ function translateUnitYToCanvasY(unitY){
 //     return unitSpaceX;
 // }
 
-// Cw = 24, Ch = 24
-// corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
-// XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
-var cameraWidth = 28;
-var cameraHeight = 28;
-var cameraOriginX = 28;
-var cameraOriginY = 28;
-var xEdgeToCamera = cameraOriginX - cameraWidth/2;
-var yEdgeToCamera = cameraOriginY - cameraHeight/2;
+
 
 function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
     //

@@ -294,12 +294,9 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
-	sessionIndexManager.setReplaySequencerIndex(step);
+    clearGameBoard();
 	activeSC2UIManager.jumpToFrame(step);
-    cleanToolTips();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
 	}
-	//need to reinstate tooltips here since not round-tripping to backend?
-	createToolTips();
 }

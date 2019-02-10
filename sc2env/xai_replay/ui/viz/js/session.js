@@ -174,14 +174,17 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
 }
 
 
-function performFinalAdjustmentsForFrameChange(frameInfo){//SC2_TEST
-    //SC2_TODO_REWexpressCumulativeRewards(frameInfo);
-    var qm = activeStudyQuestionManager;
+
+function checkForEndOfGame(){
+    if (sessionIndexManager.isAtEndOfGame()) {
+		controlsManager.reachedEndOfGame();
+	}
+}
+
+function userStudyAdjustmentsForFrameChange(){
     if (userStudyMode) {
-        // will ask for first DP
+        var qm = activeStudyQuestionManager;
         qm.configureForCurrentStep();
-    }
-    if (userStudyMode) {
         if (tabManager.hasShownUserId()){
         }
         if (qm.accessManager.isAtEndOfRange(sessionIndexManager.getCurrentIndex())){
@@ -202,24 +205,17 @@ function performFinalAdjustmentsForFrameChange(frameInfo){//SC2_TEST
         }
         currentExplManager.setWhyButtonAccessibility();
     }
-    
-	if (sessionIndexManager.isAtEndOfGame()) {
-		controlsManager.reachedEndOfGame();
-	}
 }
-
 var totalsString = "total score";
-//
-// SC2_TODO_REW rework to handle java object for the reward info,
-// adding up reward info as we go forward and subtracting as we go backward
-//
+
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
-    entryList = activeSC2DataManager.getCumulativeRewards(frameInfo);
+    rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;
-	//compute totals
-	for (var i in entryList ){
-    	var entry = entryList[i];
-		var val = entry[1];
+    //compute totals
+    var keys = Object.keys(rewardsDict);
+	for (var i in keys ){
+        var key = keys[i];
+        var val = rewardsDict[key];
 		total = Number(total) + Number(val);
 	}
 	var valId = getRewardValueId(totalsString);
@@ -234,10 +230,9 @@ function expressCumulativeRewards(frameInfo) { //SC2_TEST
     if (userStudyMode) {
         return;
     }
-  	for (var i in entryList ){
-    	var entry = entryList[i];
-    	var key = entry[0];
-		var val = entry[1];
+  	for (var i in keys ){
+        var key = keys[i];
+        var val = rewardsDict[key];
 		var valId = getRewardValueId(key);
 		var idOfExistingValueLabel = rewardsDivMap[valId];
 		if (idOfExistingValueLabel == undefined) {
@@ -258,13 +253,13 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	var rewardKeyDiv = document.createElement("DIV");
 	rewardKeyDiv.setAttribute("class", "r" + index +"c0");
 	if (key == totalsString){
-		rewardKeyDiv.setAttribute("style", "height:15px;font-family:Arial;font-size:14px;font-weight:bold;");
+		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:18px;font-weight:bold;padding-bottom:7px; padding-top:20px");
 	}
 	else {
-		rewardKeyDiv.setAttribute("style", "height:15px;font-family:Arial;font-size:14px;");
+		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:18px;padding-bottom:3px");
 	}
 	
-	rewardKeyDiv.innerHTML = key;
+	rewardKeyDiv.innerHTML = prettyPrintRewardName[key];
 	//SC2_DEFERRED var logLineLabel = templateMap["touchCumRewardLabel"];
 	//SC2_DEFERRED logLineLabel = logLineLabel.replace("<CUM_LBL>", key);
     //SC2_DEFERRED rewardKeyDiv.onclick = function(e) {targetClickHandler(e, logLineLabel);};
@@ -277,10 +272,10 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	rewardValDiv.setAttribute("id", id);
 	rewardValDiv.setAttribute("class", "r" + index +"c1");
 	if (key == totalsString){
-		rewardValDiv.setAttribute("style", "margin-left: 20px;height:15px;font-family:Arial;font-size:14px;font-weight:bold");
+		rewardValDiv.setAttribute("style", "margin-left: 20px;font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:7px; padding-top:20px");
 	}
 	else {
-		rewardValDiv.setAttribute("style", "margin-left: 20px;height:15px;font-family:Arial;font-size:14px;");
+		rewardValDiv.setAttribute("style", "margin-left: 20px;font-family:Arial;font-size:14px;");
 	}
 	
 	rewardValDiv.innerHTML = val;

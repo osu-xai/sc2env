@@ -87,7 +87,12 @@ function getSaliencyV2UI() {
         }
     }
 
+
 	ui.renderSaliencyDetailed = function(chartData) {
+        //turned off saliency for PI demo
+    }
+
+	ui.renderSaliencyDetailedGood = function(chartData) {
         var step = sessionIndexManager.getCurrentIndex();
         step = sessionIndexManager.getStepThatStartsEpochForStep(step);
         var dpEntityList = currentExplManager.entityListForDP[step];

@@ -494,7 +494,7 @@ function getOverlayOpacityBySaliencyRGBAStringQuantized(saliencyValue, gameboard
 function processSaliencyMapClick(e, ch){
     var x = e.offsetX;
     var y = e.offsetY;
-    var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+    var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
     //SC2_TODO_STUDY
 //     var logLine = templateMap["clickSaliencyMap"];
 //     if (unitId != undefined){
