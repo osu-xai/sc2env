@@ -46,8 +46,7 @@ class ConvNetQLearningAgent():
         gathered_y = torch.gather(pred_y, 1, self.replay_a)[:,0]
         error_per_sample = (gathered_y - self.replay_y)**2
         error = torch.mean(self.replay_buffer_mask * error_per_sample)
-        print("Pred y: {:.02f} {:.02f} {:.02f} {:.02f}".format(
-            pred_y[idx, 0], pred_y[idx, 1], pred_y[idx, 2], pred_y[idx, 3]))
+        #print("Pred y: {}".format(pred_y[idx]))
         error.backward()
         self.optimizer.step()
         return float(error.data)
