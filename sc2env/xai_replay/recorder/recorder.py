@@ -44,7 +44,7 @@ class XaiReplayRecorder():
         else:
             frame_info["reward"] = reward.item()
         frame_info["action"] = self.action_names[action]
-        frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
+        frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards, len(self.frames))
         frame_info["frame_info_type"] = "decision_point"
         frame_info["decision_point_number"] = self.decision_point_number
         frame_info["q_values"] = self.create_rewards_dict_from_tensor(q_values)
@@ -57,14 +57,20 @@ class XaiReplayRecorder():
 
     def create_rewards_dict_from_tensor(self, q_values):
         qvalue_info = {}
+        print("qvalues:")
+        print(q_values)
         # columns are actions, rows are rewards
         for col in range(len(self.tensor_action_key)):
             qvalue_column = {}
             col_name = self.tensor_action_key[col]
+            print(f"col_name {col_name}")
             qvalue_info[col_name] = qvalue_column
             for row in range(len(self.tensor_reward_key)):
+                print(f"row {row}")
                 reward_name = self.tensor_reward_key[row]
+                print(f"self.tensor_reward_key[{row}] == {reward_name}")
                 qvalue_column[reward_name] = q_values[row][col].item() #.item() pulls the value out of a tensor
+                print(f"q_values[row][col].item() is q_values[{row}][{col}].item() == {qvalue_column[reward_name]}")
         print(f"qvalue_info now looks like: {qvalue_info}")
         return qvalue_info
 
@@ -110,7 +116,7 @@ class XaiReplayRecorder():
             observation = self.get_observation()
         #if (self.game_clock_tick % 17 == 0):
             frame_info = {}
-            frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
+            frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards, len(self.frames))
             frame_info["frame_info_type"] = "clock_tick"
             self.gather_common_state(frame_info, observation)
             self.frames.append(frame_info)
@@ -138,8 +144,10 @@ class XaiReplayRecorder():
         f.close()
 
 
-def clone_rewards_dict(rd):
+def clone_rewards_dict(rd, frameNumber):
     result = {}
+    print(f"cloning rewards for frame {frameNumber}")
     for key, val in rd.items():
+        print(f"{key} : {val}")
         result[key] = val
     return result
