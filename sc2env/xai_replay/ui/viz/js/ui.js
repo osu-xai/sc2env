@@ -210,12 +210,12 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 			//SC2_TODO_STUDY specifiedTargetClickHandler("gameboardBackground", logBackground);
 		}
 	});
-	gameboard_canvas.addEventListener('mousemove', function(evt) {
-		var x = evt.offsetX;
-		var y = evt.offsetY;
-		$("#step-value").html( x + " , " + y);
-	});
-	gameboard_canvas.addEventListener('mouseup', function(evt) {
+	// gameboard_canvas.addEventListener('mouseup', function(evt) {
+	// 	var x = evt.offsetX;
+	// 	var y = evt.offsetY;
+	// 	$("#step-value").html( x + " , " + y);
+	// });
+	gameboard_canvas.addEventListener('mouseover', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
 		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
