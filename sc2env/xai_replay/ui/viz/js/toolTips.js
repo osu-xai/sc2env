@@ -93,6 +93,8 @@ function createAllDataToolTip(unitInfo) {
  
     tooltipInfo["Health Max"] = unit.health_max;
     tooltipInfo["Health"] = unit.health;
+    tooltipInfo["Shield Max"] = unit.shield_max;
+    tooltipInfo["Shield"] = unit.shield;
     tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
     tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance,unit.shield);
     renderTooltipInfo(tooltipInfo, valuesDiv);
@@ -177,8 +179,13 @@ function renderTooltipInfo(ttInfo, div) {
     div.append(friendLabel);
 
     // pull out hp values and print first
-    var hpLabel = getLabelForInfo(collectHitpointsForConciseMessage(ttInfo, nonDebugKeys));
+    var hpLabel = getLabelForInfo(collectValueOfMaxForConciseMessage(ttInfo, nonDebugKeys, "Health", "Health Max", "Health Points: "));
     div.append(hpLabel);
+
+    // pull out hp values and print first
+    // commenting this out for demo scenario because shield values are always 0, except for as a flag for enemy units turned friendly
+    var shieldLabel = getLabelForInfo(collectValueOfMaxForConciseMessage(ttInfo, nonDebugKeys, "Shield", "Shield Max", "Shield: "));
+//    div.append(shieldLabel);
 
     // fabricate damageDealt
     // var unitType = ttInfo["Unit Type"];
@@ -263,20 +270,20 @@ function collectUnitInfoForConciseMessage(ttInfo, nonDebugKeys) {
     }
 }
 
-function collectHitpointsForConciseMessage(ttInfo,nonDebugKeys){
-    var hp = ttInfo["Health"];
-    var maxHp = ttInfo["Health Max"];
-    var index = nonDebugKeys.indexOf("Health");
+function collectValueOfMaxForConciseMessage(ttInfo,nonDebugKeys, valueKey, maxKey, prompt){
+    var hp = ttInfo[valueKey];
+    var maxHp = ttInfo[maxKey];
+    var index = nonDebugKeys.indexOf(valueKey);
     if (index > -1) {
         nonDebugKeys.splice(index, 1);
     }
-    index = nonDebugKeys.indexOf("Health Max");
+    index = nonDebugKeys.indexOf(maxKey);
     if (index > -1) {
         nonDebugKeys.splice(index, 1);
     }
     var hpFloored = Math.floor(Number(hp));
     var maxHpFloored = Math.floor(Number(maxHp));
-    var hpString = "Health Points: " + hpFloored + " of " + maxHpFloored;
+    var hpString =  prompt + hpFloored + " of " + maxHpFloored;
     return hpString;
 }
 
