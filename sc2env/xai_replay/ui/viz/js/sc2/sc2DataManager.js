@@ -174,8 +174,9 @@ function collectActionInfo(actionName, actionValues){
     action.saliencyId = undefined; //SC2_SALIENCY
     action.value = averageValuesInDictionary(actionValues);
     var keys = Object.keys(actionValues);
-    for (i in keys){
-        var rewardName = keys[i];
+    var sortedRewardNames = sortRewardNamesIntoRelatedPairs(keys);
+    for (i in sortedRewardNames){
+        var rewardName = sortedRewardNames[i];
         var bar = collectBarInfo(rewardName, actionValues[rewardName]);
         action.bars.push(bar);
     }
