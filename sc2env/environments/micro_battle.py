@@ -21,8 +21,6 @@ UNIT_ID_LIST = [
     105, # zergling
 ]
 
-# A simple environment similar to SCAII-RTS Towers
-# Follows the interface of OpenAI Gym environments
 class MicroBattleEnvironment(gym.Env):
     def __init__(self, render=True):
         self.sc2env = make_sc2env(render)
@@ -151,7 +149,7 @@ def make_sc2env(render=False):
             action_space=actions.ActionSpace.FEATURES,
         ),
         'map_name': MAP_NAME,
-        'step_mul': 4,
+        'step_mul': 2,
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
     register_map(maps_dir, env_args['map_name'])
