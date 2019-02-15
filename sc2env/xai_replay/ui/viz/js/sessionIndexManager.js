@@ -79,7 +79,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         }
 		//$("#why-button").remove();
 		this.replaySequencerIndex = index;
-        //console.log('');
+        console.log('sessionIndex ' + index);
 
         //SC2_TODO_SALif (this.decisionPointSteps.includes(index)){
         //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);
@@ -114,11 +114,11 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		return this.replaySequencerMaxIndex;
 	}
 
-	sim.incrementReplaySequencerIndex = function() {
-		if (Number(Number(this.replaySequencerIndex) + Number(1)) <= this.replaySequencerMaxIndex) {
-			this.setReplaySequencerIndex(this.replaySequencerIndex + 1);
-		}
-	}
+	// sim.incrementReplaySequencerIndex = function() {
+	// 	if (Number(Number(this.replaySequencerIndex) + Number(1)) <= this.replaySequencerMaxIndex) {
+	// 		this.setReplaySequencerIndex(this.replaySequencerIndex + 1);
+	// 	}
+	// }
 	sim.isAtEndOfGame = function(){
 		if (this.replaySequencerIndex == this.replaySequencerMaxIndex) {
 			return true;

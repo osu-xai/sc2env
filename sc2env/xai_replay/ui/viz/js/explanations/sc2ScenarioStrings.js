@@ -36,3 +36,4 @@ prettyPrintRewardName["damageToRoach"]                = "damage to enemy Roaches
 prettyPrintRewardName["damageToStalker"]              = "damage to enemy Stalkers";
 prettyPrintRewardName["damageToZealot"]               = "damage to enemy Zealots";
 prettyPrintRewardName["damageToZergling"]             = "damage to enemy Zerglings";
+prettyPrintRewardName["total score"]             = "total score";

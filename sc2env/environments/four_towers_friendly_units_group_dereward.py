@@ -10,25 +10,40 @@ from sc2env.utility import getOneHotState
 import os
 
 SCREEN_SIZE = 40
-MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward'
+MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward_recorder'
 class FourTowersFriendlyUnitsGroupDereward():
-    def __init__(self, reward_types, map_name = None, unit_type = [83, 52, 48]):
+    def __init__(self, reward_types, map_name = None, unit_type = [83, 52, 48], generate_xai_replay = False, xai_replay_dimension = 256):
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         print("map director: " + str(maps_dir))
         register_map(maps_dir, map_name)
-        self.agent_interface_format = features.AgentInterfaceFormat(
+        
+        aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 28,
-              #use_camera_position = True,
+              camera_width_world_units = 28
               )
+        step_mul_value = 16
+        if generate_xai_replay:
+            aif=features.AgentInterfaceFormat(
+                feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
+                rgb_dimensions=sc2_env.Dimensions(
+                screen=(xai_replay_dimension, xai_replay_dimension),
+                minimap=(64, 64),
+                ),
+                action_space=actions.ActionSpace.FEATURES,
+                camera_width_world_units = 28,
+                #use_camera_position = True,
+            )
+            step_mul_value = 4
+        
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
           players = [sc2_env.Agent(sc2_env.Race.protoss)],
-          agent_interface_format = self.agent_interface_format,
-          step_mul = 16,
+          agent_interface_format = aif,
+
+          step_mul = step_mul_value,
           game_steps_per_episode = 0,
           score_index = 0,
           visualize = True,)

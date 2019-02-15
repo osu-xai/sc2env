@@ -70,7 +70,10 @@ function configureGameboardCanvas(){ //gameboard canvas will be used to draw thi
 	var gameboardTop = gameboardOffset.top;
 	var gameboardLeft = gameboardOffset.left;
 	gameboard_canvas.setAttribute("style", "position:absolute;left:" + gameboardLeft + "px;top:" + gameboardTop + "px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
-	$("#scaii-gameboard").append(gameboard_canvas);
+	var scaiiGameboard = document.getElementById("scaii-gameboard");
+	if (gameboard_canvas.parentNode != scaiiGameboard){
+		$("#scaii-gameboard").append(gameboard_canvas);
+	}
 }
 
 function configureNavigationButtons(){
@@ -174,7 +177,7 @@ function initUI() { //SC2_TEST
 }
 
 function highlightShapeInRange(x,y) {//SC2_TEST
-    var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+    var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 	if (unitId != undefined){
         highlightUnitForClickCollectionFeedback(unitId); //SC2_TODO_STUDY move highlightShapeForIdForClickCollectionFeedback to highlightUnitForClickCollectionFeedback
     }
@@ -186,7 +189,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		console.log("clicked!");
 		var x = evt.offsetX;
 		var y = evt.offsetY;
-		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+		var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 		if (unitId != undefined){
 			//SC2_TODO_STUDYhighlightUnitForClickCollectionFeedback(unitId);
 			//SC2_TODO_STUDY 
@@ -197,7 +200,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 			// logLine = logLine.replace("<GAME_COORD_Y>", y);
 			// targetClickHandler(evt, logLine);
 			//SC2_TODO_STUDY_END
-			$("#metadata_hp" + shapeId).toggleClass('tooltip-invisible');
+			$("#metadata_unitLocations" + shapeId).toggleClass('tooltip-invisible');
 			if (selectedToolTipIds[shapeId] == "show") {
 			 	selectedToolTipIds[shapeId] = "hide";
 			}
@@ -215,10 +218,11 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// 	var y = evt.offsetY;
 	// 	$("#step-value").html( x + " , " + y);
 	// });
-	gameboard_canvas.addEventListener('mouseover', function(evt) {
+	gameboard_canvas.addEventListener('mousemove', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
-		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+		//$("#step-value").html( x + " , " + y);
+		var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 		if (unitId == undefined) {
 			// we're not inside an object, so hide all the "all_metadata" tooltips
 			hideAllTooltips(evt);

@@ -1,4 +1,5 @@
 var activeSC2DataManager = undefined;
+var DATA_GATHERING_UNIT_ID = 45;
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     return getSC2DataManagerFromFrameInfos(frameInfos);
@@ -57,13 +58,13 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
         return actionnames;
     }
 
-    dm.getCumulativeRewards = function() {//SC2_TOTO_REW}
-        alert('sc2DataManager.getCumulativeRewards unimplemented')
+    dm.getCumulativeRewards = function(frameInfo) {
+        return frameInfo["cumulative_rewards"];
     }
-    dm.getClosestUnitInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST
+    dm.getClosestUnitIdInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST
         var unitCoordX = translateCanvasXCoordToGameUnitXCoord(mouseCanvasX, gameboard_canvas.width);
         var unitCoordY = translateCanvasYCoordToGameUnitYCoord(mouseCanvasY, gameboard_canvas.height);
-        var minDistance = roughlyHalfWidthOfUnitAsPixels;
+        var minDistance = roughlyHalfWidthOfUnitInGameUnits;
         var minDistanceUnit = undefined;
         var frame_info = this.frameInfos[sessionIndexManager.getCurrentIndex()];
         var units = frame_info["units"];
@@ -80,7 +81,12 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
                 minDistanceUnit = unit;
             }
         }
-        return minDistanceUnit;
+        if (minDistanceUnit == undefined){
+            return undefined;
+        }
+        else {
+            return minDistanceUnit["tag"];
+        }
     }
 
     dm.getFrameInfo = function(step){//SC2_TEST
@@ -100,11 +106,23 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
             throw('sc2DataManager - step is out of range ' + step + "...max step is " + this.frameInfos.length - 1); 
         }
         var frameInfo = this.frameInfos[step]
-        return frameInfo.units;
+        var allUnits = frameInfo.units;
+        var trueUnits = screenOutCustomDataGatheringUnits(allUnits);
+        return trueUnits;
     }
     return dm;
 }
 
+function screenOutCustomDataGatheringUnits(allUnits){
+    var result = [];
+    for (i in allUnits){
+        var unit = allUnits[i];
+        if (unit.unit_type != DATA_GATHERING_UNIT_ID){ // data gathering uni
+            result.push(unit);
+        }
+    }
+    return result;
+}
 function getFrameInfosFromJson(jsonData) {
     var result = JSON.parse(jsonData);
     return result;
