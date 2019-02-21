@@ -34,6 +34,7 @@ class FourTowersFriendlyUnitsGroupDereward():
                 ),
                 action_space=actions.ActionSpace.FEATURES,
                 camera_width_world_units = 28,
+                #use_camera_position = True,
             )
             step_mul_value = 4
         
@@ -79,7 +80,7 @@ class FourTowersFriendlyUnitsGroupDereward():
         observation = self.unpack_timestep(self.last_timestep)
         self.current_obs = observation
         self.actions_taken = 0
-        np.set_printoptions(threshold=np.nan,linewidth=np.nan)
+        #np.set_printoptions(threshold=np.nan,linewidth=np.nan)
 
         state = observation[3]['feature_screen']
         player_relative = np.array(state[5])
@@ -90,8 +91,10 @@ class FourTowersFriendlyUnitsGroupDereward():
         state = np.reshape(state, (1, -1))
         
         self.end_state = None
-      #  print(self.agent_interface_format['camera_width_world_units'])
-      #  input()
+        #print(self.agent_interface_format.camera_width_world_units)
+        #print(self.agent_interface_format.use_camera_position)
+        #print(observation)
+        #input()
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
@@ -99,7 +102,7 @@ class FourTowersFriendlyUnitsGroupDereward():
 
         
         data = data.observation.raw_data.units
-
+ 
         rewards, sof = self.getRewards(data)
 
         self.signal_of_finished = sof
