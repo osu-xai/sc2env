@@ -6,6 +6,11 @@ register(
 )
 
 register(
+        id='SC2SuperFourTowers-v0',
+        entry_point='sc2env.environments.super_four_towers:SuperFourTowersEnvironment',
+)
+
+register(
         id='SC2MicroBattle-v0',
         entry_point='sc2env.environments.micro_battle:MicroBattleEnvironment',
 )

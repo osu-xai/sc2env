@@ -28,8 +28,8 @@ UNIT_ID_LIST = [
 ]
 
 class SuperFourTowersEnvironment(gym.Env):
-    def __init__(self, render=True):
-        self.sc2env = make_sc2env(render)
+    def __init__(self, render=True, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
+        self.sc2env = make_sc2env(render, screen_size, map_size)
         self.action_space = Discrete(4)
 
     # Reset the simulation to an initial state. Alters state.
@@ -154,17 +154,17 @@ class SuperFourTowersEnvironment(gym.Env):
 
 # Create the low-level SC2Env object, which we wrap with
 #  a high level Gym-style environment
-def make_sc2env(render=False):
+def make_sc2env(render=False, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
     rgb_dimensions = False
     if render:
         rgb_dimensions=sc2_env.Dimensions(
-            screen=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE),
-            minimap=(RGB_SCREEN_SIZE, RGB_SCREEN_SIZE))
+            screen=(screen_size, screen_size),
+            minimap=(screen_size, screen_size))
     env_args = {
         'agent_interface_format': sc2_env.AgentInterfaceFormat(
             feature_dimensions=sc2_env.Dimensions(
-                screen=(MAP_SIZE, MAP_SIZE),
-                minimap=(MAP_SIZE, MAP_SIZE)
+                screen=(map_size, map_size),
+                minimap=(map_size, map_size)
             ),
             rgb_dimensions=rgb_dimensions,
             action_space=actions.ActionSpace.FEATURES,
