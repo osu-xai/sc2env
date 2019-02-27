@@ -66,7 +66,8 @@ var tryPause = function (e) {
 }
 function pauseGame() {
 	controlsManager.userClickedPause();
-	//SC2_TODO new logic that disengages the loop driver
+	activeSC2UIManager.pause();
+	//SC2_TODO_NAV_TEST new logic that disengages the loop driver
 }
 
 var tryResume = function (e) {
@@ -80,8 +81,8 @@ var tryResume = function (e) {
 
 function resumeGame() {
 	controlsManager.userClickedResume();
-	
-	//SC2_TODO - new logic that re-engages the driver loop
+	activeSC2UIManager.play();
+	//SC2_TODO_NAV_TEST - new logic that re-engages the driver loop
 	// if play button cue arrow present, remove it
 	$("#cue-arrow-div").remove();
 	if (userStudyMode){
@@ -102,8 +103,7 @@ var tryRewind = function (e) {
 function rewindGame() {
 	pauseGame();
     controlsManager.userClickedRewind();
-	activeSC2DataManager.rewind();
-	activeSC2VideoManager.jumpToStep(1);//SC2_TODO - should this be 0 or 1?
+	jumpToStep(0);
 }
 var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	var manager = {};
@@ -166,8 +166,10 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	//  pause
 	//
 	manager.userClickedPause = function () {
-		userInputBlocked = true;
-		this.pendingAction = this.expressResumeButton;
+		// backend not involved so no need to block
+		//userInputBlocked = true;
+		//this.pendingAction = this.expressResumeButton;
+		this.expressResumeButton();
 	}
 
 	manager.expressResumeButton = function () {
@@ -181,12 +183,15 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	//
 
 	manager.userClickedResume = function () {
-		userInputBlocked = true;
-		this.pendingAction = this.expressPauseButton;
+		// backend not involved so no need to block
+		//userInputBlocked = true;
+		//this.pendingAction = this.expressPauseButton;
+		this.expressPauseButton();
 	}
 
 	manager.expressPauseButton = function () {
 		//console.log('expressing PAUSE button');
+		console.log('video.currentTime: ' + video.currentTime);
 		this.pauseResumeButton.onclick = tryPause;
 		this.pauseResumeButton.innerHTML = '<img src="imgs/pause.png", height="16px" width="14px"/>';
 	}
@@ -201,8 +206,10 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	// rewind
 	//
 	manager.userClickedRewind = function () {
-        userInputBlocked = true;
-		this.pendingAction = this.adjustToRewindClick;
+		// backend not involved so no need to block
+        //userInputBlocked = true;
+		//this.pendingAction = this.adjustToRewindClick;
+		this.adjustToRewindClick();
 	}
 
 	manager.adjustToRewindClick = function () {
@@ -287,9 +294,8 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
-	activeSC2DataManager.jumpToStep(step);
-	activeSC2VideoManager.jumpToStep(step);
-    cleanToolTips();
+    clearGameBoard();
+	activeSC2UIManager.jumpToFrame(step);
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
 	}

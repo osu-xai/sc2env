@@ -25,7 +25,6 @@ function buildResponseToReplay(scPkts){
   return mm;
 }
 
-//TODO - this will be disposable if we store chart data as json string
 function convertProtobufChartToJSChart(pbch){
     var chart = {};
     chart.title = pbch.getTitle();

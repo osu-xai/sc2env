@@ -5,7 +5,7 @@ var explanationBoxMap = {};
 var showingDecisionNumber;
 
 function renderExplanationSelectors() {
-	var explanation_steps = activeSC2DataManager.getExplanationStepsList();////SC2_TODO - get this from the SC2DataManager
+	var explanation_steps = activeSC2DataManager.getExplanationStepsList();
 	var expl_count = explanation_steps.length;
 	var index = 0;
 	explanationBoxMap = {};
@@ -56,8 +56,8 @@ function configureExplanationSelectorDiamond(decisionPointNumber,step){
 		
         boldThisStepInLegend(step);
         if (userStudyMode){
-            //SC2_DEFERRED userActionMonitor.stepToDecisionPoint(step);
-            //SC2_DEFERRED stateMonitor.setDecisionPoint(step);
+            //SC2_TODO_STUDY userActionMonitor.stepToDecisionPoint(step);
+            //SC2_TODO_STUDY stateMonitor.setDecisionPoint(step);
 		}
         selectedDecisionStep = step;
 	}
@@ -114,7 +114,11 @@ function setExplanationInfoForDPAtStep(step) {
         currentExplManager.switchToExplanationsForThisDecisionPoint(step);
     }
     else {
-        askBackendForExplanationRewardInfo(step);
+		var step = sessionIndexManager.getCurrentIndex();
+        var frameInfo = activeSC2DataManager.getFrameInfo(step);
+        var rawChart = convertSC2QValuesToJSChart(frameInfo);
+        currentExplManager.setChartData(rawChart, step);
+        askBackendForExplanationSaliencyInfo(step);
     }
 }
 

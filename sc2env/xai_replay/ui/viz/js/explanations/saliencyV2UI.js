@@ -87,7 +87,12 @@ function getSaliencyV2UI() {
         }
     }
 
+
 	ui.renderSaliencyDetailed = function(chartData) {
+        //turned off saliency for PI demo
+    }
+
+	ui.renderSaliencyDetailedGood = function(chartData) {
         var step = sessionIndexManager.getCurrentIndex();
         step = sessionIndexManager.getStepThatStartsEpochForStep(step);
         var dpEntityList = currentExplManager.entityListForDP[step];
@@ -400,12 +405,14 @@ function populateSaliencyQuestionSelector(){
         radioCombinedSaliency.setAttribute("checked", "true");
     }
 	radioCombinedSaliency.onclick = function(e) {
-        currentExplManager.saliencyCombined = true;
-        if (userStudyMode){
-            //SC2_DEFERRED targetClickHandler(e, "setSaliencyView:combinedSaliency");
-        }
-        removeAnySaliencyOverlaysFromGameboard();
-        currentExplManager.render("live");
+        //SC2_TODO_SALcurrentExplManager.saliencyCombined = true;
+        //if (userStudyMode){
+        //    //SC2_TODO_STUDY targetClickHandler(e, "setSaliencyView:combinedSaliency");
+        //}
+        //removeAnySaliencyOverlaysFromGameboard();
+        //SC2_TODO_SAL_ENDcurrentExplManager.render("live");
+        alert("saliency maps for SC2 XAI Replay not yet integrated.");
+
 	};
 
 	var combinedSaliencyLabel = document.createElement("div");
@@ -423,12 +430,14 @@ function populateSaliencyQuestionSelector(){
         radioDetailedSaliency.setAttribute("checked", "true");
     }
 	radioDetailedSaliency.onclick = function(e) {
-        currentExplManager.saliencyCombined = false;
-        if (userStudyMode){
-            //SC2_DEFERRED targetClickHandler(e, "setSaliencyView:detailedSaliency");
-        }
-        removeAnySaliencyOverlaysFromGameboard();
-        currentExplManager.render("live");
+        //SC2_TODO_SAL currentExplManager.saliencyCombined = false;
+        //if (userStudyMode){
+        //    targetClickHandler(e, "setSaliencyView:detailedSaliency");
+        //}
+        //removeAnySaliencyOverlaysFromGameboard();
+        //SC2_TODO_SAL_ENDcurrentExplManager.render("live");
+        alert("saliency maps for SC2 XAI Replay not yet integrated.");
+
 	};
 
 	var detailedSaliencyLabel = document.createElement("div");

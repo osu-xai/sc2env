@@ -12,7 +12,7 @@ from sc2env.environments.micro_battle import MicroBattleEnvironment
 MAX_STEPS = 1000
 
 
-def train_agent(train_episodes=10):
+def train_agent(train_episodes=1000):
     # This environment teaches win/loss outcomes vs different enemies
     env = MicroBattleEnvironment(render=True)
     agent = ConvNetQLearningAgent(num_input_layers=env.layers(), num_actions=env.actions())
@@ -20,34 +20,34 @@ def train_agent(train_episodes=10):
 
     # Train agent
     for i in range(train_episodes):
-        states, actions, rewards = play_episode(env, agent, i)
-        # TODO: add this episode to a replay buffer
-        # TODO: simultaneously, train a network on the replay buffer
+        video = (i % 10 == 0)
+        play_episode(env, agent, i, video=video)
     print('Finished playing {} episodes'.format(train_episodes))
 
 
-def play_episode(env, agent, episode_num=0):
+def play_episode(env, agent, episode_num=0, video=False):
     start_time = time.time()
     print('Starting episode {}...'.format(episode_num))
-    states, actions, rewards = [], [], []
     state = env.reset()
     done = False
-    vid = imutil.Video('training_episode_{:04d}.mp4'.format(episode_num))
+    cumulative_reward = 0
+    if video:
+        vid = imutil.Video('training_episode_{:04d}.mp4'.format(episode_num))
     for t in range(MAX_STEPS):
         if done:
             break
         action = agent.step(state)
-        states.append(state)
         state, reward, done, info = env.step(action)
-        actions.append(action)
-        rewards.append(reward)
         caption = 't={} reward={}'.format(t, reward)
-        vid.write_frame(state[3], normalize=False)
-    vid.finish()
-    states.append(state)
-    print('Finished episode ({} actions) in {:.3f} sec'.format(
-        len(actions), time.time() - start_time))
-    return states, actions, rewards
+        if video:
+            vid.write_frame(state[3], normalize=False)
+        agent.update(reward)
+        cumulative_reward += reward
+    if video:
+        vid.finish()
+    print('Finished episode ({} actions) in {:.3f} sec total reward {}'.format(
+        t, time.time() - start_time, cumulative_reward))
+    return cumulative_reward
 
 
 if __name__ == '__main__':

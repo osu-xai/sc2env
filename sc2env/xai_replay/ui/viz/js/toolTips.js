@@ -1,11 +1,11 @@
-var entityHPToolTipIds = [];
+var unitLocationMarkerIds = [];
 //var selectedToolTipIds = {};
 var entityAllDataToolTipIds = [];
 var hoveredAllDataToolTipIds = {};
-
+var unitLogStrings = {};
 
 function createToolTips(unitInfo) {
-    createHPToolTip(unitInfo);
+    createUnitLocationMarks(unitInfo);
     createAllDataToolTip(unitInfo);
     gameboard_canvas.onmouseleave = function(evt) {
 		hideAllTooltips(evt);
@@ -24,12 +24,12 @@ function hideAllTooltips(evt) {
 }
   
 function cleanToolTips(){
-    if (entityHPToolTipIds != undefined) {
-        for (var i in entityHPToolTipIds){
-            var id = entityHPToolTipIds[i];
+    if (unitLocationMarkerIds != undefined) {
+        for (var i in unitLocationMarkerIds){
+            var id = unitLocationMarkerIds[i];
             $("#"+id).remove();
         }
-        entityHPToolTipIds = [];
+        unitLocationMarkerIds = [];
     }
     if (entityAllDataToolTipIds != undefined){
         for (var i in entityAllDataToolTipIds){
@@ -41,11 +41,8 @@ function cleanToolTips(){
     hoveredAllDataToolTipIds = {};
   }
   
-function createHPToolTip(unitInfo) {
+function createUnitLocationMarks(unitInfo) {
     var unit = unitInfo;    
-    alert('createHPToolTip needs to refer to sc2 unit info')//SC2_TODO - rework this to reference proper fields
-    var percentHPRemaining = unit.health / unit.health_max;//SC2_TODO review calculation
-    console.log('percentHPRemaining calculation: health' + unit.health + ' max ' + unit.health_max + ' result ' + percentHPRemaining);
     var canvas_bounds = gameboard_canvas.getBoundingClientRect();
     var hpDiv = document.createElement("div");
     // var setToShow = selectedToolTipIds[si.shapeId];
@@ -53,38 +50,27 @@ function createHPToolTip(unitInfo) {
     //   hpDiv.setAttribute("class","tooltip-invisible");
     // }
     
-    var id = "metadata_hp" + unit.tag;
+    var id = "metadata_unitLocations" + unit["tag"];
     hpDiv.setAttribute("id",id);
         // position it relative to where origin of bounding box of gameboard is
-    var y = getTooltipY(unitInfo) + canvas_bounds.top;
-    var x = getTooltipX(unitInfo) + canvas_bounds.left;
-    var hpWidgetWidth = 20;
-    var hpWidgetHeight = 3;
+    var y = translateUnitYToCanvasY(unitInfo.y) + canvas_bounds.top;
+    var x = translateUnitXToCanvasX(unitInfo.x) + canvas_bounds.left;
+    var hpWidgetWidth = 8;
+    var hpWidgetHeight = 8;
     hpDiv.setAttribute("class", "flex-row");
-    hpDiv.setAttribute("style", 'background-color:black;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
+    hpDiv.setAttribute("style", 'background-color:white;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
     $("#scaii-gameboard").append(hpDiv);
-
-    hpDiv.onclick = function(e) {
-        highlightUnitForClickCollectionFeedback(unit);
-        //SC2_TODO whay no x,y args to getSC2QuadrantName
-        //SC2_DEFERRED var targetName = "hitpoints-" + getSC2QuadrantName() + "-" + unitLogStrings[getUnitIdFromTag(unit.tag)];
-        //SC2_DEFERRED targetClickHandler(e, "clickHitPoints:" + targetName);
-    };
 
     var hpRemainingDivWidth = hpWidgetWidth * unit.percentHPRemaining;
     var hpLostDivWidth = hpWidgetWidth - hpRemainingDivWidth;
-
-    var remainingHpDiv = document.createElement("div");
-    remainingHpDiv.setAttribute("style", 'background-color:white;height:' + hpWidgetHeight + 'px;width:' + hpRemainingDivWidth + 'px');
-    hpDiv.append(remainingHpDiv);
-
-    entityHPToolTipIds.push(id);
+    unitLocationMarkerIds.push(id);
 }
 
 function getUnitIdFromTag(tag){
-    return 'metadata_all'+tag;
+    var result = 'metadata_all'+tag;
+    return result;
 }
-function createAllDataToolTip(unitInfo) { //SC2_TODO - ready for test!
+function createAllDataToolTip(unitInfo) { 
     var unit = unitInfo;
     var unitId = getUnitIdFromTag(unit.tag);
     var canvas_bounds = gameboard_canvas.getBoundingClientRect();
@@ -97,8 +83,8 @@ function createAllDataToolTip(unitInfo) { //SC2_TODO - ready for test!
     hoveredAllDataToolTipIds[unitId] = "hide";
     valuesDiv.setAttribute("id",unitId);
      // position it relative to where origin of bounding box of gameboard is
-    var y = unit.y + canvas_bounds.top + 20;
-    var x = unit.x + canvas_bounds.left + -125;
+    var y = translateUnitYToCanvasY(unit.y) + canvas_bounds.top + 20;
+    var x = translateUnitXToCanvasX(unit.x) + canvas_bounds.left + -125;
     valuesDiv.setAttribute("style", 'position:absolute;padding:4px;background-color:black;z-index:' + zIndexMap["tooltip"] + ';left:' + x + 'px;top:' + y + 'px;color:white;	display: flex;flex-direction: column;font-family:Arial');
     $("#scaii-gameboard").append(valuesDiv);
     entityAllDataToolTipIds.push(unitId);
@@ -107,12 +93,18 @@ function createAllDataToolTip(unitInfo) { //SC2_TODO - ready for test!
  
     tooltipInfo["Health Max"] = unit.health_max;
     tooltipInfo["Health"] = unit.health;
-    tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO make unit_type name pretty in tooltip
-    tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
+    tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
+    tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance,unit.shield);
     renderTooltipInfo(tooltipInfo, valuesDiv);
     unitLogStrings[unitId] = getShapeLogString(tooltipInfo);
 }
 
+// “unit_type”: 48 == Marine
+// “unit_type”: 52 == Thor
+// “unit_type”: 83 == Immoral
+// “alliance” :1 == agent unit
+// “alliance” :4 && “shield”: 1 == friendly unit  (Because pysc2 can not read the player id correctly, so I put the 1 shield to distinguish the friendly unit and enemy units.)
+// “alliance” :4 == enemy
 //
 // SC2 relative faction:
 //    0: background
@@ -120,7 +112,7 @@ function createAllDataToolTip(unitInfo) { //SC2_TODO - ready for test!
 //    2: ally
 //    3: neutral
 //    4: enemy
-function getIsFriendlyFaction(alliance){
+function getIsFriendlyFaction(alliance, shield){
     var result = "NA"
     if (alliance == 1){
         result = true;
@@ -128,8 +120,11 @@ function getIsFriendlyFaction(alliance){
     else if (alliance == 2){
         result = true;
     }
-    else if (alliance == 4) {
-        result = false;
+    else if (alliance == 4 && shield == 1) {
+        result = true;
+    }
+    else if (alliance == 4){
+        result == false;
     }
     return result;
 }
@@ -186,10 +181,10 @@ function renderTooltipInfo(ttInfo, div) {
     div.append(hpLabel);
 
     // fabricate damageDealt
-    var unitType = ttInfo["Unit Type"];
-    unitType = renameEntityInfoForIUI(unitType);
-    var damageDealtlabel = getLabelForInfo(getDamageDealtStringForUnit(unitType));
-    div.append(damageDealtlabel);
+    // var unitType = ttInfo["Unit Type"];
+    // unitType = renameEntityInfoForIUI(unitType);
+    // var damageDealtlabel = getLabelForInfo(getDamageDealtStringForUnit(unitType));
+    // div.append(damageDealtlabel);
 
     for (var i in nonDebugKeys) {
         var key = nonDebugKeys[i];
@@ -202,13 +197,17 @@ function renderTooltipInfo(ttInfo, div) {
         div.append(createMetadataTooltipEntry(key, val));
     }
 }
+//tooltipInfo["Health Max"] = unit.health_max;
+ //   tooltipInfo["Health"] = unit.health;
+ //   tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
+//tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
 
 function getLabelForInfo(s){
     var label = document.createElement("div");
     label.innerHTML = s;
     return label;
 }
-function getDamageDealtStringForUnit(unitType){ // SC2_TODO - map damage dealt strings for SC2
+function getDamageDealtStringForUnit(unitType){ // SC2_TODO_TT - map damage dealt strings for SC2
     var result = "Attack Damage per step: ";
     if (unitType == "Tank"){
         return result + "Low";
@@ -230,6 +229,13 @@ function getDamageDealtStringForUnit(unitType){ // SC2_TODO - map damage dealt s
     }
 }
 
+// “unit_type”: 48 == Marine
+// “unit_type”: 52 == Thor
+// “unit_type”: 83 == Immoral
+// “alliance” :1 == agent unit
+// “alliance” :4 && “shield”: 1 == friendly unit  (Because pysc2 can not read the player id correctly, so I put the 1 shield to distinguish the friendly unit and enemy units.)
+// “alliance” :4 == enemy
+//
 function collectUnitInfoForConciseMessage(ttInfo, nonDebugKeys) {
     var isFriend = ttInfo["Friend?"];
     index = nonDebugKeys.indexOf("Friend?");
@@ -249,7 +255,7 @@ function collectUnitInfoForConciseMessage(ttInfo, nonDebugKeys) {
     }
 
     var friendLabel = document.createElement("div");
-    if (isFriend == "true"){
+    if (isFriend == true){
         return "Name: Friendly " + unitType;
     }
     else {
@@ -258,13 +264,13 @@ function collectUnitInfoForConciseMessage(ttInfo, nonDebugKeys) {
 }
 
 function collectHitpointsForConciseMessage(ttInfo,nonDebugKeys){
-    var hp = ttInfo["Hitpoints"];
-    var maxHp = ttInfo["Max Hp"];
-    var index = nonDebugKeys.indexOf("Hitpoints");
+    var hp = ttInfo["Health"];
+    var maxHp = ttInfo["Health Max"];
+    var index = nonDebugKeys.indexOf("Health");
     if (index > -1) {
         nonDebugKeys.splice(index, 1);
     }
-    index = nonDebugKeys.indexOf("Max Hp");
+    index = nonDebugKeys.indexOf("Health Max");
     if (index > -1) {
         nonDebugKeys.splice(index, 1);
     }
@@ -273,21 +279,23 @@ function collectHitpointsForConciseMessage(ttInfo,nonDebugKeys){
     var hpString = "Health Points: " + hpFloored + " of " + maxHpFloored;
     return hpString;
 }
-function renameEntityInfoForIUI(s) { //SC2_TODO - rename unit types for SC2
-    if (s == "Small Tower"){
-        return "Small Fort";
+
+// “unit_type”: 48 == Marine
+// “unit_type”: 52 == Thor
+// “unit_type”: 83 == Immoral
+// “alliance” :1 == agent unit
+// “alliance” :4 && “shield”: 1 == friendly unit  (Because pysc2 can not read the player id correctly, so I put the 1 shield to distinguish the friendly unit and enemy units.)
+// “alliance” :4 == enemy
+//
+function renameEntityInfoForIUI(s) { //SC2_TODO_TT - rename unit types for SC2
+    if (s == "48"){
+        return "Marine";
     }
-    else if (s == "Big Tower"){
-        return "Big Fort";
+    else if (s == "52"){
+        return "Thor";
     }
-    if (s == "Small City"){
-        return "Town";
-    }
-    else if (s == "Big City"){
-        return "City";
-    }
-    else if (s == "Ship"){
-        return "Tank";
+    if (s == "83"){
+        return "Immortal";
     }
     else {
         return s;

@@ -7,7 +7,7 @@ function highlightUnitForClickCollectionFeedback(unit){
         }
     }
 }
-function highlightShapeForClickCollectionFeedback(info){//SC2_TODO port to unit input
+function highlightShapeForClickCollectionFeedback(info){//SC2_TODO_STUDY port to unit input
     if (activeStudyQuestionManager.renderer.controlsWaitingForClick.length == 0) {
         return;
     }
@@ -15,7 +15,7 @@ function highlightShapeForClickCollectionFeedback(info){//SC2_TODO port to unit 
     if (activeStudyQuestionManager.renderer.isLegalRegionToClickOn("target:gameboard", legalClickTargetRegions)){
         // redraw from scratch in case this is our second click andwe have to delete evidence of prior click
         activeSC2UIManager.renderStateForCurrentStep();
-        if (info.type == "rect") { //SC2_TODO - how outline to reflect selection
+        if (info.type == "rect") { //SC2_TODO_STUDY - how outline to reflect selection
             drawRect(info, "outline");
         }
         else if (info.type == "kite") {

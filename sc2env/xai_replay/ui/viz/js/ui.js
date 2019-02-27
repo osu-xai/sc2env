@@ -57,18 +57,23 @@ var use_shape_color_for_outline = false;
 var mostRecentClickHadCtrlKeyDepressed;
 
 
-function configureGameboardCanvas(){ //SC2_TODO - keeping gameboard canvas for now as may use it to draw things in front of video
-	gameboard_canvas.width = sc2GameCanvasWidth;
-    gameboard_canvas.height = sc2GameCanvasHeight;
+function configureGameboardCanvas(){ //gameboard canvas will be used to draw things in front of video
+	gameboard_canvas.width = sc2GameRenderWidth;
+    gameboard_canvas.height = sc2GameRenderHeight;
     gameboard_canvas.setAttribute("id","gameboard");
 	$("#scaii-gameboard").css("width", gameboard_canvas.width);
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
-	var video = document.createElement("video");
 	$("#scaii-gameboard").append()
-	gameboard_canvas.setAttribute("style", "position:absolute;left:0px;top:0px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + gameboard_canvas.width + "px;height:" + gameboard_canvas.height + ";");
-	$("#scaii-gameboard").append(gameboard_canvas);
+	var gameboardOffset = $("#scaii-gameboard").offset();
+	var gameboardTop = gameboardOffset.top;
+	var gameboardLeft = gameboardOffset.left;
+	gameboard_canvas.setAttribute("style", "position:absolute;left:" + gameboardLeft + "px;top:" + gameboardTop + "px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
+	var scaiiGameboard = document.getElementById("scaii-gameboard");
+	if (gameboard_canvas.parentNode != scaiiGameboard){
+		$("#scaii-gameboard").append(gameboard_canvas);
+	}
 }
 
 function configureNavigationButtons(){
@@ -96,7 +101,7 @@ function configurePauseResumeButton(){
 	$("#pause-play-control").append(pauseResumeButton);
 	$("#pauseResumeButton").css("padding-top","2px");
 	$("#pauseResumeButton").css("padding-bottom","0px");
-	$("#pauseResumeButton").css("margin-left","158px");
+	$("#pauseResumeButton").css("margin-left","15px");
 	pauseResumeButton.onclick = tryPause;
 	$("#pauseResumeButton").css("opacity", "0.6");
 	pauseResumeButton.disabled = true;
@@ -133,14 +138,13 @@ function drawExplanationTimeline() {
 		$("#explanation-control-panel").append(expl_ctrl_canvas);
 	}
 	let ctx = expl_ctrl_ctx;
-	var can_width = 600;
 	
-	expl_ctrl_canvas.width = can_width;
+	expl_ctrl_canvas.width = gameContainerWidth;
 	ctx.beginPath();
 	ctx.moveTo(timelineMargin,explanationControlYPosition);
 	ctx.lineWidth = timelineHeight;
 	ctx.strokeStyle = 'darkgrey';
-	ctx.lineTo(can_width - timelineMargin,explanationControlYPosition);
+	ctx.lineTo(expl_ctrl_canvas.width - timelineMargin,explanationControlYPosition);
 	ctx.stroke();
 	ctx.restore();
 }
@@ -160,7 +164,9 @@ function initUI() { //SC2_TEST
         }
 	}, true);
 	
-	configureGameboardCanvas();
+	// configureGameboardCanvas here, so the blank gameboard appears before start button pressed.
+	// we call it again in sc2ui.js so the unit position math comes out right when creating tooltips
+	configureGameboardCanvas();// do this here, 
 	sizeNonGeneratedElements();
 	controlsManager.setControlsNotReady();
 	controlsManager.registerJQueryHandleForWaitCursor($("#tabbed-interface"));
@@ -171,9 +177,9 @@ function initUI() { //SC2_TEST
 }
 
 function highlightShapeInRange(x,y) {//SC2_TEST
-    var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+    var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 	if (unitId != undefined){
-        highlightUnitForClickCollectionFeedback(unitId); //SC2_TODO move highlightShapeForIdForClickCollectionFeedback to highlightUnitForClickCollectionFeedback
+        highlightUnitForClickCollectionFeedback(unitId); //SC2_TODO_STUDY move highlightShapeForIdForClickCollectionFeedback to highlightUnitForClickCollectionFeedback
     }
 }
 
@@ -183,35 +189,40 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		console.log("clicked!");
 		var x = evt.offsetX;
 		var y = evt.offsetY;
-		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+		var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 		if (unitId != undefined){
-			highlightUnitForClickCollectionFeedback(unitId);
-			//SC2_DEFERRED 
+			//SC2_TODO_STUDYhighlightUnitForClickCollectionFeedback(unitId);
+			//SC2_TODO_STUDY 
 			// var logLine = templateMap["gameboard"];
 			// logLine = logLine.replace("<CLCK_GAME_ENTITY>", unitLogStrings[unitId]);
 			// logLine = logLine.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
             // logLine = logLine.replace("<GAME_COORD_X>", x);
 			// logLine = logLine.replace("<GAME_COORD_Y>", y);
 			// targetClickHandler(evt, logLine);
-			//SC2_DEFERRED_END
-			// $("#metadata_hp" + shapeId).toggleClass('tooltip-invisible');
-			// if (selectedToolTipIds[shapeId] == "show") {
-			// 	selectedToolTipIds[shapeId] = "hide";
-			// }
-			// else {
-			// 	selectedToolTipIds[shapeId] = "show";
-			// }
+			//SC2_TODO_STUDY_END
+			$("#metadata_unitLocations" + shapeId).toggleClass('tooltip-invisible');
+			if (selectedToolTipIds[shapeId] == "show") {
+			 	selectedToolTipIds[shapeId] = "hide";
+			}
+			else {
+			selectedToolTipIds[shapeId] = "show";
+			}
 		} else {
-			//SC2_DEFERRED var logBackground = templateMap["gameboardBackground"];
-			//SC2_DEFERRED logBackground = logBackground.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
-			//SC2_DEFERRED specifiedTargetClickHandler("gameboardBackground", logBackground);
+			//SC2_TODO_STUDY var logBackground = templateMap["gameboardBackground"];
+			//SC2_TODO_STUDY logBackground = logBackground.replace("<CLCK_QUADRANT>", getSC2QuadrantName(x,y));
+			//SC2_TODO_STUDY specifiedTargetClickHandler("gameboardBackground", logBackground);
 		}
 	});
-	  
+	// gameboard_canvas.addEventListener('mouseup', function(evt) {
+	// 	var x = evt.offsetX;
+	// 	var y = evt.offsetY;
+	// 	$("#step-value").html( x + " , " + y);
+	// });
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
-		var unitId = activeSC2DataManager.getClosestUnitInRange(x, y);
+		//$("#step-value").html( x + " , " + y);
+		var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 		if (unitId == undefined) {
 			// we're not inside an object, so hide all the "all_metadata" tooltips
 			hideAllTooltips(evt);
@@ -220,7 +231,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
             //SC2_DEFERRED targetHoverHandler(evt, logLine);
 		}
 		else {
-            var tooltipId = "metadata_all" + unitId; // SC2_TODO make sure tooltipId is consistent everywhere
+            var tooltipId = "metadata_all" + unitId;
             //we're inside one, keep it visible
             if (hoveredAllDataToolTipIds[tooltipId] != "show") {
 				//SC2_DEFERRED var logLine = templateMap["showEntityTooltip"];
@@ -234,37 +245,62 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 		}
   	});
 }
-function sizeNonGeneratedElements() { //SC2_TODO - still have scaii-acronym?
-
-	$("#game-titled-container").css("width", "600px");
-	// first row should add to 600...
+function sizeNonGeneratedElements() { 
+	var percentWidthAcronym = .40;
+	var percentWidthReplayLabel = .25;
+	var percentWidthFileSelector = .35;
+	var acronymWidth      = gameContainerWidth * percentWidthAcronym;
+	var replayLabelWidth  = gameContainerWidth * percentWidthReplayLabel;
+	var fileSelectorWidth = gameContainerWidth * percentWidthFileSelector;
+	$("#game-titled-container").css("width", gameContainerWidth + "px");
 	// 150
 	$("#scaii-acronym").css("padding-left", "20px");
-	$("#scaii-acronym").css("width", "110px");
+	$("#scaii-acronym").css("width", acronymWidth + "px");
 	$("#scaii-acronym").css("padding-right", "20px");
 
 	// 150
-	$("#game-replay-label").css("width", "140px");
+	$("#game-replay-label").css("width", replayLabelWidth + "px");
 	$("#game-replay-label").css("padding-right", "10px");
 
 	// 300
-	$("#replay-file-selector").css("width", "300px");
+	$("#replay-file-selector").css("width", fileSelectorWidth + "px");
 
 	
 	$("#scaii-acronym").css("padding-top", "10px");
 	$("#scaii-acronym").css("padding-bottom", "10px");
 	$("#game-replay-label").css("padding-top", "10px");
     $("#game-replay-label").css("padding-bottom", "10px");
-    
-    
-    $("#reward-values-panel").css("height", gameboard_canvas.height + "px");
+	
+
+	var quadrantLabelWidth = 30;
+    $("#left-side-quadrant-labels").css("width", quadrantLabelWidth + "px");
+	$("#right-side-quadrant-labels").css("width", quadrantLabelWidth + "px");
     $("#left-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
-    $("#right-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
-    $("#playback-controls-panel").css("height", "30px");
+	$("#right-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
+
+	var rewardsPanelWidth = gameContainerWidth - gameboard_canvas.width - 2 * quadrantLabelWidth;
+	$("#reward-values-panel").css("height", gameboard_canvas.height + "px");
+	$("#reward-values-panel").css("width", rewardsPanelWidth + "px");
+	
+	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
+	var stepValueWidth = 100;
+	var stepValuePaddingLeft = centerPointOfVideo - stepValueWidth - 40;
+	$("#step-value").css("width", stepValueWidth + "px");
+	$("#step-value").css("padding-left", stepValuePaddingLeft + "px");
+	
+	
+	
+
+	//$("#playback-controls-panel").css("height", "30px");
+	$("#playback-controls-panel").css("margin-left", "10px");
+	$("#playback-controls-panel").css("margin-top", "10px");
+	$("#playback-controls-panel").css("margin-bottom", "10px");
+	
+
     $("#explanation-control-panel").css("height", "85px");
 }
 
-function clearGameBoard() { //SC2_TEST (if anything is actually drawn there - health bars?)
+function clearGameBoard() { 
 	cleanToolTips();
 	gameboard_ctx.clearRect(0, 0, gameboard_canvas.width, gameboard_canvas.height);
 }
