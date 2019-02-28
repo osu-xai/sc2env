@@ -24,6 +24,7 @@ UNIT_ID_LIST = [
     73,  # zealot
     75,  # high_templar
     77,  # sentry
+    84,  # probe
     105, # zergling
     107, # hydra
     135, # force field
