@@ -9,7 +9,7 @@ from gym.spaces.discrete import Discrete
 
 import imutil
 from sc2env.pysc2_util import register_map
-from sc2env.representation import expand_pysc2_to_neural_input
+from sc2env.representation import int_map_to_onehot
 
 MAP_NAME = 'ZerglingDefense'
 MAP_SIZE = 64
@@ -138,7 +138,7 @@ class ZerglingDefenseEnvironment(gym.Env):
         feature_screen = np.array(self.last_timestep.observation.feature_screen)
 
         # The neural representation is appropriate for input to a neural network
-        feature_screen_onehot = expand_pysc2_to_neural_input(feature_screen, UNIT_ID_LIST)
+        feature_screen_onehot = expand_to_neural_input(feature_screen)
 
         # The RGB maps will be None if rendering is disabled (eg. for faster training)
         rgb_map = np.array(self.last_timestep.observation.get('rgb_minimap'))
@@ -186,5 +186,49 @@ def make_sc2env(render=False, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
     register_map(maps_dir, env_args['map_name'])
     return sc2_env.SC2Env(**env_args)
+
+
+# Input: A 17-dimensional integer pysc2 feature map
+# See SCREEN_FEATURES in https://github.com/deepmind/pysc2/blob/master/pysc2/lib/features.py
+# Output: A N-dimensional float convolutional input map, N = 7 + len(unit_map)
+# Contains effects like psi-storm, required for ZerglingDefense
+def expand_to_neural_input(feature_map, unit_map=UNIT_ID_LIST):
+    neural_layers = []
+
+    # Terrain height map, scaled 0 to 1
+    terrain_height = (feature_map[0] / 255.).astype(float)
+    neural_layers.append(terrain_height)
+
+    # Binary mask: friendly units
+    friendly_units = (feature_map[5] == 1).astype(float)
+    neural_layers.append(friendly_units)
+
+    # Binary mask: enemy units
+    enemy_units = (feature_map[5] == 4).astype(float)
+    neural_layers.append(enemy_units)
+
+    # Categorical map of unit types (see DEFAULT_SC2_UNITS)
+    unit_layers = int_map_to_onehot(feature_map[6], unit_map)
+    neural_layers.extend(unit_layers)
+
+    # Unit Health Points (scaled 0 to 1)
+    unit_hp = feature_map[9] / 255.
+    neural_layers.append(unit_hp)
+
+    # Unit Shield Points (scaled 0 to 1)
+    unit_sp = feature_map[13] / 255.
+    neural_layers.append(unit_sp)
+
+    # Unit density (number of overlapping units, important when zoomed out)
+    MAX_DENSITY = 4.
+    unit_density = np.clip(feature_map[15] / MAX_DENSITY, 0, 1)
+    neural_layers.append(unit_density)
+
+    # Area effects (psi-storm, EMP, etc)
+    effect_map = (feature_map[16] > 0).astype(float)
+    neural_layers.append(effect_map)
+
+    layers = np.array(neural_layers)
+    return layers
 
 
