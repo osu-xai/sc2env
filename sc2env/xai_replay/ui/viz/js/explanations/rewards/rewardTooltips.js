@@ -1,12 +1,12 @@
-function getRewardBarTooltipManager(canvas, chartData){
+function getRewardBarTooltipManager(canvas, chartData) {
     var ttm = {};
 
     ttm.chartData = chartData;
     ttm.canvas = canvas;
 
-    ttm.generateTooltips= function(){
+    ttm.generateTooltips = function () {
         this.chartData.positionTooltips();
-        for (var i in this.chartData.actionRewardNames){
+        for (var i in this.chartData.actionRewardNames) {
             var actionRewardName = this.chartData.actionRewardNames[i];
             var rewardBar = this.chartData.actionRewardForNameMap[actionRewardName];
             var tooltipText = "Value of " + prettyPrintRewardName[rewardBar.name] + " is " + Math.floor(rewardBar.value);
@@ -24,15 +24,15 @@ function getRewardBarTooltipManager(canvas, chartData){
     ttm.generateValueTooltips();
     ttm.generateTooltips();
 
-    canvas.onmousemove = function(e){
+    canvas.onmousemove = function (e) {
         var x = e.offsetX;
         var y = e.offsetY;
         var actionRewardName = chartData.getActionBarNameForCoordinates(x, y);
-        if (actionRewardName == "None"){
+        if (actionRewardName == "None") {
             ttm.hideAllToolTips();
         }
         else {
-            if (ttm.isToolTipShowingForRewardBar(actionRewardName)){
+            if (ttm.isToolTipShowingForRewardBar(actionRewardName)) {
                 // do nothing, it's already showing
             }
             else {
@@ -44,40 +44,39 @@ function getRewardBarTooltipManager(canvas, chartData){
         }
     }
 
-    ttm.isToolTipShowingForRewardBar = function(actionRewardName){
+    ttm.isToolTipShowingForRewardBar = function (actionRewardName) {
         var rewardBar = chartData.actionRewardForNameMap[actionRewardName];
         var ttVisibility = $("#tooltip-container-" + rewardBar.fullName).css("visibility");
         return (ttVisibility == "visible");
     }
-    ttm.hideAllToolTips = function(){
-        for (var i in this.chartData.actionRewardNames){
+    ttm.hideAllToolTips = function () {
+        for (var i in this.chartData.actionRewardNames) {
             var rewardBar = chartData.actionRewardForNameMap[this.chartData.actionRewardNames[i]];
             var toolContainerID = document.getElementById("tooltip-container-" + rewardBar.fullName);
             toolContainerID.style.visibility = "hidden";
-            $("#" + rewardBar.tooltipValueID).css("visibility","hidden");
+            $("#" + rewardBar.tooltipValueID).css("visibility", "hidden");
         }
     }
-    ttm.showTooltipForRewardBar = function(actionRewardName){
+    ttm.showTooltipForRewardBar = function (actionRewardName) {
         var rewardBar = chartData.actionRewardForNameMap[actionRewardName];
         var toolContainerID = document.getElementById("tooltip-container-" + rewardBar.fullName);
         toolContainerID.style.visibility = "visible";
     }
     ttm.showSimilarBarValues = function (actionRewardName) {
         var rewardBarName = actionRewardName.split(".")[1];
-        for (var i=0; i < chartData.actions.length; i++) {
+        for (var i = 0; i < chartData.actions.length; i++) {
             var action = "Attack Q" + Number(i + 1) + ".";
             var similarBar = action + rewardBarName;
             var rewardBar = chartData.actionRewardForNameMap[similarBar];
-            $("#" + rewardBar.tooltipValueID).css("visibility","visible");
+            $("#" + rewardBar.tooltipValueID).css("visibility", "visible");
         }
     }
     return ttm;
 }
 
 function createTooltipDiv(text, rewardBar, canvas) {
-    var canvas_bounds = canvas.getBoundingClientRect();
-    var x = rewardBar.tooltipOriginX + canvas_bounds.left;
-    var y = rewardBar.tooltipOriginY  + canvas_bounds.top;
+    var x = $("#game-titled-container").width() + rewardBar.tooltipOriginX + 28;
+    var y = rewardBar.tooltipOriginY + 25;
 
     var tooltipContainer = document.createElement("div");
     tooltipContainer.setAttribute("id", "tooltip-container-" + rewardBar.fullName);
@@ -85,17 +84,17 @@ function createTooltipDiv(text, rewardBar, canvas) {
 
     var id = convertNameToLegalId("tooltip-" + rewardBar.fullName);
     var ttDiv = document.createElement("div");
-    ttDiv.setAttribute("id",id);
-    ttDiv.setAttribute("style", 'width:100px;white-space: pre-wrap;' + 
-    'padding:4px;background-color:#00aabb;' + 
-    'z-index:' + zIndexMap["tooltip"] + ';' + 
-    'color:black;font-family:Arial;' + 
-    'border-radius:.4em;');
+    ttDiv.setAttribute("id", id);
+    ttDiv.setAttribute("style", 'width:100px;white-space: pre-wrap;' +
+        'padding:4px;background-color:#00aabb;' +
+        'z-index:' + zIndexMap["tooltip"] + ';' +
+        'color:black;font-family:Arial;' +
+        'border-radius:.4em;');
     ttDiv.innerHTML = text;
 
     tooltipContainer.append(ttDiv)
 
-    $("#explanations-rewards").append(tooltipContainer);
+    $("#chartV2-canvas-container").append(tooltipContainer);
 
     arrow = document.createElement("div");
     arrow.setAttribute("id", "arrow-" + rewardBar.fullName);
@@ -111,16 +110,19 @@ function createTooltipDiv(text, rewardBar, canvas) {
     return id;
 }
 
-function createValueTooltipDiv (text, rewardBar, canvas) {
+function createValueTooltipDiv(text, rewardBar, canvas) {
     var id = convertNameToLegalId("tooltip-value-" + rewardBar.fullName);
     var ttDiv = document.createElement("div");
-    ttDiv.setAttribute("id",id);
-    var canvas_bounds = canvas.getBoundingClientRect();
-    var x = rewardBar.tooltipOriginX + canvas_bounds.left;
-    var y = rewardBar.tooltipOriginY  + canvas_bounds.top;
+    ttDiv.setAttribute("id", id);
+    var x = $("#game-titled-container").width() + rewardBar.tooltipOriginX + 20;
+    if (rewardBar.value > 0) {
+        var y = rewardBar.tooltipOriginY;
+    } else {
+        var y = rewardBar.tooltipOriginY + 20;
+    }
     ttDiv.setAttribute("style", 'position:absolute;visibility:hidden;padding:4px;pointer-events:none;z-index:' + zIndexMap["tooltip"] + ';left:' + x + 'px;top:' + y + 'px;color:black;font-family:Arial');
     var textNode = document.createTextNode(text);
     ttDiv.append(textNode)
-    $("#explanations-rewards").append(ttDiv);
+    $("#chartV2-canvas-container").append(ttDiv);
     return id;
 }
