@@ -19,14 +19,11 @@ SIMULATION_STEP_MUL = 5
 BATTLE_SIMULATION_STEPS = 3
 
 UNIT_ID_LIST = [
-    48,  # marine
-    51,  # marauder
-    73,  # zealot
     75,  # high_templar
     77,  # sentry
+    83,  # immortal
     84,  # probe
     105, # zergling
-    107, # hydra
     135, # force field
 ]
 
