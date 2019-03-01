@@ -196,8 +196,8 @@ def expand_to_neural_input(feature_map, unit_map=UNIT_ID_LIST):
     neural_layers = []
 
     # Terrain height map, scaled 0 to 1
-    terrain_height = (feature_map[0] / 255.).astype(float)
-    neural_layers.append(terrain_height)
+    #terrain_height = (feature_map[0] / 255.).astype(float)
+    #neural_layers.append(terrain_height)
 
     # Binary mask: friendly units
     friendly_units = (feature_map[5] == 1).astype(float)
