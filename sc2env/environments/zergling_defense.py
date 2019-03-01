@@ -56,8 +56,8 @@ class ZerglingDefenseEnvironment(gym.Env):
         score = self.sc2env._obs[0].observation.score.score_details
         return {
             'total_damage_taken': -score.total_damage_taken.life,
-            'total_damage_dealt': 1.0 * (score.total_damage_dealt.life > 0),
-            'enemy_value_killed': 1.0 * (score.killed_value_units > 0),
+            'total_damage_dealt': score.total_damage_dealt.life,
+            'enemy_value_killed': score.killed_value_units,
             'friendly_value_alive': score.total_value_units,
         }
 
@@ -157,9 +157,17 @@ class ZerglingDefenseEnvironment(gym.Env):
         current_score = self.get_current_cumulative_score()
         info = {k: current_score[k] - self.last_score[k] for k in current_score.keys()}
 
+        # Discretize rewards to [-1, 0, 1]
+        for key in info:
+            val = info[key]
+            if val > 0:
+                val = 1.0
+            elif val < 0:
+                val = -1.0
+            info[key] = val
+
         # Reward is a sum of several terms: see self.score
         total_reward = sum(info.values())
-
         return state, total_reward, done, info
 
 
