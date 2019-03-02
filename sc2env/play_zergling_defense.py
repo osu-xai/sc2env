@@ -20,12 +20,16 @@ def generate_demo_video():
         vid(screen_rgb, normalize=False)
 
     rewards = []
-    for _ in range(100):
+    for i in range(100):
         if done:
             break
         action = env.action_space.sample()
         state, reward, done, info = env.step(action, animation_callback=video_write_frame)
         video_write_frame(state, reward, done, info)
+
+        imutil.show(state[1], img_padding=8, filename='ftr_{:06d}.png'.format(i), resize_to=(600,800))
+        imutil.show(state[1][10], filename='ftr10_{:06d}.png'.format(i), resize_to=(512,512))
+        imutil.show(state[3], filename='rgb_{:06d}.png'.format(i), resize_to=(512,512))
         rewards.append(reward)
         print('Timestep t={} took action {} got reward {}'.format(len(rewards), action, reward))
     vid.finish()
