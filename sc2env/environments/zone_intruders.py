@@ -209,43 +209,37 @@ def make_sc2env(render=False, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
 
 # Input: A 17-dimensional integer pysc2 feature map
 # See SCREEN_FEATURES in https://github.com/deepmind/pysc2/blob/master/pysc2/lib/features.py
-# Output: A N-dimensional float convolutional input map, N = 7 + len(unit_map)
-# Contains effects like psi-storm, required for ZerglingDefense
+# Output: A 4-dimensional float convolutional input map
+# Contains only unit types
 def expand_to_neural_input(feature_map, unit_map=UNIT_ID_LIST):
     neural_layers = []
 
-    # Terrain height map, scaled 0 to 1
-    #terrain_height = (feature_map[0] / 255.).astype(float)
-    #neural_layers.append(terrain_height)
-
+    # Friendly/enemy masks are unnecessary if all zealots are friendly
     # Binary mask: friendly units
-    friendly_units = (feature_map[5] == 1).astype(float)
-    neural_layers.append(friendly_units)
+    #friendly_units = (feature_map[5] == 1).astype(float)
+    #neural_layers.append(friendly_units)
 
     # Binary mask: enemy units
-    enemy_units = (feature_map[5] == 4).astype(float)
-    neural_layers.append(enemy_units)
+    #enemy_units = (feature_map[5] == 4).astype(float)
+    #neural_layers.append(enemy_units)
 
     # Categorical map of unit types (see DEFAULT_SC2_UNITS)
     unit_layers = int_map_to_onehot(feature_map[6], unit_map)
     neural_layers.extend(unit_layers)
 
+    # Unnecessary if all units die in one hit
     # Unit Health Points (scaled 0 to 1)
-    unit_hp = feature_map[9] / 255.
-    neural_layers.append(unit_hp)
+    #unit_hp = feature_map[9] / 255.
+    #neural_layers.append(unit_hp)
 
     # Unit Shield Points (scaled 0 to 1)
-    unit_sp = feature_map[13] / 255.
-    neural_layers.append(unit_sp)
+    #unit_sp = feature_map[13] / 255.
+    #neural_layers.append(unit_sp)
 
     # Unit density (number of overlapping units, important when zoomed out)
-    MAX_DENSITY = 4.
-    unit_density = np.clip(feature_map[15] / MAX_DENSITY, 0, 1)
-    neural_layers.append(unit_density)
-
-    # Area effects (psi-storm, EMP, etc)
-    effect_map = (feature_map[16] > 0).astype(float)
-    neural_layers.append(effect_map)
+    #MAX_DENSITY = 4.
+    #unit_density = np.clip(feature_map[15] / MAX_DENSITY, 0, 1)
+    #neural_layers.append(unit_density)
 
     layers = np.array(neural_layers)
     return layers
