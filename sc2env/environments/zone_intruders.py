@@ -26,9 +26,10 @@ UNIT_ID_LIST = [
 ]
 
 action_to_ability_id = {
-    1: 3771,  # CustomButtonA, Move Disruptor Left
-    2: 3773,  # CustomButtonA2, Fire
-    3: 3775,  # CustomButttonB, Move Disruptor Right
+    0: 3771,  # CustomButtonA, Move Disruptor Left
+    1: 3773,  # CustomButtonA2, Fire
+    2: 3775,  # CustomButttonB, Move Disruptor Right
+    3: 3777,  # CustomButttonB2, Stop
 }
 action_to_name = {
     0: "No-Op",
@@ -74,14 +75,7 @@ class ZoneIntrudersEnvironment(gym.Env):
         self.last_score = self.get_current_cumulative_score()
 
         sc2_action_list = []
-        if action == 0:
-            pass  # no-op
-        elif action == 1:
-            self.use_custom_ability(action_to_ability_id[1])
-        elif action == 2:
-            self.use_custom_ability(action_to_ability_id[2])
-        elif action == 3:
-            self.use_custom_ability(action_to_ability_id[3])
+        self.use_custom_ability(action_to_ability_id[action])
 
         sc2_action = actions.FUNCTIONS.no_op()
         self.last_timestep = self.sc2env.step([sc2_action])[0]
