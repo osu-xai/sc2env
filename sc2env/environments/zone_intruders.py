@@ -15,8 +15,7 @@ MAP_NAME = 'ZoneIntruders'
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
 
-SIMULATION_STEP_MUL = 3
-BATTLE_SIMULATION_STEPS = 3
+SIMULATION_STEP_MUL = 5
 
 UNIT_ID_LIST = [
     73,  # zealot
@@ -161,7 +160,7 @@ class ZoneIntrudersEnvironment(gym.Env):
 
         state = (feature_map, feature_screen_onehot, rgb_map, rgb_screen)
 
-        # The episode ends END_BATTLE_TIMESTEPS after either side is eliminated
+        # The episode ends after either side is eliminated
         player_relative = np.array(self.last_timestep.observation.feature_screen['player_relative'])
         living_players = np.unique(player_relative)
         friendlies_alive = 1 in living_players
