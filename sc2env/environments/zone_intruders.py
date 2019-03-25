@@ -31,15 +31,10 @@ action_to_ability_id = {
     3: 3777,  # CustomButttonB2, Stop
 }
 action_to_name = {
-    0: "No-Op",
-    1: "Build Marines",
-    2: "Build Barracks",
-    3: "Build Robots",
-    4: "Build Robot Facility",
-    #5: "currently unused",
-    #6: "currently unused",
-    5: "Build SCV",
-    6: "Launch Missile",
+    0: "Left",
+    1: "Fire",
+    2: "Right",
+    3: "No-Op",
 }
 
 
@@ -121,18 +116,6 @@ class ZoneIntrudersEnvironment(gym.Env):
             'total_damage_taken': -damage_taken,
             'enemy_value_killed': score.killed_value_units,
         }
-
-    def can_attack(self):
-        available_actions = self.last_timestep.observation.available_actions
-        return actions.FUNCTIONS.Attack_minimap.id in available_actions
-
-    def can_psi_storm(self):
-        available_actions = self.last_timestep.observation.available_actions
-        return actions.FUNCTIONS.Effect_PsiStorm_screen.id in available_actions
-
-    def can_force_field(self):
-        available_actions = self.last_timestep.observation.available_actions
-        return actions.FUNCTIONS.Effect_ForceField_screen.id in available_actions
 
     def render(self, *args, **kwargs):
         state, reward, done, info = self.unpack_observation()
