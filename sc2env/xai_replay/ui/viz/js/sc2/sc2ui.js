@@ -123,7 +123,7 @@ function createVideoElement(path){
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
-        var frameNumber = Math.floor(video.currentTime * framesPerSecond);
+        var frameNumber = Math.round(video.currentTime * framesPerSecond);
         activeSC2UIManager.expressFrameInfo(frameNumber);
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
