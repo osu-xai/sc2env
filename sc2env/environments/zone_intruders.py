@@ -110,11 +110,15 @@ class ZoneIntrudersEnvironment(gym.Env):
     # Helper function, does not alter state
     def get_current_cumulative_score(self):
         # Losing one friendly unit should be -1 reward and destroying one enemy +1 reward
-        score = self.sc2env._obs[0].observation.score.score_details
-        damage_taken = score.total_damage_taken.life + score.friendly_fire_minerals.army / 100.0
+        damage_taken = 0
+        enemy_value_killed = 0
+        if self.sc2env._obs:
+            score = self.sc2env._obs[0].observation.score.score_details
+            damage_taken = score.total_damage_taken.life + score.friendly_fire_minerals.army / 100.0
+            enemy_value_killed = score.killed_value_units
         return {
             'total_damage_taken': -damage_taken,
-            'enemy_value_killed': score.killed_value_units,
+            'enemy_value_killed': enemy_value_killed,
         }
 
     def render(self, *args, **kwargs):
