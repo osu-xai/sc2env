@@ -614,8 +614,7 @@ function addWhatButton() {
 		// }
 		//SC2_TODO_STUDY_END
 		e.preventDefault();
-		//SC2_TODO_SALprocessWhatClick();
-		alert("saliency maps for SC2 XAI Replay not yet integrated.");
+		processWhatClick();
 	})
 }
 

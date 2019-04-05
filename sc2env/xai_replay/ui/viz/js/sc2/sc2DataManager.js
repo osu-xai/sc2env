@@ -144,10 +144,11 @@ function convertSC2QValuesToJSChart(frameInfo){
     chart.h_title = "HORIZONTAL AXIS";
     chart.actions = [];
     var qValues = frameInfo["q_values"];
-    var actionAttackQ1 = collectActionInfo("Attack Q1", qValues["Top_Right"]);
-    var actionAttackQ2 = collectActionInfo("Attack Q2", qValues["Top_Left"]);
-    var actionAttackQ3 = collectActionInfo("Attack Q3", qValues["Bottom_Left"]);
-    var actionAttackQ4 = collectActionInfo("Attack Q4", qValues["Bottom_Right"]);
+    var step = frameInfo["frame_number"];
+    var actionAttackQ1 = collectActionInfo(step, "Attack Q1", qValues["Top_Right"]);
+    var actionAttackQ2 = collectActionInfo(step, "Attack Q2", qValues["Top_Left"]);
+    var actionAttackQ3 = collectActionInfo(step, "Attack Q3", qValues["Bottom_Left"]);
+    var actionAttackQ4 = collectActionInfo(step, "Attack Q4", qValues["Bottom_Right"]);
     chart.actions.push(actionAttackQ1);
     chart.actions.push(actionAttackQ2);
     chart.actions.push(actionAttackQ3);
@@ -167,26 +168,29 @@ function averageValuesInDictionary(actionValues){//SC2_TEST
     return average;
 }
 
-function collectActionInfo(actionName, actionValues){
+function collectActionInfo(step, actionName, actionValues){
     var action = {};
     action.name = actionName;
     action.bars = [];
-    action.saliencyId = undefined; //SC2_SALIENCY
+    action.saliencyId = step + "_" + actionName + '_all';
     action.value = averageValuesInDictionary(actionValues);
     var keys = Object.keys(actionValues);
     var sortedRewardNames = sortRewardNamesIntoRelatedPairs(keys);
     for (i in sortedRewardNames){
         var rewardName = sortedRewardNames[i];
-        var bar = collectBarInfo(rewardName, actionValues[rewardName]);
-        action.bars.push(bar);
+        if (rewardName != 'all'){
+            var bar_saliency_id = step + "_" + actionName + "_" + rewardName;
+            var bar = collectBarInfo(bar_saliency_id, rewardName, actionValues[rewardName]);
+            action.bars.push(bar);
+        }
     }
     return action;
 }
 
-function collectBarInfo(barName, barValue){
+function collectBarInfo(bar_saliency_id, barName, barValue){
     var bar = {};
     bar.name = barName;
-    bar.saliencyId = undefined; //SC2_SALIENCY
+    bar.saliencyId = bar_saliency_id;
     bar.value = barValue;
     return bar;
 }

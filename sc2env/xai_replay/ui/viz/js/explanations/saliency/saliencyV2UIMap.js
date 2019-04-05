@@ -23,16 +23,23 @@ function getSaliencyV2UIMap() {
 
 	uimap.overlaySaliencyMapOntoGameReplica = function(ctx, channel, gameboardFlag ) {
         for (var x= 0; x < Number(channel.width); x++){
+            var originX = x*saliencyScaleFactorX;
+            var hello = 3;
             for (var y = 0; y < Number(channel.height); y++){
+                var originY = y*saliencyScaleFactorY;
                 var index = Number(channel.height) * Number(x) + Number(y);
                 var cellValue = channel.cells[index];
                 var normVal = lookupNormalizationValue(channel.normalizationKey);
                 //console.log( "normalization Factor: " + normVal );
                 //console.log( channel.name );
                 //console.log( "Cell Value: " + Number( cellValue ) );
-                ctx.fillStyle = getOverlayOpacityBySaliencyRGBAString(Number(cellValue) / Number(normVal), gameboardFlag, cellValue);
+                //SC2_NORMALIZATION?
+                //ctx.fillStyle = getOverlayOpacityBySaliencyRGBAString(Number(cellValue) / Number(normVal), gameboardFlag, cellValue);
+                ctx.fillStyle = getOverlayOpacityBySaliencyRGBAString(cellValue, gameboardFlag, cellValue);
                 //console.log( "ctx.fillStyle: " + ctx.fillStyle );
-                ctx.fillRect(x*gameScaleFactor, y*gameScaleFactor, gameScaleFactor, gameScaleFactor);
+            
+                ctx.fillRect(originX, originY, saliencyScaleFactorX, saliencyScaleFactorY);
+                //ctx.fillRect(x*gameScaleFactor, y*gameScaleFactor, gameScaleFactor, gameScaleFactor);
                 ctx.fill();
             }
         }
@@ -267,11 +274,15 @@ function displayCellValue(evt, height, normalizationFactor, cells, explCanvas, v
     var yForValueLookup = Math.floor(mousePos.y/gameScaleFactor);
     var index = height * xForValueLookup + yForValueLookup;
     var cellValue = cells[index];
-    var normValue = Number(cellValue)/Number(normalizationFactor);
+    // SC2_NORMALIZATION?
+    var normValue = cellValue;
+    //var normValue = Number(cellValue)/Number(normalizationFactor);
     //var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + ' val: ' + normValue.toFixed(2);
     var top = (mousePos.y + 10 - (40 * gameScaleFactor)) + 'px'; // shift it to canvas above
     var left = (mousePos.x + 10) + 'px';
     valueSpan.setAttribute("style", 'z-index:' + zIndexMap["saliencyHoverValue"] + '; position:relative; left:' + left + '; top: ' + top + '; color:#D73F09;font-family:Arial;'); // OSU orange
+    
+    //valueSpan.innerHTML = "x="+mousePos.x + "_y="+mousePos.y;
     valueSpan.innerHTML = normValue.toFixed(2);
     //console.log(message);
 }
