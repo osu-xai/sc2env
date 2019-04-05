@@ -8,7 +8,8 @@ var gameboard_ctx = gameboard_canvas.getContext("2d");
 
 var zIndexMap = {};
 zIndexMap["explControl"] = 2;
-zIndexMap["inFrontOfVideo"] = 3;
+zIndexMap["inFrontOfTooltipCanvas"] = 3;
+zIndexMap["inFrontOfVideo"] = 4;
 zIndexMap["saliencyHoverValue"] = 5;
 zIndexMap["clickBlockerRectangle"] = 10;
 zIndexMap["whyButton"] = 11;
@@ -65,11 +66,9 @@ function configureGameboardCanvas(){ //gameboard canvas will be used to draw thi
 	$("#scaii-gameboard").css("height", gameboard_canvas.height);
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
+	$("#scaii-gameboard").css("position", "relative");
 	$("#scaii-gameboard").append()
-	var gameboardOffset = $("#scaii-gameboard").offset();
-	var gameboardTop = gameboardOffset.top;
-	var gameboardLeft = gameboardOffset.left;
-	gameboard_canvas.setAttribute("style", "position:absolute;left:" + gameboardLeft + "px;top:" + gameboardTop + "px;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
+	gameboard_canvas.setAttribute("style", "position:absolute;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
 	var scaiiGameboard = document.getElementById("scaii-gameboard");
 	if (gameboard_canvas.parentNode != scaiiGameboard){
 		$("#scaii-gameboard").append(gameboard_canvas);
