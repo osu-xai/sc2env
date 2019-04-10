@@ -47,6 +47,17 @@ def getOneHotState(state, input_screen_feature):
         unit_density = np.reshape(unit_density, (1, screen_size, screen_size))
         tstate = np.append(tstate, unit_density, axis=0)
 
+    #append unit sheild
+    if 'SHEILD' in input_screen_feature:
+        tstate = np.append(tstate, normalizeExceptZeros(state[12],
+                                                             (0, 500)), axis=0)
+
+    #append unit sheild ratio
+    if 'SHIELD_RATIO' in input_screen_feature:
+        SCALE = 255
+        shield_ratio = state[13] / SCALE
+        shield_ratio = np.reshape(shield_ratio, (1, screen_size, screen_size))
+        tstate = np.append(tstate, shield_ratio, axis=0)
     return tstate
 
 def normalizeExceptZeros(state, certainRange = None):
