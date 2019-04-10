@@ -43,10 +43,11 @@ class TugOfWar():
               action_space = actions.ActionSpace.FEATURES,
               camera_width_world_units = 28
               )
+       # print(map_name)
         step_mul_value = 16
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
-          players = [sc2_env.Agent(sc2_env.Race.protoss)],
+         # players = [sc2_env.Agent(sc2_env.Race.protoss)],
           agent_interface_format = aif,
 
           step_mul = step_mul_value,
@@ -80,7 +81,7 @@ class TugOfWar():
             'SHIELD_RATIO': 0,
             'UNIT_DENSITY': 0
         }
-        # have not finished the hot map function
+        # have not finished the normalization of shield
 
     def reset(self):
         # Move the camera in any direction
@@ -98,8 +99,8 @@ class TugOfWar():
         self.end_state = None
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
-        actions = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
-        # look into actions
+        actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
+        # look into actions_space
 
         data = data.observation.raw_data.units
  
@@ -115,6 +116,8 @@ class TugOfWar():
         
         rewards = []
         end = False
+        print(data)
+        input()
         l = len(self.reward_types)
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
@@ -123,7 +126,7 @@ class TugOfWar():
                     self.decomposed_reward_dict[rt] = (x.health - 1) * -1
                 else:
                     self.decomposed_reward_dict[rt] = x.health - 1
-        if x.unit_type = UNIT_TYPES['SCV'] and x.shield = 'end':
+        if x.unit_type == UNIT_TYPES['SCV'] and x.shield ==  'end':
         	end = True
         return rewards, end
 

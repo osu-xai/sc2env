@@ -5,7 +5,7 @@ import os
 from importlib import import_module
 from abp.configs import NetworkConfig, ReinforceConfig, EvaluationConfig
 
-#sfrom abp.examples.pysc2.four_towers_friendly_units_group_dereward.hra import run_task
+from abp.examples.pysc2.tug_of_war.hra import run_task
 
 def main():
     parser = argparse.ArgumentParser()
@@ -65,7 +65,7 @@ def main():
     map_name = args.map
     if map_name is None:
         print("You are traning the agent for the default map: ")
-        print("FogOfWar")
+        print("TugOfWar")
     else:
         print("You are traning the agent for the map: ")
         print(map_name)
