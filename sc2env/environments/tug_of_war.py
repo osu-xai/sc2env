@@ -41,7 +41,8 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 28
+              camera_width_world_units = 28,
+              
               )
        # print(map_name)
         step_mul_value = 16
@@ -90,24 +91,29 @@ class TugOfWar():
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.current_obs = self.sc2_env.step([action])[0]
         self.actions_taken = 0
-        #np.set_printoptions(threshold=np.nan,linewidth=np.nan)
-
+        np.set_printoptions(threshold=np.nan,linewidth=np.nan)
+        observation = self.current_obs
         state = observation[3]['feature_screen']
         state = getOneHotState(state, self.input_screen_features)
+        # print(state.shape)
+        # print(state)
+        # input()
         state = np.reshape(state, (1, -1))
         
         self.end_state = None
 
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
+
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
         # look into actions_space
 
         data = data.observation.raw_data.units
- 
+        # print(data)
+        # input()
         rewards, _ = self.getRewards(data)
         
-        for key in self.decomposed_reward_dict:
-            self.decomposed_reward_dict[key] = 0
+        for rt in self.reward_types:
+            self.decomposed_reward_dict[rt] = 0
             self.last_decomposed_reward_dict[rt] = 0
 
         return state
@@ -116,8 +122,8 @@ class TugOfWar():
         
         rewards = []
         end = False
-        print(data)
-        input()
+        #print(data)
+        #input()
         l = len(self.reward_types)
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
@@ -153,7 +159,7 @@ class TugOfWar():
             action = actions.FUNCTIONS.no_op()
 
         self.current_obs = self.sc2_env.step([action])[0]
-
+        observation = self.current_obs
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
 
@@ -166,7 +172,7 @@ class TugOfWar():
         if not skip:
         	for rt in self.reward_types:
         		value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
-        		self.decomposed_rewards.append[value_reward]
+        		self.decomposed_rewards.append(value_reward)
 
         if end:
             pass

@@ -48,7 +48,7 @@ def getOneHotState(state, input_screen_feature):
         tstate = np.append(tstate, unit_density, axis=0)
 
     #append unit sheild
-    if 'SHEILD' in input_screen_feature:
+    if 'SHIELD' in input_screen_feature:
         tstate = np.append(tstate, normalizeExceptZeros(state[12],
                                                              (0, 500)), axis=0)
 
