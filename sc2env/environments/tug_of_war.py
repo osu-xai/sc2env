@@ -13,9 +13,9 @@ SCREEN_SIZE = 40
 MAP_NAME = 'TugOfWar'
 UNIT_TYPES = {
 	'SCV': 45,
-	'Marine': 48,
-	'Viking': 0, # question?
-	'Colossus': 4
+	'Marine': 1927,
+	'Viking': 1928,
+	'Colossus': 1926
 }
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256):
