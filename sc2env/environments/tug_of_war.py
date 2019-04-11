@@ -26,7 +26,7 @@ class TugOfWar():
         print("map director: " + str(maps_dir))
         register_map(maps_dir, map_name)
         
-        if True:
+        if generate_xai_replay:
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
