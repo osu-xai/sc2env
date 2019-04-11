@@ -8,6 +8,7 @@ from s2clientprotocol import sc2api_pb2 as sc_pb
 from sc2env.pysc2_util import register_map
 from sc2env.utility import getOneHotState
 import os
+import sys
 
 SCREEN_SIZE = 40
 MAP_NAME = 'TugOfWar'
@@ -91,7 +92,7 @@ class TugOfWar():
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.current_obs = self.sc2_env.step([action])[0]
         self.actions_taken = 0
-        np.set_printoptions(threshold=np.nan,linewidth=np.nan)
+        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize)
         observation = self.current_obs
         state = observation[3]['feature_screen']
         state = getOneHotState(state, self.input_screen_features)
