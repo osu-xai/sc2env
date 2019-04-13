@@ -4,6 +4,8 @@ from pysc2.agents import base_agent
 from pysc2.env import sc2_env
 from pysc2.lib import actions, features, units
 from pysc2 import maps, lib
+from pysc2.lib import stopwatch
+
 from s2clientprotocol import sc2api_pb2 as sc_pb
 from sc2env.pysc2_util import register_map
 from sc2env.utility import getOneHotState
@@ -18,8 +20,11 @@ UNIT_TYPES = {
 	'Viking': 1928,
 	'Colossus': 1926
 }
+
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256):
+        stopwatch.sw.enabled = True
+        stopwatch.sw.trace = True
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
