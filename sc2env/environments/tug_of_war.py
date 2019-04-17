@@ -18,6 +18,19 @@ UNIT_TYPES = {
     'Viking': 35,
     'Colossus': 4
 }
+action_to_ability_id = {
+    0: 3771, # Effect Marine
+    1: 3773, # Effect VikingFighter
+    2: 3775, # Effect Colossus
+    3: 3777, # Effect Pylon
+}
+action_to_name = {
+    0: "Effect Marine",
+    1: "Effect VikingFighter",
+    2: "Effect Colossus",
+    3: "Effect Pylon",
+    4: "no_op",
+}
 
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256):
@@ -46,6 +59,7 @@ class TugOfWar():
               camera_width_world_units = 28,
               
               )
+        self.verbose = False
        # print(map_name)
         step_mul_value = 16
         self.sc2_env = sc2_env.SC2Env(
@@ -135,7 +149,7 @@ class TugOfWar():
                 else:
                     self.decomposed_reward_dict[rt] = x.health - 1
         if x.unit_type == UNIT_TYPES['SCV'] and x.shield ==  'end':
-        	end = True
+            end = True
         return rewards, end
 
     def step(self, action, skip = False):
@@ -143,23 +157,13 @@ class TugOfWar():
 
         #have not finished actions yet
         ### ACTION TAKING ###
-        if self.actions_taken == 0 and self.check_action(self.current_obs, 12):
-            if action == 0:
-                action = actions.FUNCTIONS.no_op()
-            elif action == 1:
-                action = actions.FUNCTIONS.no_op()
-            elif action == 2:
-                action = actions.FUNCTIONS.no_op()
-            elif action == 3:
-                action = actions.FUNCTIONS.no_op()
-            elif action == 4:
-                action = actions.FUNCTIONS.no_op()
-            else:
-                print("Invalid action: check final layer of network")
-                action = actions.FUNCTIONS.no_op()
+        action = 1
+        if action < 4:
+            self.use_custom_ability(action_to_ability_id[action])
         else:
-            action = actions.FUNCTIONS.no_op()
+            print("Invalid action: check final layer of network")
 
+        action = actions.FUNCTIONS.no_op()
         self.current_obs = self.sc2_env.step([action])[0]
         observation = self.current_obs
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
@@ -172,16 +176,16 @@ class TugOfWar():
         state = np.reshape(state, (1, -1))
 
         if not skip:
-        	for rt in self.reward_types:
-        		value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
-        		self.decomposed_rewards.append(value_reward)
+            for rt in self.reward_types:
+                value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
+                self.decomposed_rewards.append(value_reward)
 
         if end:
             pass
             self.end_state = None
             
         if not skip:
-        	self.last_decomposed_reward_dict = self.decomposed_reward_dict
+            self.last_decomposed_reward_dict = self.decomposed_reward_dict
         return state, end
 
     def register_map(self, map_dir, map_name):
@@ -190,11 +194,44 @@ class TugOfWar():
         constructed_class = type(map_name, (pysc2.maps.lib.Map,), class_definition)
         globals()[map_name] = constructed_class
 
+
+    def use_custom_ability(self, ability_id, player_id=1):
+        # Sends a command directly to the SC2 protobuf API
+        # Can cause the pysc2 client to desync, unless step_sc2env() is called afterward
+        from s2clientprotocol import sc2api_pb2
+        from s2clientprotocol import common_pb2
+        from s2clientprotocol import spatial_pb2
+
+        def get_action_spatial(ability_id):
+            target_point = common_pb2.PointI()
+            target_point.x = 0
+            target_point.y = 0
+
+            action_spatial_unit_command = spatial_pb2.ActionSpatialUnitCommand(target_minimap_coord=target_point)
+            action_spatial_unit_command.ability_id = ability_id
+
+            action_spatial = spatial_pb2.ActionSpatial(unit_command=action_spatial_unit_command)
+            action = sc2api_pb2.Action(action_feature_layer=action_spatial)
+            return action
+        player_action = get_action_spatial(ability_id)
+        request_action = sc2api_pb2.RequestAction(actions=[player_action])
+        request = sc2api_pb2.Request(action=request_action)
+
+        # Bypass pysc2 and send the proto directly
+        client = self.sc2_env._controllers[player_id - 1]._client
+        if self.verbose:
+            print('Calling client.send_req for player_id {}'.format(player_id))
+        if self.sc2_env._state == 2:
+            print('Game is over, cannot send action')
+            return
+        client.send_req(request)
+
     def get_available_actions(self, obs):
+        #print(obs.observation.available_actions)
         return obs.observation.available_actions
 
     def check_action(self, obs, action):
- #       print(action, self.get_available_actions)
+        
         return action in self.get_available_actions(obs)
 
 
