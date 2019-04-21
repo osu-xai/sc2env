@@ -10,7 +10,7 @@ from sc2env.utility import getOneHotState
 import os
 import sys
 
-SCREEN_SIZE = 40
+SCREEN_SIZE  = 40
 MAP_NAME = 'TugOfWar'
 UNIT_TYPES = {
     'SCV': 45,
@@ -33,7 +33,7 @@ action_to_name = {
 }
 
 class TugOfWar():
-    def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256):
+    def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
@@ -56,15 +56,13 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 28,
+              camera_width_world_units = 50,
               
               )
-        self.verbose = False
-       # print(map_name)
+        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
         step_mul_value = 16
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
-         # players = [sc2_env.Agent(sc2_env.Race.protoss)],
           agent_interface_format = aif,
 
           step_mul = step_mul_value,
@@ -76,6 +74,8 @@ class TugOfWar():
         self.current_obs = None
         self.actions_taken = 0
         self.decomposed_rewards = []
+        self.verbose = verbose
+        self.unspent_miner = 0
 
         self.signal_of_end = False
         self.end_state = None
@@ -98,23 +98,16 @@ class TugOfWar():
             'SHIELD_RATIO': 0,
             'UNIT_DENSITY': 0
         }
-        # have not finished the normalization of shield
 
     def reset(self):
         # Move the camera in any direction
         # This runs the ResetEpisode trigger built into the map
         self.decomposed_rewards = []
         action = actions.FUNCTIONS.move_camera([0, 0])
-        self.current_obs = self.sc2_env.step([action])[0]
         self.actions_taken = 0
-        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize)
-        observation = self.current_obs
-        state = observation[3]['feature_screen']
-        state = getOneHotState(state, self.input_screen_features)
-        # print(state.shape)
-        # print(state)
-        # input()
-        state = np.reshape(state, (1, -1))
+        
+        # Get channel states
+        state = self.get_channel_state(action)
         
         self.end_state = None
 
@@ -126,7 +119,7 @@ class TugOfWar():
         data = data.observation.raw_data.units
         # print(data)
         # input()
-        rewards, _ = self.getRewards(data)
+        self.getRewards(data)
         
         for rt in self.reward_types:
             self.decomposed_reward_dict[rt] = 0
@@ -135,57 +128,51 @@ class TugOfWar():
         return state
 
     def getRewards(self, data):
-        
-        rewards = []
         end = False
-        #print(data)
-        #input()
         l = len(self.reward_types)
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
-                rt = self.reward_types[int(x.shield - 1)]
-                if '_Neg' in rt :
-                    self.decomposed_reward_dict[rt] = (x.health - 1) * -1
-                else:
-                    self.decomposed_reward_dict[rt] = x.health - 1
-        if x.unit_type == UNIT_TYPES['SCV'] and x.shield ==  'end':
-            end = True
-        return rewards, end
+                if x.shield <= l:
+                    rt = self.reward_types[int(x.shield - 1)]
+                    if '_Neg' in rt :
+                        self.decomposed_reward_dict[rt] = (x.health - 1) * -1
+                    else:
+                        self.decomposed_reward_dict[rt] = x.health - 1
+                if x.shield == l + 1: 
+                    self.unspent_miner = x.health - 1
+                if x.shield == l + 2 and x.health == 2:
+                    end = True
+        return end
 
     def step(self, action, skip = False):
         end = False
 
-        #have not finished actions yet
         ### ACTION TAKING ###
-        action = 1
         if action < 4:
             self.use_custom_ability(action_to_ability_id[action])
-        else:
+        elif action > 4:
             print("Invalid action: check final layer of network")
-
+        
+        # Get channel states
         action = actions.FUNCTIONS.no_op()
-        self.current_obs = self.sc2_env.step([action])[0]
-        observation = self.current_obs
+        state = self.get_channel_state(action)
+        
+        # Get reward from data
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
-
-        rewards, end = self.getRewards(data)
-
-        state = observation[3]['feature_screen']
-        state = getOneHotState(state, self.input_screen_features)
-        state = np.reshape(state, (1, -1))
+        end = self.getRewards(data)
 
         if not skip:
+            self.decomposed_rewards = []
             for rt in self.reward_types:
                 value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
                 self.decomposed_rewards.append(value_reward)
-
+            for rt in self.reward_types:
+                self.last_decomposed_reward_dict[rt] = self.decomposed_reward_dict[rt]
+            #print(self.decomposed_rewards)
         if end:
-            pass
-            self.end_state = None
+            self.end_state = state
             
-        if not skip:
-            self.last_decomposed_reward_dict = self.decomposed_reward_dict
         return state, end
 
     def register_map(self, map_dir, map_name):
@@ -226,49 +213,24 @@ class TugOfWar():
             return
         client.send_req(request)
 
-    def get_available_actions(self, obs):
-        #print(obs.observation.available_actions)
-        return obs.observation.available_actions
-
-    def check_action(self, obs, action):
+    def get_channel_state(self, action):
+        self.current_obs = self.sc2_env.step([action])[0]
+        observation = self.current_obs
+        state = observation[3]['feature_screen']
+        state = getOneHotState(state, self.input_screen_features)
+#         print(state)
+#         input()
+        state = np.reshape(state, (1, -1))
         
-        return action in self.get_available_actions(obs)
+        return state
+    def get_custom_state(self):
+        pass
+#     def get_available_actions(self, obs):
+#         #print(obs.observation.available_actions)
+#         return obs.observation.available_actions
+
+#     def check_action(self, obs, action):
+        
+#         return action in self.get_available_actions(obs)
 
 
-    """
-    def int_map_to_onehot(self, x, vocabulary=None):
-        if vocabulary is None:
-            # If no vocabulary is known, make a conservative assumption
-            vocabulary = set(x.flatten())
-        output_shape = (len(vocabulary),) + x.shape
-        output_map = np.zeros(shape=output_shape, dtype=float)
-        for i, id in enumerate(vocabulary):
-            output_map[i][x == id] = 1.
-       # print(output_map)
-        return output_map
-    """
-"""
-# Unit test for int_map_to_onehot
-x = np.zeros((84, 84), dtype=int)
-x[1,2] = 49
-x[3,10] = 107
-x[40:50, 60:70] = 105
-assert int_map_to_onehot(x).shape == (4, 84, 84)
-assert int_map_to_onehot(x, SIMPLE_SC2_UNITS).shape == (len(SIMPLE_SC2_UNITS), 84, 84)
-"""
-"""
-def normalizeExceptZeros(state):
-    state = np.array(state)
-    state[state == 0] = 10000000
-    print(state)
-    state[state == 10000000] = state.min()
-    print(state)
-    nstate = (state - (state.min())) / (state.max() - state.min())
-    print(nstate)
-    return nstate
-# Unit test for normalizeExceptZeros
-s = [0,1,2,3,4,0]
-normalizeExceptZeros(s)
-"""
-
-#FourTowerSequentialMultiUnit()

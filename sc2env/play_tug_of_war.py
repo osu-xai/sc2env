@@ -49,8 +49,6 @@ def main():
     
     args = parser.parse_args()
     
-    #print(args)
-    #input()
     evaluation_config_path = os.path.join(args.folder, "evaluation.yml")
     evaluation_config = EvaluationConfig.load_from_yaml(evaluation_config_path)
 

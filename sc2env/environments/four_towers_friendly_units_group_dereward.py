@@ -10,7 +10,7 @@ from sc2env.utility import getOneHotState
 import os
 
 SCREEN_SIZE = 40
-MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward_recorder'
+MAP_NAME = 'FourTowesFriendlyunitsDecomposedGroupReward'
 class FourTowersFriendlyUnitsGroupDereward():
     def __init__(self, reward_types, map_name = None, unit_type = [83, 52, 48], generate_xai_replay = False, xai_replay_dimension = 256):
         if map_name is None:
