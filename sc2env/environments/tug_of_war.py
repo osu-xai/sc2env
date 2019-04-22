@@ -31,6 +31,13 @@ action_to_name = {
     3: "Effect Pylon",
     4: "no_op",
 }
+building_unit_types = {
+    21 : 0, #'Barracks'
+    28 : 1, # 'Starport'
+    71 : 2, # 'RoboticsFacility'
+    60 : 3, # 'Pylon'
+    59 : 4, # 'Nexus'
+}
 
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
@@ -75,7 +82,6 @@ class TugOfWar():
         self.actions_taken = 0
         self.decomposed_rewards = []
         self.verbose = verbose
-        self.unspent_miner = 0
 
         self.signal_of_end = False
         self.end_state = None
@@ -105,21 +111,18 @@ class TugOfWar():
         self.decomposed_rewards = []
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.actions_taken = 0
-        
-        # Get channel states
-        state = self.get_channel_state(action)
+        self.current_obs = self.sc2_env.step([action])[0]
         
         self.end_state = None
-
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
-
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
-        # look into actions_space
 
         data = data.observation.raw_data.units
-        # print(data)
-        # input()
         self.getRewards(data)
+#         # Get channel states
+#         state = self.get_channel_state(self.current_obs)
+        # Get custom states
+        state = self.get_custom_state(data)
         
         for rt in self.reward_types:
             self.decomposed_reward_dict[rt] = 0
@@ -127,42 +130,27 @@ class TugOfWar():
 
         return state
 
-    def getRewards(self, data):
-        end = False
-        l = len(self.reward_types)
-        for x in data:
-            if x.unit_type == UNIT_TYPES['SCV']:
-                if x.shield <= l:
-                    rt = self.reward_types[int(x.shield - 1)]
-                    if '_Neg' in rt :
-                        self.decomposed_reward_dict[rt] = (x.health - 1) * -1
-                    else:
-                        self.decomposed_reward_dict[rt] = x.health - 1
-                if x.shield == l + 1: 
-                    self.unspent_miner = x.health - 1
-                if x.shield == l + 2 and x.health == 2:
-                    end = True
-        return end
-
     def step(self, action, skip = False):
         end = False
-
+        state = None
         ### ACTION TAKING ###
         if action < 4:
             self.use_custom_ability(action_to_ability_id[action])
         elif action > 4:
             print("Invalid action: check final layer of network")
         
-        # Get channel states
         action = actions.FUNCTIONS.no_op()
-        state = self.get_channel_state(action)
-        
-        # Get reward from data
-        data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
-        data = data.observation.raw_data.units
-        end = self.getRewards(data)
+        self.current_obs = self.sc2_env.step([action])[0]
 
         if not skip:
+            data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
+            data = data.observation.raw_data.units
+            # Get reward from data
+            end = self.getRewards(data)
+#         # Get channel states
+#         state = self.get_channel_state(self.current_obs)
+        # Get custom states
+            state = self.get_custom_state(data)
             self.decomposed_rewards = []
             for rt in self.reward_types:
                 value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
@@ -213,18 +201,84 @@ class TugOfWar():
             return
         client.send_req(request)
 
-    def get_channel_state(self, action):
-        self.current_obs = self.sc2_env.step([action])[0]
-        observation = self.current_obs
+    def get_channel_state(self, observation):
+        
         state = observation[3]['feature_screen']
         state = getOneHotState(state, self.input_screen_features)
-#         print(state)
-#         input()
         state = np.reshape(state, (1, -1))
         
         return state
-    def get_custom_state(self):
-        pass
+    def get_custom_state(self, data):
+        """
+            Plyer1 : Number of Marines Maker
+            Plyer1 : Number of Vikings Maker
+            Plyer1 : Number of Colossus Maker
+            Plyer1 : Number of Pylon
+            Plyer1 : Nexus HP
+            Plyer1 : Nexus Shield
+            Plyer2 : Number of Marines Maker
+            Plyer2 : Number of Vikings Maker
+            Plyer2 : Number of Colossus Maker
+            Plyer2 : Number of Pylon
+            Plyer2 : Nexus HP
+            Plyer2 : Nexus Shield
+            Unspent Miner # get_illegal_actions should change if it change
+        """
+        state = np.zeros(13)
+        for x in data:
+            index_enemy = 0
+            if x.unit_type in building_unit_types:
+                if x.alliance != 1: # 1: Self, 4: Enemy
+                    index_enemy = 6
+                if x.unit_type != 59: # Non Nexus
+                    state[building_unit_types[x.unit_type] + index_enemy] += 1
+                else:
+                    state[building_unit_types[x.unit_type] + index_enemy] = x.health
+                    state[building_unit_types[x.unit_type] + index_enemy + 1] = x.shield
+            if x.unit_type == UNIT_TYPES['SCV'] and x.shield == 31:
+                # get_illegal_actions should change if it change
+                state[12] = x.health - 1
+                
+#         print(state)
+#         input()
+        return state
+
+    def getRewards(self, data):
+        end = False
+        l = len(self.reward_types)
+        for x in data:
+            if x.unit_type == UNIT_TYPES['SCV']:
+                if x.shield <= l:
+                    rt = self.reward_types[int(x.shield - 1)]
+                    if '_Neg' in rt :
+                        self.decomposed_reward_dict[rt] = (x.health - 1) * -1
+                    else:
+                        self.decomposed_reward_dict[rt] = x.health - 1
+                    if 'Sheild' in rt:
+                        self.decomposed_reward_dict[rt] /= 10
+                if x.shield == 41 and x.health == 2:
+                    end = True
+
+        return end
+    def get_illegal_actions(self, state):
+        """
+        0: "Effect Marine", 50 cost
+        1: "Effect VikingFighter", 75 cost
+        2: "Effect Colossus", 75 cost
+        3: "Effect Pylon", 200 cost
+        4: "no_op",
+        """
+#         print(state)
+        illegal_actions = []
+        if state[12] < 200:
+            illegal_actions.append(2)
+        if state[12] < 75:
+            illegal_actions.append(1)
+            illegal_actions.append(3)
+        if state[12] < 50:
+            illegal_actions.append(0)
+#         print(illegal_actions)
+        return illegal_actions
 #     def get_available_actions(self, obs):
 #         #print(obs.observation.available_actions)
 #         return obs.observation.available_actions
@@ -232,5 +286,3 @@ class TugOfWar():
 #     def check_action(self, obs, action):
         
 #         return action in self.get_available_actions(obs)
-
-
