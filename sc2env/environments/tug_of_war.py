@@ -85,6 +85,7 @@ class TugOfWar():
 
         self.signal_of_end = False
         self.end_state = None
+        self.get_income_signal = 2
 
 
         self.reward_types = reward_types
@@ -114,6 +115,7 @@ class TugOfWar():
         self.current_obs = self.sc2_env.step([action])[0]
         
         self.end_state = None
+        self.get_income_signal = 2
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
 
@@ -133,6 +135,7 @@ class TugOfWar():
     def step(self, action, skip = False):
         end = False
         state = None
+        get_income = False
         ### ACTION TAKING ###
         if action < 4:
             self.use_custom_ability(action_to_ability_id[action])
@@ -141,16 +144,15 @@ class TugOfWar():
         
         action = actions.FUNCTIONS.no_op()
         self.current_obs = self.sc2_env.step([action])[0]
-
+        # Get reward from data
+        data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
+        data = data.observation.raw_data.units
+        end, get_income = self.getRewards(data)
+        state = self.get_custom_state(data)
         if not skip:
-            data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
-            data = data.observation.raw_data.units
-            # Get reward from data
-            end = self.getRewards(data)
-#         # Get channel states
-#         state = self.get_channel_state(self.current_obs)
-        # Get custom states
-            state = self.get_custom_state(data)
+          # Get channel states
+          # state = self.get_channel_state(self.current_obs)
+          # Get custom states
             self.decomposed_rewards = []
             for rt in self.reward_types:
                 value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
@@ -161,7 +163,7 @@ class TugOfWar():
         if end:
             self.end_state = state
             
-        return state, end
+        return state, end, get_income
 
     def register_map(self, map_dir, map_name):
         map_filename = map_name + '.SC2Map'
@@ -245,6 +247,7 @@ class TugOfWar():
 
     def getRewards(self, data):
         end = False
+        get_income = False
         l = len(self.reward_types)
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
@@ -258,8 +261,11 @@ class TugOfWar():
                         self.decomposed_reward_dict[rt] /= 10
                 if x.shield == 41 and x.health == 2:
                     end = True
+                if x.shield == 43 and x.health != self.get_income_signal:
+                    self.get_income_signal = x.health
+                    get_income = True
 
-        return end
+        return end, get_income
     def get_illegal_actions(self, state):
         """
         0: "Effect Marine", 50 cost
