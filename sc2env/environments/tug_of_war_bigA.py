@@ -7,6 +7,7 @@ from pysc2 import maps, lib
 from s2clientprotocol import sc2api_pb2 as sc_pb
 from sc2env.pysc2_util import register_map
 from sc2env.utility import getOneHotState
+from copy import copy
 import os
 import sys
 
@@ -34,15 +35,15 @@ action_to_name = {
 building_unit_types = {
     21 : 0, #'Barracks'
     28 : 1, # 'Starport'
-    71 : 2, # 'RoboticsFacility'
+    70 : 2, # 'RoboticsFacility'
     60 : 3, # 'Pylon'
     59 : 4, # 'Nexus'
 }
 maker_cost = {
     'Marine' : 50,
     'Viking' : 75,
-    'Pylon' : 75,
-    'Colossus' : 200
+    'Colossus' : 200,
+    'Pylon' : 75
 }
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
@@ -68,10 +69,10 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 50,
+              camera_width_world_units = 90,
               
               )
-        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
+        #np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
         step_mul_value = 16
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
@@ -87,11 +88,15 @@ class TugOfWar():
         self.actions_taken = 0
         self.decomposed_rewards = []
         self.verbose = verbose
+        self.decision_point = 1
+        self.miner_index = 12
+        self.reset_steps = -1
 
         self.signal_of_end = False
         self.end_state = None
-        self.get_income_signal = 2
-
+        self.maker_cost_np = np.zeros(len(maker_cost))
+        for i, mc in enumerate(maker_cost.values()):
+            self.maker_cost_np[i] = mc
 
         self.reward_types = reward_types
         self.last_decomposed_reward_dict = {}
@@ -119,8 +124,15 @@ class TugOfWar():
         self.actions_taken = 0
         self.current_obs = self.sc2_env.step([action])[0]
         
+        if self.reset_steps >= 10:
+            self.sc2_env.reset()
+            self.reset_steps = 0
+        self.reset_steps += 1
+        
         self.end_state = None
-        self.get_income_signal = 2
+        self.decision_point = 1
+        
+        
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
 
@@ -137,24 +149,38 @@ class TugOfWar():
 
         return state
 
-    def step(self, action, skip = False):
+    def step(self, action):
         end = False
         state = None
-        get_income = False
+        
         ### ACTION TAKING ###
-        if action < 4:
-            self.use_custom_ability(action_to_ability_id[action])
-        elif action > 4:
-            print("Invalid action: check final layer of network")
+        if sum(action) > 0:
+            for a_index, num_action in enumerate(action):
+                for _ in range(num_action):
+                    self.use_custom_ability(action_to_ability_id[a_index])
         
         action = actions.FUNCTIONS.no_op()
         self.current_obs = self.sc2_env.step([action])[0]
         # Get reward from data
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
-        end, get_income = self.getRewards(data)
+        end, dp = self.getRewards(data)
         state = self.get_custom_state(data)
-        if not skip:
+#         if not skip:
+#           # Get channel states
+#           # state = self.get_channel_state(self.current_obs)
+#           # Get custom states
+#             self.decomposed_rewards = []
+#             for rt in self.reward_types:
+#                 value_reward = self.decomposed_reward_dict[rt] - self.last_decomposed_reward_dict[rt]
+#                 self.decomposed_rewards.append(value_reward)
+#             for rt in self.reward_types:
+#                 self.last_decomposed_reward_dict[rt] = self.decomposed_reward_dict[rt]
+#             #print(self.decomposed_rewards)
+
+        self.end_state = state
+            
+        if dp or end:
           # Get channel states
           # state = self.get_channel_state(self.current_obs)
           # Get custom states
@@ -164,11 +190,10 @@ class TugOfWar():
                 self.decomposed_rewards.append(value_reward)
             for rt in self.reward_types:
                 self.last_decomposed_reward_dict[rt] = self.decomposed_reward_dict[rt]
-            #print(self.decomposed_rewards)
-        if end:
-            self.end_state = state
-            
-        return state, end, get_income
+                
+            return state, self.get_big_A(state[self.miner_index] * 100), end, dp
+        else:
+            return state, None, end, dp
 
     def register_map(self, map_dir, map_name):
         map_filename = map_name + '.SC2Map'
@@ -238,22 +263,30 @@ class TugOfWar():
                 if x.alliance != 1: # 1: Self, 4: Enemy
                     index_enemy = 6
                 if x.unit_type != 59: # Non Nexus
+#                     if x.unit_type == 70:
+#                         input("asds")
                     state[building_unit_types[x.unit_type] + index_enemy] += 1
                 else:
                     state[building_unit_types[x.unit_type] + index_enemy] = x.health
                     state[building_unit_types[x.unit_type] + index_enemy + 1] = x.shield
+                    
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield == 31:
                 # get_illegal_actions should change if it change
-                state[12] = x.health - 1
-                
-#         print(state)
-#         input()
+                state[self.miner_index] = x.health - 1
+        if state[self.miner_index] > 1500:
+            state[self.miner_index] = 1500
+        state[self.miner_index] /= 100
+        state[4] /= 50
+        state[5] /= 50
+        state[10] /= 50
+        state[11] /= 50
+        
         return state
-
+    
     def getRewards(self, data):
         end = False
-        get_income = False
         l = len(self.reward_types)
+        dp = False
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
                 if x.shield <= l:
@@ -262,15 +295,17 @@ class TugOfWar():
                         self.decomposed_reward_dict[rt] = (x.health - 1) * -1
                     else:
                         self.decomposed_reward_dict[rt] = x.health - 1
-                    if 'Sheild' in rt:
+                        
+                    if 'Sheild' in rt or x.shield == 12 or x.shield == 13:
                         self.decomposed_reward_dict[rt] /= 10
                 if x.shield == 41 and x.health == 2:
                     end = True
-                if x.shield == 43 and x.health != self.get_income_signal:
-                    self.get_income_signal = x.health
-                    get_income = True
+                if x.shield == 44 and x.health != self.decision_point:
+                    self.decision_point = x.health
+                    dp = True
 
-        return end, get_income
+        return end, dp
+    
     def get_illegal_actions(self, state):
         """
         0: "Effect Marine", 50 cost
@@ -281,49 +316,53 @@ class TugOfWar():
         """
 #         print(state)
         illegal_actions = []
-        if state[12] < 200:
+        if state[self.miner_index] < 200:
             illegal_actions.append(2)
-        if state[12] < 75:
+        if state[self.miner_index] < 75:
             illegal_actions.append(1)
             illegal_actions.append(3)
-        if state[12] < 50:
+        if state[self.miner_index] < 50:
             illegal_actions.append(0)
 #         print(illegal_actions)
         return illegal_actions
 
     def get_big_A(self, miner, 
-                  all_A_vectors = set(), vector = (0, 0, 0, 0), index = 0):
+                  all_A_vectors = None, vector = None, index = 0):
+        if all_A_vectors is None:
+            all_A_vectors = set()
+        if vector is None:
+            vector = (0,0,0,0)
         if miner < 50:
             all_A_vectors.add(vector)
-            return 
+            return list(all_A_vectors)
         next_vector = copy(vector)
-        get_big_A(miner - miner, all_A_vectors, next_vector)
+        self.get_big_A(miner - miner, all_A_vectors, next_vector)
         if miner >= maker_cost['Marine']:
             if index <= 0:
                 next_vector = (vector[0] + 1, vector[1],
                                   vector[2], vector[3])
-                get_big_A(miner - maker_cost['Marine'], all_A_vectors, next_vector, 0)
+                self.get_big_A(miner - maker_cost['Marine'], all_A_vectors, next_vector, 0)
             if miner >= maker_cost['Viking']:
                 if index <= 1:
                     next_vector = (vector[0], vector[1] + 1,
                                   vector[2], vector[3])
-                    get_big_A(miner - maker_cost['Viking'], all_A_vectors, next_vector, 1)
+                    self.get_big_A(miner - maker_cost['Viking'], all_A_vectors, next_vector, 1)
                 if miner >= maker_cost['Pylon']:
                     if index <= 2:
                         next_vector = (vector[0], vector[1],
-                                  vector[2] + 1, vector[3])
-                        get_big_A(miner - maker_cost['Pylon'], all_A_vectors, next_vector, 2)
+                                  vector[2], vector[3] + 1)
+                        self.get_big_A(miner - maker_cost['Pylon'], all_A_vectors, next_vector, 2)
                     if miner >= maker_cost['Colossus']:
                         if index <= 3:
                             next_vector = (vector[0], vector[1],
-                                  vector[2], vector[3] + 1)
-                            get_big_A(miner - maker_cost['Colossus'], all_A_vectors, next_vector, 3)
+                                  vector[2] + 1, vector[3])
+                            self.get_big_A(miner - maker_cost['Colossus'], all_A_vectors, next_vector, 3)
 
-        return all_A_vectors
-#     def get_available_actions(self, obs):
-#         #print(obs.observation.available_actions)
-#         return obs.observation.available_actions
-
-#     def check_action(self, obs, action):
-        
-#         return action in self.get_available_actions(obs)
+        return list(all_A_vectors)
+    
+    def combine_sa(self, s, actions):
+        s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
+        actions = np.array(actions)
+        s[:,:4] += actions
+        s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
+        return s
