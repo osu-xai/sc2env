@@ -11,14 +11,18 @@ import imutil
 from sc2env.pysc2_util import register_map
 from sc2env.representation import int_map_to_onehot
 
-MAP_NAME = 'ZoneIntruders'
+MAP_DEFAULT = 'StarIntruders'
+MAP_VARIANT_A = 'StarIntrudersVariantA'
+MAP_VARIANT_B = 'StarIntrudersVariantB'
+MAP_VARIANT_C = 'StarIntrudersVariantC'
+
 MAP_SIZE = 64
 RGB_SCREEN_SIZE = 256
 
 SIMULATION_STEP_MUL = 5
 
 UNIT_ID_LIST = [
-    73,  # zealot
+    48,  # marine
     107, # hydralisk
     694, # disruptor
     733, # disruptor orb (fired from disruptor ship)
@@ -37,10 +41,9 @@ action_to_name = {
     3: "No-Op",
 }
 
-
-class ZoneIntrudersEnvironment(gym.Env):
-    def __init__(self, render=True, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
-        self.sc2env = make_sc2env(render, screen_size, map_size)
+class StarIntrudersEnvironment(gym.Env):
+    def __init__(self, map_name=MAP_DEFAULT, render=True, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
+        self.sc2env = make_sc2env(map_name, render, screen_size, map_size)
         self.action_space = Discrete(4)
 
     # Reset the simulation to an initial state.
@@ -163,9 +166,27 @@ class ZoneIntrudersEnvironment(gym.Env):
         return state, total_reward, done, info
 
 
+class StarIntrudersVariantA(StarIntrudersEnvironment):
+    def __init__(self, *args, **kwargs):
+        kwargs['map_name'] = MAP_VARIANT_A
+        super().__init__(*args, **kwargs)
+
+
+class StarIntrudersVariantB(StarIntrudersEnvironment):
+    def __init__(self, *args, **kwargs):
+        kwargs['map_name'] = MAP_VARIANT_B
+        super().__init__(*args, **kwargs)
+
+
+class StarIntrudersVariantC(StarIntrudersEnvironment):
+    def __init__(self, *args, **kwargs):
+        kwargs['map_name'] = MAP_VARIANT_C
+        super().__init__(*args, **kwargs)
+
+
 # Create the low-level SC2Env object, which we wrap with
 #  a high level Gym-style environment
-def make_sc2env(render=False, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
+def make_sc2env(map_name, render=False, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
     rgb_dimensions = False
     if render:
         rgb_dimensions=sc2_env.Dimensions(
@@ -180,7 +201,7 @@ def make_sc2env(render=False, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
             rgb_dimensions=rgb_dimensions,
             action_space=actions.ActionSpace.FEATURES,
         ),
-        'map_name': MAP_NAME,
+        'map_name': map_name,
         'step_mul': SIMULATION_STEP_MUL,
     }
     maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
@@ -224,5 +245,3 @@ def expand_to_neural_input(feature_map, unit_map=UNIT_ID_LIST):
 
     layers = np.array(neural_layers)
     return layers
-
-

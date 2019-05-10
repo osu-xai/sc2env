@@ -2,16 +2,16 @@ import sc2env
 import gym
 import imutil
 import time
-from sc2env.environments.zone_intruders import ZoneIntrudersEnvironment
+from sc2env.environments.star_intruders import StarIntrudersEnvironment
 
 
 def generate_demo_video():
-    env = ZoneIntrudersEnvironment()
+    env = StarIntrudersEnvironment()
     state = env.reset()
     done = False
     print('Playing sample game with environment {}'.format(env))
-    filename = 'game-ZoneIntruders-{}.mp4'.format(int(time.time()))
-    vid = imutil.Video(filename, framerate=8)
+    filename = 'game-StarIntruders-{}.mp4'.format(int(time.time()))
+    vid = imutil.Video(filename, framerate=4)
 
     rewards = []
     for t in range(200):
