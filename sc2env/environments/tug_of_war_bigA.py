@@ -69,7 +69,7 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 90,
+              camera_width_world_units = 100,
               
               )
         #np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
