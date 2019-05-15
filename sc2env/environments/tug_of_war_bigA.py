@@ -12,7 +12,7 @@ import os
 import sys
 
 SCREEN_SIZE  = 40
-MAP_NAME = 'TugOfWar'
+MAP_NAME = 'TugOfWarMarines'
 UNIT_TYPES = {
     'SCV': 45,
     'Marine': 48,
