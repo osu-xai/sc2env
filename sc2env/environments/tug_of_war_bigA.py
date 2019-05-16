@@ -72,7 +72,7 @@ class TugOfWar():
               camera_width_world_units = 100,
               
               )
-        #np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
+        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
         step_mul_value = 16
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
@@ -91,6 +91,7 @@ class TugOfWar():
         self.decision_point = 1
         self.miner_index = 12
         self.reset_steps = -1
+        self.norm_vector = np.array([1, 1, 1, 1, 50, 50, 1, 1, 1, 1, 50, 50, 100])
 
         self.signal_of_end = False
         self.end_state = None
@@ -275,13 +276,15 @@ class TugOfWar():
                 state[self.miner_index] = x.health - 1
         if state[self.miner_index] > 1500:
             state[self.miner_index] = 1500
-        state[self.miner_index] /= 100
-        state[4] /= 50
-        state[5] /= 50
-        state[10] /= 50
-        state[11] /= 50
+        state = self.normalization(state)
         
         return state
+    
+    def normalization(self, state):
+        return state / self.norm_vector
+    
+    def denormalization(self, state):
+        return state * self.norm_vector
     
     def getRewards(self, data):
         end = False
