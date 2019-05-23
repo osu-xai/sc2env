@@ -24,3 +24,8 @@ register(
         id='SC2FogOfWar-v0',
         entry_point='sc2env.environments.fog_of_war:FogOfWarEnvironment',
 )
+
+register(
+        id='SC2StarIntruders-v0',
+        entry_point='sc2env.environments.star_intruders:StarIntrudersEnvironment',
+)
