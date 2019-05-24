@@ -44,15 +44,14 @@ class TugOfWar():
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
-        print("map director: " + str(maps_dir))
         register_map(maps_dir, map_name)
-        
+
         if generate_xai_replay:
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
-                screen=(xai_replay_dimension, xai_replay_dimension),
-                minimap=(64, 64),
+                    screen=(xai_replay_dimension, xai_replay_dimension),
+                    minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
                 camera_width_world_units = 28,
@@ -61,23 +60,19 @@ class TugOfWar():
             step_mul_value = 4
         else:
             aif=features.AgentInterfaceFormat(
-              feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
-              action_space = actions.ActionSpace.FEATURES,
-              camera_width_world_units = 50,
-              
-              )
+                feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
+                action_space = actions.ActionSpace.FEATURES,
+                camera_width_world_units = 50,)
         np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
         step_mul_value = 16
         self.sc2_env = sc2_env.SC2Env(
-          map_name = map_name,
-          agent_interface_format = aif,
+            map_name=map_name,
+            agent_interface_format=aif,
+            step_mul=step_mul_value,
+            game_steps_per_episode=0,
+            score_index=0,
+            visualize=True,)
 
-          step_mul = step_mul_value,
-          game_steps_per_episode = 0,
-          score_index = 0,
-          visualize = True,)
-
-        
         self.current_obs = None
         self.actions_taken = 0
         self.decomposed_rewards = []
@@ -92,8 +87,8 @@ class TugOfWar():
         self.last_decomposed_reward_dict = {}
         self.decomposed_reward_dict = {}
         for rt in reward_types:
-        	self.decomposed_reward_dict[rt] = 0
-        	self.last_decomposed_reward_dict[rt] = 0
+            self.decomposed_reward_dict[rt] = 0
+            self.last_decomposed_reward_dict[rt] = 0
 
         unit_type = [UNIT_TYPES['Marine'], UNIT_TYPES['Viking'], UNIT_TYPES['Colossus']]
         self.input_screen_features = {
@@ -113,7 +108,7 @@ class TugOfWar():
         action = actions.FUNCTIONS.move_camera([0, 0])
         self.actions_taken = 0
         self.current_obs = self.sc2_env.step([action])[0]
-        
+
         self.end_state = None
         self.get_income_signal = 2
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
@@ -121,15 +116,11 @@ class TugOfWar():
 
         data = data.observation.raw_data.units
         self.getRewards(data)
-#         # Get channel states
-#         state = self.get_channel_state(self.current_obs)
-        # Get custom states
         state = self.get_custom_state(data)
-        
+
         for rt in self.reward_types:
             self.decomposed_reward_dict[rt] = 0
             self.last_decomposed_reward_dict[rt] = 0
-
         return state
 
     def step(self, action, skip = False):
@@ -141,7 +132,7 @@ class TugOfWar():
             self.use_custom_ability(action_to_ability_id[action])
         elif action > 4:
             print("Invalid action: check final layer of network")
-        
+
         action = actions.FUNCTIONS.no_op()
         self.current_obs = self.sc2_env.step([action])[0]
         # Get reward from data
@@ -162,15 +153,7 @@ class TugOfWar():
             #print(self.decomposed_rewards)
         if end:
             self.end_state = state
-            
         return state, end, get_income
-
-    def register_map(self, map_dir, map_name):
-        map_filename = map_name + '.SC2Map'
-        class_definition = dict(prefix = map_dir, filename = map_filename, players = 1)
-        constructed_class = type(map_name, (pysc2.maps.lib.Map,), class_definition)
-        globals()[map_name] = constructed_class
-
 
     def use_custom_ability(self, ability_id, player_id=1):
         # Sends a command directly to the SC2 protobuf API
@@ -204,12 +187,11 @@ class TugOfWar():
         client.send_req(request)
 
     def get_channel_state(self, observation):
-        
         state = observation[3]['feature_screen']
         state = getOneHotState(state, self.input_screen_features)
         state = np.reshape(state, (1, -1))
-        
         return state
+
     def get_custom_state(self, data):
         """
             Plyer1 : Number of Marines Maker
@@ -240,9 +222,6 @@ class TugOfWar():
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield == 31:
                 # get_illegal_actions should change if it change
                 state[12] = x.health - 1
-                
-#         print(state)
-#         input()
         return state
 
     def getRewards(self, data):
@@ -266,6 +245,7 @@ class TugOfWar():
                     get_income = True
 
         return end, get_income
+
     def get_illegal_actions(self, state):
         """
         0: "Effect Marine", 50 cost
@@ -274,7 +254,6 @@ class TugOfWar():
         3: "Effect Pylon", 200 cost
         4: "no_op",
         """
-#         print(state)
         illegal_actions = []
         if state[12] < 200:
             illegal_actions.append(2)
@@ -283,12 +262,5 @@ class TugOfWar():
             illegal_actions.append(3)
         if state[12] < 50:
             illegal_actions.append(0)
-#         print(illegal_actions)
         return illegal_actions
-#     def get_available_actions(self, obs):
-#         #print(obs.observation.available_actions)
-#         return obs.observation.available_actions
 
-#     def check_action(self, obs, action):
-        
-#         return action in self.get_available_actions(obs)
