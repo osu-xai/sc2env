@@ -29,3 +29,8 @@ register(
         id='SC2StarIntruders-v0',
         entry_point='sc2env.environments.star_intruders:StarIntrudersEnvironment',
 )
+
+register(
+        id='SC2StarIntrudersBox-v0',
+        entry_point='sc2env.environments.star_intruders:StarIntrudersBox',
+)

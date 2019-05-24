@@ -6,6 +6,7 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions
 import gym
 from gym.spaces.discrete import Discrete
+from gym.spaces.box import Box
 
 import imutil
 from sc2env.pysc2_util import register_map
@@ -42,9 +43,15 @@ action_to_name = {
 }
 
 class StarIntrudersEnvironment(gym.Env):
-    def __init__(self, map_name=MAP_DEFAULT, render=True, screen_size=RGB_SCREEN_SIZE, map_size=MAP_SIZE):
+    def __init__(self, map_name=MAP_DEFAULT, render=True, screen_size=RGB_SCREEN_SIZE,
+                 map_size=MAP_SIZE, continuous_action_space=False):
         self.sc2env = make_sc2env(map_name, render, screen_size, map_size)
-        self.action_space = Discrete(4)
+        self.continuous_action_space = continuous_action_space
+        if self.continuous_action_space:
+            # For compatibility with PlaNet-type architectures
+            self.action_space = Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
+        else:
+            self.action_space = Discrete(4)
 
     # Reset the simulation to an initial state.
     def reset(self):
@@ -70,6 +77,10 @@ class StarIntrudersEnvironment(gym.Env):
     def step(self, action, animation_callback=None):
         # Keep track of the previous cumulative score to compute a difference
         self.last_score = self.get_current_cumulative_score()
+
+        if self.continuous_action_space:
+            # Convert continuous actions to the discrete [0, 1, 2, 3] set
+            action = np.argmax(action)
 
         sc2_action_list = []
         self.use_custom_ability(action_to_ability_id[action])
@@ -128,7 +139,8 @@ class StarIntrudersEnvironment(gym.Env):
         state, reward, done, info = self.unpack_observation()
         feature_map, feature_screen, rgb_map, rgb_screen = state
         visual = np.concatenate([rgb_map, rgb_screen], axis=1)
-        imutil.show(visual, save=False)
+        result = imutil.get_pixels(rgb_screen, 64, 64) * 255
+        return state
 
     def layers(self):
         # One-hot unit ids plus metadata
@@ -164,6 +176,12 @@ class StarIntrudersEnvironment(gym.Env):
         # Reward is a sum of several terms: see self.score
         total_reward = sum(info.values())
         return state, total_reward, done, info
+
+
+class StarIntrudersBox(StarIntrudersEnvironment):
+    def __init__(self, *args, **kwargs):
+        kwargs['continuous_action_space'] = True
+        super().__init__(*args, **kwargs)
 
 
 class StarIntrudersVariantA(StarIntrudersEnvironment):
