@@ -40,7 +40,9 @@ building_unit_types = {
 }
 
 class TugOfWar():
-    def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
+    def __init__(self, reward_types, map_name=None,
+                 unit_type=[], generate_xai_replay=False,
+                 xai_replay_dimension=256, verbose=False):
         if map_name is None:
             map_name = MAP_NAME
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
@@ -123,7 +125,7 @@ class TugOfWar():
             self.last_decomposed_reward_dict[rt] = 0
         return state
 
-    def step(self, action, skip = False):
+    def step(self, action, skip=False):
         end = False
         state = None
         get_income = False
@@ -150,7 +152,6 @@ class TugOfWar():
                 self.decomposed_rewards.append(value_reward)
             for rt in self.reward_types:
                 self.last_decomposed_reward_dict[rt] = self.decomposed_reward_dict[rt]
-            #print(self.decomposed_rewards)
         if end:
             self.end_state = state
         return state, end, get_income
