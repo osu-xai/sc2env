@@ -1,5 +1,5 @@
-
 import numpy as np
+
 SIMPLE_SC2_UNITS = {
     48,
     53,
@@ -81,3 +81,5 @@ def int_map_to_onehot(x, vocabulary=None):
         output_map[i][x == id] = 1.
    # print(output_map)
     return output_map
+
+    
