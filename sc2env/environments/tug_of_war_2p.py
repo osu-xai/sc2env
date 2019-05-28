@@ -21,10 +21,10 @@ UNIT_TYPES = {
 }
 action_to_ability_id = {
     0: 3771, # Effect Marine
-    1: 3773, # Effect VikingFighter
-    2: 3775, # Effect Colossus
+    1: 3779, # Effect VikingFighter
+    2: 3773, # Effect Colossus
     3: 3777, # Effect Pylon
-    'switch_player': 3779, # Effect Pylon
+    'switch_player': 3775, # Effect Pylon
 }
 action_to_name = {
     0: "Effect Marine",
@@ -173,16 +173,16 @@ class TugOfWar():
         data = data.observation.raw_data.units
         
         if len(action) > 0:
-            ### ACTION TAKING ###
+            ## ACTION TAKING ###
             current_player = self.get_current_player(data)
-            print(current_player)
+#             print(current_player)
             if current_player != player:
-                print('switch')
+#                 print('switch')
                 self.use_custom_ability(action_to_ability_id['switch_player'])
                 
             for a_index, num_action in enumerate(action):
                 for _ in range(num_action):
-                    print(a_index, num_action)
+#                     print(a_index, num_action)
                     self.use_custom_ability(action_to_ability_id[a_index])
                     
             action = actions.FUNCTIONS.no_op()
