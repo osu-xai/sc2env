@@ -423,6 +423,9 @@ class TugOfWar():
     def combine_sa(self, s, actions):
         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
         actions = np.array(actions)
-        s[:,:4] += actions
-        s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
-        return s
+        return np.hstack((s, actions))
+#         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
+#         actions = np.array(actions)
+#         s[:,:4] += actions
+#         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
+#         return s
