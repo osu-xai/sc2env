@@ -59,6 +59,42 @@ maker_cost = {
     'Colossus' : 200,
     'Pylon' : 75
 }
+
+def pretty_print_units(data):
+    marine_a = 0
+    viking_a = 0
+    colossus_a = 0
+    pylon_a = 0
+    marine_b = 0
+    viking_b = 0
+    colossus_b = 0
+    pylon_b = 0
+    for i in data:
+        if i.alliance == 1:
+            if i.unit_type == 21:
+                marine_a = marine_a + 1
+            elif i.unit_type == 28:
+                viking_a = viking_a + 1
+            elif i.unit_type == 70:
+                colossus_a = colossus_a + 1
+            elif i.unit_type == 60:
+                pylon_a = pylon_a + 1
+            
+        else:
+            if i.unit_type == 21:
+                marine_b = marine_b + 1
+            elif i.unit_type == 28:
+                viking_b = viking_b + 1
+            elif i.unit_type == 70:
+                colossus_b = colossus_b + 1
+            elif i.unit_type == 60:
+                pylon_b = pylon_b + 1
+    print("_________________________________________________________________")
+    print("|\tPLAYER 1\t\t|\tPLAYER 2\t\t|")
+    print("|Marine\tViking\tColossus Pylon  | Marine  Viking  Colossus Pylon|")
+    print("| ",marine_a,"\t ",viking_a,"\t  ",colossus_a,"\t  ",pylon_a,"   | ",marine_b,"\t  ",viking_b,"\t  ",colossus_b,"\t   ",pylon_b,"  |")
+    print("|_______________________________|_______________________________|")
+
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
         if map_name is None:
@@ -171,7 +207,8 @@ class TugOfWar():
         dp = False
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
-        
+        pretty_print_units(data)
+        input("pausing at step")
         if len(action) > 0:
             ## ACTION TAKING ###
             current_player = self.get_current_player(data)
@@ -292,7 +329,7 @@ class TugOfWar():
                     unit_types = unit_types_player1
                 else:
                     unit_types = unit_types_player2
-                    
+       
                 if x.unit_type != 59: # Non Nexus
                     state[unit_types[x.unit_type]] += 1
                 else:
@@ -306,6 +343,8 @@ class TugOfWar():
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield == mineral_scv_index:
                 # get_illegal_actions should change if it change
                 state[self.miner_index] = x.health - 1
+        #pretty_print_units(data)
+        input("pausing units to be made in two steps...")
         if state[self.miner_index] > 1500:
             state[self.miner_index] = 1500
         state = self.normalization(state)
@@ -429,3 +468,5 @@ class TugOfWar():
 #         s[:,:4] += actions
 #         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
 #         return s
+        
+                
