@@ -120,10 +120,10 @@ class TugOfWar():
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
               camera_width_world_units = 100,
-              
               )
+            step_mul_value = 16
         np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
-        step_mul_value = 16
+        
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
           agent_interface_format = aif,
