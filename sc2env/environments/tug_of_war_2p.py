@@ -69,6 +69,8 @@ def pretty_print_units(data):
     viking_b = 0
     colossus_b = 0
     pylon_b = 0
+    wave_num = 0
+    dp_num = 0
     for i in data:
         if i.alliance == 1:
             if i.unit_type == 21:
@@ -89,11 +91,17 @@ def pretty_print_units(data):
                 colossus_b = colossus_b + 1
             elif i.unit_type == 60:
                 pylon_b = pylon_b + 1
-    print("_________________________________________________________________")
-    print("|\tPLAYER 1\t\t|\tPLAYER 2\t\t|")
-    print("|Marine\tViking\tColossus Pylon  | Marine  Viking  Colossus Pylon|")
-    print("| ",marine_a,"\t ",viking_a,"\t  ",colossus_a,"\t  ",pylon_a,"   | ",marine_b,"\t  ",viking_b,"\t  ",colossus_b,"\t   ",pylon_b,"  |")
-    print("|_______________________________|_______________________________|")
+        if i.unit_type in [45]:
+            if i.shield in [42]:
+                wave_num = i.health
+            if i.shield in [44]:
+                dp_num = i.health
+    #print("_________________________________________________________________")
+    #print("|\tPLAYER 1\t\t|\tPLAYER 2\t\t|")
+    #print("|P1(Marine\tViking\tColossus Pylon)  | P2(Marine  Viking  Colossus Pylon)|")
+    #print("|   ",marine_a,"\t ",viking_a,"\t  ",colossus_a,"\t  ",pylon_a,"   |   ",marine_b,"\t  ",viking_b,"\t  ",colossus_b,"\t   ",pylon_b,"  |")
+    print(f"dp {dp_num} wave {wave_num} |P1(M {marine_a}  V {viking_a}  C {colossus_a}  P {pylon_a})  | P2(M {marine_b}  V {viking_b}  C {colossus_b}  P {pylon_b})  |")
+    #print("|_______________________________|_______________________________|")
 
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
@@ -208,7 +216,7 @@ class TugOfWar():
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
         pretty_print_units(data)
-        input("pausing at step")
+        #input("pausing at step")
         if len(action) > 0:
             ## ACTION TAKING ###
             current_player = self.get_current_player(data)
