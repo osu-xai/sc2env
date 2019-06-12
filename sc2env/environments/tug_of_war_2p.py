@@ -300,6 +300,7 @@ class TugOfWar():
         return state
     def get_custom_state(self, data, player):
         """
+        State of Player 1:
             Plyer1 : Number of Marines Maker 0
             Plyer1 : Number of Vikings Maker 1
             Plyer1 : Number of Colossus Maker 2
@@ -320,16 +321,45 @@ class TugOfWar():
             Player2: Marine on the field 14
             Player2: Vikings on the field 15
             Player2: Colossus on the field 16
+        State of player 2:
+            Plyer2 : Number of Marines Maker 0
+            Plyer2 : Number of Vikings Maker 1
+            Plyer2 : Number of Colossus Maker 2
+            Plyer2 : Number of Pylon 3
+            Plyer2 : Nexus HP 4
+            
+            Plyer1 : Number of Marines Maker 5
+            Plyer1 : Number of Vikings Maker 6
+            Plyer1 : Number of Colossus Maker 7
+            Plyer1 : Number of Pylon 8
+            Plyer1 : Nexus HP 9
+            
+            Unspent Miner # get_illegal_actions should change if it change 10
+            
+            Player2: Marine on the field 11
+            Player2: Vikings on the field 12
+            Player2: Colossus on the field 13
+            Player1: Marine on the field 14
+            Player1: Vikings on the field 15
+            Player1: Colossus on the field 16
+            
         """
+        if player == 1:
+            utp_1 = unit_types_player1
+            utp_2 = unit_types_player2
+        else:
+            utp_1 = unit_types_player2
+            utp_2 = unit_types_player1
+            
         state = np.zeros(17)
         for x in data:
             index_enemy = 0
             if x.unit_type in unit_types_player1:
                 if x.alliance == 1: # 1: Self, 4: Enemy
-                    unit_types = unit_types_player1
+                    unit_types = utp_1
                 else:
-                    unit_types = unit_types_player2
-       
+                    unit_types = utp_2
+                    
                 if x.unit_type != 59: # Non Nexus
                     state[unit_types[x.unit_type]] += 1
                 else:
@@ -343,12 +373,8 @@ class TugOfWar():
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield == mineral_scv_index:
                 # get_illegal_actions should change if it change
                 state[self.miner_index] = x.health - 1
-        #pretty_print_units(data)
         input("pausing units to be made in two steps...")
         if state[self.miner_index] > 1500:
-            state[self.miner_index] = 1500
-        state = self.normalization(state)
-        
         return state
     
     def get_current_player(self, data):
