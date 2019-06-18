@@ -20,11 +20,11 @@ UNIT_TYPES = {
     'Colossus': 4
 }
 action_to_ability_id = {
-    0: 3771, # Effect Marine
-    1: 3779, # Effect VikingFighter
-    2: 3773, # Effect Colossus
-    3: 3777, # Effect Pylon
-    'switch_player': 3775, # Effect Pylon
+    0: 146, # Effect Marine
+    1: 148, # Effect VikingFighter
+    2: 150, # Effect Colossus
+    3: 152, # Effect Pylon
+    'switch_player': 154, # Effect Pylon
 }
 action_to_name = {
     0: "Effect Marine",
@@ -105,7 +105,11 @@ class TugOfWar():
         self.decision_point = 1
         self.miner_index = 10
         self.reset_steps = -1
-        self.norm_vector = np.array([1, 1, 1, 1, 50, 1, 1, 1, 1, 50, 100, 1, 1, 1, 1, 1, 1])
+        self.fifo_player_1 = []
+        self.fifo_player_2 = []
+        self.building_limiation = 30
+        self.mineral_limiation = 1500
+        self.norm_vector = np.array([1, 1, 1, 1, 100, 1, 1, 1, 1, 100, 100, 1, 1, 1, 1, 1, 1])
 
         self.signal_of_end = False
         self.end_state = None
@@ -147,7 +151,8 @@ class TugOfWar():
         
         self.end_state = None
         self.decision_point = 1
-        
+        self.fifo_player_1 = []
+        self.fifo_player_2 = []
         
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
@@ -163,7 +168,7 @@ class TugOfWar():
         for rt in self.reward_types:
             self.decomposed_reward_dict[rt] = 0
             self.last_decomposed_reward_dict[rt] = 0
-        self.use_custom_ability(action_to_ability_id['switch_player'])
+#         self.use_custom_ability(action_to_ability_id['switch_player'])
         return state_1, state_2
 
     def step(self, action, player):
@@ -173,6 +178,10 @@ class TugOfWar():
         data = data.observation.raw_data.units
         
         if len(action) > 0:
+            if player == 1:
+                fifo = self.fifo_player_1
+            else:
+                fifo = self.fifo_player_2
             ## ACTION TAKING ###
             current_player = self.get_current_player(data)
 #             print(current_player)
@@ -184,6 +193,10 @@ class TugOfWar():
                 for _ in range(num_action):
 #                     print(a_index, num_action)
                     self.use_custom_ability(action_to_ability_id[a_index])
+                    fifo.append(a_index)
+                    if len(fifo) > self.building_limiation:
+                        del fifo[0]
+                    
                     
             action = actions.FUNCTIONS.no_op()
             self.current_obs = self.sc2_env.step([action])[0]
@@ -337,8 +350,8 @@ class TugOfWar():
                 # get_illegal_actions should change if it change
                 state[self.miner_index] = x.health - 1
                 
-        if state[self.miner_index] > 1500:
-            state[self.miner_index] = 1500
+        if state[self.miner_index] > self.mineral_limiation:
+            state[self.miner_index] = self.mineral_limiation
         state = self.normalization(state)
         
         return state
@@ -451,12 +464,25 @@ class TugOfWar():
 
         return list(all_A_vectors)
     
-    def combine_sa(self, s, actions):
+    def combine_sa(self, s, actions, player):
         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
         actions = np.array(actions)
-        return np.hstack((s, actions))
+        s[:,:4] += actions
+        if player == 1:
+            fifo = deepcopy(self.fifo_player_1)
+        else:
+            fifo = deepcopy(self.fifo_player_2)
+            
+        for a in fifo:
+            s[s[:, :4].sum(axis = 1) > self.building_limiation, a] -= 1
+#             temp_s = s[s[:, :4].sum(axis = 1) > self.building_limiation]
+#             if len(temp_s) > 0:
+#                 print(temp_s)
+#             temp_s[:, a] -= 1
+            
+        s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
+        return s
+    
 #         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
 #         actions = np.array(actions)
-#         s[:,:4] += actions
-#         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
-#         return s
+#         return np.hstack((s, actions))
