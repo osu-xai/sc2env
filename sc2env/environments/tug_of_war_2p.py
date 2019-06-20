@@ -95,7 +95,7 @@ class TugOfWar():
           step_mul = step_mul_value,
           game_steps_per_episode = 0,
           score_index = 0,
-          visualize = True,)
+          visualize = False,)
 
         
         self.current_obs = None
@@ -486,3 +486,4 @@ class TugOfWar():
 #         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
 #         actions = np.array(actions)
 #         return np.hstack((s, actions))
+
