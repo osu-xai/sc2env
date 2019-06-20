@@ -95,7 +95,7 @@ class TugOfWar():
           step_mul = step_mul_value,
           game_steps_per_episode = 0,
           score_index = 0,
-          visualize = False,)
+          visualize = True,)
 
         
         self.current_obs = None
