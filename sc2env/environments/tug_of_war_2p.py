@@ -486,3 +486,4 @@ class TugOfWar():
 #         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
 #         actions = np.array(actions)
 #         return np.hstack((s, actions))
+
