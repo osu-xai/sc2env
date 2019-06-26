@@ -139,7 +139,7 @@ class TugOfWar():
           step_mul = step_mul_value,
           game_steps_per_episode = 0,
           score_index = 0,
-          visualize = False,)
+          visualize = True,)
 
         
         self.current_obs = None
@@ -508,22 +508,28 @@ class TugOfWar():
                             self.get_big_A(miner - maker_cost['Colossus'], all_A_vectors, next_vector, 3)
 
         return list(all_A_vectors)
-    
+
     def combine_sa(self, s, actions, player):
+        # Repeat state maxtix corressponding to the number of candidate actions
         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
         actions = np.array(actions)
+        # Add all candidate acgtions to the corressponding vector of the state matrix
         s[:,:4] += actions
         if player == 1:
             fifo = deepcopy(self.fifo_player_1)
         else:
             fifo = deepcopy(self.fifo_player_2)
+        
+        # Get rid of the building from the candidate after_states until no exceeders to match the FIFO behavior
+        for building_type in fifo:
+            # Get the count of building of the candidate after_state
             
-        for a in fifo:
-            s[s[:, :4].sum(axis = 1) > self.building_limiation, a] -= 1
-#             temp_s = s[s[:, :4].sum(axis = 1) > self.building_limiation]
-#             if len(temp_s) > 0:
-#                 print(temp_s)
-#             temp_s[:, a] -= 1
+            count_of_bulding = s[:, :4].sum(axis = 1)
+            
+            array_of_indices_of_exceeders = count_of_bulding > self.building_limiation
+            
+            s[array_of_indices_of_exceeders, building_type] -= 1
+            
             
         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
         return s
