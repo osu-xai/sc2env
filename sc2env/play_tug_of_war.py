@@ -6,6 +6,8 @@ from importlib import import_module
 from abp.configs import NetworkConfig, ReinforceConfig, EvaluationConfig
 
 from abp.examples.pysc2.tug_of_war.hra import run_task
+from abp.examples.pysc2.tug_of_war.sadq_bigA import run_task as run_task_bigA
+from abp.examples.pysc2.tug_of_war.sadq_2p import run_task as run_task_2p
 
 def main():
     parser = argparse.ArgumentParser()
@@ -20,6 +22,14 @@ def main():
         help='Run the specified map',
         required=False
     )
+    
+    parser.add_argument(
+        '-tk', '--task',
+        help="which task to run",
+        dest='task',
+        required=False
+    )
+    
     parser.add_argument(
         '-t', '--test',
         help='Just run test, no train',
@@ -46,6 +56,8 @@ def main():
         dest='render',
         action="store_true"
     )
+    
+
     
     args = parser.parse_args()
     
@@ -76,9 +88,14 @@ def main():
     if args.render:
         evaluation_config.render = True
 
-
-    run_task(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
-
+    if args.task == 'task_bigA':
+        run_task_bigA(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+    elif args.task == 'task_single_player':
+        run_task(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+    elif args.task == 'task_2p':
+        run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+    else:
+        run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     return 0
 
 
