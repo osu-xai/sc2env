@@ -8,6 +8,7 @@ from abp.configs import NetworkConfig, ReinforceConfig, EvaluationConfig
 from abp.examples.pysc2.tug_of_war.hra import run_task
 from abp.examples.pysc2.tug_of_war.sadq_bigA import run_task as run_task_bigA
 from abp.examples.pysc2.tug_of_war.sadq_2p import run_task as run_task_2p
+from abp.examples.pysc2.tug_of_war.model_base_TS import run_task as run_task_mbts
 
 def main():
     parser = argparse.ArgumentParser()
@@ -94,6 +95,8 @@ def main():
         run_task(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     elif args.task == 'task_2p':
         run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+    elif args.task == 'task_mbts':
+        run_task_mbts(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     else:
         run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     return 0
