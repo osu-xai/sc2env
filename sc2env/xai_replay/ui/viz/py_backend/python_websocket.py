@@ -7,7 +7,7 @@ import os
 #import proto
 #from proto.session_pb2 import ScaiiPacket
 #import proto.user_study_pb2
-#import proto.explanation_pb2
+import proto.explanation_pb2 as expl_pb
 import proto.session_pb2 as pb
 
 REPLAY_DIR_PATH = "../replays"
@@ -33,7 +33,7 @@ async def hello(websocket, path):
     #filename = "test_1520x1280" #everything but the filetype
 
     #scaii_packet.replay_choice_config = rc
-
+    explanations = expl_pb.ExplanationPoints()
     byt = scaii_packet.SerializeToString()
     await websocket.send(byt)
 
@@ -52,6 +52,7 @@ async def hello(websocket, path):
 	    #}
         #import pdb; pdb.set_trace()
         if responsePacket.HasField('user_command'):
+            print("received command!")
             if responsePacket.user_command.command_type == 9:
                 args = responsePacket.user_command.args
                 filename = args[0]
@@ -60,10 +61,38 @@ async def hello(websocket, path):
                 if json is None:
                     print("ERROR - when grabbing json file")
                 else:
-                    rsc = pb.SC2ReplaySessionConfig(json_data=json)
-                    scaii_packet = pb.ScaiiPacket(replay_session_config=rsc)
+                    explanations = load_explanations_for_replay(filename, REPLAY_DIR_PATH)
+                    if explanations is None:
+                        print(f"ERROR - cannot load explanations for {filename}")
+                    else:
+                        rsc = pb.SC2ReplaySessionConfig(json_data=json)
+                        scaii_packet = pb.ScaiiPacket(replay_session_config=rsc)
+                        byt = scaii_packet.SerializeToString()
+                        await websocket.send(byt)
+            elif responsePacket.user_command.command_type == 1:
+                target_step = int(responsePacket.user_command.args[0], 10)
+                matching_expl = None
+                print(f" type of explanations is {type(explanations)} indeed")
+                print(f" type of explanations.explanation_points is {type(explanations.explanation_points)} also")
+                #for expl in explanations.explanation_points:
+                for i in range(len(explanations.explanation_points)):
+                    expl = explanations.explanation_points[i]
+                    print(f"type of expl is {type(expl)} ")
+                    print(f"expl.step is {expl.step}, target_step is {target_step}")
+                    print(f"type of expl.step is {type(expl.step)} - type of target_step is {type(target_step)}")
+                    if expl.step == target_step:
+                        matching_expl = expl
+                        print(f"matching step is {target_step}")
+                if matching_expl == None:
+                    print(f"cound not find explanation info for step {target_step}")
+                else:
+                    #print(matching_expl)
+                    expl_details = pb.ExplanationDetails(step=target_step, expl_point = matching_expl)
+                    scaii_packet = pb.ScaiiPacket(expl_details=expl_details)
                     byt = scaii_packet.SerializeToString()
+                    print("about to send the expl details!")
                     await websocket.send(byt)
+                        
 
         
         #print [method for method in dir(responsePacket) if callable(getattr(responsePacket, method))]
@@ -89,7 +118,30 @@ def load_json_from_replay_datafile(filename, replay_dir_path):
             return data
 
     print("ERROR: file not found in replays folder!")
-    return
+    return None
+
+def load_explanations_for_replay(filename, replay_dir_path):
+    # files will be in ../replays
+    # navigate to ../replays and retrive file with same name as filename
+
+    filename_with_extension = filename + '.expl'
+
+    if not os.path.exists(replay_dir_path):
+        print("ERROR: path to replays does not exist!")
+        return
+
+    files_in_dir = os.listdir(replay_dir_path)
+    for f in files_in_dir:
+        if f == filename_with_extension:
+            expl_path = os.path.join(replay_dir_path, filename_with_extension)
+            f = open(expl_path, 'rb')
+            explanation_points = expl_pb.ExplanationPoints()
+            explanation_points.ParseFromString(f.read())
+            f.close()
+            return explanation_points
+
+    print("ERROR: file not found in replays folder!")
+    return None
 
 def grab_replay_files(replay_dir_path):
     if not os.path.exists(replay_dir_path):

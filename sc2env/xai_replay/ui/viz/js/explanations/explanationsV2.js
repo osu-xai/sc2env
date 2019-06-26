@@ -19,11 +19,13 @@ function handleSaliencyDetails(explDetails){
 }
 
 function askBackendForExplanationSaliencyInfo(stepNumber) {
-	var userCommand = new proto.UserCommand;
-	userCommand.setCommandType(proto.UserCommand.UserCommandType.EXPLAIN);
-	var args = ['' +stepNumber];
-	userCommand.setArgsList(args);
-	stageUserCommand(userCommand);
+    var userCommand = new proto.UserCommand;
+    userCommand.setCommandType(proto.UserCommand.UserCommandType.EXPLAIN);
+    var args = ['' +stepNumber];
+    userCommand.setArgsList(args);
+    var scaiiPkt = new proto.ScaiiPacket;
+    scaiiPkt.setUserCommand(userCommand);
+    sendScaiiPacket(scaiiPkt);
 	currentExplanationStep = stepNumber;
 	// if (stepNumber == sessionIndexManager.getCurrentIndex()) {
 	// 	//console.log("no need to move - already at step with explanation");

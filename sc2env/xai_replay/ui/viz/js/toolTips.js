@@ -43,7 +43,6 @@ function cleanToolTips(){
   
 function createUnitLocationMarks(unitInfo) {
     var unit = unitInfo;    
-    var canvas_bounds = gameboard_canvas.getBoundingClientRect();
     var hpDiv = document.createElement("div");
     // var setToShow = selectedToolTipIds[si.shapeId];
     // if (setToShow == undefined || setToShow == "hide"){
@@ -53,12 +52,11 @@ function createUnitLocationMarks(unitInfo) {
     var id = "metadata_unitLocations" + unit["tag"];
     hpDiv.setAttribute("id",id);
         // position it relative to where origin of bounding box of gameboard is
-    var y = translateUnitYToCanvasY(unitInfo.y) + canvas_bounds.top;
-    var x = translateUnitXToCanvasX(unitInfo.x) + canvas_bounds.left;
+    var y = translateUnitYToCanvasY(unitInfo.y); 
+    var x = translateUnitXToCanvasX(unitInfo.x);
     var hpWidgetWidth = 8;
     var hpWidgetHeight = 8;
-    hpDiv.setAttribute("class", "flex-row");
-    hpDiv.setAttribute("style", 'background-color:white;position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
+    hpDiv.setAttribute("style", 'background-color:white;position:absolute;z-index:' + zIndexMap["inFrontOfTooltipCanvas"] + ';left:' + x + 'px;top:' + y + 'px;color:' + getTooltipColorRGBAForUnit(unit) + ';height:' + hpWidgetHeight + 'px;width:' + hpWidgetWidth + 'px');
     $("#scaii-gameboard").append(hpDiv);
 
     var hpRemainingDivWidth = hpWidgetWidth * unit.percentHPRemaining;
@@ -73,7 +71,6 @@ function getUnitIdFromTag(tag){
 function createAllDataToolTip(unitInfo) { 
     var unit = unitInfo;
     var unitId = getUnitIdFromTag(unit.tag);
-    var canvas_bounds = gameboard_canvas.getBoundingClientRect();
     var valuesDiv = document.createElement("div");
     var setToShow = hoveredAllDataToolTipIds[unitId];
     if (setToShow == undefined || setToShow == "hide"){
@@ -83,8 +80,8 @@ function createAllDataToolTip(unitInfo) {
     hoveredAllDataToolTipIds[unitId] = "hide";
     valuesDiv.setAttribute("id",unitId);
      // position it relative to where origin of bounding box of gameboard is
-    var y = translateUnitYToCanvasY(unit.y) + canvas_bounds.top + 20;
-    var x = translateUnitXToCanvasX(unit.x) + canvas_bounds.left + -125;
+    var y = translateUnitYToCanvasY(unit.y) + 20; 
+    var x = translateUnitXToCanvasX(unit.x) + -125;
     valuesDiv.setAttribute("style", 'position:absolute;padding:4px;background-color:black;z-index:' + zIndexMap["tooltip"] + ';left:' + x + 'px;top:' + y + 'px;color:white;	display: flex;flex-direction: column;font-family:Arial');
     $("#scaii-gameboard").append(valuesDiv);
     entityAllDataToolTipIds.push(unitId);
@@ -93,6 +90,8 @@ function createAllDataToolTip(unitInfo) {
  
     tooltipInfo["Health Max"] = unit.health_max;
     tooltipInfo["Health"] = unit.health;
+    tooltipInfo["Shield Max"] = unit.shield_max;
+    tooltipInfo["Shield"] = unit.shield;
     tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
     tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance,unit.shield);
     renderTooltipInfo(tooltipInfo, valuesDiv);
@@ -177,8 +176,13 @@ function renderTooltipInfo(ttInfo, div) {
     div.append(friendLabel);
 
     // pull out hp values and print first
-    var hpLabel = getLabelForInfo(collectHitpointsForConciseMessage(ttInfo, nonDebugKeys));
+    var hpLabel = getLabelForInfo(collectValueOfMaxForConciseMessage(ttInfo, nonDebugKeys, "Health", "Health Max", "Health Points: "));
     div.append(hpLabel);
+
+    // pull out hp values and print first
+    // commenting this out for demo scenario because shield values are always 0, except for as a flag for enemy units turned friendly
+    var shieldLabel = getLabelForInfo(collectValueOfMaxForConciseMessage(ttInfo, nonDebugKeys, "Shield", "Shield Max", "Shield: "));
+//    div.append(shieldLabel);
 
     // fabricate damageDealt
     // var unitType = ttInfo["Unit Type"];
@@ -197,10 +201,10 @@ function renderTooltipInfo(ttInfo, div) {
         div.append(createMetadataTooltipEntry(key, val));
     }
 }
-//tooltipInfo["Health Max"] = unit.health_max;
- //   tooltipInfo["Health"] = unit.health;
- //   tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
-//tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
+tooltipInfo["Health Max"] = unit.health_max;
+   tooltipInfo["Health"] = unit.health;
+   tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
+tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
 
 function getLabelForInfo(s){
     var label = document.createElement("div");
@@ -263,20 +267,20 @@ function collectUnitInfoForConciseMessage(ttInfo, nonDebugKeys) {
     }
 }
 
-function collectHitpointsForConciseMessage(ttInfo,nonDebugKeys){
-    var hp = ttInfo["Health"];
-    var maxHp = ttInfo["Health Max"];
-    var index = nonDebugKeys.indexOf("Health");
+function collectValueOfMaxForConciseMessage(ttInfo,nonDebugKeys, valueKey, maxKey, prompt){
+    var hp = ttInfo[valueKey];
+    var maxHp = ttInfo[maxKey];
+    var index = nonDebugKeys.indexOf(valueKey);
     if (index > -1) {
         nonDebugKeys.splice(index, 1);
     }
-    index = nonDebugKeys.indexOf("Health Max");
+    index = nonDebugKeys.indexOf(maxKey);
     if (index > -1) {
         nonDebugKeys.splice(index, 1);
     }
     var hpFloored = Math.floor(Number(hp));
     var maxHpFloored = Math.floor(Number(maxHp));
-    var hpString = "Health Points: " + hpFloored + " of " + maxHpFloored;
+    var hpString =  prompt + hpFloored + " of " + maxHpFloored;
     return hpString;
 }
 

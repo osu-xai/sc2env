@@ -296,6 +296,7 @@ function updateButtonsAfterJump() {
 function jumpToStep(step){
     clearGameBoard();
 	activeSC2UIManager.jumpToFrame(step);
+	updateButtonsAfterJump();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
 	}

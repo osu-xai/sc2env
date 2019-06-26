@@ -37,3 +37,37 @@ prettyPrintRewardName["damageToStalker"]              = "damage to enemy Stalker
 prettyPrintRewardName["damageToZealot"]               = "damage to enemy Zealots";
 prettyPrintRewardName["damageToZergling"]             = "damage to enemy Zerglings";
 prettyPrintRewardName["total score"]             = "total score";
+
+function isXAIFeb2019MeetingDemoScenario(rewardNames){
+    if (rewardNames.includes("damageToWeakEnemyGroup")&&
+        rewardNames.includes("destoryToWeakEnemyGroup")&&
+        rewardNames.includes("damageToStrongEnemyGroup")&&
+        rewardNames.includes("destoryToStrongEnemyGroup")&&
+        rewardNames.includes("damageToWeakFriendGroup")&&
+        rewardNames.includes("destoryToWeakFriendGroup")&&
+        rewardNames.includes("damageToStrongFriendGroup")&&
+        rewardNames.includes("destoryToStrongFriendGroup") &&
+        rewardNames.length == 8){
+            return true;
+    }
+    else {
+        return false;
+    }
+}
+function sortRewardNamesIntoRelatedPairs(rewardNames){
+    if (isXAIFeb2019MeetingDemoScenario(rewardNames)){
+        var sorted = [];
+        sorted.push("damageToWeakEnemyGroup");
+        sorted.push("destoryToWeakEnemyGroup");
+        sorted.push("damageToStrongEnemyGroup");
+        sorted.push("destoryToStrongEnemyGroup");
+        sorted.push("damageToWeakFriendGroup");
+        sorted.push("destoryToWeakFriendGroup");
+        sorted.push("damageToStrongFriendGroup");
+        sorted.push("destoryToStrongFriendGroup");
+        return sorted;
+    }
+    else {
+        return rewardNames;
+    }
+}
