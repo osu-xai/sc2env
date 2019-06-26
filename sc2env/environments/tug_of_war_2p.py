@@ -59,6 +59,50 @@ maker_cost = {
     'Colossus' : 200,
     'Pylon' : 75
 }
+
+def pretty_print_units(data):
+    marine_a = 0
+    viking_a = 0
+    colossus_a = 0
+    pylon_a = 0
+    marine_b = 0
+    viking_b = 0
+    colossus_b = 0
+    pylon_b = 0
+    wave_num = 0
+    dp_num = 0
+    for i in data:
+        if i.alliance == 1:
+            if i.unit_type == 21:
+                marine_a = marine_a + 1
+            elif i.unit_type == 28:
+                viking_a = viking_a + 1
+            elif i.unit_type == 70:
+                colossus_a = colossus_a + 1
+            elif i.unit_type == 60:
+                pylon_a = pylon_a + 1
+            
+        else:
+            if i.unit_type == 21:
+                marine_b = marine_b + 1
+            elif i.unit_type == 28:
+                viking_b = viking_b + 1
+            elif i.unit_type == 70:
+                colossus_b = colossus_b + 1
+            elif i.unit_type == 60:
+                pylon_b = pylon_b + 1
+        if i.unit_type in [45]:
+            if i.shield in [42]:
+                wave_num = i.health
+            if i.shield in [44]:
+                dp_num = i.health
+    #print("_________________________________________________________________")
+    #print("|\tPLAYER 1\t\t|\tPLAYER 2\t\t|")
+    #print("|P1(Marine\tViking\tColossus Pylon)  | P2(Marine  Viking  Colossus Pylon)|")
+    #print("|   ",marine_a,"\t ",viking_a,"\t  ",colossus_a,"\t  ",pylon_a,"   |   ",marine_b,"\t  ",viking_b,"\t  ",colossus_b,"\t   ",pylon_b,"  |")
+    print(f"dp {dp_num} wave {wave_num} |P1(M {marine_a}  V {viking_a}  C {colossus_a}  P {pylon_a})  | P2(M {marine_b}  V {viking_b}  C {colossus_b}  P {pylon_b})  |")
+    #print("|_______________________________|_______________________________|")
+
 class TugOfWar():
     def __init__(self, reward_types, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
         if map_name is None:
@@ -84,10 +128,10 @@ class TugOfWar():
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),
               action_space = actions.ActionSpace.FEATURES,
               camera_width_world_units = 100,
-              
               )
+            step_mul_value = 16
         np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
-        step_mul_value = 16
+        
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
           agent_interface_format = aif,
@@ -176,7 +220,8 @@ class TugOfWar():
         dp = False
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
-        
+        pretty_print_units(data)
+        #input("pausing at step")
         if len(action) > 0:
             if player == 1:
                 fifo = self.fifo_player_1
@@ -482,8 +527,4 @@ class TugOfWar():
             
         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions, axis = 1) / 100
         return s
-    
-#         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
-#         actions = np.array(actions)
-#         return np.hstack((s, actions))
-
+  
