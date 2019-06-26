@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 from s2clientprotocol import sc2api_pb2 as sc_pb
-import explanation_pb2 as expl_pb 
+#import explanation_pb2 as expl_pb 
 from pysc2.lib import features
 import sys
 REPLAY_DIR_PATH = "../sc2env/sc2env/xai_replay/ui/viz/replays"
