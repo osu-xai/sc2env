@@ -68,31 +68,27 @@ function getSaliencyV2UI() {
 
    
     ui.buildSaliencyDetailedForBar = function(bar){
-        var layerMessage = saliencyLookupMap.get(bar.saliencyId);
-        if (layerMessage == undefined){
+        var layersMessage = saliencyLookupMap.get(bar.saliencyId);
+        if (layersMessage == undefined){
             console.log("ERROR - no Layer message for saliencyID " + bar.saliencyId);
             return;
         }
         
         // configure
-        var expLayers = layerMessage.getLayersList();
+        var expLayers = layersMessage.getLayersList();
         if (bar.channels == undefined){
             bar.channels = {};
             for (var j in expLayers) {
                 var channel = {};
                 bar.channels[j] = channel;
                 expLayer = expLayers[j];
+                expLayerObj = proto.Layer.toObject(false, expLayer);
                 this.configureBarChannel(bar, channel, expLayer);
             }
         }
     }
 
-
 	ui.renderSaliencyDetailed = function(chartData) {
-        //turned off saliency for PI demo
-    }
-
-	ui.renderSaliencyDetailedGood = function(chartData) {
         var step = sessionIndexManager.getCurrentIndex();
         step = sessionIndexManager.getStepThatStartsEpochForStep(step);
         var dpEntityList = currentExplManager.entityListForDP[step];
@@ -405,13 +401,13 @@ function populateSaliencyQuestionSelector(){
         radioCombinedSaliency.setAttribute("checked", "true");
     }
 	radioCombinedSaliency.onclick = function(e) {
-        //SC2_TODO_SALcurrentExplManager.saliencyCombined = true;
+        currentExplManager.saliencyCombined = true;
+        //SC2_TODO_STUDY
         //if (userStudyMode){
         //    //SC2_TODO_STUDY targetClickHandler(e, "setSaliencyView:combinedSaliency");
         //}
-        //removeAnySaliencyOverlaysFromGameboard();
-        //SC2_TODO_SAL_ENDcurrentExplManager.render("live");
-        alert("saliency maps for SC2 XAI Replay not yet integrated.");
+        removeAnySaliencyOverlaysFromGameboard();
+        currentExplManager.render("live");
 
 	};
 
@@ -430,14 +426,13 @@ function populateSaliencyQuestionSelector(){
         radioDetailedSaliency.setAttribute("checked", "true");
     }
 	radioDetailedSaliency.onclick = function(e) {
-        //SC2_TODO_SAL currentExplManager.saliencyCombined = false;
+        currentExplManager.saliencyCombined = false;
+        //SC2_TODO_STUDY
         //if (userStudyMode){
         //    targetClickHandler(e, "setSaliencyView:detailedSaliency");
         //}
-        //removeAnySaliencyOverlaysFromGameboard();
-        //SC2_TODO_SAL_ENDcurrentExplManager.render("live");
-        alert("saliency maps for SC2 XAI Replay not yet integrated.");
-
+        removeAnySaliencyOverlaysFromGameboard();
+        currentExplManager.render("live");
 	};
 
 	var detailedSaliencyLabel = document.createElement("div");

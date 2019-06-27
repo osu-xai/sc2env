@@ -26,7 +26,8 @@ function getChartV2UI() {
         // create chartCanvasContainer because some layout issues dealing with canvas directly
         var chartCanvasContainer = document.createElement("div");
         chartCanvasContainer.setAttribute("width", canvasWidth);
-        chartCanvasContainer.setAttribute("height", canvasHeight);
+		chartCanvasContainer.setAttribute("height", canvasHeight);
+		chartCanvasContainer.setAttribute("position", "relative");
         chartCanvasContainer.setAttribute("id", "chartV2-canvas-container");
         
         $("#explanations-rewards").append(chartCanvasContainer);
@@ -613,8 +614,7 @@ function addWhatButton() {
 		// }
 		//SC2_TODO_STUDY_END
 		e.preventDefault();
-		//SC2_TODO_SALprocessWhatClick();
-		alert("saliency maps for SC2 XAI Replay not yet integrated.");
+		processWhatClick();
 	})
 }
 

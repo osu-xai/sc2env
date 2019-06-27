@@ -27,7 +27,9 @@ var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * vid
 var roughlyHalfWidthOfUnitInGameUnits = cameraWidth * roughlyHalfWidthOfUnitAsPercentageOfCanvas;
 var sc2GameRenderWidth  = sc2GameOrigPixelViewableWidth_Scaled;
 var sc2GameRenderHeight = sc2GameOrigPixelViewableHeight_Scaled;
-
+var saliencyScaleFactorX = Math.round(sc2GameRenderWidth / 40.0);
+var saliencyScaleFactorY = Math.round(sc2GameRenderHeight / 40.0);
+//alert("" + saliencyScaleFactorX + "  " + saliencyScaleFactorY);
 var gameContainerWidth = sc2GameRenderWidth + 520;
 
 //=================================================================================
@@ -123,7 +125,7 @@ function createVideoElement(path){
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
-        var frameNumber = Math.floor(video.currentTime * framesPerSecond);
+        var frameNumber = Math.round(video.currentTime * framesPerSecond);
         activeSC2UIManager.expressFrameInfo(frameNumber);
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.

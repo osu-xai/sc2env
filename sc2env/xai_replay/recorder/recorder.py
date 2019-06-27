@@ -2,29 +2,31 @@ import json
 import imutil
 import numpy as np
 import time
+import os
 from s2clientprotocol import sc2api_pb2 as sc_pb
+#import explanation_pb2 as expl_pb 
 from pysc2.lib import features
 import sys
+REPLAY_DIR_PATH = "../sc2env/sc2env/xai_replay/ui/viz/replays"
 
 class XaiReplayRecorder():
     """
     Creates a video and metadata file to support XAI replays UI for user studies
     """
     
-    def __init__(self, sc2_env, game_number, env_name, tensor_action_key, tensor_reward_key, replay_dimension = 256):
-        #self.json_filename = env_name + "_" +  str(game_number) + ".json"
-        #self.video_filename = env_name + "_" +  str(game_number) + ".mp4"
+    def __init__(self, sc2_env, game_number, env_name, action_names, tensor_reward_key, replay_dimension = 256):
         time_string = "{}".format(int(time.time()))
-        self.json_filename = "game_" +  time_string + "_" + str(replay_dimension) + ".json"
-        self.video_filename = "game_" +  time_string + "_" + str(replay_dimension) + ".mp4"
+        self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".json")
+        self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".mp4")
+        self.saliency_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".expl")
         self.sc2_env = sc2_env
         self.game_clock_tick = 0
         self.frames = []
-        self.action_names = ['Top_Left', 'Top_Right', 'Bottom_Left', 'Bottom_Right']
-        self.video = imutil.Video(filename=self.video_filename)
+        self.action_names = action_names
+        self.video = imutil.Video(filename=self.video_pathname)
         self.decision_point_number = 1
-        self.tensor_action_key = tensor_action_key
         self.tensor_reward_key = tensor_reward_key
+        self.explanation_points_array = []
 
 
     def get_observation(self):
@@ -57,21 +59,21 @@ class XaiReplayRecorder():
 
     def create_rewards_dict_from_tensor(self, q_values):
         qvalue_info = {}
-        print("qvalues:")
-        print(q_values)
+        #print("qvalues:")
+        #print(q_values)
         # columns are actions, rows are rewards
-        for col in range(len(self.tensor_action_key)):
+        for col in range(len(self.action_names)):
             qvalue_column = {}
-            col_name = self.tensor_action_key[col]
-            print(f"col_name {col_name}")
+            col_name = self.action_names[col]
+            #print(f"col_name {col_name}")
             qvalue_info[col_name] = qvalue_column
             for row in range(len(self.tensor_reward_key)):
-                print(f"row {row}")
+                #print(f"row {row}")
                 reward_name = self.tensor_reward_key[row]
-                print(f"self.tensor_reward_key[{row}] == {reward_name}")
+                #print(f"self.tensor_reward_key[{row}] == {reward_name}")
                 qvalue_column[reward_name] = q_values[row][col].item() #.item() pulls the value out of a tensor
-                print(f"q_values[row][col].item() is q_values[{row}][{col}].item() == {qvalue_column[reward_name]}")
-        print(f"qvalue_info now looks like: {qvalue_info}")
+                #print(f"q_values[row][col].item() is q_values[{row}][{col}].item() == {qvalue_column[reward_name]}")
+        #print(f"qvalue_info now looks like: {qvalue_info}")
         return qvalue_info
 
     def gather_common_state(self, frame_info, observation):
@@ -137,16 +139,58 @@ class XaiReplayRecorder():
         #print("HERE COMES THE JSON")
         #print(self.frames)
         #print(json.dumps(self.frames, separators=(',', ':')))
-        f = open(self.json_filename,"w")
+        f = open(self.json_pathname,"w")
         #f.write(json.dumps(self.frames, separators=(',', ':')))
         f.write(json.dumps(self.frames, sort_keys=True, indent=4))
         f.write("\n")
         f.close()
+        expl_points_pb = expl_pb.ExplanationPoints(explanation_points = self.explanation_points_array)
+        data = expl_points_pb.SerializeToString()
+        output_file = open(self.saliency_pathname,"wb")
+        output_file.write(data)
 
+    def record_saliency_for_decision_point(self, saliencies):
+        # since we already appended the corresponding frame to the frames list in record_decision_point, 
+        # we need to subtract 1 here to reference that frame (which is == game clock cycle == "step" in UI terms)
+        step_plus_one = len(self.frames)
+        step = step_plus_one - 1
+        expl_point = expl_pb.ExplanationPoint()
+        expl_point.title = "someTitle"
+        expl_point.description = "someDescription"
+        expl_point.step = step
+        layer_names = ['Friend/Enemy', 'Unit Type' , 'HP']
+        action_names = ['Attack Q1','Attack Q2','Attack Q3','Attack Q4']
+        # map the saliency info from this point into an ExplanationPoint protobuf
+        #
+        # saliencies' keys are quadrant names, values are dictionaries where keys are reward names or "all" and values are ndarray of shape 40x40x 3 where 3 is the count of saliency flavors: frenemy, unit_type , hp
+        #(Pdb) type(saliencies) == <class 'dict'>
+        #(Pdb) saliencies.keys() == dict_keys([0, 1, 2, 3])
+        for action_index, reward_saliencies_dict in saliencies.items():
+            #(Pdb) type(saliencies[0]) == <class 'dict'>
+            #(Pdb) saliencies[0].keys() == dict_keys(['all', 'damageToWeakEnemyGroup', 'destoryToWeakEnemyGroup', 'damageToStrongEnemyGroup', 'destoryToStrongEnemyGroup', 'damageToWeakFriendGroup', 'destoryToWeakFriendGroup', 'damageToStrongFriendGroup', 'destoryToStrongFriendGroup'])
+            for reward_name, layers_info in reward_saliencies_dict.items():
+                #(Pdb) type(saliencies[0]['all']) == <class 'numpy.ndarray'>
+                #(Pdb) saliencies[0]['damageToWeakEnemyGroup'].shape == (40, 40, 3)
+                action_name = action_names[action_index]
+                key = f"{step}_{action_name}_{reward_name}"
+                print(f"saliencyId is {key}")
+                layer_count = layers_info.shape[2] # 3 where shape is (40,40,3)
+                
+                for i in range(0,layer_count):
+                    layer_proto = expl_point.saliency.saliency_map[key].layers.add()
+                    layer_info_x_by_y_by_1 = layers_info[::,::,i:i+1:]
+                    layer_info_row_major = layer_info_x_by_y_by_1.reshape(-1)
+                    #print(f"length of row_major info is {layer_info_row_major.size}")
+                    layer_proto.cells.extend(layer_info_row_major)
+                    layer_proto.width = layers_info.shape[0] # 40
+                    layer_proto.height = layers_info.shape[1] # 40
+                    layer_proto.name = layer_names[i]
+                    #print(f"layer name is {layer_names[i]}")
+        self.explanation_points_array.append(expl_point)
 
 def clone_rewards_dict(rd, frameNumber):
     result = {}
-    print(f"cloning rewards for frame {frameNumber}")
+    #print(f"cloning rewards for frame {frameNumber}")
     for key, val in rd.items():
         print(f"{key} : {val}")
         result[key] = val

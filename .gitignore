@@ -1,4 +1,7 @@
 __pycache__
+sc2env/xai_replay/ui/viz/js/closure-library
+sc2env/xai_replay/ui/viz/js/protobuf_js
+sc2env/xai_replay/ui/viz/replays
 *.jpg
 *.mp4
 .DS_Store
