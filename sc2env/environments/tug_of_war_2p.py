@@ -220,7 +220,7 @@ class TugOfWar():
         dp = False
         data = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         data = data.observation.raw_data.units
-        pretty_print_units(data)
+#         pretty_print_units(data)
         #input("pausing at step")
         if len(action) > 0:
             if player == 1:
