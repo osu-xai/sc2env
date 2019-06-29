@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 import pysc2
 from pysc2.agents import base_agent
 from pysc2.env import sc2_env
@@ -100,7 +101,7 @@ def pretty_print_units(data):
     #print("|\tPLAYER 1\t\t|\tPLAYER 2\t\t|")
     #print("|P1(Marine\tViking\tColossus Pylon)  | P2(Marine  Viking  Colossus Pylon)|")
     #print("|   ",marine_a,"\t ",viking_a,"\t  ",colossus_a,"\t  ",pylon_a,"   |   ",marine_b,"\t  ",viking_b,"\t  ",colossus_b,"\t   ",pylon_b,"  |")
-    print(f"dp {dp_num} wave {wave_num} |P1(M {marine_a}  V {viking_a}  C {colossus_a}  P {pylon_a})  | P2(M {marine_b}  V {viking_b}  C {colossus_b}  P {pylon_b})  |")
+#     print(f"dp {dp_num} wave {wave_num} |P1(M {marine_a}  V {viking_a}  C {colossus_a}  P {pylon_a})  | P2(M {marine_b}  V {viking_b}  C {colossus_b}  P {pylon_b})  |")
     #print("|_______________________________|_______________________________|")
 
 class TugOfWar():
@@ -164,7 +165,13 @@ class TugOfWar():
         self.reward_types = reward_types
         self.last_decomposed_reward_dict = {}
         self.decomposed_reward_dict = {}
+        maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         
+        action_dict_path = os.path.join(os.path.dirname(__file__), 'action_tug_of_war.pt')
+        print("actions path:" + action_dict_path)
+        self.a_dict = torch.load(action_dict_path)
+        self.a_dict['actions'] = np.array(self.a_dict['actions'])
+#         print(self.a_dict.keys())
         for rt in reward_types:
         	self.decomposed_reward_dict[rt] = 0
         	self.last_decomposed_reward_dict[rt] = 0
@@ -233,9 +240,9 @@ class TugOfWar():
             if current_player != player:
 #                 print('switch')
                 self.use_custom_ability(action_to_ability_id['switch_player'])
-                
+            
             for a_index, num_action in enumerate(action):
-                for _ in range(num_action):
+                for _ in range(int(num_action)):
 #                     print(a_index, num_action)
                     self.use_custom_ability(action_to_ability_id[a_index])
                     fifo.append(a_index)
@@ -475,39 +482,41 @@ class TugOfWar():
 #         print(illegal_actions)
         return illegal_actions
 
-    def get_big_A(self, miner, 
-                  all_A_vectors = None, vector = None, index = 0):
-        if all_A_vectors is None:
-            all_A_vectors = set()
-        if vector is None:
-            vector = (0,0,0,0)
-        if miner < 50:
-            all_A_vectors.add(vector)
-            return list(all_A_vectors)
-        next_vector = copy(vector)
-        self.get_big_A(miner - miner, all_A_vectors, next_vector)
-        if miner >= maker_cost['Marine']:
-            if index <= 0:
-                next_vector = (vector[0] + 1, vector[1],
-                                  vector[2], vector[3])
-                self.get_big_A(miner - maker_cost['Marine'], all_A_vectors, next_vector, 0)
-            if miner >= maker_cost['Viking']:
-                if index <= 1:
-                    next_vector = (vector[0], vector[1] + 1,
-                                  vector[2], vector[3])
-                    self.get_big_A(miner - maker_cost['Viking'], all_A_vectors, next_vector, 1)
-                if miner >= maker_cost['Pylon']:
-                    if index <= 2:
-                        next_vector = (vector[0], vector[1],
-                                  vector[2], vector[3] + 1)
-                        self.get_big_A(miner - maker_cost['Pylon'], all_A_vectors, next_vector, 2)
-                    if miner >= maker_cost['Colossus']:
-                        if index <= 3:
-                            next_vector = (vector[0], vector[1],
-                                  vector[2] + 1, vector[3])
-                            self.get_big_A(miner - maker_cost['Colossus'], all_A_vectors, next_vector, 3)
+#     def get_big_A(self, miner, 
+#                   all_A_vectors = None, vector = None, index = 0):
+#         if all_A_vectors is None:
+#             all_A_vectors = set()
+#         if vector is None:
+#             vector = (0,0,0,0)
+#         if miner < 50:
+#             all_A_vectors.add(vector)
+#             return list(all_A_vectors)
+#         next_vector = copy(vector)
+#         self.get_big_A(miner - miner, all_A_vectors, next_vector)
+#         if miner >= maker_cost['Marine']:
+#             if index <= 0:
+#                 next_vector = (vector[0] + 1, vector[1],
+#                                   vector[2], vector[3])
+#                 self.get_big_A(miner - maker_cost['Marine'], all_A_vectors, next_vector, 0)
+#             if miner >= maker_cost['Viking']:
+#                 if index <= 1:
+#                     next_vector = (vector[0], vector[1] + 1,
+#                                   vector[2], vector[3])
+#                     self.get_big_A(miner - maker_cost['Viking'], all_A_vectors, next_vector, 1)
+#                 if miner >= maker_cost['Pylon']:
+#                     if index <= 2:
+#                         next_vector = (vector[0], vector[1],
+#                                   vector[2], vector[3] + 1)
+#                         self.get_big_A(miner - maker_cost['Pylon'], all_A_vectors, next_vector, 2)
+#                     if miner >= maker_cost['Colossus']:
+#                         if index <= 3:
+#                             next_vector = (vector[0], vector[1],
+#                                   vector[2] + 1, vector[3])
+#                             self.get_big_A(miner - maker_cost['Colossus'], all_A_vectors, next_vector, 3)
 
-        return list(all_A_vectors)
+#         return list(all_A_vectors)
+    def get_big_A(self, mineral):
+        return self.a_dict['actions'][ : self.a_dict['mineral'][mineral]]
 
     def combine_sa(self, s, actions, player):
         # Repeat state maxtix corressponding to the number of candidate actions
