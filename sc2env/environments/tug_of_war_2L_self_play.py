@@ -78,49 +78,6 @@ maker_cost = {
     'Immortal B' : 200,
 }
 
-# def pretty_print_units(data):
-#     marine_a = 0
-#     viking_a = 0
-#     colossus_a = 0
-#     pylon_a = 0
-#     marine_b = 0
-#     viking_b = 0
-#     colossus_b = 0
-#     pylon_b = 0
-#     wave_num = 0
-#     dp_num = 0
-#     for i in data:
-#         if i.alliance == 1:
-#             if i.unit_type == 21:
-#                 marine_a = marine_a + 1
-#             elif i.unit_type == 28:
-#                 viking_a = viking_a + 1
-#             elif i.unit_type == 70:
-#                 colossus_a = colossus_a + 1
-#             elif i.unit_type == 60:
-#                 pylon_a = pylon_a + 1
-            
-#         else:
-#             if i.unit_type == 21:
-#                 marine_b = marine_b + 1
-#             elif i.unit_type == 28:
-#                 viking_b = viking_b + 1
-#             elif i.unit_type == 70:
-#                 colossus_b = colossus_b + 1
-#             elif i.unit_type == 60:
-#                 pylon_b = pylon_b + 1
-#         if i.unit_type in [45]:
-#             if i.shield in [42]:
-#                 wave_num = i.health
-#             if i.shield in [44]:
-#                 dp_num = i.health
-#     #print("_________________________________________________________________")
-    #print("|\tPLAYER 1\t\t|\tPLAYER 2\t\t|")
-    #print("|P1(Marine\tViking\tColossus Pylon)  | P2(Marine  Viking  Colossus Pylon)|")
-    #print("|   ",marine_a,"\t ",viking_a,"\t  ",colossus_a,"\t  ",pylon_a,"   |   ",marine_b,"\t  ",viking_b,"\t  ",colossus_b,"\t   ",pylon_b,"  |")
-#     print(f"dp {dp_num} wave {wave_num} |P1(M {marine_a}  V {viking_a}  C {colossus_a}  P {pylon_a})  | P2(M {marine_b}  V {viking_b}  C {colossus_b}  P {pylon_b})  |")
-    #print("|_______________________________|_______________________________|")
-
 class TugOfWar():
     def __init__(self, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
         if map_name is None:
@@ -148,7 +105,7 @@ class TugOfWar():
               camera_width_world_units = 100,
               )
             step_mul_value = 16
-        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 1)
+        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 2)
         
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
@@ -168,7 +125,11 @@ class TugOfWar():
         self.miner_index = 0
         self.reset_steps = -1
         self.mineral_limiation = 1500
-#         self.norm_vector = np.array([1, 1, 1, 1, 100, 1, 1, 1, 1, 100, 100, 1, 1, 1, 1, 1, 1])
+        self.norm_vector = np.array([700, 50, 40, 20, 50, 40, 20, 3,
+                                    50, 40, 20, 50, 40, 20, 3,
+                                    50, 40, 20, 50, 40, 20, 
+                                    50, 40, 20, 50, 40, 20,
+                                    2000, 2000, 2000, 2000])
         
         self.decision_point = 1
         self.signal_of_end = False
@@ -262,6 +223,7 @@ class TugOfWar():
                 for _ in range(int(num_action)):
 #                     print(a_index, num_action)
                     self.use_custom_ability(action_to_ability_id[a_index])
+#             self.use_custom_ability(action_to_ability_id[0])
             action = actions.FUNCTIONS.no_op()
             self.current_obs = self.sc2_env.step([action])[0]
                     
@@ -400,6 +362,9 @@ class TugOfWar():
                 if x.pos.y < 32:
                     Bottom_index_addition_unit_building = 3
                     Bottom_index_addition_hp = 1
+                if x.unit_type == 60:
+                    Bottom_index_addition_unit_building = 0
+                    Bottom_index_addition_hp = 0
                     
                 if x.unit_type != 59: # Non Nexus
                     state[unit_types[x.unit_type] + Bottom_index_addition_unit_building] += 1
@@ -448,6 +413,9 @@ class TugOfWar():
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
                 if x.shield in reward_dict.keys():
+#                     if x.health - 1 > 2001 and x.shield not in [3, 103]:
+#                         print(x)
+#                         input()
                     reward_type = reward_dict[x.shield]
                     self.decomposed_reward_dict[reward_type] = x.health - 1
                     
@@ -473,29 +441,100 @@ class TugOfWar():
                 reward_2.append(reward[i])
         return reward_1, reward_2
         
-    def get_big_A(self, mineral, num_of_pylon):
+#     def get_big_A(self, mineral, num_of_pylon):
+# #         print(mineral)
+#         big_A = self.a_dict['actions'][ : self.a_dict['mineral'][mineral]]
+#         if num_of_pylon < 3:
+#             mineral_after_pylong = mineral - (self.pylon_cost + num_of_pylon * 100)
+# #             print(mineral_after_pylong)
+#             if mineral_after_pylong > 0:
+#                 action_after_pylon = self.a_dict['actions'][ : self.a_dict['mineral'][mineral_after_pylong]].copy()
+#                 action_after_pylon[:, -1] = 1
+#                 big_A = np.append(big_A, action_after_pylon, axis = 0)
+                
+#         return big_A
+
+    def get_big_A(self, mineral, num_of_pylon, is_train = False):
 #         print(mineral)
         big_A = self.a_dict['actions'][ : self.a_dict['mineral'][mineral]]
         if num_of_pylon < 3:
             mineral_after_pylong = mineral - (self.pylon_cost + num_of_pylon * 100)
+#             print(mineral_after_pylong)
             if mineral_after_pylong > 0:
-                big_A = np.append(big_A, self.a_dict['actions'][ : self.a_dict['mineral'][mineral_after_pylong]], axis = 0)
+                action_after_pylon = self.a_dict['actions'][ : self.a_dict['mineral'][mineral_after_pylong]].copy()
+                action_after_pylon[:, -1] = 1
+                big_A = np.append(big_A, action_after_pylon, axis = 0)
+        if is_train:
+#             print(len(big_A))
+            big_A_I_1x = big_A[big_A[:, 2] > 0].copy()#[big_A[:, 5] > 0]
+            big_A_I_0x = big_A[big_A[:, 2] == 0].copy()#[big_A[:, 5] == 0]
+            
+            big_A_I_10 = big_A_I_1x[big_A_I_1x[:, 5] == 0].reshape(-1, 7)
+            big_A_I_11 = big_A_I_1x[big_A_I_1x[:, 5] > 0].reshape(-1, 7)
+            big_A_I_01 = big_A_I_0x[big_A_I_0x[:, 5] > 0].reshape(-1, 7)
+            
+#             print(len(big_A_I_10), len(big_A_I_11), len(big_A_I_01))
+#             print(big_A_I_10.shape,big_A_I_11.shape, big_A_I_01.shape)
+            
+            big_A_I = np.vstack([big_A_I_10, big_A_I_11,big_A_I_01])
+            
+            big_A_Noop = big_A[0]
+            
+            big_A_P = big_A[big_A[:, 6] > 0].copy()
+            
+#             print(len(big_A), len(big_A_I), len(big_A_P))
+            lenth_m_b = len(big_A) - len(big_A_I) - len(big_A_P)
+#             print(lenth_m_b)
+            
+            num_I = lenth_m_b // len(big_A_I) if len(big_A_I) > 0 else 0
+            num_P = lenth_m_b // len(big_A_P) if len(big_A_P) > 0 else 0
+            num_Noop = lenth_m_b
+            
+            num_I = num_I if num_I > 0 else 0
+            num_P = num_P if num_P > 0 else 0
+            num_Noop = num_Noop if num_Noop > 0 else 0
+            
+#             print(lenth_m_b,  len(big_A_I))=
+            big_A_I = np.repeat(big_A_I.reshape(-1, 7), num_I, axis = 0).reshape(-1, 7)
+            big_A_P = np.repeat(big_A_P.reshape(-1, 7), num_P, axis = 0).reshape(-1, 7)
+            big_A_Noop = np.repeat(big_A_Noop.reshape(-1, 7), num_Noop, axis = 0).reshape(-1, 7)
                 
+            big_A = np.vstack([big_A, big_A_I, big_A_P, big_A_Noop])
+#             print(len(big_A))
+#             input()
+#             print("##################")
+#             print(mineral)
+#             l = len(big_A)
+#             num_noop = 0
+#             for b_a in big_A:
+#                 if np.sum(b_a) == 0:
+#                     num_noop += 1
+            
+#             print(num_noop / l)
+            
+#             print(len(big_A[big_A[:, 0] > 0]) / l)
+#             print(len(big_A[big_A[:, 1] > 0]) / l)
+#             print(len(big_A[big_A[:, 2] > 0]) / l)
+#             print(len(big_A[big_A[:, 3] > 0]) / l)
+#             print(len(big_A[big_A[:, 4] > 0]) / l)
+#             print(len(big_A[big_A[:, 5] > 0]) / l)
+#             print(len(big_A[big_A[:, 6] > 0]) / l)
+#             input()
         return big_A
 
     def combine_sa(self, s, actions):
         # Repeat state maxtix corressponding to the number of candidate actions
-        num_of_pylon = s[self.pylon_index]
         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
         actions = np.array(actions)
         # Add all candidate acgtions to the corressponding vector of the state matrix
-        s[:,1:7] += actions
-            
-        s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions[: -1], axis = 1)
+        s[:,1:8] += actions
         
-        index_has_pylon = actions[-1] > 0
-        if actions[-1] == 1:
-            s[index_has_pylon, self.miner_index] -= (self.pylon_cost + num_of_pylon * 100)
+#         print((self.maker_cost_np * actions[: -1]).shape)
+        s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions[:, :-1], axis = 1)
+        
+        index_has_pylon = actions[:, -1] > 0
+        num_of_pylon = s[index_has_pylon, self.pylon_index]
+        s[index_has_pylon, self.miner_index] -= (self.pylon_cost + (num_of_pylon - 1) * 100)
             
         return s
   
