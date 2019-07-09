@@ -129,7 +129,7 @@ class TugOfWar():
                                     50, 40, 20, 50, 40, 20, 3,
                                     50, 40, 20, 50, 40, 20, 
                                     50, 40, 20, 50, 40, 20,
-                                    2000, 2000, 2000, 2000])
+                                    2000, 2000, 2000, 2000, 40])
         
         self.decision_point = 1
         self.signal_of_end = False
@@ -143,12 +143,14 @@ class TugOfWar():
 
         self.last_decomposed_reward_dict = {}
         self.decomposed_reward_dict = {}
+        self.num_waves = 0
         
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         action_dict_path = os.path.join(os.path.dirname(__file__), 'action_1500_tow_2L.pt')
         print("actions path:" + action_dict_path)
         self.a_dict = torch.load(action_dict_path)
-        self.a_dict['actions'] = np.array(self.a_dict['actions'])
+        self.action_space = self.a_dict['actions']
+        self.action_space_dict = self.a_dict['mineral']
 #         print(self.a_dict.keys())
     # at the end of the reward type name:
     # 1 means for player 1 is positive, for player 2 is negative
@@ -185,6 +187,7 @@ class TugOfWar():
         
         self.end_state = None
         self.decision_point = 1
+        self.num_waves = 0
         
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
@@ -237,6 +240,8 @@ class TugOfWar():
               # Get channel states
               # state = self.get_channel_state(self.current_obs)
               # Get custom states
+                self.num_waves += 1
+                
                 state_1 = self.get_custom_state(data, 1)
                 state_2 = self.get_custom_state(data, 2)
                 if done:
@@ -340,6 +345,8 @@ class TugOfWar():
             Player1: Hit point of Nexus T 28 B
             Player2: Hit point of Nexus T 29 T
             Player2: Hit point of Nexus T 30 B
+            
+            Number of waves
         """
         if player == 1:
             utp_1 = unit_types_player1
@@ -382,7 +389,7 @@ class TugOfWar():
                 
         if state[self.miner_index] > self.mineral_limiation:
             state[self.miner_index] = self.mineral_limiation
-            
+        state = np.append(state, self.num_waves)
 #         state = self.normalization(state)
         
         return state
@@ -413,9 +420,6 @@ class TugOfWar():
         for x in data:
             if x.unit_type == UNIT_TYPES['SCV']:
                 if x.shield in reward_dict.keys():
-#                     if x.health - 1 > 2001 and x.shield not in [3, 103]:
-#                         print(x)
-#                         input()
                     reward_type = reward_dict[x.shield]
                     self.decomposed_reward_dict[reward_type] = x.health - 1
                     
@@ -456,49 +460,57 @@ class TugOfWar():
 
     def get_big_A(self, mineral, num_of_pylon, is_train = False):
 #         print(mineral)
-        big_A = self.a_dict['actions'][ : self.a_dict['mineral'][mineral]]
-        if num_of_pylon < 3:
-            mineral_after_pylong = mineral - (self.pylon_cost + num_of_pylon * 100)
-#             print(mineral_after_pylong)
-            if mineral_after_pylong > 0:
-                action_after_pylon = self.a_dict['actions'][ : self.a_dict['mineral'][mineral_after_pylong]].copy()
-                action_after_pylon[:, -1] = 1
-                big_A = np.append(big_A, action_after_pylon, axis = 0)
+#         print(self.action_space_dict[num_of_pylon][mineral])
+        big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
+        top_lane = np.zeros((len(big_A), 7))
+        bottom_lane = np.zeros((len(big_A), 7))
+        
+        top_lane[:, 0: 3] = big_A[:, 0: 3].copy()
+        top_lane[:, 6] = big_A[:, 3].copy()
+        
+        bottom_lane[:, 3: 7] = big_A.copy()
+        
+#         print(top_lane)
+#         print(bottom_lane)
+        
+        big_A = np.vstack((top_lane, bottom_lane))
+#         print(big_A)
+#         return big_A
         if is_train:
 #             print(len(big_A))
             big_A_I_1x = big_A[big_A[:, 2] > 0].copy()#[big_A[:, 5] > 0]
             big_A_I_0x = big_A[big_A[:, 2] == 0].copy()#[big_A[:, 5] == 0]
-            
+
             big_A_I_10 = big_A_I_1x[big_A_I_1x[:, 5] == 0].reshape(-1, 7)
             big_A_I_11 = big_A_I_1x[big_A_I_1x[:, 5] > 0].reshape(-1, 7)
             big_A_I_01 = big_A_I_0x[big_A_I_0x[:, 5] > 0].reshape(-1, 7)
-            
+
 #             print(len(big_A_I_10), len(big_A_I_11), len(big_A_I_01))
 #             print(big_A_I_10.shape,big_A_I_11.shape, big_A_I_01.shape)
-            
+
             big_A_I = np.vstack([big_A_I_10, big_A_I_11,big_A_I_01])
-            
+
             big_A_Noop = big_A[0]
-            
+
             big_A_P = big_A[big_A[:, 6] > 0].copy()
-            
+
 #             print(len(big_A), len(big_A_I), len(big_A_P))
             lenth_m_b = len(big_A) - len(big_A_I) - len(big_A_P)
 #             print(lenth_m_b)
-            
+
             num_I = lenth_m_b // len(big_A_I) if len(big_A_I) > 0 else 0
             num_P = lenth_m_b // len(big_A_P) if len(big_A_P) > 0 else 0
             num_Noop = lenth_m_b
-            
+
             num_I = num_I if num_I > 0 else 0
             num_P = num_P if num_P > 0 else 0
             num_Noop = num_Noop if num_Noop > 0 else 0
-            
+
 #             print(lenth_m_b,  len(big_A_I))=
             big_A_I = np.repeat(big_A_I.reshape(-1, 7), num_I, axis = 0).reshape(-1, 7)
             big_A_P = np.repeat(big_A_P.reshape(-1, 7), num_P, axis = 0).reshape(-1, 7)
             big_A_Noop = np.repeat(big_A_Noop.reshape(-1, 7), num_Noop, axis = 0).reshape(-1, 7)
-                
+
             big_A = np.vstack([big_A, big_A_I, big_A_P, big_A_Noop])
 #             print(len(big_A))
 #             input()
@@ -509,9 +521,9 @@ class TugOfWar():
 #             for b_a in big_A:
 #                 if np.sum(b_a) == 0:
 #                     num_noop += 1
-            
+
 #             print(num_noop / l)
-            
+
 #             print(len(big_A[big_A[:, 0] > 0]) / l)
 #             print(len(big_A[big_A[:, 1] > 0]) / l)
 #             print(len(big_A[big_A[:, 2] > 0]) / l)
@@ -535,6 +547,7 @@ class TugOfWar():
         index_has_pylon = actions[:, -1] > 0
         num_of_pylon = s[index_has_pylon, self.pylon_index]
         s[index_has_pylon, self.miner_index] -= (self.pylon_cost + (num_of_pylon - 1) * 100)
-            
+        
+        assert np.sum(s[:, self.miner_index] >= 0) == s.shape[0]
         return s
   

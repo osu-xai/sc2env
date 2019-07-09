@@ -38,6 +38,13 @@ def main():
         dest='test',
         action="store_true"
     )
+    
+    parser.add_argument(
+        '-ce', '--collecting_experience',
+        help='Just run test and collect experience',
+        dest='collecting_experience',
+        action="store_true"
+    )
 
     parser.add_argument(
         '-tf', '--train_forever',
@@ -74,6 +81,9 @@ def main():
 
     if args.test:
         evaluation_config.training_episodes = 0
+    if args.collecting_experience:
+        reinforce_config.collecting_experience = True
+        
     map_name = args.map
     if map_name is None:
         print("You are traning the agent for the default map: ")
