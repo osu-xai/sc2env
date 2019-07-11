@@ -90,7 +90,7 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
-                screen=(xai_replay_dimension, xai_replay_dimension),
+                screen=(2*xai_replay_dimension, xai_replay_dimension),
                 minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
@@ -156,7 +156,7 @@ class TugOfWar():
     # 1 means for player 1 is positive, for player 2 is negative
     # 2 means for player 2 is positive, for player 1 is negative
         self.reward_types = list(reward_dict.values())
-#         print(self.reward_types)
+        # print(self.reward_types)
         for rt in self.reward_types:
         	self.decomposed_reward_dict[rt] = 0
         	self.last_decomposed_reward_dict[rt] = 0
