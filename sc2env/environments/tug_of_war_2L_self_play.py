@@ -78,6 +78,12 @@ maker_cost = {
     'Immortal B' : 200,
 }
 
+action_component_names = {
+    0: 'Marine',
+    1: 'Baneling',
+    2: 'Immortal',
+    3: 'Pylon'
+}
 class TugOfWar():
     def __init__(self, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
         if map_name is None:
@@ -90,14 +96,16 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
-                screen=(2*xai_replay_dimension, xai_replay_dimension),
+                screen=(1.5*xai_replay_dimension, xai_replay_dimension),
                 minimap=(64, 64),
                 ),
                 action_space=actions.ActionSpace.FEATURES,
                 camera_width_world_units = 28,
                 #use_camera_position = True,
             )
-            step_mul_value = 4
+            #step_mul_value = 4
+            step_mul_value = 16
+
         else:
             aif=features.AgentInterfaceFormat(
               feature_dimensions = features.Dimensions(screen = SCREEN_SIZE, minimap = SCREEN_SIZE),

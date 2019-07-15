@@ -15,6 +15,7 @@ class XaiReplayRecorder2LaneNexus():
     """
     
     def __init__(self, sc2_env, game_number, env_name, action_component_names, replay_dimension = 256):
+        print("RECORDER IS ALIVE")
         time_string = "{}".format(int(time.time()))
         self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".json")
         self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".mp4")
@@ -27,16 +28,24 @@ class XaiReplayRecorder2LaneNexus():
         self.decision_point_number = 1
         self.explanation_points_array = []
         self.current_wave_number = 0
+        self.jpg_number = 0
 
+
+    def save_jpg(self):
+        observation = self.get_observation()
+        self.save_game_rgb_screen(observation)
 
     def get_observation(self):
         observation = self.sc2_env._controllers[0]._client.send(observation=sc_pb.RequestObservation())
         return observation
 
     def save_game_rgb_screen(self, observation): 
+        print("fetching RGB screen")
         rgb_screen = features.Feature.unpack_rgb_image(observation.observation.render_data.map).astype(np.int32)  
         print(f"SAVING IMAGE")
-        self.video.write_frame(rgb_screen, normalize=False)
+        imutil.show(rgb_screen, filename="twoLane" + str(self.jpg_number) + ".jpg")
+        #imutil.show(self.last_timestep.observation['rgb_screen'], filename="test.jpg")
+        #self.video.write_frame(rgb_screen, normalize=False)
 
     def record_decision_point(self, action_p1, action_p2, state_p1, state_p2, cumulative_rewards):
         print("record_decision_point...")
