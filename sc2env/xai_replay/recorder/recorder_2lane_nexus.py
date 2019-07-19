@@ -17,9 +17,12 @@ class XaiReplayRecorder2LaneNexus():
     def __init__(self, sc2_env, game_number, env_name, action_component_names, replay_dimension = 256):
         print("RECORDER IS ALIVE")
         time_string = "{}".format(int(time.time()))
-        self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".json")
-        self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".mp4")
-        self.saliency_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".expl")
+
+        self.game_number = game_number
+        self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".json")
+        self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".mp4")
+        self.saliency_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".expl")
+
         self.sc2_env = sc2_env
         #self.game_clock_tick = 0
         self.frames = []
@@ -30,7 +33,6 @@ class XaiReplayRecorder2LaneNexus():
         self.current_wave_number = 0
         self.jpg_number = 0
 
-
     def save_jpg(self):
         observation = self.get_observation()
         self.save_game_rgb_screen(observation)
@@ -40,12 +42,12 @@ class XaiReplayRecorder2LaneNexus():
         return observation
 
     def save_game_rgb_screen(self, observation): 
-        print("fetching RGB screen")
+        # print("fetching RGB screen")
         rgb_screen = features.Feature.unpack_rgb_image(observation.observation.render_data.map).astype(np.int32)  
-        print(f"SAVING IMAGE")
-        imutil.show(rgb_screen, filename="twoLane" + str(self.jpg_number) + ".jpg")
+        # print(f"SAVING IMAGE")
+        # imutil.show(rgb_screen, filename="twoLane" + str(self.jpg_number) + ".jpg")
         #imutil.show(self.last_timestep.observation['rgb_screen'], filename="test.jpg")
-        #self.video.write_frame(rgb_screen, normalize=False)
+        self.video.write_frame(rgb_screen, normalize=False)
 
     def record_decision_point(self, action_p1, action_p2, state_p1, state_p2, cumulative_rewards):
         print("record_decision_point...")
@@ -149,9 +151,11 @@ class XaiReplayRecorder2LaneNexus():
         f.write("\n")
         f.close()
         # expl_points_pb = expl_pb.ExplanationPoints(explanation_points = self.explanation_points_array)
-        # data = expl_points_pb.SerializeToString()
-        # output_file = open(self.saliency_pathname,"wb")
-        # output_file.write(data)
+
+        expl_points_pb = {}
+        data = expl_points_pb.SerializeToString()
+        output_file = open(self.saliency_pathname,"wb")
+        output_file.write(data)
 
     # def record_saliency_for_decision_point(self, saliencies):
     #     # since we already appended the corresponding frame to the frames list in record_decision_point, 

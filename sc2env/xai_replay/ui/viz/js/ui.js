@@ -35,7 +35,7 @@ pauseResumeButton.setAttribute("id", "pauseResumeButton");
 
 // explanation controls
 var expl_ctrl_canvas = document.createElement("canvas");
-expl_ctrl_canvas.setAttribute("style", "z-index:" + zIndexMap["explControl"]);
+expl_ctrl_canvas.setAttribute("style", "z-index:" + (zIndexMap["allTheWayToFront"]+1));
 expl_ctrl_canvas.setAttribute("id", "expl-control-canvas");
 var expl_ctrl_ctx = expl_ctrl_canvas.getContext("2d");
 expl_ctrl_ctx.imageSmoothingEnabled = false;
@@ -49,7 +49,7 @@ var explanationControlYPosition = 36;
 var controlsManager = configureControlsManager(pauseResumeButton, rewindButton);
 
 //scaling
-var gameScaleFactor = 6;
+var gameScaleFactor = 1;
 var spacingFactor = 1;
 var sizingFactor = 1;
 
@@ -61,14 +61,16 @@ var mostRecentClickHadCtrlKeyDepressed;
 function configureGameboardCanvas(){ //gameboard canvas will be used to draw things in front of video
 	gameboard_canvas.width = sc2GameRenderWidth;
     gameboard_canvas.height = sc2GameRenderHeight;
-    gameboard_canvas.setAttribute("id","gameboard");
-	$("#scaii-gameboard").css("width", gameboard_canvas.width);
-	$("#scaii-gameboard").css("height", gameboard_canvas.height);
+	gameboard_canvas.setAttribute("id","gameboard");
+	screen_height = $(window).height()
+	$("#scaii-gameboard").css("width", "100%");
+	$("#scaii-gameboard").css("height", screen_height*.875);
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
 	$("#scaii-gameboard").css("position", "relative");
+	$("#scaii-gameboard").css("overflow", "hidden");
 	$("#scaii-gameboard").append()
-	gameboard_canvas.setAttribute("style", "position:absolute;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
+	gameboard_canvas.setAttribute("style", "position:absolute;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:100%;" + "height:" + (gameboard_canvas.height - (gameboard_canvas.height*.2)) + "px;");
 	var scaiiGameboard = document.getElementById("scaii-gameboard");
 	if (gameboard_canvas.parentNode != scaiiGameboard){
 		$("#scaii-gameboard").append(gameboard_canvas);
@@ -278,8 +280,14 @@ function sizeNonGeneratedElements() {
 	$("#right-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
 
 	var rewardsPanelWidth = gameContainerWidth - gameboard_canvas.width - 2 * quadrantLabelWidth;
-	$("#reward-values-panel").css("height", gameboard_canvas.height + "px");
-	$("#reward-values-panel").css("width", rewardsPanelWidth + "px");
+	$("#reward-values-panel").css("height", 225 + "px");
+	$("#reward-values-panel").css("width", 350 + "px");
+	$("#reward-values-panel").css("position","absolute");
+	$("#reward-values-panel").css("top", "78%");
+	$("#reward-values-panel").css("left", "30%");
+	$("#reward-values-panel").css("display", "none");
+
+
 	
 	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
 	var stepValueWidth = 100;
@@ -296,7 +304,14 @@ function sizeNonGeneratedElements() {
 	$("#playback-controls-panel").css("margin-bottom", "10px");
 	
 
-    $("#explanation-control-panel").css("height", "85px");
+	$("#explanation-control-panel").css("height", "60px")
+	$("#explanation-control-panel").css("width", "100%")
+	$("#explanation-control-panel").css("position", "absolute");
+	$("#explanation-control-panel").css("top", "45%");
+	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
+
+
+
 }
 
 function clearGameBoard() { 
@@ -343,7 +358,7 @@ expl_ctrl_canvas.addEventListener('click', function (event) {
 	if (!isUserInputBlocked()){
 		var matchingStep = getMatchingExplanationStep(expl_ctrl_ctx, event.offsetX, event.offsetY);
 		if (matchingStep == undefined){
-            processTimelineClick(event);
+			processTimelineClick(event);
 		}
 		else{
 			if (matchingStep == sessionIndexManager.getCurrentIndex()) {

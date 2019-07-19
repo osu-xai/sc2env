@@ -96,6 +96,7 @@ class TugOfWar():
             aif=features.AgentInterfaceFormat(
                 feature_dimensions=features.Dimensions(screen=SCREEN_SIZE, minimap=SCREEN_SIZE),
                 rgb_dimensions=sc2_env.Dimensions(
+
                 screen=(1.5*xai_replay_dimension, xai_replay_dimension),
                 minimap=(64, 64),
                 ),
@@ -103,8 +104,9 @@ class TugOfWar():
                 camera_width_world_units = 28,
                 #use_camera_position = True,
             )
-            #step_mul_value = 4
-            step_mul_value = 16
+
+            step_mul_value = 4
+            # step_mul_value = 16
 
         else:
             aif=features.AgentInterfaceFormat(

@@ -105,19 +105,15 @@
                             <div id="replay-speed-panel" class="control-panel"></div>
                         </div>-->
                         <div id="game-row" class="flex-row">
-                            <div id="reward-values-panel" class="flex-column">
-                                <!--<div id="cumulative-rewards-title" class="grid bg" style="text-align:center;margin-left:30px;margin-top:30px;width:200px;font-family:Arial;font-size:16px;">Cumulative Rewards</div>-->
-                                <div id="cumulative-rewards" class="grid bg" style="margin-left:30px;margin-top:10px;height:125px"></div>
-                            </div>
-                            <div id="left-side-quadrant-labels" class="flex-column bg">
-                                <div id="q1-label" style="margin-left:4px;margin-right:4px;margin-top:20px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q2</div>
-                                <div id="q2-label" style="margin-left:4px;margin-right:4px;margin-top:140px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q3</div>
+                            <div id="left-side-video" class="flex-column bg">
                             </div>
                             <div id="scaii-gameboard" class="grid-center bg"></div>
-                            <div id="right-side-quadrant-labels" class="flex-column bg">
-                                <div id="q3-label" style="margin-left:4px;margin-right:4px;margin-top:20px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q1</div>
-                                <div id="q4-label" style="margin-left:4px;margin-right:4px;margin-top:140px;height:50%;font-family:Arial;font-size:16px;" class="bg">Q4</div>
+                            <div id="right-side-video" class="flex-column bg">
                             </div>
+                        </div>
+                        <div id="reward-values-panel">
+                            <!--<div id="cumulative-rewards-title" class="grid bg" style="text-align:center;margin-left:30px;margin-top:30px;width:200px;font-family:Arial;font-size:16px;">Cumulative Rewards</div>-->
+                            <div id="cumulative-rewards" class="grid bg" style="padding-left:8px;height:100%"></div>
                         </div>
                         
                         
@@ -128,7 +124,7 @@
                             <div id="step-forward-control"></div>
                             <div id="pause-play-control"></div>
                         </div>
-                        <div id="explanation-control-panel" class="timeline-control bg">
+                        <div id="explanation-control-panel" class="timeline-control bg" style="z-index:999;">
                             <!--<input type="button" id="test-button" style="z-index:2; position:relative; top:20px; left:50px" value="?"/>-->
                         </div>
                         <div id="action-list" class="bg grid" style="margin-top:10px;"></div>
