@@ -15,7 +15,6 @@ class XaiReplayRecorder2LaneNexus():
     """
     
     def __init__(self, sc2_env, game_number, env_name, action_component_names, replay_dimension = 256):
-        print("RECORDER IS ALIVE")
         time_string = "{}".format(int(time.time()))
 
         self.game_number = game_number
@@ -25,7 +24,7 @@ class XaiReplayRecorder2LaneNexus():
 
         self.sc2_env = sc2_env
         #self.game_clock_tick = 0
-        self.frames = []
+        self.frames = [] 
         self.action_component_names = action_component_names
         self.video = imutil.Video(filename=self.video_pathname)
         self.decision_point_number = 1
@@ -50,7 +49,7 @@ class XaiReplayRecorder2LaneNexus():
         self.video.write_frame(rgb_screen, normalize=False)
 
     def record_decision_point(self, action_p1, action_p2, state_p1, state_p2, cumulative_rewards):
-        print("record_decision_point...")
+        # print("record_decision_point...")
         observation = self.get_observation()
         frame_info = {}
         # if rewards == [[]]:
@@ -63,6 +62,11 @@ class XaiReplayRecorder2LaneNexus():
             frame_info["cumulative_rewards"] = cumulative_rewards
         
         frame_info["action_component_names"] = self.action_component_names
+        print("action p1: " + str(action_p1))
+        print("action p1: " + str(action_p2))
+        print("state p2: " + str(state_p1))
+        print("state p2: " + str(state_p2))
+        input
         # frame_info["action_p1"] = create_action_dict(action_p1)
         # frame_info["action_p2"] = create_action_dict(action_p2)
         # frame_info["state_p1"] = create_state_dict(state_p1)
@@ -121,7 +125,6 @@ class XaiReplayRecorder2LaneNexus():
         
 
     def record_game_clock_tick(self, cumulative_rewards):
-        print("record_clock tick...")
         observation = self.get_observation()
         frame_info = {}
         frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
@@ -152,7 +155,7 @@ class XaiReplayRecorder2LaneNexus():
         f.close()
         # expl_points_pb = expl_pb.ExplanationPoints(explanation_points = self.explanation_points_array)
 
-        expl_points_pb = {}
+        expl_points_pb = 0
         data = expl_points_pb.SerializeToString()
         output_file = open(self.saliency_pathname,"wb")
         output_file.write(data)

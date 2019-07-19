@@ -64,6 +64,8 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
     dm.getClosestUnitIdInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST
         var unitCoordX = translateCanvasXCoordToGameUnitXCoord(mouseCanvasX, gameboard_canvas.width);
         var unitCoordY = translateCanvasYCoordToGameUnitYCoord(mouseCanvasY, gameboard_canvas.height);
+        console.log("MouseX: " + mouseCanvasX + "\tUnitX: " + unitCoordX)
+        console.log("MouseY: " + mouseCanvasY + "\tUnitY: " + unitCoordY)
         var minDistance = roughlyHalfWidthOfUnitInGameUnits;
         var minDistanceUnit = undefined;
         var frame_info = this.frameInfos[sessionIndexManager.getCurrentIndex()];

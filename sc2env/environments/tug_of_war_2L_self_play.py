@@ -58,7 +58,7 @@ unit_types_player2 = {
     60 : 14, # 'Pylon'
     59 : 29, # 'Nexus'
     48 : 21, # 'Marine'
-    9 : 22, # 'Baneling'
+    9 : 22, # 'Baneling' 
     83 : 23 # 'Immortal'
 }
 reward_dict = {

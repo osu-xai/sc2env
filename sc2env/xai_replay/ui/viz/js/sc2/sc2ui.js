@@ -1,19 +1,13 @@
 // Cw = 24, Ch = 24
 // corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
 // XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
-<<<<<<< Updated upstream
-var cameraWidth = 28;
-var cameraHeight = 28;
-var cameraOriginX = 28;
-var cameraOriginY = 28;
-=======
+
 var videoScaleFactor = .365;
 
-var cameraWidth = 2048 * 1.3;
+var cameraWidth = 2048 * 1.5;
 var cameraHeight = 2048;
-var cameraOriginX = (2048 * 1.3);
+var cameraOriginX = (2048 * 1.5);
 var cameraOriginY = 2048;
->>>>>>> Stashed changes
 var xEdgeToCamera = cameraOriginX - cameraWidth/2;
 var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 // 1520 x 1280 is dimensions of video frame, try half that
@@ -30,7 +24,6 @@ var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 //var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
 //var sc2GameOrigPixelOffscreenToBottomY = (sc2GameOrigPixelHeight - sc2GameOrigPixelViewableHeight)/2;//160
 
-var videoScaleFactor = 1;
 var sc2GameOrigPixelViewableWidth_Scaled  = sc2GameOrigPixelViewableWidth * videoScaleFactor;
 var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * videoScaleFactor;
 var roughlyHalfWidthOfUnitInGameUnits = cameraWidth * roughlyHalfWidthOfUnitAsPercentageOfCanvas;
@@ -55,7 +48,7 @@ var gameContainerWidth = sc2GameRenderWidth + 520;
 var playInterval = 400;
 var framesPerSecond = 25;
 var recorderCaptureInterval = 8;
-var videoPlaybackRate = 1 / recorderCaptureInterval;
+var videoPlaybackRate = 4 / recorderCaptureInterval;
 var relativeReplayDir = "./replays";
 var activeSC2UIManager = undefined;
 
@@ -82,7 +75,6 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         this.pause();
         var currentTime = frameNumber / framesPerSecond;
         this.jumped = true;
-		console.log("frame number " + frameNumber + " currentTime " + currentTime)
         var video = document.getElementById("video");
         video.currentTime = currentTime;
         // event will fire that will trigger expressFrameInfo
@@ -135,22 +127,14 @@ function createVideoElement(path){
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
-        console.log("video time: " + video.currentTime + "fps: " + framesPerSecond)
         var frameNumber = Math.round(video.currentTime * framesPerSecond);
-        console.log("video express frame num: " + frameNumber)
         activeSC2UIManager.expressFrameInfo(frameNumber);
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
 	configureGameboardCanvas();
-<<<<<<< Updated upstream
 	video.load();	
 	video.playbackRate = videoPlaybackRate;
-=======
-    video.load();	
-    video.playbackRate = videoPlaybackRate;
-    video.currentTime = 0
-    
->>>>>>> Stashed changes
+
 }
 
 function getTooltipColorRGBAForUnit(unitInfo){
@@ -196,39 +180,37 @@ function getSC2QuadrantName(x,y){
 // }
 
 function translateUnitXToCanvasX(unitX){
-<<<<<<< Updated upstream
     var unitXCamera = unitX - xEdgeToCamera;
     var unitXPercentAcrossCanvas = unitXCamera / cameraWidth;
     var canvasX = gameboard_canvas.width * unitXPercentAcrossCanvas;
-=======
-    // console.log("unitX: "+ unitX)
-    // var unitXCamera = unitX - xEdgeToCamera;
-    // console.log("unitXCamera: " + unitXCamera)
-    var unitXPercentAcrossCanvas = unitX / 69 * videoScaleFactor;
-    // console.log("percent X: "+ unitXPercentAcrossCanvas)
-    var canvasX = cameraWidth * unitXPercentAcrossCanvas;
->>>>>>> Stashed changes
-    //console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
+// =======
+//     // console.log("unitX: "+ unitX)
+//     // var unitXCamera = unitX - xEdgeToCamera;
+//     // console.log("unitXCamera: " + unitXCamera)
+//     var unitXPercentAcrossCanvas = unitX / 69 * videoScaleFactor;
+//     // console.log("percent X: "+ unitXPercentAcrossCanvas)
+//     var canvasX = cameraWidth * unitXPercentAcrossCanvas;
+// >>>>>>> Stashed changes
+//     //console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
     return canvasX;
 }
 
 function translateUnitYToCanvasY(unitY){
-<<<<<<< Updated upstream
     var unitYCamera = cameraHeight - (unitY - yEdgeToCamera);
     var unitYPercentAcrossCanvas = unitYCamera / cameraHeight;
     var canvasY = gameboard_canvas.height * unitYPercentAcrossCanvas;
-=======
-    var video_y_ratio = (cameraHeight * videoScaleFactor) 
-    var unit_y_ratio = 149 * videoScaleFactor
+// =======
+//     var video_y_ratio = (cameraHeight * videoScaleFactor) 
+//     var unit_y_ratio = 149 * videoScaleFactor
 
-    var canvasY = unitY * (video_y_ratio / unit_y_ratio)
-    if (canvasY < cameraOriginY/2) {
-        canvasY = canvasY - unitY
-    }
-    else{
-        canvasY = canvasY + unitY    
-    }
->>>>>>> Stashed changes
+//     var canvasY = unitY * (video_y_ratio / unit_y_ratio)
+//     if (canvasY < cameraOriginY/2) {
+//         canvasY = canvasY - unitY
+//     }
+//     else{
+//         canvasY = canvasY + unitY    
+//     }
+// >>>>>>> Stashed changes
     return canvasY;
 }
 
@@ -267,10 +249,7 @@ function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
-    var difference = Number(canvasX) - cameraWidth
-    var half_difference = difference/2
-
-
+    console.log("canvas-width: " + canvasWidth)
     var percentCanvasX = ((Number(canvasX)) / Number(canvasWidth));
     var unitSpaceX = cameraWidth * percentCanvasX + xEdgeToCamera;
     return unitSpaceX;
@@ -282,6 +261,8 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
+    console.log("canvas-height: " + canvasHeight)
+
     var percentCanvasY = (canvasHeight - Number(canvasY)) / Number(canvasHeight);
     var unitSpaceY = cameraHeight * percentCanvasY + yEdgeToCamera;
     return unitSpaceY;

@@ -222,6 +222,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
+
 		//$("#step-value").html( x + " , " + y);
 		var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 		if (unitId == undefined) {
@@ -253,7 +254,7 @@ function sizeNonGeneratedElements() {
 	var acronymWidth      = gameContainerWidth * percentWidthAcronym;
 	var replayLabelWidth  = gameContainerWidth * percentWidthReplayLabel;
 	var fileSelectorWidth = gameContainerWidth * percentWidthFileSelector;
-	$("#game-titled-container").css("width", gameContainerWidth + "px");
+	$("#game-titled-container").css("width", "100%");
 	// 150
 	$("#scaii-acronym").css("padding-left", "20px");
 	$("#scaii-acronym").css("width", acronymWidth + "px");
@@ -283,9 +284,8 @@ function sizeNonGeneratedElements() {
 	$("#reward-values-panel").css("height", 225 + "px");
 	$("#reward-values-panel").css("width", 350 + "px");
 	$("#reward-values-panel").css("position","absolute");
-	$("#reward-values-panel").css("top", "78%");
-	$("#reward-values-panel").css("left", "30%");
-	$("#reward-values-panel").css("display", "none");
+	$("#reward-values-panel").css("top", "55%");
+	$("#reward-values-panel").css("float", "left");
 
 
 	
@@ -308,6 +308,8 @@ function sizeNonGeneratedElements() {
 	$("#explanation-control-panel").css("width", "100%")
 	$("#explanation-control-panel").css("position", "absolute");
 	$("#explanation-control-panel").css("top", "45%");
+	$("#explanation-control-panel").css("left", "25%");
+	$("#explanation-control-panel").css("right", "25%");
 	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
 
 
