@@ -1,10 +1,19 @@
 // Cw = 24, Ch = 24
 // corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
 // XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
+<<<<<<< Updated upstream
 var cameraWidth = 28;
 var cameraHeight = 28;
 var cameraOriginX = 28;
 var cameraOriginY = 28;
+=======
+var videoScaleFactor = .365;
+
+var cameraWidth = 2048 * 1.3;
+var cameraHeight = 2048;
+var cameraOriginX = (2048 * 1.3);
+var cameraOriginY = 2048;
+>>>>>>> Stashed changes
 var xEdgeToCamera = cameraOriginX - cameraWidth/2;
 var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 // 1520 x 1280 is dimensions of video frame, try half that
@@ -73,12 +82,13 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         this.pause();
         var currentTime = frameNumber / framesPerSecond;
         this.jumped = true;
-		//console.log("frame number " + frameIndex + " currentTime " + currentTime)
+		console.log("frame number " + frameNumber + " currentTime " + currentTime)
+        var video = document.getElementById("video");
         video.currentTime = currentTime;
         // event will fire that will trigger expressFrameInfo
         
         //sessionIndexManager.setReplaySequencerIndex(frameNumber);
-       // this.renderStateForCurrentStep();
+        //this.renderStateForCurrentStep();
         //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
 
@@ -117,21 +127,30 @@ function createVideoElement(path){
         existingVideo.remove();
     }
     video = document.createElement("video");
-	video.setAttribute("width", sc2GameRenderWidth + "px");
-    video.setAttribute("height",sc2GameRenderHeight + "px");
+	video.setAttribute("width", "100%");
+    video.setAttribute("height", $(window).height()*1.1);
     video.setAttribute("id","video");
 	video.src = path;
 	$("#scaii-gameboard").append(video);
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
+        console.log("video time: " + video.currentTime + "fps: " + framesPerSecond)
         var frameNumber = Math.round(video.currentTime * framesPerSecond);
+        console.log("video express frame num: " + frameNumber)
         activeSC2UIManager.expressFrameInfo(frameNumber);
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
 	configureGameboardCanvas();
+<<<<<<< Updated upstream
 	video.load();	
 	video.playbackRate = videoPlaybackRate;
+=======
+    video.load();	
+    video.playbackRate = videoPlaybackRate;
+    video.currentTime = 0
+    
+>>>>>>> Stashed changes
 }
 
 function getTooltipColorRGBAForUnit(unitInfo){
@@ -177,17 +196,39 @@ function getSC2QuadrantName(x,y){
 // }
 
 function translateUnitXToCanvasX(unitX){
+<<<<<<< Updated upstream
     var unitXCamera = unitX - xEdgeToCamera;
     var unitXPercentAcrossCanvas = unitXCamera / cameraWidth;
     var canvasX = gameboard_canvas.width * unitXPercentAcrossCanvas;
+=======
+    // console.log("unitX: "+ unitX)
+    // var unitXCamera = unitX - xEdgeToCamera;
+    // console.log("unitXCamera: " + unitXCamera)
+    var unitXPercentAcrossCanvas = unitX / 69 * videoScaleFactor;
+    // console.log("percent X: "+ unitXPercentAcrossCanvas)
+    var canvasX = cameraWidth * unitXPercentAcrossCanvas;
+>>>>>>> Stashed changes
     //console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
     return canvasX;
 }
 
 function translateUnitYToCanvasY(unitY){
+<<<<<<< Updated upstream
     var unitYCamera = cameraHeight - (unitY - yEdgeToCamera);
     var unitYPercentAcrossCanvas = unitYCamera / cameraHeight;
     var canvasY = gameboard_canvas.height * unitYPercentAcrossCanvas;
+=======
+    var video_y_ratio = (cameraHeight * videoScaleFactor) 
+    var unit_y_ratio = 149 * videoScaleFactor
+
+    var canvasY = unitY * (video_y_ratio / unit_y_ratio)
+    if (canvasY < cameraOriginY/2) {
+        canvasY = canvasY - unitY
+    }
+    else{
+        canvasY = canvasY + unitY    
+    }
+>>>>>>> Stashed changes
     return canvasY;
 }
 
@@ -226,7 +267,11 @@ function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
-    var percentCanvasX = (Number(canvasX) / Number(canvasWidth));
+    var difference = Number(canvasX) - cameraWidth
+    var half_difference = difference/2
+
+
+    var percentCanvasX = ((Number(canvasX)) / Number(canvasWidth));
     var unitSpaceX = cameraWidth * percentCanvasX + xEdgeToCamera;
     return unitSpaceX;
 }
@@ -271,7 +316,6 @@ function vidStep(){
 	}
 	else {
 		var currentTime = frameNumber / framesPerSecond;
-		console.log("frame number " + frameNumber + " currentTime " + currentTime)
 		video.currentTime = currentTime;
 		window.setTimeout(vidStep, 500);
 		//window.requestAnimationFrame(vidStep);

@@ -6,7 +6,7 @@ function paintProgress(value) {
 	renderExplanationSelectors();
 }
 
-var cursorHeight = 60;
+var cursorHeight = 45;
 var cursorWidth = 4;
 function showPositionOnTimeline(value) {
 	drawExplanationTimeline();
@@ -294,6 +294,7 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
+	step = Number(step)
     clearGameBoard();
 	activeSC2UIManager.jumpToFrame(step);
 	updateButtonsAfterJump();
