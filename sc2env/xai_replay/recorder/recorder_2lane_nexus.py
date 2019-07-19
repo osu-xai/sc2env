@@ -17,10 +17,12 @@ class XaiReplayRecorder2LaneNexus():
     def __init__(self, sc2_env, game_number, env_name, action_component_names, replay_dimension = 256):
         print("RECORDER IS ALIVE")
         time_string = "{}".format(int(time.time()))
+
         self.game_number = game_number
         self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".json")
         self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".mp4")
         self.saliency_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".expl")
+
         self.sc2_env = sc2_env
         #self.game_clock_tick = 0
         self.frames = []
@@ -31,7 +33,6 @@ class XaiReplayRecorder2LaneNexus():
         self.current_wave_number = 0
         self.jpg_number = 0
 
- 
     def save_jpg(self):
         observation = self.get_observation()
         self.save_game_rgb_screen(observation)
@@ -150,6 +151,7 @@ class XaiReplayRecorder2LaneNexus():
         f.write("\n")
         f.close()
         # expl_points_pb = expl_pb.ExplanationPoints(explanation_points = self.explanation_points_array)
+
         expl_points_pb = {}
         data = expl_points_pb.SerializeToString()
         output_file = open(self.saliency_pathname,"wb")
