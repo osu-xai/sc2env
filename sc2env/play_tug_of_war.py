@@ -9,6 +9,7 @@ from abp.examples.pysc2.tug_of_war.hra import run_task
 from abp.examples.pysc2.tug_of_war.sadq_bigA import run_task as run_task_bigA
 from abp.examples.pysc2.tug_of_war.sadq_2p import run_task as run_task_2p
 from abp.examples.pysc2.tug_of_war.model_base_TS import run_task as run_task_mbts
+from abp.examples.pysc2.tug_of_war.sadq_2p_2l import run_task as run_task_2p_2l
 
 def main():
     parser = argparse.ArgumentParser()
@@ -35,6 +36,13 @@ def main():
         '-t', '--test',
         help='Just run test, no train',
         dest='test',
+        action="store_true"
+    )
+    
+    parser.add_argument(
+        '-ce', '--collecting_experience',
+        help='Just run test and collect experience',
+        dest='collecting_experience',
         action="store_true"
     )
 
@@ -73,6 +81,9 @@ def main():
 
     if args.test:
         evaluation_config.training_episodes = 0
+    if args.collecting_experience:
+        reinforce_config.collecting_experience = True
+        
     map_name = args.map
     if map_name is None:
         print("You are traning the agent for the default map: ")
@@ -97,6 +108,8 @@ def main():
         run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     elif args.task == 'task_mbts':
         run_task_mbts(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+    elif args.task == 'task_2p_2l':
+        run_task_2p_2l(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     else:
         run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     return 0
