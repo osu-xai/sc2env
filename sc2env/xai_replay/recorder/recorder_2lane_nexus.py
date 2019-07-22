@@ -66,7 +66,7 @@ class XaiReplayRecorder2LaneNexus():
         print("action p1: " + str(action_p2))
         print("state p2: " + str(state_p1))
         print("state p2: " + str(state_p2))
-        input
+
         # frame_info["action_p1"] = create_action_dict(action_p1)
         # frame_info["action_p2"] = create_action_dict(action_p2)
         # frame_info["state_p1"] = create_state_dict(state_p1)

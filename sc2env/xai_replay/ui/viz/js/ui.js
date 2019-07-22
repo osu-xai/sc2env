@@ -126,7 +126,9 @@ var timelineMargin = 40;
 var explanationControlCanvasHeight = 70;
 var timelineHeight = 16;
 function drawExplanationTimeline() {
-	expl_ctrl_ctx.clearRect(0,0, expl_ctrl_canvas.width, expl_ctrl_canvas.height);
+	// var video = document.getElementById("video");
+	// var video_width = video.offsetWidth
+	expl_ctrl_ctx.clearRect(0,0, $(window).width(), expl_ctrl_canvas.height);
 	// just use width of gameboard for now, may need to be bigger
 	
 	expl_ctrl_canvas.height = explanationControlCanvasHeight;
@@ -140,7 +142,7 @@ function drawExplanationTimeline() {
 	}
 	let ctx = expl_ctrl_ctx;
 	
-	expl_ctrl_canvas.width = gameContainerWidth;
+	expl_ctrl_canvas.width = $(window).width()*.9;
 	ctx.beginPath();
 	ctx.moveTo(timelineMargin,explanationControlYPosition);
 	ctx.lineWidth = timelineHeight;
@@ -282,10 +284,11 @@ function sizeNonGeneratedElements() {
 
 	var rewardsPanelWidth = gameContainerWidth - gameboard_canvas.width - 2 * quadrantLabelWidth;
 	$("#reward-values-panel").css("height", 225 + "px");
-	$("#reward-values-panel").css("width", 350 + "px");
+	$("#reward-values-panel").css("width", 340 + "px");
 	$("#reward-values-panel").css("position","absolute");
 	$("#reward-values-panel").css("top", "55%");
 	$("#reward-values-panel").css("float", "left");
+	$("#reward-values-panel").css("display", "none");
 
 
 	
@@ -305,11 +308,11 @@ function sizeNonGeneratedElements() {
 	
 
 	$("#explanation-control-panel").css("height", "60px")
-	$("#explanation-control-panel").css("width", "100%")
+	// $("#explanation-control-panel").css("width", "100%")
 	$("#explanation-control-panel").css("position", "absolute");
 	$("#explanation-control-panel").css("top", "45%");
-	$("#explanation-control-panel").css("left", "25%");
-	$("#explanation-control-panel").css("right", "25%");
+	$("#explanation-control-panel").css("left", "5%");
+	$("#explanation-control-panel").css("right", "5%");
 	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
 
 
