@@ -253,10 +253,10 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	var rewardKeyDiv = document.createElement("DIV");
 	rewardKeyDiv.setAttribute("class", "r" + index +"c0");
 	if (key == totalsString){
-		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:3px;padding-top:10px");
+		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:3px;padding-top:10px;background-color:rgba(0,0,0,0);");
 	}
 	else {
-		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:14px;padding-bottom:3px");
+		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:14px;padding-bottom:3px;background-color:rgba(0,0,0,0);");
 	}
 	
 	rewardKeyDiv.innerHTML = prettyPrintRewardName[key];
@@ -272,10 +272,10 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	rewardValDiv.setAttribute("id", id);
 	rewardValDiv.setAttribute("class", "r" + index +"c1");
 	if (key == totalsString){
-		rewardValDiv.setAttribute("style", "margin-left: 10px;font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:3px;padding-top:10px");
+		rewardValDiv.setAttribute("style", "margin-left: 10px;font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:3px;padding-top:10px;background-color:rgba(0,0,0,0);");
 	}
 	else {
-		rewardValDiv.setAttribute("style", "margin-left: 10px;font-family:Arial;font-size:14px;");
+		rewardValDiv.setAttribute("style", "margin-left: 10px;font-family:Arial;font-size:14px;background-color:rgba(0,0,0,0);");
 	}
 	
 	rewardValDiv.innerHTML = val;

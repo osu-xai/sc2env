@@ -2,6 +2,9 @@
 // corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
 // XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
 
+// 64w by 128h game units is new dims
+
+
 var videoScaleFactor = .365;
 
 var cameraWidth = 2048 * 1.5;
@@ -75,7 +78,6 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         this.pause();
         var currentTime = frameNumber / framesPerSecond;
         this.jumped = true;
-        var video = document.getElementById("video");
         video.currentTime = currentTime;
         // event will fire that will trigger expressFrameInfo
         

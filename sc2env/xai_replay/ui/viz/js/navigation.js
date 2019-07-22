@@ -21,9 +21,9 @@ function showPositionOnTimeline(value) {
 	var ctx = expl_ctrl_ctx;
 	ctx.beginPath();
 
-	ctx.fillStyle = 'darkgrey';
+	ctx.fillStyle = 'white';
 	ctx.lineWidth = 1;
-	ctx.strokeStyle = 'darkgray';
+	ctx.strokeStyle = 'white';
 	var upperLeftVertexX = xLeft;
 	var upperLeftVertexY = yTop;
 	var upperRightVertexX = xRight;
@@ -294,7 +294,6 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
-	step = Number(step)
     clearGameBoard();
 	activeSC2UIManager.jumpToFrame(step);
 	updateButtonsAfterJump();

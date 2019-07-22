@@ -88,6 +88,7 @@
                     <div id="scaii-interface-title" class="bg" >Small Configurable AI Interface</div>
                 </div>-->
                 <div id = "game-chart-container" style="display:flex">
+
                     <div id="game-titled-container" class="titled-container bg" style="display:flex-column;float:left;width:100%;">
                         
                         <div id="title-row" class="flex-row">
@@ -105,19 +106,47 @@
                             <div id="replay-speed-panel" class="control-panel"></div>
                         </div>-->
                         <div id="game-row" class="flex-row">
-                            <div id="left-side-video" class="flex-column bg">
+                            <div id="unit-value-panels-containter" class="unit-value-panels" style="height:87%;width:99%;display:none;position: absolute;">
+                                <div class="unit-value-panels" id="p1_top">Player 1 (Top):
+                                    <div class="unit-value-panels" id="p1_top_marine" style="position:relative;">Marine: </div>
+                                    <div class="unit-value-panels" id="p1_top_baneling" style="position:relative;">Baneling: </div>
+                                    <div class="unit-value-panels" id="p1_top_immortal" style="position:relative;">Immortal: </div>
+                                </div>
+        
+                                <div class="unit-value-panels" id="p2_top">Player 2 (Top):
+                                    <div class="unit-value-panels" id="p2_top_marine" style="position:relative;">Marine: </div>
+                                    <div class="unit-value-panels" id="p2_top_baneling" style="position:relative;">Baneling: </div>
+                                    <div class="unit-value-panels" id="p2_top_immortal" style="position:relative;">Immortal: </div>
+                                </div>
+        
+                                <div class="unit-value-panels" id="p1_bottom">Player 1 (Bottom): 
+                                    <div class="unit-value-panels" id="p1_bottom_marine" style="position:relative;">Marine: </div>
+                                    <div class="unit-value-panels" id="p1_bottom_baneling" style="position:relative;">Baneling: </div>
+                                    <div class="unit-value-panels" id="p1_bottom_immortal" style="position:relative;">Immortal: </div>
+                                </div>
+        
+                                <div class="unit-value-panels" id="p2_bottom">Player 2 (Bottom): 
+                                    <div class="unit-value-panels" id="p2_bottom_marine" style="position:relative;">Marine: </div>
+                                    <div class="unit-value-panels" id="p2_bottom_baneling" style="position:relative;">Baneling: </div>
+                                    <div class="unit-value-panels" id="p2_bottom_immortal" style="position:relative;">Immortal: </div>
+                                </div>
                             </div>
                             <div id="scaii-gameboard" class="grid-center bg"></div>
                             <div id="right-side-video" class="flex-column bg">
                             </div>
                         </div>
+
+
                         <div id="reward-values-panel">
                             <!--<div id="cumulative-rewards-title" class="grid bg" style="text-align:center;margin-left:30px;margin-top:30px;width:200px;font-family:Arial;font-size:16px;">Cumulative Rewards</div>-->
-                            <div id="cumulative-rewards" class="grid bg" style="padding-left:8px;height:100%"></div>
+                            <div id="cumulative-rewards" class="grid bg" style="padding-left:8px;height:100%;background-color:rgba(0,0,0,0);"></div>
                         </div>
                         
                         
-                        <div id="playback-controls-panel" class="flex-row">
+                        <div id="playback-controls-panel" class="flex-row" style="z-index:1100;">
+                            <button id="reward-values-panel-toggle" alt="View Rewards">Show Rewards</button>
+                            <button id="unit-value-panels-toggle" alt="See all unit count information">Show Units</button>
+
                             <div id="step-value" class="minor-label-text"></div>
                             <div id="rewind-control"></div>
                             <div id="step-back-control"></div>
@@ -128,7 +157,7 @@
                             <!--<input type="button" id="test-button" style="z-index:2; position:relative; top:20px; left:50px" value="?"/>-->
                         </div>
                         <div id="action-list" class="bg grid" style="margin-top:10px;"></div>
-                        <div id="q-and-a-div" class="flex-column"></div>
+                        <!-- <div id="q-and-a-div" class="flex-column"></div> -->
                         <!--<div id="debug-panel" class="flex-row" style="height:60px;">
                             <div id="debug1" class="debug-msg"></div>
                             <div id="debug2" class="debug-msg"></div>
