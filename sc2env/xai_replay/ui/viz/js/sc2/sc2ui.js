@@ -7,10 +7,10 @@
 
 var videoScaleFactor = .365;
 
-var cameraWidth = 2048 * 1.5;
-var cameraHeight = 2048;
-var cameraOriginX = (2048 * 1.5);
-var cameraOriginY = 2048;
+var cameraWidth = 114;
+var cameraHeight = 56;
+var cameraOriginX = 64;
+var cameraOriginY = 32;
 var xEdgeToCamera = cameraOriginX - cameraWidth/2;
 var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 // 1520 x 1280 is dimensions of video frame, try half that
@@ -78,7 +78,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         this.pause();
         var currentTime = frameNumber / framesPerSecond;
         this.jumped = true;
-        video.currentTime = currentTime;
+        video.currentTime = currentTime + (trimBy / framesPerSecond);
         // event will fire that will trigger expressFrameInfo
         
         //sessionIndexManager.setReplaySequencerIndex(frameNumber);
@@ -90,6 +90,8 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
+        frame = this.dataManager.getFrameInfo(frameNumber);
+        expressUnitValues(frame);
         userStudyAdjustmentsForFrameChange();
         if (this.jumped){
             this.renderTooltipsForCurrentStep();
@@ -129,13 +131,16 @@ function createVideoElement(path){
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
-        var frameNumber = Math.round(video.currentTime * framesPerSecond);
+        
+        var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
         activeSC2UIManager.expressFrameInfo(frameNumber);
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
 	configureGameboardCanvas();
 	video.load();	
-	video.playbackRate = videoPlaybackRate;
+    video.playbackRate = videoPlaybackRate;
+    video.currentTime = trimBy / framesPerSecond
+    $('#unit-value-panels-toggle').css('display', "block")
 
 }
 

@@ -79,7 +79,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         }
 		//$("#why-button").remove();
 		this.replaySequencerIndex = index;
-        console.log('sessionIndex ' + index);
+        // console.log('sessionIndex ' + index);
 
         //SC2_TODO_SALif (this.decisionPointSteps.includes(index)){
         //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);

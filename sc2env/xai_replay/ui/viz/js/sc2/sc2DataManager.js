@@ -1,7 +1,10 @@
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
+var trimBy = 80
+
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
+    frameInfos = trimFirstFrames(frameInfos, trimBy)
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
@@ -9,6 +12,16 @@ function getSC2DataManagerFromJson(jsonData){
     var frameInfos =getFrameInfosFromJson(jsonData);
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
+function trimFirstFrames(frameInfos, trimBy){
+    for (var i = 0; i < trimBy; i++){
+        frameInfos.shift()
+    }
+    for (var i = 0; i < frameInfos.length; i++){
+        frameInfos[i].frame_number = i;
+    }
+    return frameInfos;
+}
+
 function getSC2DataManagerFromFrameInfos(frameInfos) {
     var dm = {};
     dm.frameInfos = frameInfos;
@@ -61,6 +74,7 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
     dm.getCumulativeRewards = function(frameInfo) {
         return frameInfo["cumulative_rewards"];
     }
+ 
     dm.getClosestUnitIdInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST
         var unitCoordX = translateCanvasXCoordToGameUnitXCoord(mouseCanvasX, gameboard_canvas.width);
         var unitCoordY = translateCanvasYCoordToGameUnitYCoord(mouseCanvasY, gameboard_canvas.height);

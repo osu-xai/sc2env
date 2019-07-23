@@ -208,6 +208,149 @@ function userStudyAdjustmentsForFrameChange(){
 }
 var totalsString = "total score";
 
+
+function expressUnitValues(frameInfo){
+    p1_top_mar = 0
+    p1_top_ban = 0
+    p1_top_imm = 0
+
+    p2_top_mar = 0
+    p2_top_ban = 0
+    p2_top_imm = 0
+
+    p1_bot_mar = 0
+    p1_bot_ban = 0
+    p1_bot_imm = 0
+    
+    p2_bot_mar = 0
+    p2_bot_ban = 0
+    p2_bot_imm = 0
+
+    p1_min = 0
+    p1_pyl = 0
+    p2_pyl = 0
+
+    stored_p1_top_mar = 0
+    stored_p1_top_ban = 0
+    stored_p1_top_imm = 0
+
+    stored_p2_top_mar = 0
+    stored_p2_top_ban = 0
+    stored_p2_top_imm = 0
+
+    stored_p1_bot_mar = 0
+    stored_p1_bot_ban = 0
+    stored_p1_bot_imm = 0
+    
+    stored_p2_bot_mar = 0
+    stored_p2_bot_ban = 0
+    stored_p2_bot_imm = 0
+
+    stored_p1_min = 0
+    stored_p1_pyl = 0
+    stored_p2_pyl = 0
+    for (var i in frameInfo.units){
+        
+        if (frameInfo.units[i].alliance == 1){
+            if (frameInfo.units[i].y > 32){
+                if (frameInfo.units[i].unit_type == 21){
+                    p1_top_mar++
+                }
+                else if(frameInfo.units[i].unit_type == 28){
+                    p1_top_ban++
+                }
+                else if(frameInfo.units[i].unit_type == 70){
+                    p1_top_imm++
+                }
+            }
+            else{
+                if (frameInfo.units[i].unit_type == 21){
+                    p1_bot_mar++
+                }
+                else if(frameInfo.units[i].unit_type == 28){
+                    p1_bot_ban++
+                }
+                else if(frameInfo.units[i].unit_type == 70){
+                    p1_bot_imm++
+                }
+            }
+            if (frameInfo.units[i].unit_type == 60){
+                p1_pyl++
+            }
+        }
+        else{
+            if (frameInfo.units[i].y > 32){
+                if (frameInfo.units[i].unit_type == 21){
+                    p2_top_mar++
+                }
+                else if(frameInfo.units[i].unit_type == 28){
+                    p2_top_ban++
+                }
+                else if(frameInfo.units[i].unit_type == 70){
+                    p2_top_imm++
+                }
+            }
+            else{
+                if (frameInfo.units[i].unit_type == 21){
+                    p2_bot_mar++
+                }
+                else if(frameInfo.units[i].unit_type == 28){
+                    p2_bot_ban++
+                }
+                else if(frameInfo.units[i].unit_type == 70){
+                    p2_bot_imm++
+                }
+            }
+            if (frameInfo.units[i].unit_type == 60){
+                p2_pyl++
+            }
+        }
+    }
+
+
+
+    document.getElementById("p1_top_marine").innerHTML = "Marine: " + p1_top_mar + "    (+" + (p1_top_mar-stored_p1_top_mar) + ")"
+    document.getElementById("p1_top_baneling").innerHTML = "Baneling: " + p1_top_ban + "    (+" + (p1_top_ban-stored_p1_top_ban) + ")"
+    document.getElementById("p1_top_immortal").innerHTML = "Immortal: " + p1_top_imm + "    (+" + (p1_top_imm-stored_p1_top_imm) + ")"
+
+    document.getElementById("p1_bottom_marine").innerHTML = "Marine: " + p1_bot_mar + " (+" + (p1_bot_mar-stored_p1_bot_mar) + ")"
+    document.getElementById("p1_bottom_baneling").innerHTML = "Baneling: " + p1_bot_ban + " (+" + (p1_bot_ban-stored_p1_bot_ban) + ")"
+    document.getElementById("p1_bottom_immortal").innerHTML = "Immortal: " + p1_bot_imm + " (+" + (p1_bot_imm-stored_p1_bot_imm) + ")"
+
+    document.getElementById("p2_top_marine").innerHTML = "Marine: " + p2_top_mar + "    (+" + (p2_top_mar-stored_p2_top_mar) + ")"
+    document.getElementById("p2_top_baneling").innerHTML = "Baneling: " + p2_top_ban + "    (+" + (p2_top_ban-stored_p2_top_ban) + ")"
+    document.getElementById("p2_top_immortal").innerHTML = "Immortal: " + p2_top_imm + "    (+" + (p1_top_imm-stored_p1_top_imm) + ")"
+
+    document.getElementById("p2_bottom_marine").innerHTML = "Marine: " + p2_bot_mar + " (+" + (p2_bot_mar-stored_p2_bot_mar) + ")"
+    document.getElementById("p2_bottom_baneling").innerHTML = "Baneling: " + p2_bot_ban + " (+" + (p2_bot_ban-stored_p2_bot_ban) + ")"
+    document.getElementById("p2_bottom_immortal").innerHTML = "Immortal: " + p2_bot_imm + " (+" + (p2_bot_imm-stored_p2_bot_imm) + ")"
+
+    document.getElementById("p1_pylon").innerHTML = "Player 1 Pylons: " + p1_pyl + "  (+" + (p1_pyl-stored_p1_pyl) + ")"
+    document.getElementById("p2_pylon").innerHTML = "Player 2 Pylons: " + p2_pyl + "  (+" + (p2_pyl-stored_p2_pyl) + ")"
+
+    stored_p1_top_mar = p1_top_mar
+    stored_p1_top_ban = p1_top_ban
+    stored_p1_top_imm = p1_top_imm
+
+    stored_p2_top_mar = p2_top_mar
+    stored_p2_top_ban = p2_top_ban
+    stored_p2_top_imm = p2_top_imm
+
+    stored_p1_bot_mar = p1_bot_mar
+    stored_p1_bot_ban = p1_bot_ban
+    stored_p1_bot_imm = p1_bot_imm
+    
+    stored_p2_bot_mar = p2_bot_mar
+    stored_p2_bot_ban = p2_bot_ban
+    stored_p2_bot_imm = p2_bot_imm
+
+    stored_p1_min = p1_min
+    stored_p1_pyl = p1_pyl
+    stored_p2_pyl = p2_pyl
+
+}
+
+
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
     rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;

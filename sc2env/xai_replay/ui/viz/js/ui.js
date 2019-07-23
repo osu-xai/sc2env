@@ -358,24 +358,26 @@ function sizeNonGeneratedElements() {
 
 	$("#p1_top").css("position", "absolute");
 	$("#p1_top").css("top", "2%");
-	$("#p1_top").css("left", "8%");
+	$("#p1_top").css("left", "2.75%");
 
 
 	$("#p2_top").css("position", "absolute");
 	$("#p2_top").css("top", "2%");
-	$("#p2_top").css("left", "85%");
+	$("#p2_top").css("left", "87.5%");
 
 
 	$("#p1_bottom").css("position", "absolute");
-	$("#p1_bottom").css("top", "57%");
-	$("#p1_bottom").css("left", "8%");
+	$("#p1_bottom").css("top", "88%");
+	$("#p1_bottom").css("left", "2.7%");
 
 
 	$("#p2_bottom").css("position", "absolute");
-	$("#p2_bottom").css("top", "57%");
-	$("#p2_bottom").css("left", "85%");
+	$("#p2_bottom").css("top", "88%");
+	$("#p2_bottom").css("left", "87.5%");
 
 
+	$('.unit-value-panels').css('font-size', "13px")
+	$('.unit-value-panels').css('font-family', "Arial")
 
 	
 	$('#unit-value-panels-toggle').css('float', "left")
@@ -390,9 +392,13 @@ function sizeNonGeneratedElements() {
 		console.log("you clicked on the toggle")
 		if ($('.unit-value-panels').css('display') == 'none'){
 			$('.unit-value-panels').css('display', "block")
+			$("#lane-neutral-information-container").css("display", "block")
+
 		}
 		else{
 			$('.unit-value-panels').css('display', "none")
+			$("#lane-neutral-information-container").css("display", "none")
+
 		}
 	});
 
@@ -420,6 +426,20 @@ function sizeNonGeneratedElements() {
 	$("#explanation-control-panel").css("left", "5%");
 	$("#explanation-control-panel").css("right", "5%");
 	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
+	
+	$("#lane-neutral-information-container").css("top", "45.5%")
+	$("#lane-neutral-information-container").css("float", "left")
+	$("#lane-neutral-information-container").css("left", "1%")
+	$("#lane-neutral-information-container").css("font-family", "Arial")
+	$("#lane-neutral-information-container").css("font-size", "13px")
+	$("#lane-neutral-information-container").css("position", "absolute")
+	$("#lane-neutral-information-container").css("color", "white");
+	$("#lane-neutral-information-container").css("background-color", "Navy");
+	$("#lane-neutral-information-container").css("border", "2px solid blue");
+	$("#lane-neutral-information-container").css("border-radius", "2px");
+	$("#lane-neutral-information-container").css("padding", "5px");
+	$("#lane-neutral-information-container").css("display", "none")
+
 
 	
 
