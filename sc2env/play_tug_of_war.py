@@ -111,8 +111,11 @@ def main():
         run_task_mbts(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     elif args.task == 'task_2p_2l':
         run_task_2p_2l(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+<<<<<<< HEAD
+=======
     elif args.task == 'task_2p_2l_grid':
         run_task_2p_2l_grid(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+>>>>>>> origin
     else:
         run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     return 0
