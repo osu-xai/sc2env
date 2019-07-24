@@ -277,6 +277,11 @@ function expressUnitValues(frameInfo){
             if (frameInfo.units[i].unit_type == 60){
                 p1_pyl++
             }
+            if (frameInfo.units[i].unit_type == 45){
+                if (frameInfo.units[i].shield == 4){
+                    p1_min = frameInfo.units[i].health - 1
+                }
+            }
         }
         else{
             if (frameInfo.units[i].y > 32){
@@ -304,6 +309,7 @@ function expressUnitValues(frameInfo){
             if (frameInfo.units[i].unit_type == 60){
                 p2_pyl++
             }
+
         }
     }
 
@@ -327,6 +333,9 @@ function expressUnitValues(frameInfo){
 
     document.getElementById("p1_pylon").innerHTML = "Player 1 Pylons: " + p1_pyl + "  (+" + (p1_pyl-stored_p1_pyl) + ")"
     document.getElementById("p2_pylon").innerHTML = "Player 2 Pylons: " + p2_pyl + "  (+" + (p2_pyl-stored_p2_pyl) + ")"
+    document.getElementById("p2_pylon").innerHTML = "Player 1 Minerals: " + p1_min + "  (+" + (p1_min-stored_p1_min) + ")"
+
+
 
     stored_p1_top_mar = p1_top_mar
     stored_p1_top_ban = p1_top_ban
