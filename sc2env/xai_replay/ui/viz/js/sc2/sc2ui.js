@@ -51,7 +51,7 @@ var gameContainerWidth = sc2GameRenderWidth + 520;
 var playInterval = 400;
 var framesPerSecond = 25;
 var recorderCaptureInterval = 8;
-var videoPlaybackRate = 4 / recorderCaptureInterval;
+var videoPlaybackRate = 1.5 / recorderCaptureInterval;
 var relativeReplayDir = "./replays";
 var activeSC2UIManager = undefined;
 
@@ -61,6 +61,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.videoFilepath = getVideoFilepath(filenameRoot);
     uim.jumped = false;
     createVideoElement(uim.videoFilepath);
+    toggleOnUIElements()
 
     uim.renderTooltipsForCurrentStep = function() {
         clearGameBoard();
@@ -131,17 +132,22 @@ function createVideoElement(path){
 	
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
-        
         var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
+        console.log("frame Number: " + frameNumber)
         activeSC2UIManager.expressFrameInfo(frameNumber);
+        video.currentTime = 1/framesPerSecond + video.currentTime
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
 	configureGameboardCanvas();
 	video.load();	
     video.playbackRate = videoPlaybackRate;
     video.currentTime = trimBy / framesPerSecond
-    $('#unit-value-panels-toggle').css('display', "block")
 
+}
+
+function toggleOnUIElements(){
+    $('#unit-value-panels-toggle').css('display', "block")
+    
 }
 
 function getTooltipColorRGBAForUnit(unitInfo){

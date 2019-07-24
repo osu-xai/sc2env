@@ -97,7 +97,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 	}
 	
 	sim.getProgressBarValue = function() {
-		var value = Math.floor((this.replaySequencerIndex / this.replaySequencerMaxIndex ) * 100);
+		var value = ((this.replaySequencerIndex / this.replaySequencerMaxIndex ) * 100);
 		//console.log('progress value to paint: ' + value);
 		return value;
 	}

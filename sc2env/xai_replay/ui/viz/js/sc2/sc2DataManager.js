@@ -153,24 +153,24 @@ function validateFrameInfos(frameInfos){//SC2_TODO_DEFER implement this
     return undefined;
 }
 
-function convertSC2QValuesToJSChart(frameInfo){
-    var chart = {};
-    chart.title = "CHART TITLE";
-    chart.v_title = "VERTICAL AXIS"
-    chart.h_title = "HORIZONTAL AXIS";
-    chart.actions = [];
-    var qValues = frameInfo["q_values"];
-    var step = frameInfo["frame_number"];
-    var actionAttackQ1 = collectActionInfo(step, "Attack Q1", qValues["Top_Right"]);
-    var actionAttackQ2 = collectActionInfo(step, "Attack Q2", qValues["Top_Left"]);
-    var actionAttackQ3 = collectActionInfo(step, "Attack Q3", qValues["Bottom_Left"]);
-    var actionAttackQ4 = collectActionInfo(step, "Attack Q4", qValues["Bottom_Right"]);
-    chart.actions.push(actionAttackQ1);
-    chart.actions.push(actionAttackQ2);
-    chart.actions.push(actionAttackQ3);
-    chart.actions.push(actionAttackQ4);
-    return chart;
-}
+// function convertSC2QValuesToJSChart(frameInfo){
+//     var chart = {};
+//     chart.title = "CHART TITLE";
+//     chart.v_title = "VERTICAL AXIS"
+//     chart.h_title = "HORIZONTAL AXIS";
+//     chart.actions = [];
+//     var qValues = frameInfo["q_values"];
+//     var step = frameInfo["frame_number"];
+//     var actionAttackQ1 = collectActionInfo(step, "Attack Q1", qValues["Top_Right"]);
+//     var actionAttackQ2 = collectActionInfo(step, "Attack Q2", qValues["Top_Left"]);
+//     var actionAttackQ3 = collectActionInfo(step, "Attack Q3", qValues["Bottom_Left"]);
+//     var actionAttackQ4 = collectActionInfo(step, "Attack Q4", qValues["Bottom_Right"]);
+//     chart.actions.push(actionAttackQ1);
+//     chart.actions.push(actionAttackQ2);
+//     chart.actions.push(actionAttackQ3);
+//     chart.actions.push(actionAttackQ4);
+//     return chart;
+// }
 
 function averageValuesInDictionary(actionValues){//SC2_TEST
     var values = Object.values(actionValues);

@@ -6,7 +6,9 @@ var activeStudyQuestionManager = undefined;
 //SC2_DEFERRED var stateMonitor = undefined;
 //SC2_DEFERRED var userActionMonitor = undefined;
 var treatmentID = undefined;
-
+var previousFrameUnitCounts = {}
+var currentFrameUnitCounts = {}
+var currentFriendlyMineralHealth = 0
 // Since studyMode is controlled at front end, backend is unaware which mode and will always send 
 // questions if it finds them.  So, we need to check userStudyMode here.
 function handleStudyQuestions(studyQuestions){ //SC2_OK
@@ -208,154 +210,159 @@ function userStudyAdjustmentsForFrameChange(){
 }
 var totalsString = "total score";
 
+function incrementUnitCount(dict, key){
+    dict[key] = dict[key] + 1
+}
+
+function getUnitLane(basicUnitYPos){
+    var lane = "bottom"
+    if (basicUnitYPos > 32){
+        lane = "top"
+    }
+    return lane
+}
+
+function getKey(alliance, unitType, basicUnitYPos){
+    var key = allianceNameForValue[alliance] + "." + unitNamesForType[unitType] + "." + getUnitLane(basicUnitYPos)
+    return key
+}
+function updateUnitCounts(basicUnit){
+    var key = getKey(basicUnit.alliance, basicUnit.unit_type, basicUnit.y)
+    incrementUnitCount(currentFrameUnitCounts, key)
+}
+
+function setMineralHealth(recorderUnit){
+    var mineralHealthSheildValue = 4
+    if (recorderUnit.shield == mineralHealthSheildValue){
+        currentFriendlyMineralHealth = recorderUnit.health - 1
+     }
+}
+
+function updatePylonCounts(pylonUnit){
+    var key = allianceNameForValue[pylonUnit.alliance] + "." + unitNamesForType[pylonUnit.unit_type]
+    currentFrameUnitCounts = fillUnitValueDictionary(currentFrameUnitCounts, key)
+}
+
+function initUnitCounts(unitCountsDict){
+    unitCountsDict["friendly.marineBuilding.top"] = 0
+    unitCountsDict["friendly.banelingBuilding.top"] = 0
+    unitCountsDict["friendly.immortalBuilding.top"] = 0
+
+    unitCountsDict["friendly.marineBuilding.bottom"] = 0
+    unitCountsDict["friendly.banelingBuilding.bottom"] = 0
+    unitCountsDict["friendly.immortalBuilding.bottom"] = 0
+
+    unitCountsDict["enemy.marineBuilding.top"] = 0
+    unitCountsDict["enemy.banelingBuilding.top"] = 0
+    unitCountsDict["enemy.immortalBuilding.top"] = 0
+
+    unitCountsDict["enemy.marineBuilding.bottom"] = 0
+    unitCountsDict["enemy.banelingBuilding.bottom"] = 0
+    unitCountsDict["enemy.immortalBuilding.bottom"] = 0
+
+    currentFrameUnitCounts["friendly.Pylon"] = 0
+    unitCountsDict["enemy.Pylon"] = 0
+
+}
 
 function expressUnitValues(frameInfo){
-    p1_top_mar = 0
-    p1_top_ban = 0
-    p1_top_imm = 0
+    var recorderUnit = 45
+    var pylonUnit = 60
 
-    p2_top_mar = 0
-    p2_top_ban = 0
-    p2_top_imm = 0
+    previousFrameUnitCounts = currentFrameUnitCounts
+    currentFrameUnitCounts = {}
+    initUnitCounts(currentFrameUnitCounts)
 
-    p1_bot_mar = 0
-    p1_bot_ban = 0
-    p1_bot_imm = 0
-    
-    p2_bot_mar = 0
-    p2_bot_ban = 0
-    p2_bot_imm = 0
-
-    p1_min = 0
-    p1_pyl = 0
-    p2_pyl = 0
-
-    stored_p1_top_mar = 0
-    stored_p1_top_ban = 0
-    stored_p1_top_imm = 0
-
-    stored_p2_top_mar = 0
-    stored_p2_top_ban = 0
-    stored_p2_top_imm = 0
-
-    stored_p1_bot_mar = 0
-    stored_p1_bot_ban = 0
-    stored_p1_bot_imm = 0
-    
-    stored_p2_bot_mar = 0
-    stored_p2_bot_ban = 0
-    stored_p2_bot_imm = 0
-
-    stored_p1_min = 0
-    stored_p1_pyl = 0
-    stored_p2_pyl = 0
     for (var i in frameInfo.units){
-        
-        if (frameInfo.units[i].alliance == 1){
-            if (frameInfo.units[i].y > 32){
-                if (frameInfo.units[i].unit_type == 21){
-                    p1_top_mar++
-                }
-                else if(frameInfo.units[i].unit_type == 28){
-                    p1_top_ban++
-                }
-                else if(frameInfo.units[i].unit_type == 70){
-                    p1_top_imm++
-                }
-            }
-            else{
-                if (frameInfo.units[i].unit_type == 21){
-                    p1_bot_mar++
-                }
-                else if(frameInfo.units[i].unit_type == 28){
-                    p1_bot_ban++
-                }
-                else if(frameInfo.units[i].unit_type == 70){
-                    p1_bot_imm++
-                }
-            }
-            if (frameInfo.units[i].unit_type == 60){
-                p1_pyl++
-            }
-            if (frameInfo.units[i].unit_type == 45){
-                if (frameInfo.units[i].shield == 4){
-                    p1_min = frameInfo.units[i].health - 1
-                }
-            }
+        var unit = frameInfo.units[i]
+        if (unit.unit_type == recorderUnit){
+            setMineralHealth(unit)
+        }
+        else if (unit.unit_type == pylonUnit){
+            updatePylonCounts(unit)
         }
         else{
-            if (frameInfo.units[i].y > 32){
-                if (frameInfo.units[i].unit_type == 21){
-                    p2_top_mar++
-                }
-                else if(frameInfo.units[i].unit_type == 28){
-                    p2_top_ban++
-                }
-                else if(frameInfo.units[i].unit_type == 70){
-                    p2_top_imm++
-                }
-            }
-            else{
-                if (frameInfo.units[i].unit_type == 21){
-                    p2_bot_mar++
-                }
-                else if(frameInfo.units[i].unit_type == 28){
-                    p2_bot_ban++
-                }
-                else if(frameInfo.units[i].unit_type == 70){
-                    p2_bot_imm++
-                }
-            }
-            if (frameInfo.units[i].unit_type == 60){
-                p2_pyl++
-            }
-
+            updateUnitCounts(unit)
         }
     }
+    renderUnitValues(frameInfo)
 
+}
+var allianceNameForValue = {
+    1 : "friendly",
+    4 : "enemy"
+}
 
+var unitNamesForType = {
+        21 : "marineBuilding", //'Barracks'
+        28 : "banelingBuilding", // 'Starport'
+        70 : "immortalBuilding", // 'RoboticsFacility'
+        60 : 'Pylon',
+        59 : 'Nexus',
+        48 : 'Marine',
+        9 : 'Baneling',
+        83 : 'Immortal'
+    }
 
-    document.getElementById("p1_top_marine").innerHTML = "Marine: " + p1_top_mar + "    (+" + (p1_top_mar-stored_p1_top_mar) + ")"
-    document.getElementById("p1_top_baneling").innerHTML = "Baneling: " + p1_top_ban + "    (+" + (p1_top_ban-stored_p1_top_ban) + ")"
-    document.getElementById("p1_top_immortal").innerHTML = "Immortal: " + p1_top_imm + "    (+" + (p1_top_imm-stored_p1_top_imm) + ")"
+var lastDecisionPoint = 0;
+function renderUnitValues(frameInfo){
+    console.log("HERE  "+frameInfo.frame_number)
+    if (frameInfo.frame_info_type == "decision_point"){
+        lastDecisionPoint = frameInfo.frame_number
+        console.log("frame is dp")
+        document.getElementById("p1_top_marine_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.marineBuilding.top"] + ")"
+        document.getElementById("p1_top_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.banelingBuilding.top"] + ")"
+        document.getElementById("p1_top_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.immortalBuilding.top"] + ")"
+        document.getElementById("p1_bottom_marine_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.marineBuilding.bottom"] + ")"
+        document.getElementById("p1_bottom_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.banelingBuilding.bottom"] + ")"
+        document.getElementById("p1_bottom_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.immortalBuilding.bottom"] + ")"
+        document.getElementById("p2_top_marine_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.marineBuilding.top"] + ")"
+        document.getElementById("p2_top_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.banelingBuilding.top"] + ")"
+        document.getElementById("p2_top_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.immortalBuilding.top"] + ")"
+        document.getElementById("p2_bottom_marine_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.marineBuilding.bottom"] + ")"
+        document.getElementById("p2_bottom_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.banelingBuilding.bottom"] + ")"
+        document.getElementById("p2_bottom_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.immortalBuilding.bottom"] + ")"
+        document.getElementById("p2_pylon_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.Pylon"] + ")"
+        document.getElementById("p1_pylon_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.Pylon"] + ")"
+    }
+    if (frameInfo.frame_number < (lastDecisionPoint + 20)){
+        $('.unit-additive-value').css('display', "inline")
+        $('.unit-additive-value').css('color', "green")
+    }
+    else{
+        $('.unit-additive-value').css('display', "none")
+    }
 
-    document.getElementById("p1_bottom_marine").innerHTML = "Marine: " + p1_bot_mar + " (+" + (p1_bot_mar-stored_p1_bot_mar) + ")"
-    document.getElementById("p1_bottom_baneling").innerHTML = "Baneling: " + p1_bot_ban + " (+" + (p1_bot_ban-stored_p1_bot_ban) + ")"
-    document.getElementById("p1_bottom_immortal").innerHTML = "Immortal: " + p1_bot_imm + " (+" + (p1_bot_imm-stored_p1_bot_imm) + ")"
+    document.getElementById("p1_top_marine").innerHTML = "Marine: " + currentFrameUnitCounts["friendly.marineBuilding.top"]
 
-    document.getElementById("p2_top_marine").innerHTML = "Marine: " + p2_top_mar + "    (+" + (p2_top_mar-stored_p2_top_mar) + ")"
-    document.getElementById("p2_top_baneling").innerHTML = "Baneling: " + p2_top_ban + "    (+" + (p2_top_ban-stored_p2_top_ban) + ")"
-    document.getElementById("p2_top_immortal").innerHTML = "Immortal: " + p2_top_imm + "    (+" + (p1_top_imm-stored_p1_top_imm) + ")"
+    document.getElementById("p1_top_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["friendly.banelingBuilding.top"]
 
-    document.getElementById("p2_bottom_marine").innerHTML = "Marine: " + p2_bot_mar + " (+" + (p2_bot_mar-stored_p2_bot_mar) + ")"
-    document.getElementById("p2_bottom_baneling").innerHTML = "Baneling: " + p2_bot_ban + " (+" + (p2_bot_ban-stored_p2_bot_ban) + ")"
-    document.getElementById("p2_bottom_immortal").innerHTML = "Immortal: " + p2_bot_imm + " (+" + (p2_bot_imm-stored_p2_bot_imm) + ")"
+    document.getElementById("p1_top_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["friendly.immortalBuilding.top"]
 
-    document.getElementById("p1_pylon").innerHTML = "Player 1 Pylons: " + p1_pyl + "  (+" + (p1_pyl-stored_p1_pyl) + ")"
-    document.getElementById("p2_pylon").innerHTML = "Player 2 Pylons: " + p2_pyl + "  (+" + (p2_pyl-stored_p2_pyl) + ")"
-    document.getElementById("p2_pylon").innerHTML = "Player 1 Minerals: " + p1_min + "  (+" + (p1_min-stored_p1_min) + ")"
+    document.getElementById("p1_bottom_marine").innerHTML = "Marine: " + currentFrameUnitCounts["friendly.marineBuilding.bottom"]
 
+    document.getElementById("p1_bottom_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["friendly.banelingBuilding.bottom"]
 
-
-    stored_p1_top_mar = p1_top_mar
-    stored_p1_top_ban = p1_top_ban
-    stored_p1_top_imm = p1_top_imm
-
-    stored_p2_top_mar = p2_top_mar
-    stored_p2_top_ban = p2_top_ban
-    stored_p2_top_imm = p2_top_imm
-
-    stored_p1_bot_mar = p1_bot_mar
-    stored_p1_bot_ban = p1_bot_ban
-    stored_p1_bot_imm = p1_bot_imm
+    document.getElementById("p1_bottom_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["friendly.immortalBuilding.bottom"]
     
-    stored_p2_bot_mar = p2_bot_mar
-    stored_p2_bot_ban = p2_bot_ban
-    stored_p2_bot_imm = p2_bot_imm
+    document.getElementById("p2_top_marine").innerHTML = "Marine: " + currentFrameUnitCounts["enemy.marineBuilding.top"]
 
-    stored_p1_min = p1_min
-    stored_p1_pyl = p1_pyl
-    stored_p2_pyl = p2_pyl
+    document.getElementById("p2_top_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["enemy.banelingBuilding.top"]
+
+    document.getElementById("p2_top_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["enemy.immortalBuilding.top"]
+
+    document.getElementById("p2_bottom_marine").innerHTML = "Marine: " + currentFrameUnitCounts["enemy.marineBuilding.bottom"]
+
+    document.getElementById("p2_bottom_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["enemy.banelingBuilding.bottom"]
+
+    document.getElementById("p2_bottom_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["enemy.immortalBuilding.bottom"]
+
+    document.getElementById("p1_pylon").innerHTML = "Pylons: " + currentFrameUnitCounts["friendly.Pylon"]
+
+    document.getElementById("p2_pylon").innerHTML = "Pylons: " + currentFrameUnitCounts["enemy.Pylon"]
+
+    document.getElementById("p1_mineral").innerHTML = "Minerals: " + currentFriendlyMineralHealth
+    
 
 }
 

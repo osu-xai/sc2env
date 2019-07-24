@@ -327,6 +327,7 @@ function sizeNonGeneratedElements() {
 	$("#p1_top").css("padding", "5px");
 
 
+
 	$("#p2_top").css("display", "none");
 	$("#p2_top").css("z-index", "50");
 	$("#p2_top").css("color", "white");
@@ -391,13 +392,10 @@ function sizeNonGeneratedElements() {
 	toggle_units.addEventListener('click', function(event){
 		console.log("you clicked on the toggle")
 		if ($('.unit-value-panels').css('display') == 'none'){
-			$('.unit-value-panels').css('display', "block")
-			$("#lane-neutral-information-container").css("display", "block")
-
+			$('.unit-value-panels').css('display', "inline-block")
 		}
 		else{
 			$('.unit-value-panels').css('display', "none")
-			$("#lane-neutral-information-container").css("display", "none")
 
 		}
 	});
@@ -427,21 +425,43 @@ function sizeNonGeneratedElements() {
 	$("#explanation-control-panel").css("right", "5%");
 	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
 	
-	$("#lane-neutral-information-container").css("top", "45.5%")
-	$("#lane-neutral-information-container").css("float", "left")
-	$("#lane-neutral-information-container").css("left", "1%")
-	$("#lane-neutral-information-container").css("font-family", "Arial")
-	$("#lane-neutral-information-container").css("font-size", "13px")
-	$("#lane-neutral-information-container").css("position", "absolute")
-	$("#lane-neutral-information-container").css("color", "white");
-	$("#lane-neutral-information-container").css("background-color", "Navy");
-	$("#lane-neutral-information-container").css("border", "2px solid blue");
-	$("#lane-neutral-information-container").css("border-radius", "2px");
-	$("#lane-neutral-information-container").css("padding", "5px");
-	$("#lane-neutral-information-container").css("display", "none")
 
+	$("#friendly-title").css("font-size", "18px")
+	$("#enemy-title").css("font-size", "18px")
+
+	$("#p1_mineral").css("font-size", "14px")
+
+
+
+	$("#p1_pylon").css("font-size", "14px")
+
+
+
+	$("#p2_pylon").css("font-size", "14px")
+
+
+	$("#friendly-lane-neutral-container").css("color", "white");
+	$("#friendly-lane-neutral-container").css("background-color", "Navy");
+	$("#friendly-lane-neutral-container").css("border", "2px solid blue");
+	$("#friendly-lane-neutral-container").css("border-radius", "2px");
+	$("#friendly-lane-neutral-container").css("padding", "5px");
+	$("#friendly-lane-neutral-container").css("float", "left");
+	$("#friendly-lane-neutral-container").css("width", "41%");
+	$("#friendly-lane-neutral-container").css("height", "25px");
 
 	
+	$(".lane-neutral-info").css("font-family", "Arial")
+	$(".lane-neutral-info").css("top", "");
+
+	$("#enemy-lane-neutral-container").css("font-size", "13px")
+	$("#enemy-lane-neutral-container").css("color", "white");
+	$("#enemy-lane-neutral-container").css("background-color", "Navy");
+	$("#enemy-lane-neutral-container").css("border", "2px solid blue");
+	$("#enemy-lane-neutral-container").css("border-radius", "2px");
+	$("#enemy-lane-neutral-container").css("padding", "5px");
+	$("#enemy-lane-neutral-container").css("width", "41%");
+	$("#enemy-lane-neutral-container").css("height", "25px");
+
 
 
 }
