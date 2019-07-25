@@ -134,28 +134,28 @@ class TugOfWar():
         self.reset_steps = -1
         self.mineral_limiation = 1500
         self.norm_vector = np.array([700,           # Player 1 unspent minerals
-                                    50, 40, 20,     # Player 1 top lane building
-                                    50, 40, 20,     # Player 1 bottom lane building
+                                    30, 30, 10,     # Player 1 top lane building
+                                    30, 30, 10,     # Player 1 bottom lane building
                                     3,              # Player 1 pylons
-                                    50, 40, 20,     # Player 2 top lane building
-                                    50, 40, 20,     # Player 2 bottom lane building
+                                    30, 30, 10,     # Player 2 top lane building
+                                    30, 30, 10,     # Player 2 bottom lane building
                                     3,              # Player 2 pylons
-                                    50, 40, 20,     # Player 1 units top lane grid 1
-                                    50, 40, 20,     # Player 1 units top lane grid 2 
-                                    50, 40, 20,     # Player 1 units top lane grid 3
-                                    50, 40, 20,     # Player 1 units top lane grid 4
-                                    50, 40, 20,     # Player 1 units bottom lane grid 1
-                                    50, 40, 20,     # Player 1 units bottom lane grid 2 
-                                    50, 40, 20,     # Player 1 units bottom lane grid 3
-                                    50, 40, 20,     # Player 1 units bottom lane grid 4
-                                    50, 40, 20,     # Player 2 units top lane grid 1
-                                    50, 40, 20,     # Player 2 units top lane grid 2 
-                                    50, 40, 20,     # Player 2 units top lane grid 3
-                                    50, 40, 20,     # Player 2 units top lane grid 4
-                                    50, 40, 20,     # Player 2 units bottom lane grid 1
-                                    50, 40, 20,     # Player 2 units bottom lane grid 2 
-                                    50, 40, 20,     # Player 2 units bottom lane grid 3
-                                    50, 40, 20,     # Player 2 units bottom lane grid 4
+                                    30, 30, 10,     # Player 1 units top lane grid 1
+                                    30, 30, 10,     # Player 1 units top lane grid 2 
+                                    30, 30, 10,     # Player 1 units top lane grid 3
+                                    30, 30, 10,     # Player 1 units top lane grid 4
+                                    30, 30, 10,     # Player 1 units bottom lane grid 1
+                                    30, 30, 10,     # Player 1 units bottom lane grid 2 
+                                    30, 30, 10,     # Player 1 units bottom lane grid 3
+                                    30, 30, 10,     # Player 1 units bottom lane grid 4
+                                    30, 30, 10,     # Player 2 units top lane grid 1
+                                    30, 30, 10,     # Player 2 units top lane grid 2 
+                                    30, 30, 10,     # Player 2 units top lane grid 3
+                                    30, 30, 10,     # Player 2 units top lane grid 4
+                                    30, 30, 10,     # Player 2 units bottom lane grid 1
+                                    30, 30, 10,     # Player 2 units bottom lane grid 2 
+                                    30, 30, 10,     # Player 2 units bottom lane grid 3
+                                    30, 30, 10,     # Player 2 units bottom lane grid 4
                                     2000, 2000,     # Player 1 Nexus HP (top, bottom)
                                     2000, 2000,     # Player 2 Nexus HP (top, bottom)
                                     40])              # Wave Number
@@ -427,8 +427,10 @@ class TugOfWar():
             if entry.unit_type in unit_types_player1:
                 if entry.alliance == 1: # 1: Self, 4: Enemy
                     unit_types = utp_1
+                    
                 elif entry.alliance == 4:
                     unit_types = utp_2
+                    
                 else:
                     print("ERROR!! Alliance not recognized")
 
@@ -447,16 +449,28 @@ class TugOfWar():
                 #units on field
                 elif unit_types[entry.unit_type] >= 15 and unit_types[entry.unit_type] <= 62:
                     # Grid
-                    if entry.pos.x >= 0 and entry.pos.x <= 45.5:
-                        grid_index = 0
-                    elif entry.pos.x > 45.5 and entry.pos.x <= 64:
-                        grid_index = 1
-                    elif entry.pos.x > 64 and entry.pos.x < 82.5:
-                        grid_index = 2
-                    elif entry.pos.x >= 82.5 and entry.pos.x <= 128:
-                        grid_index = 3
+                    if player == 1:
+                        if entry.pos.x >= 0 and entry.pos.x <= 45.5:
+                            grid_index = 0
+                        elif entry.pos.x > 45.5 and entry.pos.x <= 64:
+                            grid_index = 1
+                        elif entry.pos.x > 64 and entry.pos.x < 82.5:
+                            grid_index = 2
+                        elif entry.pos.x >= 82.5 and entry.pos.x <= 128:
+                            grid_index = 3
+                        else:
+                            print("ERROR!!! Unit recorded is somehow out of range of the map")
                     else:
-                        print("ERROR!!! Unit recorded is somehow out of range of the map")
+                        if entry.pos.x >= 0 and entry.pos.x <= 45.5:
+                            grid_index = 3
+                        elif entry.pos.x > 45.5 and entry.pos.x <= 64:
+                            grid_index = 2
+                        elif entry.pos.x > 64 and entry.pos.x < 82.5:
+                            grid_index = 1
+                        elif entry.pos.x >= 82.5 and entry.pos.x <= 128:
+                            grid_index = 0
+                        else:
+                            print("ERROR!!! Unit recorded is somehow out of range of the map")
                     
                     if bottom_entry == True:
                         adjust = (12 + (3 * grid_index))
