@@ -229,6 +229,9 @@ function getKey(alliance, unitType, basicUnitYPos){
 function updateUnitCounts(basicUnit){
     var key = getKey(basicUnit.alliance, basicUnit.unit_type, basicUnit.y)
     incrementUnitCount(currentFrameUnitCounts, key)
+    if(key == "friendly.marineBuilding.top"){
+        console.log("found marine!")
+    }
 }
 
 function setMineralHealth(recorderUnit){
@@ -260,19 +263,53 @@ function initUnitCounts(unitCountsDict){
     unitCountsDict["enemy.banelingBuilding.bottom"] = 0
     unitCountsDict["enemy.immortalBuilding.bottom"] = 0
 
-    currentFrameUnitCounts["friendly.Pylon"] = 0
+    unitCountsDict["friendly.Pylon"] = 0
     unitCountsDict["enemy.Pylon"] = 0
 
 }
 
-function expressUnitValues(frameInfo){
+function copyFrameUnitCountsDict(){
+    previousFrameUnitCounts["friendly.marineBuilding.top"] = currentFrameUnitCounts["friendly.marineBuilding.top"]
+    previousFrameUnitCounts["friendly.banelingBuilding.top"] = currentFrameUnitCounts["friendly.banelingBuilding.top"]
+    previousFrameUnitCounts["friendly.immortalBuilding.top"] = currentFrameUnitCounts["friendly.immortalBuilding.top"]
+
+    previousFrameUnitCounts["friendly.marineBuilding.bottom"] = currentFrameUnitCounts["friendly.marineBuilding.bottom"]
+    previousFrameUnitCounts["friendly.banelingBuilding.bottom"] = currentFrameUnitCounts["friendly.banelingBuilding.bottom"]
+    previousFrameUnitCounts["friendly.immortalBuilding.bottom"] = currentFrameUnitCounts["friendly.immortalBuilding.bottom"]
+
+    previousFrameUnitCounts["enemy.marineBuilding.top"] = currentFrameUnitCounts["enemy.marineBuilding.top"]
+    previousFrameUnitCounts["enemy.banelingBuilding.top"] = currentFrameUnitCounts["enemy.banelingBuilding.top"]
+    previousFrameUnitCounts["enemy.immortalBuilding.top"] = currentFrameUnitCounts["enemy.immortalBuilding.top"]
+
+    previousFrameUnitCounts["enemy.marineBuilding.bottom"] = currentFrameUnitCounts["enemy.marineBuilding.bottom"]
+    previousFrameUnitCounts["enemy.banelingBuilding.bottom"] = currentFrameUnitCounts["enemy.banelingBuilding.bottom"]
+    previousFrameUnitCounts["enemy.immortalBuilding.bottom"] = currentFrameUnitCounts["enemy.immortalBuilding.bottom"]
+
+    previousFrameUnitCounts["friendly.Pylon"] = currentFrameUnitCounts["friendly.Pylon"]
+    previousFrameUnitCounts["enemy.Pylon"] = currentFrameUnitCounts["enemy.Pylon"]
+}
+
+initUnitCounts(currentFrameUnitCounts)
+initUnitCounts(previousFrameUnitCounts)
+console.log("global init called")
+
+function computeUnitValues(frameInfo){
     var recorderUnit = 45
     var pylonUnit = 60
+    var 
+    for (dpIndex in video)
+    if (haveJumped){
+        if (videoDecisionPoints[dpIndex] == frameInfo.frame_number){
+            copyFrameUnitCountsDict()
+        }
+    }
+    else{
+        if (videoDecisionPoints[dpIndex]+5 <= frameInfo.frame_number && frameInfo.frame_number < videoDecisionPoints[i] + 12){
+            copyFrameUnitCountsDict()
+        }
+    }
 
-    previousFrameUnitCounts = currentFrameUnitCounts
-    currentFrameUnitCounts = {}
     initUnitCounts(currentFrameUnitCounts)
-
     for (var i in frameInfo.units){
         var unit = frameInfo.units[i]
         if (unit.unit_type == recorderUnit){
@@ -285,9 +322,10 @@ function expressUnitValues(frameInfo){
             updateUnitCounts(unit)
         }
     }
-    renderUnitValues(frameInfo)
-
+    renderUnitValues(frameInfo);
 }
+
+
 var allianceNameForValue = {
     1 : "friendly",
     4 : "enemy"
@@ -304,65 +342,82 @@ var unitNamesForType = {
         83 : 'Immortal'
     }
 
-var lastDecisionPoint = 0;
-function renderUnitValues(frameInfo){
-    console.log("HERE  "+frameInfo.frame_number)
-    if (frameInfo.frame_info_type == "decision_point"){
-        lastDecisionPoint = frameInfo.frame_number
-        console.log("frame is dp")
-        document.getElementById("p1_top_marine_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.marineBuilding.top"] + ")"
-        document.getElementById("p1_top_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.banelingBuilding.top"] + ")"
-        document.getElementById("p1_top_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.immortalBuilding.top"] + ")"
-        document.getElementById("p1_bottom_marine_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.marineBuilding.bottom"] + ")"
-        document.getElementById("p1_bottom_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.banelingBuilding.bottom"] + ")"
-        document.getElementById("p1_bottom_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.immortalBuilding.bottom"] + ")"
-        document.getElementById("p2_top_marine_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.marineBuilding.top"] + ")"
-        document.getElementById("p2_top_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.banelingBuilding.top"] + ")"
-        document.getElementById("p2_top_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.immortalBuilding.top"] + ")"
-        document.getElementById("p2_bottom_marine_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.marineBuilding.bottom"] + ")"
-        document.getElementById("p2_bottom_baneling_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.banelingBuilding.bottom"] + ")"
-        document.getElementById("p2_bottom_immortal_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.immortalBuilding.bottom"] + ")"
-        document.getElementById("p2_pylon_add").innerHTML = "(+" + previousFrameUnitCounts["enemy.Pylon"] + ")"
-        document.getElementById("p1_pylon_add").innerHTML = "(+" + previousFrameUnitCounts["friendly.Pylon"] + ")"
+var videoDecisionPoints = []
+function collectDecisionPoints(frameInfos){
+    videoDecisionPoints = []
+    for (var i in frameInfos){
+        if (frameInfos[i].frame_info_type == "decision_point"){
+            console.log("DP at " + frameInfos[i].frame_number)
+            videoDecisionPoints.push(frameInfos[i].frame_number)
+        }
     }
-    if (frameInfo.frame_number < (lastDecisionPoint + 20)){
+}
+
+var framePastDecisionPoint = 0;
+function renderUnitValues(frameInfo){
+    for (i in videoDecisionPoints){
+        if (frameInfo.frame_number >= videoDecisionPoints[i]+4 && frameInfo.frame_number < videoDecisionPoints[i] + 12){
+            framePastDecisionPoint = frameInfo.frame_number
+            videoDecisionPoints.splice(i,1)
+            console.log("frame number in renderer" + frameInfo["frame_number"])
+            console.log("computed additive val: " + (currentFrameUnitCounts["friendly.marineBuilding.top"] - previousFrameUnitCounts["friendly.marineBuilding.top"]))
+            document.getElementById("p1_top_marine_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.marineBuilding.top"] - previousFrameUnitCounts["friendly.marineBuilding.top"]) + ")"
+            document.getElementById("p1_top_baneling_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.banelingBuilding.top"] - previousFrameUnitCounts["friendly.banelingBuilding.top"]) + ")"
+            document.getElementById("p1_top_immortal_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.immortalBuilding.top"]- previousFrameUnitCounts["friendly.immortalBuilding.top"]) + ")"
+            document.getElementById("p1_bottom_marine_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.marineBuilding.bottom"] - previousFrameUnitCounts["friendly.marineBuilding.bottom"]) + ")"
+            document.getElementById("p1_bottom_baneling_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.banelingBuilding.bottom"] - previousFrameUnitCounts["friendly.banelingBuilding.bottom"]) + ")"
+            document.getElementById("p1_bottom_immortal_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.immortalBuilding.bottom"] - previousFrameUnitCounts["friendly.immortalBuilding.bottom"]) + ")"
+            document.getElementById("p2_top_marine_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.marineBuilding.top"]- previousFrameUnitCounts["enemy.marineBuilding.top"]) + ")"
+            document.getElementById("p2_top_baneling_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.banelingBuilding.top"] - previousFrameUnitCounts["enemy.banelingBuilding.top"]) + ")"
+            document.getElementById("p2_top_immortal_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.immortalBuilding.top"] - previousFrameUnitCounts["enemy.immortalBuilding.top"]) + ")"
+            document.getElementById("p2_bottom_marine_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.marineBuilding.bottom"] - previousFrameUnitCounts["enemy.marineBuilding.bottom"]) + ")"
+            document.getElementById("p2_bottom_baneling_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.banelingBuilding.bottom"] - previousFrameUnitCounts["enemy.banelingBuilding.bottom"]) + ")"
+            document.getElementById("p2_bottom_immortal_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.immortalBuilding.bottom"] - previousFrameUnitCounts["enemy.immortalBuilding.bottom"]) + ")"
+            document.getElementById("p2_pylon_add").innerHTML = "(+" + (currentFrameUnitCounts["friendly.Pylon"] -previousFrameUnitCounts["enemy.Pylon"]) + ")"
+            document.getElementById("p1_pylon_add").innerHTML = "(+" + (currentFrameUnitCounts["enemy.Pylon"] - previousFrameUnitCounts["friendly.Pylon"]) + ")"
+            return;
+        }
+    }
+    if (frameInfo.frame_number < (framePastDecisionPoint + 40)){
         $('.unit-additive-value').css('display', "inline")
         $('.unit-additive-value').css('color', "green")
+        document.getElementById("p1_top_marine").innerHTML = "Marine: " + previousFrameUnitCounts["friendly.marineBuilding.top"]
+        document.getElementById("p1_top_baneling").innerHTML = "Baneling: " + previousFrameUnitCounts["friendly.banelingBuilding.top"]
+        document.getElementById("p1_top_immortal").innerHTML = "Immortal: " + previousFrameUnitCounts["friendly.immortalBuilding.top"]
+        document.getElementById("p1_bottom_marine").innerHTML = "Marine: " + previousFrameUnitCounts["friendly.marineBuilding.bottom"]
+        document.getElementById("p1_bottom_baneling").innerHTML = "Baneling: " + previousFrameUnitCounts["friendly.banelingBuilding.bottom"]
+        document.getElementById("p1_bottom_immortal").innerHTML = "Immortal: " + previousFrameUnitCounts["friendly.immortalBuilding.bottom"]
+        document.getElementById("p2_top_marine").innerHTML = "Marine: " + previousFrameUnitCounts["enemy.marineBuilding.top"]
+        document.getElementById("p2_top_baneling").innerHTML = "Baneling: " + previousFrameUnitCounts["enemy.banelingBuilding.top"]
+        document.getElementById("p2_top_immortal").innerHTML = "Immortal: " + previousFrameUnitCounts["enemy.immortalBuilding.top"]
+        document.getElementById("p2_bottom_marine").innerHTML = "Marine: " + previousFrameUnitCounts["enemy.marineBuilding.bottom"]
+        document.getElementById("p2_bottom_baneling").innerHTML = "Baneling: " + previousFrameUnitCounts["enemy.banelingBuilding.bottom"]
+        document.getElementById("p2_bottom_immortal").innerHTML = "Immortal: " + previousFrameUnitCounts["enemy.immortalBuilding.bottom"]
+        document.getElementById("p1_pylon").innerHTML = "Pylons: " + previousFrameUnitCounts["friendly.Pylon"]
+        document.getElementById("p2_pylon").innerHTML = "Pylons: " + previousFrameUnitCounts["enemy.Pylon"]
+        document.getElementById("p1_mineral").innerHTML = "Minerals: " + currentFriendlyMineralHealth
+        return;        
     }
-    else{
+    else if (frameInfo.frame_number >= (framePastDecisionPoint + 40)){
         $('.unit-additive-value').css('display', "none")
-    }
-
-    document.getElementById("p1_top_marine").innerHTML = "Marine: " + currentFrameUnitCounts["friendly.marineBuilding.top"]
-
-    document.getElementById("p1_top_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["friendly.banelingBuilding.top"]
-
-    document.getElementById("p1_top_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["friendly.immortalBuilding.top"]
-
-    document.getElementById("p1_bottom_marine").innerHTML = "Marine: " + currentFrameUnitCounts["friendly.marineBuilding.bottom"]
-
-    document.getElementById("p1_bottom_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["friendly.banelingBuilding.bottom"]
-
-    document.getElementById("p1_bottom_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["friendly.immortalBuilding.bottom"]
-    
-    document.getElementById("p2_top_marine").innerHTML = "Marine: " + currentFrameUnitCounts["enemy.marineBuilding.top"]
-
-    document.getElementById("p2_top_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["enemy.banelingBuilding.top"]
-
-    document.getElementById("p2_top_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["enemy.immortalBuilding.top"]
-
-    document.getElementById("p2_bottom_marine").innerHTML = "Marine: " + currentFrameUnitCounts["enemy.marineBuilding.bottom"]
-
-    document.getElementById("p2_bottom_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["enemy.banelingBuilding.bottom"]
-
-    document.getElementById("p2_bottom_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["enemy.immortalBuilding.bottom"]
-
-    document.getElementById("p1_pylon").innerHTML = "Pylons: " + currentFrameUnitCounts["friendly.Pylon"]
-
-    document.getElementById("p2_pylon").innerHTML = "Pylons: " + currentFrameUnitCounts["enemy.Pylon"]
-
-    document.getElementById("p1_mineral").innerHTML = "Minerals: " + currentFriendlyMineralHealth
-    
+        document.getElementById("p1_top_marine").innerHTML = "Marine: " + currentFrameUnitCounts["friendly.marineBuilding.top"]
+        document.getElementById("p1_top_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["friendly.banelingBuilding.top"]
+        document.getElementById("p1_top_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["friendly.immortalBuilding.top"]
+        document.getElementById("p1_bottom_marine").innerHTML = "Marine: " + currentFrameUnitCounts["friendly.marineBuilding.bottom"]
+        document.getElementById("p1_bottom_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["friendly.banelingBuilding.bottom"]
+        document.getElementById("p1_bottom_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["friendly.immortalBuilding.bottom"]
+        document.getElementById("p2_top_marine").innerHTML = "Marine: " + currentFrameUnitCounts["enemy.marineBuilding.top"]
+        document.getElementById("p2_top_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["enemy.banelingBuilding.top"]
+        document.getElementById("p2_top_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["enemy.immortalBuilding.top"]
+        document.getElementById("p2_bottom_marine").innerHTML = "Marine: " + currentFrameUnitCounts["enemy.marineBuilding.bottom"]
+        document.getElementById("p2_bottom_baneling").innerHTML = "Baneling: " + currentFrameUnitCounts["enemy.banelingBuilding.bottom"]
+        document.getElementById("p2_bottom_immortal").innerHTML = "Immortal: " + currentFrameUnitCounts["enemy.immortalBuilding.bottom"]
+        document.getElementById("p1_pylon").innerHTML = "Pylons: " + currentFrameUnitCounts["friendly.Pylon"]
+        document.getElementById("p2_pylon").innerHTML = "Pylons: " + currentFrameUnitCounts["enemy.Pylon"]
+        document.getElementById("p1_mineral").innerHTML = "Minerals: " + currentFriendlyMineralHealth
+        // copyFrameUnitCountsDict()
+        return;
+    } 
 
 }
 

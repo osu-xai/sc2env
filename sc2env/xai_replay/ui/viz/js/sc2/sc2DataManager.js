@@ -1,7 +1,6 @@
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
-
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
@@ -12,6 +11,7 @@ function getSC2DataManagerFromJson(jsonData){
     var frameInfos =getFrameInfosFromJson(jsonData);
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
+
 function trimFirstFrames(frameInfos, trimBy){
     for (var i = 0; i < trimBy; i++){
         frameInfos.shift()
