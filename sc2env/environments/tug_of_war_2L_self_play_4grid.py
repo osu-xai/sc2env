@@ -615,21 +615,23 @@ class TugOfWar():
     def get_big_A(self, mineral, num_of_pylon, is_train = 0):
 #         print(mineral)
 #         print(self.action_space_dict[num_of_pylon][mineral])
-        big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
-        top_lane = np.zeros((len(big_A), 7))
-        bottom_lane = np.zeros((len(big_A), 7))
-        
-        top_lane[:, 0: 3] = big_A[:, 0: 3].copy()
-        top_lane[:, 6] = big_A[:, 3].copy()
-        
-        bottom_lane[:, 3: 7] = big_A.copy()
-        
-#         print(top_lane)
-#         print(bottom_lane)
-        
-        big_A = np.vstack((top_lane, bottom_lane))
-#         print(big_A)
-#         return big_A
+
+        if is_train == 0 or is_train == 1:
+            big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
+            top_lane = np.zeros((len(big_A), 7))
+            bottom_lane = np.zeros((len(big_A), 7))
+            
+            top_lane[:, 0: 3] = big_A[:, 0: 3].copy()
+            top_lane[:, 6] = big_A[:, 3].copy()
+            
+            bottom_lane[:, 3: 7] = big_A.copy()
+            
+    #         print(top_lane)
+    #         print(bottom_lane)
+            
+            big_A = np.vstack((top_lane, bottom_lane))
+    #         print(big_A)
+    #         return big_A
 
         if is_train == 1:
 #             print(len(big_A))
