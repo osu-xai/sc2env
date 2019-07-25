@@ -11,6 +11,7 @@ from sc2env.utility import getOneHotState
 from copy import copy, deepcopy
 import os
 import sys
+import random
 
 SCREEN_SIZE  = 40
 MAP_NAME = 'TugOfWar-2-Lane-Self-Play-No-FIFO'
@@ -557,7 +558,61 @@ class TugOfWar():
                 
 #         return big_A
 
-    def get_big_A(self, mineral, num_of_pylon, is_train = False):
+    def tree_hierarchy(self, mineral, num_of_pylon, tree_A, adjust_for_lane):
+        # print("tree A: ")
+        # print(tree_A)
+        # print("mineral: " + str(mineral))
+        # input("Press Enter to Continue: ")
+        if mineral >= 0 and mineral < 50:
+            choices = ['noop']
+        elif mineral >= 50 and mineral < 75:
+            choices = ['noop', 'marine']
+        elif mineral >= 75 and mineral < 200:
+            choices = ['noop', 'marine', 'baneling']
+        elif mineral >= 200 and mineral < 300:
+            choices = ['noop', 'marine', 'baneling', 'immortal']
+        elif (mineral >= 300 and num_of_pylon == 0) or (mineral >= 400 and num_of_pylon == 1) or (mineral >= 500 and num_of_pylon == 2):
+            choices = ['noop', 'marine', 'baneling', 'immortal', 'pylon']
+        elif (mineral < 400 and num_of_pylon == 1) or (mineral < 500 and num_of_pylon == 2) or (num_of_pylon == 3):
+            choices = ['noop', 'marine', 'baneling', 'immortal']
+        else:
+            print("ERROR!! Mineral choice not recognized")
+            print(tree_A)
+            print(mineral)
+            return tree_A
+
+        pick_idx = random.randint(0, len(choices) - 1)
+
+        picked_action = choices[pick_idx]
+
+        if picked_action == 'noop':
+            print(tree_A)
+            return tree_A
+        elif picked_action == 'marine':
+            tree_A[0 + adjust_for_lane] += 1
+            mineral -= 50
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        elif picked_action == 'baneling':
+            tree_A[1 + adjust_for_lane] += 1
+            mineral -= 75
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        elif picked_action == 'immortal':
+            tree_A[2 + adjust_for_lane] += 1
+            mineral -= 200
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        elif picked_action == 'pylon':
+            tree_A[3] += 1
+            adjust_pylon_cost = 100 * num_of_pylon
+            mineral -= 300 + adjust_pylon_cost
+            num_of_pylon += 1
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        else:
+            print("ERROR!! Action picked is not recognized")
+            print(picked_action)
+            return tree_A
+        return tree_A
+
+    def get_big_A(self, mineral, num_of_pylon, is_train = 0):
 #         print(mineral)
 #         print(self.action_space_dict[num_of_pylon][mineral])
         big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
@@ -575,7 +630,8 @@ class TugOfWar():
         big_A = np.vstack((top_lane, bottom_lane))
 #         print(big_A)
 #         return big_A
-        if is_train:
+
+        if is_train == 1:
 #             print(len(big_A))
             big_A_I_1x = big_A[big_A[:, 2] > 0].copy()#[big_A[:, 5] > 0]
             big_A_I_0x = big_A[big_A[:, 2] == 0].copy()#[big_A[:, 5] == 0]
@@ -611,26 +667,21 @@ class TugOfWar():
             big_A_Noop = np.repeat(big_A_Noop.reshape(-1, 7), num_Noop, axis = 0).reshape(-1, 7)
 
             big_A = np.vstack([big_A, big_A_I, big_A_P, big_A_Noop])
-#             print(len(big_A))
-#             input()
-#             print("##################")
-#             print(mineral)
-#             l = len(big_A)
-#             num_noop = 0
-#             for b_a in big_A:
-#                 if np.sum(b_a) == 0:
-#                     num_noop += 1
 
-#             print(num_noop / l)
+        elif is_train == 2:
+            tree_A = np.zeros(7)
+            pick_lane = random.randint(0, 1)
+            # top lane
+            if pick_lane == 0:
+                adjust_for_lane = 0
+            # bottom lane
+            else:
+                adjust_for_lane = 4
+            big_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+            print("created action:")
+            print(big_A)
+            print("---------------")
 
-#             print(len(big_A[big_A[:, 0] > 0]) / l)
-#             print(len(big_A[big_A[:, 1] > 0]) / l)
-#             print(len(big_A[big_A[:, 2] > 0]) / l)
-#             print(len(big_A[big_A[:, 3] > 0]) / l)
-#             print(len(big_A[big_A[:, 4] > 0]) / l)
-#             print(len(big_A[big_A[:, 5] > 0]) / l)
-#             print(len(big_A[big_A[:, 6] > 0]) / l)
-#             input()
         return big_A
 
     def combine_sa(self, s, actions):
