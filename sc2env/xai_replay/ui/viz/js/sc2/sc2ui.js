@@ -20,8 +20,8 @@ var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.03; 
 // var sc2GameOrigPixelWidth          = 1600;
 // var sc2GameOrigPixelHeight         = 1600;
-var sc2GameOrigPixelViewableWidth  = 512;
-var sc2GameOrigPixelViewableHeight = 512;
+var sc2GameOrigPixelViewableWidth  = 2048 * 1.5;
+var sc2GameOrigPixelViewableHeight = 2048;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 
 //var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
