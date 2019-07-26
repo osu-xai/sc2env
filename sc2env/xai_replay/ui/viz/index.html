@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<title>SCAII Visualization</title>
 		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-		<script src="js/jquery.min.js"></script>
+	    <script src="js/jquery.min.js"></script>
 	  <script src="js/closure-library/closure/goog/base.js"></script>
 	  <script>
 	  	goog.require('goog.dom');
@@ -82,10 +82,7 @@
     </style>
 	</head>
 	<body>
-        <div id="friendly.nexusHealth.top">Nexus Health: </div>
-        <div id="enemy.nexusHealth.top">Nexus Health: </div>
-        <div id="friendly.nexusHealth.bottom">Nexus Health: </div>
-        <div id="enemy.nexusHealth.bottom">Nexus Health: </div>
+
         <div id="tabbed-interface" class="flex-column">
             <div id="master-tabs" class= "master-tab-container flex-row"></div>
             <div id="scaii-interface" class="bg" style="display:flex-column">
@@ -100,14 +97,14 @@
                             <!-- <div id="scaii-acronym" style="font-family:Arial;">XAI  xACT - Year 2 - StarCraft II</div> -->
                             <!-- <div id="game-replay-label" style="font-family:Arial;">replaying game file:</div> -->
                             <div id="friendly-lane-neutral-container" class="lane-neutral-info">
-                                <div id="friendly-title" class="lane-neutral-info" style="display: inline;"><b>FRIENDLY </b></div>
+                                <div id="friendly-title" class="lane-neutral-info" style="display: inline;margin-left: 20%;color: orange;"><b>FRIENDLY </b></div>
                                 <ul id="p1_mineral" class="lane-neutral-info" style="display: inline"></ul>
                                 <ul id="friendly.Pylon_count" class="lane-neutral-info" style="display:inline;"></ul><div id="friendly.Pylon_delta" class="unit-additive-value"></div>
                             </div>
                             <select id="replay-file-selector" style="font-family:Arial;font-size:16px" onchange="loadSelectedReplayFile()"></select>
-                            <div id="enemy-lane-neutral-container" class="lane-neutral-info">
-                                <div id="enemy-title" class="lane-neutral-info" style="display: inline;font-size:13px;margin-left: 65%;"><b>ENEMY</b></div>
-                                <div id="enemy.Pylon_count" class="lane-neutral-info" style="display: inline;margin-left: 85%;"></div><div id="enemy.Pylon_delta" class="unit-additive-value"></div>
+                            <div id="enemy-lane-neutral-container" class="lane-neutral-info flex-row">
+                                <div id="enemy-title" class="lane-neutral-info" style="font-size:13px;margin-left: 40%;;color: orange;"><b>ENEMY</b></div>
+                                <div id="enemy.Pylon_count" class="lane-neutral-info" style="margin-left: 10%;"></div><div id="enemy.Pylon_delta" class="unit-additive-value"></div>
                             </div>
                         </div>
                         
@@ -123,7 +120,10 @@
 
 
                             <div id="unit-value-panels-containter" class="unit-value-panels" style="height:87%;width:99%;display:none;position: absolute;">
-                                
+                                <div id="friendly.nexusHealth.top">Nexus Health: </div>
+                                <div id="enemy.nexusHealth.top">Nexus Health: </div>
+                                <div id="friendly.nexusHealth.bottom">Nexus Health: </div>
+                                <div id="enemy.nexusHealth.bottom">Nexus Health: </div>
                                 <div class="unit-value-panels" id="p1_top"><b>Spawning Next Wave:</b>
                                     <div class="unit-values-row" style="display:block;"><div class="unit-value-panels" id="friendly.marineBuilding.top_count" style="position:relative;">Marine:</div><div class="unit-additive-value" id="friendly.marineBuilding.top_delta"></div></div>
                                     <div class="unit-values-row" style="display:block;"><div class="unit-value-panels" id="friendly.banelingBuilding.top_count" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="friendly.banelingBuilding.top_delta"></div></div>
