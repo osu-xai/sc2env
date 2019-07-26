@@ -73,7 +73,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         var unitInfos = this.dataManager.getUnitInfos(sessionIndexManager.getCurrentIndex());
         for (i in unitInfos){
             var unitInfo = unitInfos[i];
-            createToolTips(unitInfo); 
+            // createToolTips(unitInfo); 
         }
     }
 
