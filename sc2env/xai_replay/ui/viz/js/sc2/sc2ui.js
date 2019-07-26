@@ -9,6 +9,8 @@ var videoScaleFactor = .365;
 var uncroppedPercentage = 0.875
 var videoHeightExtensionForCrop = 1.1
 
+var aspectRatio = 1.5
+
 
 var cameraWidth = 114;
 var cameraHeight = 56;
@@ -23,7 +25,7 @@ var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.03; 
 // var sc2GameOrigPixelWidth          = 1600;
 // var sc2GameOrigPixelHeight         = 1600;
-var sc2GameOrigPixelViewableWidth  = 2048 * 1.5;
+var sc2GameOrigPixelViewableWidth  = 2048 * aspectRatio;
 var sc2GameOrigPixelViewableHeight = 2048;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 
@@ -135,6 +137,8 @@ function createVideoElement(path){
     var renderedVideoHeight = video.clientHeight
     console.log("video height: " + renderedVideoHeight)
     var renderedVideoWidth =  video.clientWidth
+    var trueRenderedVideoWidth = renderedVideoHeight * aspectRatio;
+    var pillarBoxLeft = (renderedVideoWidth - trueRenderedVideoWidth) / 2; // the grey thing on the side of the video - nick
     console.log("video width: " + renderedVideoWidth)
 
 	video.addEventListener("timeupdate", function(){
@@ -144,7 +148,14 @@ function createVideoElement(path){
         // video.currentTime = 1/framesPerSecond + video.currentTime
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
-	configureGameboardCanvas();
+    configureGameboardCanvas();
+
+    $("#gameboard").css("left", pillarBoxLeft);
+    // setting the gameboard canvas to the viewable hieght so full dimensions are visible
+    $("#gameboard").css("height", $(window).height() * uncroppedPercentage);
+    $("#gameboard").css("width", trueRenderedVideoWidth);
+
+
 	video.load();	
     video.playbackRate = videoPlaybackRate;
     video.currentTime = trimBy / framesPerSecond
