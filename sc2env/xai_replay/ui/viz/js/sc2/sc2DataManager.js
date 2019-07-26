@@ -4,7 +4,8 @@ var trimBy = 80
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
-    addUnitDynamicsToFrames(frameInfos);
+    addUnitCountsToFrames(frameInfos);
+    addUnitDeltasToFrames(frameInfos);
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
@@ -89,18 +90,13 @@ laneForKey["enemy.immortalBuilding.bottom"] = "bottom";
 laneForKey["friendly.Pylon"] = "NA";
 laneForKey["enemy.Pylon"] = "NA";
 
-function addUnitDynamicsToFrames(frameInfos){
-    var deltaKeyCounters = {};
+function addUnitCountsToFrames(frameInfos){
     for (keyIndex in unitInfoKeys){
         var key = unitInfoKeys[keyIndex];
-        var prevFrame = undefined;
         var countKey = key +"_count";
-        var deltaKey = key + "_delta";
-        var deltaCounterKey = key + "_delta_count";
         for (frameIndex in frameInfos){
             var frame = frameInfos[frameIndex];
             frame[countKey] = 0;
-            frame[deltaKey] = 0;
             var unitId = unitIdForKey[key];
             var lane = laneForKey[key];
             var alliance = allianceForKey[key];
@@ -114,29 +110,51 @@ function addUnitDynamicsToFrames(frameInfos){
                     if (curLane == "NA" || curLane == lane) {
                         frame[countKey]++;
                     }
-                    if (prevFrame != undefined){
-                        if (prevFrame[countKey] < frame[countKey]){
-                            frame[deltaKey] = frame[countKey] - prevFrame[countKey];
-                            deltaKeyCounters[deltaCounterKey] = 1;
+                }
+            }
+        }
+    }
+    // var key = "friendly.marineBuilding.top";
+    // for (frameIndex in frameInfos){
+    //     var frame = frameInfos[frameIndex];
+    //     var deltaKey = key +"_delta"
+    //     console.log("frame " + frameIndex + " delta " + frame[deltaKey])
+    // }
+}
+
+function addUnitDeltasToFrames(frameInfos){
+    var deltaKeyCounters = {};
+    for (keyIndex in unitInfoKeys){
+        var key = unitInfoKeys[keyIndex];
+        var prevFrame = undefined;
+        var countKey = key +"_count";
+        var deltaKey = key + "_delta";
+        var deltaCounterKey = key + "_delta_count";
+        for (frameIndex in frameInfos){
+            var frame = frameInfos[frameIndex];
+            frame[deltaKey] = 0;
+            if (prevFrame != undefined){
+                if (prevFrame[countKey] < frame[countKey]){
+                    frame[deltaKey] = frame[countKey] - prevFrame[countKey];
+                    deltaKeyCounters[deltaCounterKey] = 1;
+                }
+                else {
+                    // no difference between frames
+                    var curCount = deltaKeyCounters[deltaCounterKey];
+                    if (curCount == undefined){
+                        deltaKeyCounters[deltaCounterKey] = 0;
+                    }
+                    else if (curCount != 0){
+                        curCount++;
+                        console.log(key + " frame " + frameIndex + " curCount " + curCount);
+                        if (curCount > 40){
+                            deltaKeyCounters[deltaCounterKey] = 0;
+                            console.log(key + " frame " + frameIndex + " resetting to 0")
                         }
                         else {
-                            var curCount = deltaKeyCounters[deltaCounterKey]
-                            if (curCount == undefined){
-                                deltaKeyCounters[deltaCounterKey] = 0;
-                            }
-                            else if (curCount != 0){
-                                curCount++;
-                                console.log(key + " frame " + frameIndex + " curCount " + curCount);
-                                if (curCount > 40){
-                                    deltaKeyCounters[deltaCounterKey] = 0;
-                                    console.log(key + " frame " + frameIndex + " resetting to 0")
-                                }
-                                else {
-                                    deltaKeyCounters[deltaCounterKey] = curCount;
-                                    frame[deltaKey] = prevFrame[deltaKey];
-                                    console.log(key + " frame " + frameIndex + " applying prior delta")
-                                }
-                            }
+                            deltaKeyCounters[deltaCounterKey] = curCount;
+                            frame[deltaKey] = prevFrame[deltaKey];
+                            console.log(key + " frame " + frameIndex + " applying prior delta")
                         }
                     }
                 }
