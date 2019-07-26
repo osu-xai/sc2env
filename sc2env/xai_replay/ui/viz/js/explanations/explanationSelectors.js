@@ -51,7 +51,7 @@ function configureExplanationSelectorDiamond(decisionPointNumber,step){
         }
         else {
             setExplanationInfoForDPAtStep(step);
-            renderWhyButton(step, xPositionOfWhyButton, yPositionOfWhyButton);
+            //renderWhyButton(step, xPositionOfWhyButton, yPositionOfWhyButton);
         }
 		
         boldThisStepInLegend(step);

@@ -223,17 +223,17 @@ function getMineralHealth(frameInfo){
     for (var i in frameInfo.units){
         var unit = frameInfo.units[i]
         if (unit.unit_type == recorderUnit){
-            setMineralHealth(unit)
+            recorderUnit = unit
+            var mineralHealthSheildValue = 4
+            if (recorderUnit.shield == mineralHealthSheildValue){
+                currentFriendlyMineralHealth = recorderUnit.health - 1
+             }
+             return currentFriendlyMineralHealth
         }
     }
 }
 
-function setMineralHealth(recorderUnit){
-    var mineralHealthSheildValue = 4
-    if (recorderUnit.shield == mineralHealthSheildValue){
-        currentFriendlyMineralHealth = recorderUnit.health - 1
-     }
-}
+
 
 var htmlTextForKey = {};
 htmlTextForKey["friendly.marineBuilding.top"] = "Marines: ";
@@ -255,16 +255,21 @@ function renderUnitValues(frameInfo){
         var unit = frameInfo
         for (unitCount in unitInfoKeys){
             if(unit[unitInfoKeys[unitCount] + "_delta_triggered"] == 1){
-                document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "(+" + (unit[unitInfoKeys[unitCount] + "_delta"]) + ")"
+                document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = " (+" + (unit[unitInfoKeys[unitCount] + "_delta"]) + ")"
 
-                document.getElementById(unitInfoKeys[unitCount] + "_delta").style.color = "green";
+                document.getElementById(unitInfoKeys[unitCount] + "_delta").style.color = "yellow";
                 document.getElementById(unitInfoKeys[unitCount] + "_delta").style.display = "inline";
+                document.getElementById(unitInfoKeys[unitCount] + "_count").style.display = "inline";
+
+                // document.getElementById(unitInfoKeys[unitCount] + "_delta").style.width = "25%";
+                // document.getElementById(unitInfoKeys[unitCount] + "_count").style.width = "75%";
 
                 document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]] + (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
                 document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
             }
             else{
                 document.getElementById(unitInfoKeys[unitCount] + "_delta").style.display = "none";
+                // document.getElementById(unitInfoKeys[unitCount] + "_count").style.float = "l";
 
                 document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]] + (unit[unitInfoKeys[unitCount] + "_count"])
                 document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)

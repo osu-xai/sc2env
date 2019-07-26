@@ -377,26 +377,26 @@ function sizeNonGeneratedElements() {
 	$("#p2_bottom").css("left", "87.5%");
 
 
-	$('.unit-value-panels').css('font-size', "13px")
+	$('.unit-value-panels').css('font-size', "15px")
 	$('.unit-value-panels').css('font-family', "Arial")
 
 	
 	$('#unit-value-panels-toggle').css('float', "left")
 	$('#unit-value-panels-toggle').css('text-align', "center")
-	$('#unit-value-panels-toggle').css('font-size', "10px")
-	$('#unit-value-panels-toggle').css('width', "70px")
-	$('#unit-value-panels-toggle').css('height', "100%")
+	$('#unit-value-panels-toggle').css('font-size', "12px")
+	$('#unit-value-panels-toggle').css('font-family', "Arial")
+	$('#unit-value-panels-toggle').css('width', "80px")
+	$('#unit-value-panels-toggle').css('height', "30px")
 
 
 	var toggle_units = document.getElementById("unit-value-panels-toggle");
 	toggle_units.addEventListener('click', function(event){
 		console.log("you clicked on the toggle")
 		if ($('.unit-value-panels').css('display') == 'none'){
-			$('.unit-value-panels').css('display', "inline-block")
+			$('.unit-value-panels').css('display', "block")
 		}
 		else{
 			$('.unit-value-panels').css('display', "none")
-
 		}
 	});
 
@@ -429,15 +429,15 @@ function sizeNonGeneratedElements() {
 	$("#friendly-title").css("font-size", "18px")
 	$("#enemy-title").css("font-size", "18px")
 
-	$("#p1_mineral").css("font-size", "14px")
+	$("#p1_mineral").css("font-size", "15px")
 
 
 
-	$("#p1_pylon").css("font-size", "14px")
+	$("#p1_pylon").css("font-size", "15px")
 
 
 
-	$("#p2_pylon").css("font-size", "14px")
+	$("#p2_pylon").css("font-size", "15px")
 
 
 	$("#friendly-lane-neutral-container").css("color", "white");
@@ -448,18 +448,18 @@ function sizeNonGeneratedElements() {
 	$("#friendly-lane-neutral-container").css("float", "left");
 	$("#friendly-lane-neutral-container").css("width", "41%");
 	$("#friendly-lane-neutral-container").css("height", "25px");
+	$("#friendly-lane-neutral-container").css("font-size", "15px")
 
 	
 	$(".lane-neutral-info").css("font-family", "Arial")
-	$(".lane-neutral-info").css("top", "");
 
-	$("#enemy-lane-neutral-container").css("font-size", "13px")
+	$("#enemy-lane-neutral-container").css("font-size", "15px")
 	$("#enemy-lane-neutral-container").css("color", "white");
 	$("#enemy-lane-neutral-container").css("background-color", "Navy");
 	$("#enemy-lane-neutral-container").css("border", "2px solid blue");
 	$("#enemy-lane-neutral-container").css("border-radius", "2px");
 	$("#enemy-lane-neutral-container").css("padding", "5px");
-	$("#enemy-lane-neutral-container").css("width", "41%");
+	$("#enemy-lane-neutral-container").css("width", "42%");
 	$("#enemy-lane-neutral-container").css("height", "25px");
 
 
