@@ -133,9 +133,11 @@ function addUnitDeltasToFrames(frameInfos){
         for (frameIndex in frameInfos){
             var frame = frameInfos[frameIndex];
             frame[deltaKey] = 0;
+            frame[deltaKey + "_triggered"] = 0;
             if (prevFrame != undefined){
                 if (prevFrame[countKey] < frame[countKey]){
                     frame[deltaKey] = frame[countKey] - prevFrame[countKey];
+                    frame[deltaKey + "_triggered"] = 1;
                     deltaKeyCounters[deltaCounterKey] = 1;
                 }
                 else {
@@ -143,18 +145,22 @@ function addUnitDeltasToFrames(frameInfos){
                     var curCount = deltaKeyCounters[deltaCounterKey];
                     if (curCount == undefined){
                         deltaKeyCounters[deltaCounterKey] = 0;
+                        frame[deltaKey + "_triggered"] = 0;
+
                     }
                     else if (curCount != 0){
                         curCount++;
                         console.log(key + " frame " + frameIndex + " curCount " + curCount);
                         if (curCount > 40){
                             deltaKeyCounters[deltaCounterKey] = 0;
-                            console.log(key + " frame " + frameIndex + " resetting to 0")
+                            // console.log(key + " frame " + frameIndex + " resetting to 0")
+                            frame[deltaKey + "_triggered"] = 0;
                         }
                         else {
                             deltaKeyCounters[deltaCounterKey] = curCount;
                             frame[deltaKey] = prevFrame[deltaKey];
-                            console.log(key + " frame " + frameIndex + " applying prior delta")
+                            frame[deltaKey + "_triggered"] = 1;
+                            // console.log(key + " frame " + frameIndex + " applying prior delta")
                         }
                     }
                 }
@@ -162,12 +168,12 @@ function addUnitDeltasToFrames(frameInfos){
             prevFrame = frame;
         }
     }
-    var key = "friendly.marineBuilding.top";
-    for (frameIndex in frameInfos){
-        var frame = frameInfos[frameIndex];
-        var deltaKey = key +"_delta"
-        console.log("frame " + frameIndex + " delta " + frame[deltaKey])
-    }
+    // var key = "friendly.marineBuilding.top";
+    // for (frameIndex in frameInfos){
+    //     var frame = frameInfos[frameIndex];
+    //     var deltaKey = key +"_delta"
+    //     console.log("frame " + frameIndex + " delta " + frame[deltaKey])
+    // }
 }
 function getSC2DataManagerFromFrameInfos(frameInfos) {
     var dm = {};

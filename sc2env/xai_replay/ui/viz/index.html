@@ -98,12 +98,12 @@
                             <div id="friendly-lane-neutral-container" class="lane-neutral-info">
                                 <div id="friendly-title" class="lane-neutral-info" style="display: inline">Friendly</div>
                                 <ul id="p1_mineral" class="lane-neutral-info" style="display: inline"></ul>
-                                <ul id="p1_pylon" class="lane-neutral-info" style="display:inline;"></ul><div id="p1_pylon_add" class="unit-additive-value"></div>
+                                <ul id="friendly.Pylon_count" class="lane-neutral-info" style="display:inline;"></ul><div id="friendly.Pylon_delta" class="unit-additive-value"></div>
                             </div>
                             <select id="replay-file-selector" style="font-family:Arial;font-size:16px" onchange="loadSelectedReplayFile()"></select>
                             <div id="enemy-lane-neutral-container" class="lane-neutral-info">
                                 <div id="enemy-title" class="lane-neutral-info" style="display: inline;">Enemy</div>
-                                <ul id="p2_pylon" class="lane-neutral-info" style="display: inline"></ul><div id="p2_pylon_add" class="unit-additive-value"></div>
+                                <ul id="enemy.Pylon_count" class="lane-neutral-info" style="display: inline"></ul><div id="enemy.Pylon_delta" class="unit-additive-value"></div>
                             </div>
                         </div>
                         
@@ -118,27 +118,27 @@
                         <div id="game-row" class="flex-row">
                             <div id="unit-value-panels-containter" class="unit-value-panels" style="height:87%;width:99%;display:none;position: absolute;">
                                 <div class="unit-value-panels" id="p1_top"><b>Spawning Next Wave:</b>
-                                    <div class="unit-value-panels" id="p1_top_marine" style="position:relative;">Marine:</div><div class="unit-additive-value" id="p1_top_marine_add"></div>
-                                    <div class="unit-value-panels" id="p1_top_baneling" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="p1_top_baneling_add"></div>
-                                    <div class="unit-value-panels" id="p1_top_immortal" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="p1_top_immortal_add"></div>
+                                    <div class="unit-value-panels" id="friendly.marineBuilding.top_count" style="position:relative;">Marine:</div><div class="unit-additive-value" id="friendly.marineBuilding.top_delta"></div>
+                                    <div class="unit-value-panels" id="friendly.banelingBuilding.top_count" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="friendly.banelingBuilding.top_delta"></div>
+                                    <div class="unit-value-panels" id="friendly.immortalBuilding.top_count" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="friendly.immortalBuilding.top_delta"></div>
                                 </div>
         
                                 <div class="unit-value-panels" id="p2_top"><b>Spawning Next Wave:</b>
-                                    <div class="unit-value-panels" id="p2_top_marine" style="position:relative;">Marine:</div><div class="unit-additive-value" id="p2_top_marine_add"></div>
-                                    <div class="unit-value-panels" id="p2_top_baneling" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="p2_top_baneling_add"></div>
-                                    <div class="unit-value-panels" id="p2_top_immortal" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="p2_top_immortal_add"></div>
+                                    <div class="unit-value-panels" id="enemy.marineBuilding.top_count" style="position:relative;">Marine:</div><div class="unit-additive-value" id="enemy.marineBuilding.top_delta"></div>
+                                    <div class="unit-value-panels" id="enemy.banelingBuilding.top_count" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="enemy.banelingBuilding.top_delta"></div>
+                                    <div class="unit-value-panels" id="enemy.immortalBuilding.top_count" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="enemy.immortalBuilding.top_delta"></div>
                                 </div>
         
                                 <div class="unit-value-panels" id="p1_bottom"><b>Spawning Next Wave:</b>
-                                    <div class="unit-value-panels" id="p1_bottom_marine" style="position:relative;">Marine:</div><div class="unit-additive-value" id="p1_bottom_marine_add"></div> 
-                                    <div class="unit-value-panels" id="p1_bottom_baneling" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="p1_bottom_baneling_add"></div>
-                                    <div class="unit-value-panels" id="p1_bottom_immortal" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="p1_bottom_immortal_add"></div>
+                                    <div class="unit-value-panels" id="friendly.marineBuilding.bottom_count" style="position:relative;">Marine:</div><div class="unit-additive-value" id="friendly.marineBuilding.bottom_delta"></div> 
+                                    <div class="unit-value-panels" id="friendly.banelingBuilding.bottom_count" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="friendly.banelingBuilding.bottom_delta"></div>
+                                    <div class="unit-value-panels" id="friendly.immortalBuilding.bottom_count" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="friendly.immortalBuilding.bottom_delta"></div>
                                 </div>
         
                                 <div class="unit-value-panels" id="p2_bottom"><b>Spawning Next Wave:</b>
-                                    <div class="unit-value-panels" id="p2_bottom_marine" style="position:relative;">Marine:</div><div class="unit-additive-value" id="p2_bottom_marine_add"></div>
-                                    <div class="unit-value-panels" id="p2_bottom_baneling" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="p2_bottom_baneling_add"></div>
-                                    <div class="unit-value-panels" id="p2_bottom_immortal" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="p2_bottom_immortal_add"></div>
+                                    <div class="unit-value-panels" id="enemy.marineBuilding.bottom_count" style="position:relative;">Marine:</div><div class="unit-additive-value" id="enemy.marineBuilding.bottom_delta"></div>
+                                    <div class="unit-value-panels" id="enemy.banelingBuilding.bottom_count" style="position:relative;">Baneling:</div><div class="unit-additive-value" id="enemy.banelingBuilding.bottom_delta"></div>
+                                    <div class="unit-value-panels" id="enemy.immortalBuilding.bottom_count" style="position:relative;">Immortal:</div><div class="unit-additive-value" id="enemy.immortalBuilding.bottom_delta"></div>
                                 </div>
                             </div>
                             <div id="scaii-gameboard" class="grid-center bg"></div>

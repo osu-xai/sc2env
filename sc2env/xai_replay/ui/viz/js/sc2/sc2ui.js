@@ -58,7 +58,6 @@ var activeSC2UIManager = undefined;
 function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim = {};
     uim.dataManager = sc2DataManager;
-    collectDecisionPoints(uim.dataManager.frameInfos)
     uim.videoFilepath = getVideoFilepath(filenameRoot);
     uim.jumped = false;
     createVideoElement(uim.videoFilepath);
@@ -87,36 +86,15 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         //this.renderStateForCurrentStep();
         //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
-    // uim.fastForwardUnitCounts = function(frameNumber){
-    //     collectDecisionPoints(this.dataManager.frameInfos)
-    //     initUnitCounts(currentFrameUnitCounts)
-    //     initUnitCounts(previousFrameUnitCounts)
-    //     framePastDecisionPoint = 0
-    //     for (var i = 0; i <= frameNumber; i++){
-    //         var frame = this.dataManager.frameInfos[i];
-    //         console.log("frame number " + frame["frame_number"])
-    //         console.log("calling compute: " + i)
-    //         for (var dpIndex in videoDecisionPoints){
-    //             if (videoDecisionPoints[dpIndex] == i){
-    //                 copyFrameUnitCountsDict()
-    //             }
-    //         }
-    //         computeUnitValues(frame);
-           
-    //     }
-    //     // renderUnitValues(frame);
-    // }
-
+    
     uim.expressFrameInfo = function(frameNumber) {
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
         frame = this.dataManager.getFrameInfo(frameNumber);
-        //computeUnitValues(frame);
         renderUnitValues(frame);
         userStudyAdjustmentsForFrameChange();
         if (this.jumped){
-            //this.renderUnitValues(frameNumber)
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
         }
@@ -155,7 +133,6 @@ function createVideoElement(path){
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
-        console.log("frame Number: " + frameNumber)
         activeSC2UIManager.expressFrameInfo(frameNumber);
         // video.currentTime = 1/framesPerSecond + video.currentTime
 	})
