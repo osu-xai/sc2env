@@ -254,7 +254,7 @@ function getNexusHealthForUnit(alliance, lane, nexusUnits){
             return unit.health;
         }
     }
-    return -1;
+    return 0;
 }
 
 
