@@ -233,6 +233,29 @@ function getMineralHealth(frameInfo){
     }
 }
 
+function getNexusUnits(frameInfo){
+    var nexusUnit = 59;
+    var nexusUnits = []
+    for (var unitIndex in frameInfo.units){
+        var unit = frameInfo.units[unitIndex]
+        if (unit["unit_type"] == nexusUnit){
+            nexusUnits.push(unit)
+        }
+    }
+    return nexusUnits
+}
+
+function getNexusHealthForUnit(alliance, lane, nexusUnits){
+    for (var unitIndex in nexusUnits){
+        var unit = nexusUnits[unitIndex];
+        curLane = getUnitLane(unit.y);
+        curAlliance = unit.alliance;
+        if (alliance == curAlliance && curLane == lane){
+            return unit.health;
+        }
+    }
+    return -1;
+}
 
 
 var htmlTextForKey = {};
@@ -251,6 +274,7 @@ htmlTextForKey["enemy.immortalBuilding.bottom"] = "Immortals: ";
 htmlTextForKey["friendly.Pylon"] = "Pylons: ";
 htmlTextForKey["enemy.Pylon"] = "Pylons: ";
 
+
 function renderUnitValues(frameInfo){
         var unit = frameInfo
         for (unitCount in unitInfoKeys){
@@ -261,20 +285,23 @@ function renderUnitValues(frameInfo){
                 document.getElementById(unitInfoKeys[unitCount] + "_delta").style.display = "inline";
                 document.getElementById(unitInfoKeys[unitCount] + "_count").style.display = "inline";
 
-                // document.getElementById(unitInfoKeys[unitCount] + "_delta").style.width = "25%";
-                // document.getElementById(unitInfoKeys[unitCount] + "_count").style.width = "75%";
-
                 document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]] + (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
                 document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
             }
             else{
                 document.getElementById(unitInfoKeys[unitCount] + "_delta").style.display = "none";
-                // document.getElementById(unitInfoKeys[unitCount] + "_count").style.float = "l";
 
                 document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]] + (unit[unitInfoKeys[unitCount] + "_count"])
                 document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
             } 
         }
+
+        var nexusUnits = getNexusUnits(frameInfo);
+        document.getElementById("friendly.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"top",nexusUnits);
+        document.getElementById("friendly.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"bottom",nexusUnits);
+        document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
+        document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
+
 }
 
 

@@ -39,7 +39,7 @@ var unitInfoKeys = [
     "enemy.banelingBuilding.bottom",
     "enemy.immortalBuilding.bottom",
     "friendly.Pylon",
-    "enemy.Pylon"
+    "enemy.Pylon",
 ]
 var unitIdForKey = {};
 unitIdForKey["friendly.marineBuilding.top"] = 21;
@@ -56,6 +56,7 @@ unitIdForKey["enemy.banelingBuilding.bottom"] = 28;
 unitIdForKey["enemy.immortalBuilding.bottom"] = 70;
 unitIdForKey["friendly.Pylon"] = 60;
 unitIdForKey["enemy.Pylon"] = 60;
+
 
 var allianceForKey = {};
 allianceForKey["friendly.marineBuilding.top"] = 1;
@@ -89,6 +90,7 @@ laneForKey["enemy.banelingBuilding.bottom"] = "bottom";
 laneForKey["enemy.immortalBuilding.bottom"] = "bottom";
 laneForKey["friendly.Pylon"] = "NA";
 laneForKey["enemy.Pylon"] = "NA";
+
 
 function addUnitCountsToFrames(frameInfos){
     for (keyIndex in unitInfoKeys){
@@ -150,7 +152,7 @@ function addUnitDeltasToFrames(frameInfos){
                     }
                     else if (curCount != 0){
                         curCount++;
-                        console.log(key + " frame " + frameIndex + " curCount " + curCount);
+                        // console.log(key + " frame " + frameIndex + " curCount " + curCount);
                         if (curCount > 40){
                             deltaKeyCounters[deltaCounterKey] = 0;
                             // console.log(key + " frame " + frameIndex + " resetting to 0")
@@ -231,8 +233,8 @@ function getSC2DataManagerFromFrameInfos(frameInfos) {
     dm.getClosestUnitIdInRange = function(mouseCanvasX, mouseCanvasY) {//SC2_TEST
         var unitCoordX = translateCanvasXCoordToGameUnitXCoord(mouseCanvasX, gameboard_canvas.width);
         var unitCoordY = translateCanvasYCoordToGameUnitYCoord(mouseCanvasY, gameboard_canvas.height);
-        console.log("MouseX: " + mouseCanvasX + "\tUnitX: " + unitCoordX)
-        console.log("MouseY: " + mouseCanvasY + "\tUnitY: " + unitCoordY)
+        // console.log("MouseX: " + mouseCanvasX + "\tUnitX: " + unitCoordX)
+        // console.log("MouseY: " + mouseCanvasY + "\tUnitY: " + unitCoordY)
         var minDistance = roughlyHalfWidthOfUnitInGameUnits;
         var minDistanceUnit = undefined;
         var frame_info = this.frameInfos[sessionIndexManager.getCurrentIndex()];

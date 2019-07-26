@@ -318,7 +318,6 @@ function sizeNonGeneratedElements() {
 	});
 		
 
-	$("#p1_top").css("display", "none");
 	$("#p1_top").css("z-index", "50");
 	$("#p1_top").css("color", "white");
 	$("#p1_top").css("background-color", "Navy");
@@ -328,7 +327,6 @@ function sizeNonGeneratedElements() {
 
 
 
-	$("#p2_top").css("display", "none");
 	$("#p2_top").css("z-index", "50");
 	$("#p2_top").css("color", "white");
 	$("#p2_top").css("background-color", "Navy");
@@ -337,7 +335,6 @@ function sizeNonGeneratedElements() {
 	$("#p2_top").css("padding", "5px");
 
 
-	$("#p1_bottom").css("display", "none");
 	$("#p1_bottom").css("z-index", "50");
 	$("#p1_bottom").css("color", "white");
 	$("#p1_bottom").css("background-color", "Navy");
@@ -346,7 +343,6 @@ function sizeNonGeneratedElements() {
 	$("#p1_bottom").css("padding", "5px");
 
 
-	$("#p2_bottom").css("display", "none");
 	$("#p2_bottom").css("z-index", "50");
 	$("#p2_bottom").css("color", "white");
 	$("#p2_bottom").css("background-color", "Navy");
@@ -379,6 +375,64 @@ function sizeNonGeneratedElements() {
 
 	$('.unit-value-panels').css('font-size', "15px")
 	$('.unit-value-panels').css('font-family', "Arial")
+	
+	$('#friendly.nexusHealth.top').css("position", "absolute");
+	$('#friendly.nexusHealth.top').css("top", "7%");
+	$('#friendly.nexusHealth.top').css("left", "2.75%");
+	$('#friendly.nexusHealth.top').css("height", "20px");
+	$('#friendly.nexusHealth.top').css('font-size', "15px")
+	$('#friendly.nexusHealth.top').css('font-family', "Arial")
+	$("#friendly.nexusHealth.top").css("display", "block");
+	$("#friendly.nexusHealth.top").css("z-index", "9999");
+	$("#friendly.nexusHealth.top").css("color", "white");
+	$("#friendly.nexusHealth.top").css("background-color", "Navy");
+	$("#friendly.nexusHealth.top").css("border", "2px solid blue");
+	$("#friendly.nexusHealth.top").css("border-radius", "2px");
+	$("#friendly.nexusHealth.top").css("padding", "5px");
+
+	$('#friendly.nexusHealth.bottom').css("position", "absolute");
+	$('#friendly.nexusHealth.bottom').css("top", "7%");
+	$('#friendly.nexusHealth.bottom').css("left", "87.5%");
+	$('#friendly.nexusHealth.bottom').css("height", "20px");
+	$('#friendly.nexusHealth.bottom').css('font-size', "15px")
+	$('#friendly.nexusHealth.bottom').css('font-family', "Arial")
+	$("#friendly.nexusHealth.bottom").css("display", "block");
+	$("#friendly.nexusHealth.bottom").css("z-index", "9999");
+	$("#friendly.nexusHealth.bottom").css("color", "white");
+	$("#friendly.nexusHealth.bottom").css("background-color", "Navy");
+	$("#friendly.nexusHealth.bottom").css("border", "2px solid blue");
+	$("#friendly.nexusHealth.bottom").css("border-radius", "2px");
+	$("#friendly.nexusHealth.bottom").css("padding", "5px");
+
+
+	$('#enemy.nexusHealth.top').css("position", "absolute");
+	$('#enemy.nexusHealth.top').css("top", "7%");
+	$('#enemy.nexusHealth.top').css("left", "87.5%");
+	$('#enemy.nexusHealth.top').css("height", "20px");
+	$('#enemy.nexusHealth.top').css('font-size', "15px")
+	$('#enemy.nexusHealth.top').css('font-family', "Arial")
+	$("#enemy.nexusHealth.top").css("display", "block");
+	$("#enemy.nexusHealth.top").css("z-index", "9999");
+	$("#enemy.nexusHealth.top").css("color", "white");
+	$("#enemy.nexusHealth.top").css("background-color", "Navy");
+	$("#enemy.nexusHealth.top").css("border", "2px solid blue");
+	$("#enemy.nexusHealth.top").css("border-radius", "2px");
+	$("#enemy.nexusHealth.top").css("padding", "5px");
+
+	$('#enemy.nexusHealth.bottom').css("position", "absolute");
+	$('#enemy.nexusHealth.bottom').css("top", "88%");
+	$('#enemy.nexusHealth.bottom').css("left", "87.5%");
+	$('#enemy.nexusHealth.bottom').css("height", "20px");
+	$('#enemy.nexusHealth.bottom').css('font-size', "15px")
+	$('#enemy.nexusHealth.bottom').css('font-family', "Arial")
+	$("#enemy.nexusHealth.bottom").css("display", "block");
+	$("#enemy.nexusHealth.bottom").css("z-index", "9999");
+	$("#enemy.nexusHealth.bottom").css("color", "white");
+	$("#enemy.nexusHealth.bottom").css("background-color", "Navy");
+	$("#enemy.nexusHealth.bottom").css("border", "2px solid blue");
+	$("#enemy.nexusHealth.bottom").css("border-radius", "2px");
+	$("#enemy.nexusHealth.bottom").css("padding", "5px");
+	
 
 	
 	$('#unit-value-panels-toggle').css('float', "left")
@@ -387,6 +441,7 @@ function sizeNonGeneratedElements() {
 	$('#unit-value-panels-toggle').css('font-family', "Arial")
 	$('#unit-value-panels-toggle').css('width', "80px")
 	$('#unit-value-panels-toggle').css('height', "30px")
+
 
 
 	var toggle_units = document.getElementById("unit-value-panels-toggle");

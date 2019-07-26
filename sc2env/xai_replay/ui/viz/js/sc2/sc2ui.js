@@ -10,7 +10,7 @@ var uncroppedPercentage = 0.875
 var videoHeightExtensionForCrop = 1.1
 
 var aspectRatio = 1.5
-
+var pillarBoxLeft = undefined;
 
 var cameraWidth = 114;
 var cameraHeight = 56;
@@ -135,11 +135,9 @@ function createVideoElement(path){
 	video.src = path;
     $("#scaii-gameboard").append(video);
     var renderedVideoHeight = video.clientHeight
-    console.log("video height: " + renderedVideoHeight)
     var renderedVideoWidth =  video.clientWidth
     var trueRenderedVideoWidth = renderedVideoHeight * aspectRatio;
-    var pillarBoxLeft = (renderedVideoWidth - trueRenderedVideoWidth) / 2; // the grey thing on the side of the video - nick
-    console.log("video width: " + renderedVideoWidth)
+    pillarBoxLeft = (renderedVideoWidth - trueRenderedVideoWidth) / 2; // the grey thing on the side of the video - nick
 
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
@@ -159,11 +157,13 @@ function createVideoElement(path){
 	video.load();	
     video.playbackRate = videoPlaybackRate;
     video.currentTime = trimBy / framesPerSecond
-
+    toggleOnUIElements();
 }
 
 function toggleOnUIElements(){
     $('#unit-value-panels-toggle').css('display', "block")
+    $('.unit-value-panels').css('display', "block")
+
     
 }
 
@@ -213,15 +213,7 @@ function translateUnitXToCanvasX(unitX){
     var unitXCamera = unitX - xEdgeToCamera;
     var unitXPercentAcrossCanvas = unitXCamera / cameraWidth;
     var canvasX = gameboard_canvas.width * unitXPercentAcrossCanvas;
-// =======
-//     // console.log("unitX: "+ unitX)
-//     // var unitXCamera = unitX - xEdgeToCamera;
-//     // console.log("unitXCamera: " + unitXCamera)
-//     var unitXPercentAcrossCanvas = unitX / 69 * videoScaleFactor;
-//     // console.log("percent X: "+ unitXPercentAcrossCanvas)
-//     var canvasX = cameraWidth * unitXPercentAcrossCanvas;
-// >>>>>>> Stashed changes
-//     //console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
+    
     return canvasX;
 }
 
@@ -229,18 +221,7 @@ function translateUnitYToCanvasY(unitY){
     var unitYCamera = cameraHeight - (unitY - yEdgeToCamera);
     var unitYPercentAcrossCanvas = unitYCamera / cameraHeight;
     var canvasY = gameboard_canvas.height * unitYPercentAcrossCanvas;
-// =======
-//     var video_y_ratio = (cameraHeight * videoScaleFactor) 
-//     var unit_y_ratio = 149 * videoScaleFactor
 
-//     var canvasY = unitY * (video_y_ratio / unit_y_ratio)
-//     if (canvasY < cameraOriginY/2) {
-//         canvasY = canvasY - unitY
-//     }
-//     else{
-//         canvasY = canvasY + unitY    
-//     }
-// >>>>>>> Stashed changes
     return canvasY;
 }
 
@@ -279,7 +260,6 @@ function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
-    console.log("canvas-width: " + canvasWidth)
     var percentCanvasX = ((Number(canvasX)) / Number(canvasWidth));
     var unitSpaceX = cameraWidth * percentCanvasX + xEdgeToCamera;
     return unitSpaceX;
@@ -291,7 +271,6 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
-    console.log("canvas-height: " + canvasHeight)
 
     var percentCanvasY = (canvasHeight - Number(canvasY)) / Number(canvasHeight);
     var unitSpaceY = cameraHeight * percentCanvasY + yEdgeToCamera;
