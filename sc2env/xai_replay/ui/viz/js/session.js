@@ -210,9 +210,9 @@ function userStudyAdjustmentsForFrameChange(){
 }
 var totalsString = "total score";
 
-function incrementUnitCount(dict, key){
-    dict[key] = dict[key] + 1
-}
+// function incrementUnitCount(dict, key){
+//     dict[key] = dict[key] + 1
+// }
 
 function getUnitLane(basicUnitYPos){
     var lane = "bottom"
@@ -226,13 +226,13 @@ function getKey(alliance, unitType, basicUnitYPos){
     var key = allianceNameForValue[alliance] + "." + unitNamesForType[unitType] + "." + getUnitLane(basicUnitYPos)
     return key
 }
-function updateUnitCounts(basicUnit){
-    var key = getKey(basicUnit.alliance, basicUnit.unit_type, basicUnit.y)
-    incrementUnitCount(currentFrameUnitCounts, key)
-    if(key == "friendly.marineBuilding.top"){
-        console.log("found marine!")
-    }
-}
+// function updateUnitCounts(basicUnit){
+//     var key = getKey(basicUnit.alliance, basicUnit.unit_type, basicUnit.y)
+//     incrementUnitCount(currentFrameUnitCounts, key)
+//     if(key == "friendly.marineBuilding.top"){
+//         console.log("found marine!")
+//     }
+// }
 
 function setMineralHealth(recorderUnit){
     var mineralHealthSheildValue = 4
@@ -241,88 +241,88 @@ function setMineralHealth(recorderUnit){
      }
 }
 
-function updatePylonCounts(pylonUnit){
-    var key = allianceNameForValue[pylonUnit.alliance] + "." + unitNamesForType[pylonUnit.unit_type]
-    currentFrameUnitCounts = fillUnitValueDictionary(currentFrameUnitCounts, key)
-}
+// function updatePylonCounts(pylonUnit){
+//     var key = allianceNameForValue[pylonUnit.alliance] + "." + unitNamesForType[pylonUnit.unit_type]
+//     currentFrameUnitCounts = fillUnitValueDictionary(currentFrameUnitCounts, key)
+// }
 
-function initUnitCounts(unitCountsDict){
-    unitCountsDict["friendly.marineBuilding.top"] = 0
-    unitCountsDict["friendly.banelingBuilding.top"] = 0
-    unitCountsDict["friendly.immortalBuilding.top"] = 0
+// function initUnitCounts(unitCountsDict){
+//     unitCountsDict["friendly.marineBuilding.top"] = 0
+//     unitCountsDict["friendly.banelingBuilding.top"] = 0
+//     unitCountsDict["friendly.immortalBuilding.top"] = 0
 
-    unitCountsDict["friendly.marineBuilding.bottom"] = 0
-    unitCountsDict["friendly.banelingBuilding.bottom"] = 0
-    unitCountsDict["friendly.immortalBuilding.bottom"] = 0
+//     unitCountsDict["friendly.marineBuilding.bottom"] = 0
+//     unitCountsDict["friendly.banelingBuilding.bottom"] = 0
+//     unitCountsDict["friendly.immortalBuilding.bottom"] = 0
 
-    unitCountsDict["enemy.marineBuilding.top"] = 0
-    unitCountsDict["enemy.banelingBuilding.top"] = 0
-    unitCountsDict["enemy.immortalBuilding.top"] = 0
+//     unitCountsDict["enemy.marineBuilding.top"] = 0
+//     unitCountsDict["enemy.banelingBuilding.top"] = 0
+//     unitCountsDict["enemy.immortalBuilding.top"] = 0
 
-    unitCountsDict["enemy.marineBuilding.bottom"] = 0
-    unitCountsDict["enemy.banelingBuilding.bottom"] = 0
-    unitCountsDict["enemy.immortalBuilding.bottom"] = 0
+//     unitCountsDict["enemy.marineBuilding.bottom"] = 0
+//     unitCountsDict["enemy.banelingBuilding.bottom"] = 0
+//     unitCountsDict["enemy.immortalBuilding.bottom"] = 0
 
-    unitCountsDict["friendly.Pylon"] = 0
-    unitCountsDict["enemy.Pylon"] = 0
+//     unitCountsDict["friendly.Pylon"] = 0
+//     unitCountsDict["enemy.Pylon"] = 0
 
-}
+// }
 
-function copyFrameUnitCountsDict(){
-    previousFrameUnitCounts["friendly.marineBuilding.top"] = currentFrameUnitCounts["friendly.marineBuilding.top"]
-    previousFrameUnitCounts["friendly.banelingBuilding.top"] = currentFrameUnitCounts["friendly.banelingBuilding.top"]
-    previousFrameUnitCounts["friendly.immortalBuilding.top"] = currentFrameUnitCounts["friendly.immortalBuilding.top"]
+// function copyFrameUnitCountsDict(){
+//     previousFrameUnitCounts["friendly.marineBuilding.top"] = currentFrameUnitCounts["friendly.marineBuilding.top"]
+//     previousFrameUnitCounts["friendly.banelingBuilding.top"] = currentFrameUnitCounts["friendly.banelingBuilding.top"]
+//     previousFrameUnitCounts["friendly.immortalBuilding.top"] = currentFrameUnitCounts["friendly.immortalBuilding.top"]
 
-    previousFrameUnitCounts["friendly.marineBuilding.bottom"] = currentFrameUnitCounts["friendly.marineBuilding.bottom"]
-    previousFrameUnitCounts["friendly.banelingBuilding.bottom"] = currentFrameUnitCounts["friendly.banelingBuilding.bottom"]
-    previousFrameUnitCounts["friendly.immortalBuilding.bottom"] = currentFrameUnitCounts["friendly.immortalBuilding.bottom"]
+//     previousFrameUnitCounts["friendly.marineBuilding.bottom"] = currentFrameUnitCounts["friendly.marineBuilding.bottom"]
+//     previousFrameUnitCounts["friendly.banelingBuilding.bottom"] = currentFrameUnitCounts["friendly.banelingBuilding.bottom"]
+//     previousFrameUnitCounts["friendly.immortalBuilding.bottom"] = currentFrameUnitCounts["friendly.immortalBuilding.bottom"]
 
-    previousFrameUnitCounts["enemy.marineBuilding.top"] = currentFrameUnitCounts["enemy.marineBuilding.top"]
-    previousFrameUnitCounts["enemy.banelingBuilding.top"] = currentFrameUnitCounts["enemy.banelingBuilding.top"]
-    previousFrameUnitCounts["enemy.immortalBuilding.top"] = currentFrameUnitCounts["enemy.immortalBuilding.top"]
+//     previousFrameUnitCounts["enemy.marineBuilding.top"] = currentFrameUnitCounts["enemy.marineBuilding.top"]
+//     previousFrameUnitCounts["enemy.banelingBuilding.top"] = currentFrameUnitCounts["enemy.banelingBuilding.top"]
+//     previousFrameUnitCounts["enemy.immortalBuilding.top"] = currentFrameUnitCounts["enemy.immortalBuilding.top"]
 
-    previousFrameUnitCounts["enemy.marineBuilding.bottom"] = currentFrameUnitCounts["enemy.marineBuilding.bottom"]
-    previousFrameUnitCounts["enemy.banelingBuilding.bottom"] = currentFrameUnitCounts["enemy.banelingBuilding.bottom"]
-    previousFrameUnitCounts["enemy.immortalBuilding.bottom"] = currentFrameUnitCounts["enemy.immortalBuilding.bottom"]
+//     previousFrameUnitCounts["enemy.marineBuilding.bottom"] = currentFrameUnitCounts["enemy.marineBuilding.bottom"]
+//     previousFrameUnitCounts["enemy.banelingBuilding.bottom"] = currentFrameUnitCounts["enemy.banelingBuilding.bottom"]
+//     previousFrameUnitCounts["enemy.immortalBuilding.bottom"] = currentFrameUnitCounts["enemy.immortalBuilding.bottom"]
 
-    previousFrameUnitCounts["friendly.Pylon"] = currentFrameUnitCounts["friendly.Pylon"]
-    previousFrameUnitCounts["enemy.Pylon"] = currentFrameUnitCounts["enemy.Pylon"]
-}
+//     previousFrameUnitCounts["friendly.Pylon"] = currentFrameUnitCounts["friendly.Pylon"]
+//     previousFrameUnitCounts["enemy.Pylon"] = currentFrameUnitCounts["enemy.Pylon"]
+// }
 
-initUnitCounts(currentFrameUnitCounts)
-initUnitCounts(previousFrameUnitCounts)
-console.log("global init called")
+// initUnitCounts(currentFrameUnitCounts)
+// initUnitCounts(previousFrameUnitCounts)
+// console.log("global init called")
 
-function computeUnitValues(frameInfo){
-    var recorderUnit = 45
-    var pylonUnit = 60
-    for (dpIndex in video)
-    if (haveJumped){
-        if (videoDecisionPoints[dpIndex] == frameInfo.frame_number){
-            copyFrameUnitCountsDict()
-        }
-    }
-    else{
-        if (videoDecisionPoints[dpIndex]+5 <= frameInfo.frame_number && frameInfo.frame_number < videoDecisionPoints[i] + 12){
-            copyFrameUnitCountsDict()
-        }
-    }
+// function computeUnitValues(frameInfo){
+//     var recorderUnit = 45
+//     var pylonUnit = 60
+//     for (dpIndex in video)
+//     if (haveJumped){
+//         if (videoDecisionPoints[dpIndex] == frameInfo.frame_number){
+//             copyFrameUnitCountsDict()
+//         }
+//     }
+//     else{
+//         if (videoDecisionPoints[dpIndex]+5 <= frameInfo.frame_number && frameInfo.frame_number < videoDecisionPoints[i] + 12){
+//             copyFrameUnitCountsDict()
+//         }
+//     }
 
-    initUnitCounts(currentFrameUnitCounts)
-    for (var i in frameInfo.units){
-        var unit = frameInfo.units[i]
-        if (unit.unit_type == recorderUnit){
-            setMineralHealth(unit)
-        }
-        else if (unit.unit_type == pylonUnit){
-            updatePylonCounts(unit)
-        }
-        else{
-            updateUnitCounts(unit)
-        }
-    }
-    renderUnitValues(frameInfo);
-}
+//     initUnitCounts(currentFrameUnitCounts)
+//     for (var i in frameInfo.units){
+//         var unit = frameInfo.units[i]
+//         if (unit.unit_type == recorderUnit){
+//             setMineralHealth(unit)
+//         }
+//         else if (unit.unit_type == pylonUnit){
+//             updatePylonCounts(unit)
+//         }
+//         else{
+//             updateUnitCounts(unit)
+//         }
+//     }
+//     renderUnitValues(frameInfo);
+// }
 
 
 var allianceNameForValue = {
@@ -352,8 +352,85 @@ function collectDecisionPoints(frameInfos){
     }
 }
 
-var framePastDecisionPoint = 0;
+var unitDivIds = [
+    "p1_top_marine",
+    "p1_top_baneling",
+    "p1_top_immortal",
+    "p1_bottom_marine",
+    "p1_bottom_baneling",
+    "p1_bottom_immortal",
+    "p2_top_marine",
+    "p2_top_baneling",
+    "p2_top_immortal",
+    "p2_bottom_marine",
+    "p2_bottom_baneling",
+    "p2_bottom_immortal",
+    "p2_pylon",
+    "p1_pylon"
+];
+var unitKeyForDivId = {};
+unitKeyForDivId["p1_top_marine"] = "friendly.marineBuilding.top";
+unitKeyForDivId["p1_top_baneling"] = "friendly.banelingBuilding.top";
+unitKeyForDivId["p1_top_immortal"] = "friendly.immortalBuilding.top";
+unitKeyForDivId["p1_bottom_marine"] = "friendly.marineBuilding.bottom";
+unitKeyForDivId["p1_bottom_baneling"] = "friendly.banelingBuilding.bottom";
+unitKeyForDivId["p1_bottom_immortal"] = "friendly.immortalBuilding.bottom";
+unitKeyForDivId["p2_top_marine"] = "enemy.marineBuilding.top";
+unitKeyForDivId["p2_top_baneling"] = "enemy.banelingBuilding.top";
+unitKeyForDivId["p2_top_immortal"] = "enemy.immortalBuilding.top";
+unitKeyForDivId["p2_bottom_marine"] = "enemy.marineBuilding.bottom";
+unitKeyForDivId["p2_bottom_baneling"] = "enemy.banelingBuilding.bottom";
+unitKeyForDivId["p2_bottom_immortal"] = "enemy.immortalBuilding.bottom";
+unitKeyForDivId["p2_pylon"] = "enemy.Pylon";
+unitKeyForDivId["p1_pylon"] = "friendly.Pylon";
+
+var unitNameForDiv = {};
+unitNameForDiv["p1_top_marine"] = "Marine: ";
+unitNameForDiv["p1_top_baneling"] = "Baneling: ";
+unitNameForDiv["p1_top_immortal"] = "Immortal: ";
+unitNameForDiv["p1_bottom_marine"] = "Marine: ";
+unitNameForDiv["p1_bottom_baneling"] = "Baneling: ";
+unitNameForDiv["p1_bottom_immortal"] = "Immortal: ";
+unitNameForDiv["p2_top_marine"] = "Marine: ";
+unitNameForDiv["p2_top_baneling"] = "Baneling: ";
+unitNameForDiv["p2_top_immortal"] = "Immortal: ";
+unitNameForDiv["p2_bottom_marine"] = "Marine: ";
+unitNameForDiv["p2_bottom_baneling"] = "Baneling: ";
+unitNameForDiv["p2_bottom_immortal"] = "Immortal: ";
+unitNameForDiv["p2_pylon"] = "Pylon";
+unitNameForDiv["p1_pylon"] = "Pylon";
+// var framePastDecisionPoint = 0;
 function renderUnitValues(frameInfo){
+    // fill out the additives
+    $('.unit-additive-value').css('color', "green");
+    var addValues = {};
+    for (var i in unitDivIds){
+        var unitDivAddId = unitDivIds[i] + "_add";
+        addValues[unitDivAddId] = "";
+    }
+    for (var i in unitDivIds){
+        var unitDivId = unitDivIds[i];
+        var unitKey = unitKeyForDivId[unitDivId];
+        var unitAddKey = unitKey + "_delta";
+        var unitDivAddId = unitDivId + "_add";
+        if (frame[unitAddKey] > 0){
+            addValues[unitDivAddId] = "(+" + frame[unitAddKey] + ")";
+        }
+        document.getElementById(unitDivAddId).innerHTML = addValues[unitDivAddId];
+    }
+    
+    //fill out the counts 
+    for (var i in unitDivIds){
+        var unitDivId = unitDivIds[i];
+        var unitKey = unitKeyForDivId[unitDivId] + "_count";
+        document.getElementById(unitDivId).innerHTML = unitNameForDiv[unitDivId] + frame[unitKey];
+    }
+    
+    document.getElementById("p1_mineral").innerHTML = "Minerals: " + currentFriendlyMineralHealth;
+
+}
+
+function renderUnitValuesOld(frameInfo){
     for (i in videoDecisionPoints){
         if (frameInfo.frame_number >= videoDecisionPoints[i]+4 && frameInfo.frame_number < videoDecisionPoints[i] + 12){
             framePastDecisionPoint = frameInfo.frame_number

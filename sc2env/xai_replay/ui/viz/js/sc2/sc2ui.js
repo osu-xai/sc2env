@@ -87,36 +87,36 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         //this.renderStateForCurrentStep();
         //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
-    uim.fastForwardUnitCounts = function(frameNumber){
-        collectDecisionPoints(this.dataManager.frameInfos)
-        initUnitCounts(currentFrameUnitCounts)
-        initUnitCounts(previousFrameUnitCounts)
-        framePastDecisionPoint = 0
-        for (var i = 0; i <= frameNumber; i++){
-            var frame = this.dataManager.frameInfos[i];
-            console.log("frame number " + frame["frame_number"])
-            console.log("calling compute: " + i)
-            for (var dpIndex in videoDecisionPoints){
-                if (videoDecisionPoints[dpIndex] == i){
-                    copyFrameUnitCountsDict()
-                }
-            }
-            computeUnitValues(frame);
+    // uim.fastForwardUnitCounts = function(frameNumber){
+    //     collectDecisionPoints(this.dataManager.frameInfos)
+    //     initUnitCounts(currentFrameUnitCounts)
+    //     initUnitCounts(previousFrameUnitCounts)
+    //     framePastDecisionPoint = 0
+    //     for (var i = 0; i <= frameNumber; i++){
+    //         var frame = this.dataManager.frameInfos[i];
+    //         console.log("frame number " + frame["frame_number"])
+    //         console.log("calling compute: " + i)
+    //         for (var dpIndex in videoDecisionPoints){
+    //             if (videoDecisionPoints[dpIndex] == i){
+    //                 copyFrameUnitCountsDict()
+    //             }
+    //         }
+    //         computeUnitValues(frame);
            
-        }
-        // renderUnitValues(frame);
-    }
+    //     }
+    //     // renderUnitValues(frame);
+    // }
 
     uim.expressFrameInfo = function(frameNumber) {
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
         frame = this.dataManager.getFrameInfo(frameNumber);
-        computeUnitValues(frame);
-        // renderUnitValues(frame);
+        //computeUnitValues(frame);
+        renderUnitValues(frame);
         userStudyAdjustmentsForFrameChange();
         if (this.jumped){
-            this.fastForwardUnitCounts(frameNumber)
+            //this.renderUnitValues(frameNumber)
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
         }
