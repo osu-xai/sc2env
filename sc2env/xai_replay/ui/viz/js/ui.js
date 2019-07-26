@@ -64,7 +64,7 @@ function configureGameboardCanvas(){ //gameboard canvas will be used to draw thi
 	gameboard_canvas.setAttribute("id","gameboard");
 	screen_height = $(window).height()
 	$("#scaii-gameboard").css("width", "100%");
-	$("#scaii-gameboard").css("height", screen_height*.875); //cropping video in ui
+	$("#scaii-gameboard").css("height", screen_height * uncroppedPercentage); //cropping video in ui
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
 	$("#scaii-gameboard").css("position", "relative");

@@ -6,6 +6,9 @@
 
 
 var videoScaleFactor = .365;
+var uncroppedPercentage = 0.875
+var videoHeightExtensionForCrop = 1.1
+
 
 var cameraWidth = 114;
 var cameraHeight = 56;
@@ -125,11 +128,15 @@ function createVideoElement(path){
     }
     video = document.createElement("video");
 	video.setAttribute("width", "100%");
-    video.setAttribute("height", $(window).height()*1.1);
+    video.setAttribute("height", $(window).height() * videoHeightExtensionForCrop);
     video.setAttribute("id","video");
 	video.src = path;
-	$("#scaii-gameboard").append(video);
-	
+    $("#scaii-gameboard").append(video);
+    var renderedVideoHeight = video.clientHeight
+    console.log("video height: " + renderedVideoHeight)
+    var renderedVideoWidth =  video.clientWidth
+    console.log("video width: " + renderedVideoWidth)
+
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
