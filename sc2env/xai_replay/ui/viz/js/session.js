@@ -296,7 +296,6 @@ console.log("global init called")
 function computeUnitValues(frameInfo){
     var recorderUnit = 45
     var pylonUnit = 60
-    var 
     for (dpIndex in video)
     if (haveJumped){
         if (videoDecisionPoints[dpIndex] == frameInfo.frame_number){

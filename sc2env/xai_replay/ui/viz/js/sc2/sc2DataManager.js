@@ -4,6 +4,7 @@ var trimBy = 80
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
+    addUnitDynamicsToFrames(frameInfos);
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
@@ -22,6 +23,134 @@ function trimFirstFrames(frameInfos, trimBy){
     return frameInfos;
 }
 
+
+var unitInfoKeys = [
+    "friendly.marineBuilding.top",
+    "friendly.banelingBuilding.top",
+    "friendly.immortalBuilding.top",
+    "friendly.marineBuilding.bottom",
+    "friendly.banelingBuilding.bottom",
+    "friendly.immortalBuilding.bottom",
+    "enemy.marineBuilding.top",
+    "enemy.banelingBuilding.top",
+    "enemy.immortalBuilding.top",
+    "enemy.marineBuilding.bottom",
+    "enemy.banelingBuilding.bottom",
+    "enemy.immortalBuilding.bottom",
+    "friendly.Pylon",
+    "enemy.Pylon"
+]
+var unitIdForKey = {};
+unitIdForKey["friendly.marineBuilding.top"] = 21;
+unitIdForKey["friendly.banelingBuilding.top"] = 28;
+unitIdForKey["friendly.immortalBuilding.top"] = 70;
+unitIdForKey["friendly.marineBuilding.bottom"] = 21;
+unitIdForKey["friendly.banelingBuilding.bottom"] = 28;
+unitIdForKey["friendly.immortalBuilding.bottom"] = 70;
+unitIdForKey["enemy.marineBuilding.top"] = 21;
+unitIdForKey["enemy.banelingBuilding.top"] = 28;
+unitIdForKey["enemy.immortalBuilding.top"] = 70;
+unitIdForKey["enemy.marineBuilding.bottom"] = 21;
+unitIdForKey["enemy.banelingBuilding.bottom"] = 28;
+unitIdForKey["enemy.immortalBuilding.bottom"] = 70;
+unitIdForKey["friendly.Pylon"] = 60;
+unitIdForKey["enemy.Pylon"] = 60;
+
+var allianceForKey = {};
+allianceForKey["friendly.marineBuilding.top"] = 1;
+allianceForKey["friendly.banelingBuilding.top"] = 1;
+allianceForKey["friendly.immortalBuilding.top"] = 1;
+allianceForKey["friendly.marineBuilding.bottom"] = 1;
+allianceForKey["friendly.banelingBuilding.bottom"] = 1;
+allianceForKey["friendly.immortalBuilding.bottom"] = 1;
+allianceForKey["enemy.marineBuilding.top"] = 4;
+allianceForKey["enemy.banelingBuilding.top"] = 4;
+allianceForKey["enemy.immortalBuilding.top"] = 4;
+allianceForKey["enemy.marineBuilding.bottom"] = 4;
+allianceForKey["enemy.banelingBuilding.bottom"] = 4;
+allianceForKey["enemy.immortalBuilding.bottom"] = 4;
+allianceForKey["friendly.Pylon"] = 1;
+allianceForKey["enemy.Pylon"] = 4;
+
+
+var laneForKey = {};
+laneForKey["friendly.marineBuilding.top"] = "top";
+laneForKey["friendly.banelingBuilding.top"] = "top";
+laneForKey["friendly.immortalBuilding.top"] = "top";
+laneForKey["friendly.marineBuilding.bottom"] = "bottom";
+laneForKey["friendly.banelingBuilding.bottom"] = "bottom";
+laneForKey["friendly.immortalBuilding.bottom"] = "bottom";
+laneForKey["enemy.marineBuilding.top"] = "top";
+laneForKey["enemy.banelingBuilding.top"] = "top";
+laneForKey["enemy.immortalBuilding.top"] = "top";
+laneForKey["enemy.marineBuilding.bottom"] = "bottom";
+laneForKey["enemy.banelingBuilding.bottom"] = "bottom";
+laneForKey["enemy.immortalBuilding.bottom"] = "bottom";
+laneForKey["friendly.Pylon"] = "NA";
+laneForKey["enemy.Pylon"] = "NA";
+
+function addUnitDynamicsToFrames(frameInfos){
+    var deltaKeyCounters = {};
+    for (keyIndex in unitInfoKeys){
+        var key = unitInfoKeys[keyIndex];
+        var prevFrame = undefined;
+        var countKey = key +"_count";
+        var deltaKey = key + "_delta";
+        var deltaCounterKey = key + "_delta_count";
+        for (frameIndex in frameInfos){
+            var frame = frameInfos[frameIndex];
+            frame[countKey] = 0;
+            frame[deltaKey] = 0;
+            var unitId = unitIdForKey[key];
+            var lane = laneForKey[key];
+            var alliance = allianceForKey[key];
+            var units = frame["units"];
+            for (unitIndex in units){
+                var unit = units[unitIndex];
+                var curUnitId = unit["unit_type"];
+                var curAlliance = unit["alliance"];
+                var curLane = getUnitLane(unit["y"]);
+                if (curUnitId == unitId &&  curAlliance == alliance){
+                    if (curLane == "NA" || curLane == lane) {
+                        frame[countKey]++;
+                    }
+                    if (prevFrame != undefined){
+                        if (prevFrame[countKey] < frame[countKey]){
+                            frame[deltaKey] = frame[countKey] - prevFrame[countKey];
+                            deltaKeyCounters[deltaCounterKey] = 1;
+                        }
+                        else {
+                            var curCount = deltaKeyCounters[deltaCounterKey]
+                            if (curCount == undefined){
+                                deltaKeyCounters[deltaCounterKey] = 0;
+                            }
+                            else if (curCount != 0){
+                                curCount++;
+                                console.log(key + " frame " + frameIndex + " curCount " + curCount);
+                                if (curCount > 40){
+                                    deltaKeyCounters[deltaCounterKey] = 0;
+                                    console.log(key + " frame " + frameIndex + " resetting to 0")
+                                }
+                                else {
+                                    deltaKeyCounters[deltaCounterKey] = curCount;
+                                    frame[deltaKey] = prevFrame[deltaKey];
+                                    console.log(key + " frame " + frameIndex + " applying prior delta")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            prevFrame = frame;
+        }
+    }
+    var key = "friendly.marineBuilding.top";
+    for (frameIndex in frameInfos){
+        var frame = frameInfos[frameIndex];
+        var deltaKey = key +"_delta"
+        console.log("frame " + frameIndex + " delta " + frame[deltaKey])
+    }
+}
 function getSC2DataManagerFromFrameInfos(frameInfos) {
     var dm = {};
     dm.frameInfos = frameInfos;
