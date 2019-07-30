@@ -15,7 +15,10 @@ zIndexMap["clickBlockerRectangle"] = 10;
 zIndexMap["whyButton"] = 11;
 zIndexMap["arrow"] = 20;
 zIndexMap["tooltip"] = 30;
-zIndexMap["allTheWayToFront"] = 40;
+zIndexMap["aboveToolTip"] = 40;
+zIndexMap["allTheWayToFront"] = 80;
+zIndexMap["modalPopUp"] = 90
+
 //var game_background_color = "#123456";
 //var game_background_color = "#000000";
 //var game_background_color = "#f0f0f0";
@@ -318,7 +321,7 @@ function sizeNonGeneratedElements() {
 	});
 		
 
-	$("#p1_top").css("z-index", "50");
+	$("#p1_top").css("z-index", zIndexMap["aboveToolTip"]);
 	$("#p1_top").css("color", "white");
 	$("#p1_top").css("background-color", "Navy");
 	$("#p1_top").css("border", "2px solid blue");
@@ -327,7 +330,7 @@ function sizeNonGeneratedElements() {
 
 
 
-	$("#p2_top").css("z-index", "50");
+	$("#p2_top").css("z-index", zIndexMap["aboveToolTip"]);
 	$("#p2_top").css("color", "white");
 	$("#p2_top").css("background-color", "Navy");
 	$("#p2_top").css("border", "2px solid blue");
@@ -335,7 +338,7 @@ function sizeNonGeneratedElements() {
 	$("#p2_top").css("padding", "5px");
 
 
-	$("#p1_bottom").css("z-index", "50");
+	$("#p1_bottom").css("z-index", zIndexMap["aboveToolTip"]);
 	$("#p1_bottom").css("color", "white");
 	$("#p1_bottom").css("background-color", "Navy");
 	$("#p1_bottom").css("border", "2px solid blue");
@@ -343,7 +346,7 @@ function sizeNonGeneratedElements() {
 	$("#p1_bottom").css("padding", "5px");
 
 
-	$("#p2_bottom").css("z-index", "50");
+	$("#p2_bottom").css("z-index", zIndexMap["aboveToolTip"]);
 	$("#p2_bottom").css("color", "white");
 	$("#p2_bottom").css("background-color", "Navy");
 	$("#p2_bottom").css("border", "2px solid blue");
@@ -442,11 +445,8 @@ function sizeNonGeneratedElements() {
 	$('#unit-value-panels-toggle').css('width', "80px")
 	$('#unit-value-panels-toggle').css('height', "30px")
 
-
-
 	var toggle_units = document.getElementById("unit-value-panels-toggle");
 	toggle_units.addEventListener('click', function(event){
-		console.log("you clicked on the toggle")
 		if ($('.unit-value-panels').css('display') == 'none'){
 			$('.unit-value-panels').css('display', "block")
 		}
@@ -454,8 +454,39 @@ function sizeNonGeneratedElements() {
 			$('.unit-value-panels').css('display', "none")
 		}
 	});
+	
+	$('#fullscreen-button1-toggle').css('float', "left")
+	$('#fullscreen-button1-toggle').css('text-align', "center")
+	$('#fullscreen-button1-toggle').css('font-size', "12px")
+	$('#fullscreen-button1-toggle').css('font-family', "Arial")
+	$('#fullscreen-button1-toggle').css('width', "80px")
+	$('#fullscreen-button1-toggle').css('height', "30px")
 
 
+	$('#fullscreen-modal').css('width', "90%")
+	$('#fullscreen-modal').css('height', "80%")
+	$('#fullscreen-modal').css('left', "5%")
+	$('#fullscreen-modal').css('right', "5%")
+	$('#fullscreen-modal').css('top', "7%")
+	$('#fullscreen-modal').css('bottom', "5%")
+
+	$('#fullscreen-modal').css('position', "absolute")
+	$('#fullscreen-modal').css('background-color', "white")
+	$('#fullscreen-modal').css('border-radius', "10px")
+	$('#fullscreen-modal').css('z-index', zIndexMap["modalPopUp"])
+
+
+
+
+	var toggle_fullscreen_modal = document.getElementById("fullscreen-button1-toggle");
+	toggle_fullscreen_modal.addEventListener('click', function(event){
+		if ($('#fullscreen-modal').css('display') == 'none'){
+			$('#fullscreen-modal').css('display', "block")
+		}
+		else{
+			$('#fullscreen-modal').css('display', "none")
+		}
+	});
 	
 	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
 	var stepValueWidth = 100;
@@ -470,16 +501,17 @@ function sizeNonGeneratedElements() {
 	$("#playback-controls-panel").css("margin-left", "10px");
 	$("#playback-controls-panel").css("margin-top", "10px");
 	$("#playback-controls-panel").css("margin-bottom", "10px");
-	
+	$("#playback-controls-panel").css("z-index", zIndexMap["allTheWayToFront"]);
+
 
 	$("#explanation-control-panel").css("height", "60px")
-	// $("#explanation-control-panel").css("width", "100%")
 	$("#explanation-control-panel").css("position", "absolute");
 	$("#explanation-control-panel").css("top", "45%");
 	$("#explanation-control-panel").css("left", "5%");
 	$("#explanation-control-panel").css("right", "5%");
 	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
-	
+	$("#explanation-control-panel").css("z-index", zIndexMap["allTheWayToFront"]);
+
 
 	$("#friendly-title").css("font-size", "18px")
 	$("#enemy-title").css("font-size", "18px")

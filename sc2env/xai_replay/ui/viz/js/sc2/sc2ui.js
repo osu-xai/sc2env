@@ -164,6 +164,7 @@ function toggleOnUIElements(){
     $('#unit-value-panels-toggle').css('display', "block")
     $('.unit-value-panels').css('display', "block")
 
+    $('#fullscreen-button1-toggle').css('display', "block")
     
 }
 

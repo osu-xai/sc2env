@@ -77,7 +77,16 @@
 	  <link rel="stylesheet" type="text/css" href="css/gameControls.css">
 	  <link rel="stylesheet" type="text/css" href="css/explanations.css">
 	  <link rel="stylesheet" type="text/css" href="css/game.css">
-	  <link rel="stylesheet" type="text/css" href="css/majorContainers.css">
+      <link rel="stylesheet" type="text/css" href="css/majorContainers.css">
+      
+      <link rel="stylesheet" href="css/Treant.css">
+      <link rel="stylesheet" href="css/collapsable.css">
+      <link rel="stylesheet" href="css/perfect-scrollbar.css">
+      <script src="js/raphael.js"></script>
+      <script src="js/Treant.js"></script>
+      <script src="js/jquery.easing.js"></script>
+      <script src="js/collapsable.js"></script>
+
 	<style>
     </style>
 	</head>
@@ -118,6 +127,12 @@
                         </div>-->
                         <div id="game-row" class="flex-row">
 
+                            <div id="fullscreen-modal" style="display:none;">
+                                <div class="chart" id="collapsable-example"></div>
+                                <script>
+                                    tree = new Treant( chart_config );
+                                </script>
+                            </div>
 
                             <div id="unit-value-panels-containter" class="unit-value-panels" style="height:87%;width:99%;display:none;position: absolute;">
                                 <div id="friendly.nexusHealth.top">Nexus Health: </div>
@@ -159,10 +174,11 @@
                             <div id="cumulative-rewards" class="grid bg" style="padding-left:8px;height:100%;background-color:rgba(0,0,0,0);"></div>
                         </div>
                         
-                        
-                        <div id="playback-controls-panel" class="flex-row" style="z-index:1100;">
+
+                        <div id="playback-controls-panel" class="flex-row">
                             <button id="reward-values-panel-toggle" alt="View Rewards" style="display: none;">Show Rewards</button>
                             <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;">Show Units</button>
+                            <button id="fullscreen-button1-toggle" alt="enter alt text her" style="display:none;">Fullscreen Modual</button>
 
                             <div id="step-value" class="minor-label-text"></div>
                             <div id="rewind-control"></div>
@@ -170,8 +186,7 @@
                             <div id="step-forward-control"></div>
                             <div id="pause-play-control"></div>
                         </div>
-                        <div id="explanation-control-panel" class="timeline-control bg" style="z-index:999;">
-                            <!--<input type="button" id="test-button" style="z-index:2; position:relative; top:20px; left:50px" value="?"/>-->
+                        <div id="explanation-control-panel" class="timeline-control bg" >
                         </div>
                         <div id="lane-neutral-information-container" class="lane-neutral-information" style="display: none;">
                             <div id="p1_mineral" class="lane-neutral-information">Player 1 Minerals: </div>

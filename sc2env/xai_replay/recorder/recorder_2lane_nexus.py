@@ -62,10 +62,10 @@ class XaiReplayRecorder2LaneNexus():
             frame_info["cumulative_rewards"] = cumulative_rewards
         
         frame_info["action_component_names"] = self.action_component_names
-        print("action p1: " + str(action_p1))
-        print("action p1: " + str(action_p2))
-        print("state p2: " + str(state_p1))
-        print("state p2: " + str(state_p2))
+        # print("action p1: " + str(action_p1))
+        # print("action p1: " + str(action_p2))
+        # print("state p2: " + str(state_p1))
+        # print("state p2: " + str(state_p2))
 
         # frame_info["action_p1"] = create_action_dict(action_p1)
         # frame_info["action_p2"] = create_action_dict(action_p2)
@@ -94,31 +94,35 @@ class XaiReplayRecorder2LaneNexus():
         #     self.current_wave_number = wave_number
         # else:
         #     frame_info["start_of_wave"] = False
+        
         for unit in observation.observation.raw_data.units:
             x = {}
-            x["display_type"] = unit.display_type
-            x["alliance"] = unit.alliance
-            x["tag"] = unit.tag
+            # x["display_type"] = unit.display_type
+            
+            # x["tag"] = unit.tag
             x["unit_type"] = unit.unit_type
-            x["owner"] = unit.owner
-            x["facing"] = unit.facing
-            x["radius"] = unit.radius
-            x["build_progress"] = unit.build_progress
-            x["cloak"] = unit.cloak
-            x["is_selected"] = unit.is_selected
-            x["is_on_screen"] = unit.is_on_screen
-            x["is_blip"] = unit.is_blip
+            # x["owner"] = unit.owner
+            # x["facing"] = unit.facing
+            # x["radius"] = unit.radius
+            # x["build_progress"] = unit.build_progress
+            # x["cloak"] = unit.cloak
+            # x["is_selected"] = unit.is_selected
+            # x["is_on_screen"] = unit.is_on_screen
+            # x["is_blip"] = unit.is_blip
             x["health"] = unit.health
-            x["health_max"] = unit.health_max
             x["shield"] = unit.shield
-            x["energy"] = unit.energy
-            x["is_flying"] = unit.is_flying
-            x["is_burrowed"] = unit.is_burrowed
-            x["shield_max"] = unit.shield_max
-            x["energy_max"] = unit.energy_max
-            x["x"] = unit.pos.x
-            x["y"] = unit.pos.y
-            x["z"] = unit.pos.z
+            # x["energy"] = unit.energy
+            # x["is_flying"] = unit.is_flying
+            # x["is_burrowed"] = unit.is_burrowed
+            # x["shield_max"] = unit.shield_max
+            # x["energy_max"] = unit.energy_max
+            if(unit.unit_type != 45):
+                x["alliance"] = unit.alliance
+                x["x"] = unit.pos.x
+                x["y"] = unit.pos.y
+                x["health_max"] = unit.health_max
+
+            # x["z"] = unit.pos.z
             units.append(x)
         frame_info["units"] = units
     
