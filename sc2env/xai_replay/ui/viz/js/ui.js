@@ -267,7 +267,7 @@ function sizeNonGeneratedElements() {
 	$("#game-replay-label").css("padding-right", "10px");
 
 	// 300
-	$("#replay-file-selector").css("width", fileSelectorWidth + "px");
+	$("#replay-file-selector").css("width",  "16%");
 
 	
 	$("#scaii-acronym").css("padding-top", "10px");
