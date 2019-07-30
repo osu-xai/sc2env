@@ -277,6 +277,7 @@ htmlTextForKey["enemy.Pylon"] = "Pylons: ";
 
 function renderUnitValues(frameInfo){
         var unit = frameInfo
+        var hitDP = false;
         for (unitCount in unitInfoKeys){
             if(unit[unitInfoKeys[unitCount] + "_delta_triggered"] == 1){
                 document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = " (+" + (unit[unitInfoKeys[unitCount] + "_delta"]) + ")"
@@ -287,6 +288,7 @@ function renderUnitValues(frameInfo){
 
                 document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]] + (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
                 document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+                hitDP = true;
             }
             else{
                 document.getElementById(unitInfoKeys[unitCount] + "_delta").style.display = "none";
@@ -301,7 +303,13 @@ function renderUnitValues(frameInfo){
         document.getElementById("friendly.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"bottom",nexusUnits);
         document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
         document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
-
+        for (var i = 0; i < decisionPoints.length; i++){
+            if (frameInfo.frame_number >= decisionPoints[i] + 2){
+                pauseGame();
+                decisionPoints.splice(i,1);
+                return;
+            }
+        }
 }
 
 

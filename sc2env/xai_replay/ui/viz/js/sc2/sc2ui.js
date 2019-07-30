@@ -99,7 +99,9 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         frame = this.dataManager.getFrameInfo(frameNumber);
         renderUnitValues(frame);
         userStudyAdjustmentsForFrameChange();
+        
         if (this.jumped){
+            getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
         }
@@ -164,7 +166,7 @@ function toggleOnUIElements(){
     $('#unit-value-panels-toggle').css('display', "block")
     $('.unit-value-panels').css('display', "block")
 
-    $('#fullscreen-button1-toggle').css('display', "block")
+    // $('#fullscreen-button1-toggle').css('display', "block")
     
 }
 

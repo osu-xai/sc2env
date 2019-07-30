@@ -6,6 +6,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     frameInfos = trimFirstFrames(frameInfos, trimBy)
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
+    getDecisionPointFrames(frameInfos, 0)
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
@@ -24,6 +25,15 @@ function trimFirstFrames(frameInfos, trimBy){
     return frameInfos;
 }
 
+var decisionPoints = []
+function getDecisionPointFrames(frameInfos, frameNumber){
+    decisionPoints = [];
+    for (var i = frameNumber; i < frameInfos.length; i++){
+        if (frameInfos[i].frame_info_type == "decision_point"){
+            decisionPoints.push(frameInfos[i].frame_number);
+        }
+    }
+}
 
 var unitInfoKeys = [
     "friendly.marineBuilding.top",
