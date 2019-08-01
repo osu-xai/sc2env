@@ -11,6 +11,7 @@ from sc2env.utility import getOneHotState
 from copy import copy, deepcopy
 import os
 import sys
+import random
 
 SCREEN_SIZE  = 40
 MAP_NAME = 'TugOfWar-2-Lane-Self-Play-No-FIFO'
@@ -46,7 +47,7 @@ unit_types_player1 = {
     28 : 2, # 'Starport'
     70 : 3, # 'RoboticsFacility'
     60 : 7, # 'Pylon'
-    59 : 27, # 'Nexus'
+    59 : 63, # 'Nexus'
     48 : 15, # 'Marine'
     9 : 16, # 'Baneling'
     83 : 17 # 'Immortal'
@@ -56,10 +57,10 @@ unit_types_player2 = {
     28 : 9, # 'Starport'
     70 : 10, # 'RoboticsFacility'
     60 : 14, # 'Pylon'
-    59 : 29, # 'Nexus'
-    48 : 21, # 'Marine'
-    9 : 22, # 'Baneling' 
-    83 : 23 # 'Immortal'
+    59 : 65, # 'Nexus'
+    48 : 39, # 'Marine'
+    9 : 40, # 'Baneling'
+    83 : 41 # 'Immortal'
 }
 reward_dict = {
     1: "damge_to_player1_top_2",
@@ -103,9 +104,8 @@ class TugOfWar():
                 camera_width_world_units = 28,
                 #use_camera_position = True,
             )
-
-            step_mul_value = 4
-            # step_mul_value = 16
+            #step_mul_value = 4
+            step_mul_value = 16
 
         else:
             aif=features.AgentInterfaceFormat(
@@ -134,11 +134,32 @@ class TugOfWar():
         self.miner_index = 0
         self.reset_steps = -1
         self.mineral_limiation = 1500
-        self.norm_vector = np.array([700, 50, 40, 20, 50, 40, 20, 3,
-                                    50, 40, 20, 50, 40, 20, 3,
-                                    50, 40, 20, 50, 40, 20, 
-                                    50, 40, 20, 50, 40, 20,
-                                    2000, 2000, 2000, 2000, 40])
+        self.norm_vector = np.array([1500,           # Player 1 unspent minerals
+                                    30, 30, 10,     # Player 1 top lane building
+                                    30, 30, 10,     # Player 1 bottom lane building
+                                    3,              # Player 1 pylons
+                                    30, 30, 10,     # Player 2 top lane building
+                                    30, 30, 10,     # Player 2 bottom lane building
+                                    3,              # Player 2 pylons
+                                    30, 30, 10,     # Player 1 units top lane grid 1
+                                    30, 30, 10,     # Player 1 units top lane grid 2 
+                                    30, 30, 10,     # Player 1 units top lane grid 3
+                                    30, 30, 10,     # Player 1 units top lane grid 4
+                                    30, 30, 10,     # Player 1 units bottom lane grid 1
+                                    30, 30, 10,     # Player 1 units bottom lane grid 2 
+                                    30, 30, 10,     # Player 1 units bottom lane grid 3
+                                    30, 30, 10,     # Player 1 units bottom lane grid 4
+                                    30, 30, 10,     # Player 2 units top lane grid 1
+                                    30, 30, 10,     # Player 2 units top lane grid 2 
+                                    30, 30, 10,     # Player 2 units top lane grid 3
+                                    30, 30, 10,     # Player 2 units top lane grid 4
+                                    30, 30, 10,     # Player 2 units bottom lane grid 1
+                                    30, 30, 10,     # Player 2 units bottom lane grid 2 
+                                    30, 30, 10,     # Player 2 units bottom lane grid 3
+                                    30, 30, 10,     # Player 2 units bottom lane grid 4
+                                    2000, 2000,     # Player 1 Nexus HP (top, bottom)
+                                    2000, 2000,     # Player 2 Nexus HP (top, bottom)
+                                    40])              # Wave Number
         
         self.decision_point = 1
         self.signal_of_end = False
@@ -336,24 +357,62 @@ class TugOfWar():
             Plyer2 : Number of Immortal Maker 13 B
             Plyer2 : Number of Pylon 14
             
-            Player1: Marine on the field 15 T
-            Player1: Banelings on the field 16 T
-            Player1: Immortal on the field 17 T
-            Player1: Marine on the field 18 B
-            Player1: Banelings on the field 19 B
-            Player1: Immortal on the field 20 B
+            Player1: Marine on the field 15 T1
+            Player1: Banelings on the field 16 T1
+            Player1: Immortal on the field 17 T1
+            Player1: Marine on the field 18 T2
+            Player1: Banelings on the field 19 T2
+            Player1: Immortal on the field 20 T2
+            Player1: Marine on the field 21 T3
+            Player1: Banelings on the field 22 T3
+            Player1: Immortal on the field 23 T3
+            Player1: Marine on the field 24 T4
+            Player1: Banelings on the field 25 T4
+            Player1: Immortal on the field 26 T4
+ 
+            Player1: Marine on the field 27 B1
+            Player1: Banelings on the field 28 B1
+            Player1: Immortal on the field 29 B1
+            Player1: Marine on the field 30 B2
+            Player1: Banelings on the field 31 B2
+            Player1: Immortal on the field 32 B2
+            Player1: Marine on the field 33 B3
+            Player1: Banelings on the field 34 B3
+            Player1: Immortal on the field 35 B3
+            Player1: Marine on the field 36 B4
+            Player1: Banelings on the field 37 B4
+            Player1: Immortal on the field 38 B4
             
-            Player2: Marine on the field 21 T
-            Player2: Banelings on the field 22 T
-            Player2: Immortal on the field 23 T
-            Player2: Marine on the field 24 B
-            Player2: Banelings on the field 25 B
-            Player2: Immortal on the field 26 B
+            Player2: Marine on the field 39 T1
+            Player2: Banelings on the field 40 T1
+            Player2: Immortal on the field 41 T1
+            Player2: Marine on the field 42 T2
+            Player2: Banelings on the field 43 T2
+            Player2: Immortal on the field 44 T2
+            Player2: Marine on the field 45 T3
+            Player2: Banelings on the field 46 T3
+            Player2: Immortal on the field 47 T3
+            Player2: Marine on the field 48 T4
+            Player2: Banelings on the field 49 T4
+            Player2: Immortal on the field 50 T4
+           
+            Player2: Marine on the field 51 B1
+            Player2: Banelings on the field 52 B1
+            Player2: Immortal on the field 53 B1
+            Player2: Marine on the field 54 B2
+            Player2: Banelings on the field 55 B2
+            Player2: Immortal on the field 56 B2
+            Player2: Marine on the field 57 B3
+            Player2: Banelings on the field 58 B3
+            Player2: Immortal on the field 59 B3
+            Player2: Marine on the field 60 B4
+            Player2: Banelings on the field 61 B4
+            Player2: Immortal on the field 62 B4
             
-            Player1: Hit point of Nexus T 27 T
-            Player1: Hit point of Nexus T 28 B
-            Player2: Hit point of Nexus T 29 T
-            Player2: Hit point of Nexus T 30 B
+            Player1: Hit point of Nexus T 63 T
+            Player1: Hit point of Nexus T 64 B
+            Player2: Hit point of Nexus T 65 T
+            Player2: Hit point of Nexus T 66 B
             
             Number of waves
         """
@@ -364,37 +423,83 @@ class TugOfWar():
             utp_1 = unit_types_player2
             utp_2 = unit_types_player1
             
-        state = np.zeros(31)
-        for x in data:
-            if x.unit_type in unit_types_player1:
-                Bottom_index_addition_unit_building = 0
-                Bottom_index_addition_hp = 0
-                if x.alliance == 1: # 1: Self, 4: Enemy
+        state = np.zeros(67)
+        for entry in data:
+            if entry.unit_type in unit_types_player1:
+                if entry.alliance == 1: # 1: Self, 4: Enemy
                     unit_types = utp_1
-                else:
-                    unit_types = utp_2
-                
-                # Bottom lane
-                if x.pos.y < 32:
-                    Bottom_index_addition_unit_building = 3
-                    Bottom_index_addition_hp = 1
-                if x.unit_type == 60:
-                    Bottom_index_addition_unit_building = 0
-                    Bottom_index_addition_hp = 0
                     
-                if x.unit_type != 59: # Non Nexus
-                    state[unit_types[x.unit_type] + Bottom_index_addition_unit_building] += 1
+                elif entry.alliance == 4:
+                    unit_types = utp_2
+                    
                 else:
-                    state[unit_types[x.unit_type] + Bottom_index_addition_hp] = x.health
+                    print("ERROR!! Alliance not recognized")
+
+                if entry.pos.y < 32:
+                    bottom_entry = True
+                else:
+                    bottom_entry = False
+
+                #building
+                if unit_types[entry.unit_type] >= 0 and unit_types[entry.unit_type] <= 14:
+                    # Not a Pylon
+                    if entry.unit_type != 60 and bottom_entry == True:
+                        adjust = 3
+                    else:
+                        adjust = 0
+                #units on field
+                elif unit_types[entry.unit_type] >= 15 and unit_types[entry.unit_type] <= 62:
+                    # Grid
+                    if player == 1:
+                        if entry.pos.x >= 0 and entry.pos.x <= 32:
+                            grid_index = 0
+                        elif entry.pos.x > 32 and entry.pos.x <= 64:
+                            grid_index = 1
+                        elif entry.pos.x > 64 and entry.pos.x < 82.5:
+                            grid_index = 2
+                        elif entry.pos.x >= 82.5 and entry.pos.x <= 128:
+                            grid_index = 3
+                        else:
+                            print("ERROR!!! Unit recorded is somehow out of range of the map")
+                    else:
+                        if entry.pos.x >= 0 and entry.pos.x <= 32:
+                            grid_index = 3
+                        elif entry.pos.x > 32 and entry.pos.x <= 64:
+                            grid_index = 2
+                        elif entry.pos.x > 64 and entry.pos.x < 82.5:
+                            grid_index = 1
+                        elif entry.pos.x >= 82.5 and entry.pos.x <= 128:
+                            grid_index = 0
+                        else:
+                            print("ERROR!!! Unit recorded is somehow out of range of the map")
+                    
+                    if bottom_entry == True:
+                        adjust = (12 + (3 * grid_index))
+                    else:
+                        adjust = (3 * grid_index)
+                # Nexus
+                elif unit_types[entry.unit_type] >= 63 and unit_types[entry.unit_type] <= 66:
+                    if bottom_entry == True:
+                        adjust = 1
+                    else:
+                        adjust = 0
+
+                raw_idx = unit_types[entry.unit_type]
+                true_idx = raw_idx + adjust
+                # Save health if nexus
+                if entry.unit_type == 59:
+                    state[true_idx] = entry.health
+                else:
+                    state[true_idx] += 1
             
             if player == 1:
                 mineral_scv_index = 4
             else:
                 mineral_scv_index = 104
                 
-            if x.unit_type == UNIT_TYPES['SCV'] and x.shield == mineral_scv_index:
+            if entry.unit_type == UNIT_TYPES['SCV'] and entry.shield == mineral_scv_index:
                 # get_illegal_actions should change if it change
-                state[self.miner_index] = x.health - 1
+                state[self.miner_index] = entry.health - 1
                 
         if state[self.miner_index] > self.mineral_limiation:
             state[self.miner_index] = self.mineral_limiation
@@ -467,25 +572,82 @@ class TugOfWar():
                 
 #         return big_A
 
-    def get_big_A(self, mineral, num_of_pylon, is_train = False):
+    def tree_hierarchy(self, mineral, num_of_pylon, tree_A, adjust_for_lane):
+        # print("tree A: ")
+        # print(tree_A)
+        # print("mineral: " + str(mineral))
+        # input("Press Enter to Continue: ")
+        if mineral >= 0 and mineral < 50:
+            choices = ['noop']
+        elif mineral >= 50 and mineral < 75:
+            choices = ['noop', 'marine']
+        elif mineral >= 75 and mineral < 200:
+            choices = ['noop', 'marine', 'baneling']
+        elif mineral >= 200 and mineral < 300:
+            choices = ['noop', 'marine', 'baneling', 'immortal']
+        elif (mineral >= 300 and num_of_pylon == 0) or (mineral >= 400 and num_of_pylon == 1) or (mineral >= 500 and num_of_pylon == 2):
+            choices = ['noop', 'marine', 'baneling', 'immortal', 'pylon']
+        elif (mineral < 400 and num_of_pylon == 1) or (mineral < 500 and num_of_pylon == 2) or (num_of_pylon == 3):
+            choices = ['noop', 'marine', 'baneling', 'immortal']
+        else:
+            print("ERROR!! Mineral choice not recognized")
+            print(tree_A)
+            print(mineral)
+            return tree_A
+
+        pick_idx = random.randint(0, len(choices) - 1)
+
+        picked_action = choices[pick_idx]
+
+        if picked_action == 'noop':
+            print(tree_A)
+            return tree_A
+        elif picked_action == 'marine':
+            tree_A[0 + adjust_for_lane] += 1
+            mineral -= 50
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        elif picked_action == 'baneling':
+            tree_A[1 + adjust_for_lane] += 1
+            mineral -= 75
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        elif picked_action == 'immortal':
+            tree_A[2 + adjust_for_lane] += 1
+            mineral -= 200
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        elif picked_action == 'pylon':
+            tree_A[3] += 1
+            adjust_pylon_cost = 100 * num_of_pylon
+            mineral -= 300 + adjust_pylon_cost
+            num_of_pylon += 1
+            tree_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+        else:
+            print("ERROR!! Action picked is not recognized")
+            print(picked_action)
+            return tree_A
+        return tree_A
+
+    def get_big_A(self, mineral, num_of_pylon, is_train = 0):
 #         print(mineral)
 #         print(self.action_space_dict[num_of_pylon][mineral])
-        big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
-        top_lane = np.zeros((len(big_A), 7))
-        bottom_lane = np.zeros((len(big_A), 7))
-        
-        top_lane[:, 0: 3] = big_A[:, 0: 3].copy()
-        top_lane[:, 6] = big_A[:, 3].copy()
-        
-        bottom_lane[:, 3: 7] = big_A.copy()
-        
-#         print(top_lane)
-#         print(bottom_lane)
-        
-        big_A = np.vstack((top_lane, bottom_lane))
-#         print(big_A)
-#         return big_A
-        if is_train:
+
+        if is_train == 0 or is_train == 1:
+            big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
+            top_lane = np.zeros((len(big_A), 7))
+            bottom_lane = np.zeros((len(big_A), 7))
+            
+            top_lane[:, 0: 3] = big_A[:, 0: 3].copy()
+            top_lane[:, 6] = big_A[:, 3].copy()
+            
+            bottom_lane[:, 3: 7] = big_A.copy()
+            
+    #         print(top_lane)
+    #         print(bottom_lane)
+            
+            big_A = np.vstack((top_lane, bottom_lane))
+    #         print(big_A)
+    #         return big_A
+
+        if is_train == 1:
 #             print(len(big_A))
             big_A_I_1x = big_A[big_A[:, 2] > 0].copy()#[big_A[:, 5] > 0]
             big_A_I_0x = big_A[big_A[:, 2] == 0].copy()#[big_A[:, 5] == 0]
@@ -521,26 +683,21 @@ class TugOfWar():
             big_A_Noop = np.repeat(big_A_Noop.reshape(-1, 7), num_Noop, axis = 0).reshape(-1, 7)
 
             big_A = np.vstack([big_A, big_A_I, big_A_P, big_A_Noop])
-#             print(len(big_A))
-#             input()
-#             print("##################")
-#             print(mineral)
-#             l = len(big_A)
-#             num_noop = 0
-#             for b_a in big_A:
-#                 if np.sum(b_a) == 0:
-#                     num_noop += 1
 
-#             print(num_noop / l)
+        elif is_train == 2:
+            tree_A = np.zeros(7)
+            pick_lane = random.randint(0, 1)
+            # top lane
+            if pick_lane == 0:
+                adjust_for_lane = 0
+            # bottom lane
+            else:
+                adjust_for_lane = 4
+            big_A = self.tree_hierarchy(mineral, num_of_pylon, tree_A, adjust_for_lane)
+            print("created action:")
+            print(big_A)
+            print("---------------")
 
-#             print(len(big_A[big_A[:, 0] > 0]) / l)
-#             print(len(big_A[big_A[:, 1] > 0]) / l)
-#             print(len(big_A[big_A[:, 2] > 0]) / l)
-#             print(len(big_A[big_A[:, 3] > 0]) / l)
-#             print(len(big_A[big_A[:, 4] > 0]) / l)
-#             print(len(big_A[big_A[:, 5] > 0]) / l)
-#             print(len(big_A[big_A[:, 6] > 0]) / l)
-#             input()
         return big_A
 
     def combine_sa(self, s, actions):

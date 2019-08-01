@@ -10,7 +10,8 @@ from abp.examples.pysc2.tug_of_war.sadq_bigA import run_task as run_task_bigA
 from abp.examples.pysc2.tug_of_war.sadq_2p import run_task as run_task_2p
 from abp.examples.pysc2.tug_of_war.model_base_TS import run_task as run_task_mbts
 from abp.examples.pysc2.tug_of_war.sadq_2p_2l import run_task as run_task_2p_2l
-# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_human_play import run_task as run_task_2p_2l_hp
+from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid import run_task as run_task_2p_2l_grid
+from abp.examples.pysc2.tug_of_war.sadq_2p_2l_human_play import run_task as run_task_2p_2l_hp
 
 def main():
     parser = argparse.ArgumentParser()
@@ -118,8 +119,10 @@ def main():
         run_task_mbts(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     elif args.task == 'task_2p_2l':
         run_task_2p_2l(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
-    # elif args.task == 'task_2p_2l_hp':
-    #     run_task_2p_2l_hp(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever, agent_model = args.agent_model)
+    elif args.task == 'task_2p_2l_grid':
+        run_task_2p_2l_grid(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
+    elif args.task == 'task_2p_2l_hp':
+        run_task_2p_2l_hp(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever, agent_model = args.agent_model)
     else:
         run_task_2p(evaluation_config, network_config, reinforce_config, map_name = map_name, train_forever = args.train_forever)
     return 0

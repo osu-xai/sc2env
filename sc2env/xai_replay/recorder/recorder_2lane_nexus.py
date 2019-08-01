@@ -124,7 +124,7 @@ class XaiReplayRecorder2LaneNexus():
 
             # x["z"] = unit.pos.z
             units.append(x)
-        frame_info["units"] = x
+        frame_info["units"] = units
     
         
 
