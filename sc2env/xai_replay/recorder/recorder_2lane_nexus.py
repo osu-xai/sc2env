@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 from s2clientprotocol import sc2api_pb2 as sc_pb
-#import explanation_pb2 as expl_pb 
+import sc2env.xai_replay.ui.viz.py_backend.proto.explanation_pb2 as expl_pb 
 from pysc2.lib import features
 import sys
 REPLAY_DIR_PATH = "../sc2env/sc2env/xai_replay/ui/viz/replays"
@@ -129,6 +129,7 @@ class XaiReplayRecorder2LaneNexus():
         
 
     def record_game_clock_tick(self, cumulative_rewards):
+        
         observation = self.get_observation()
         frame_info = {}
         frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
@@ -159,7 +160,7 @@ class XaiReplayRecorder2LaneNexus():
         f.close()
         # expl_points_pb = expl_pb.ExplanationPoints(explanation_points = self.explanation_points_array)
 
-        expl_points_pb = 0
+        expl_points_pb = expl_pb.ExplanationPoints(explanation_points = [])
         data = expl_points_pb.SerializeToString()
         output_file = open(self.saliency_pathname,"wb")
         output_file.write(data)
