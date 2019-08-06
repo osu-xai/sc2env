@@ -44,6 +44,9 @@ function showPositionOnTimeline(value) {
 
 function processTimelineClick(e) {
 	var clickX = e.offsetX - timelineMargin;
+	if (clickX < 0){
+		clickX = 0;
+	}
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
 	var targetStepString = "" + replaySequenceTargetStep;
 	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];

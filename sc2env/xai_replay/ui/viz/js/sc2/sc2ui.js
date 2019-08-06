@@ -164,7 +164,7 @@ function createVideoElement(path){
 
 function toggleOnUIElements(){
     $('#unit-value-panels-toggle').css('display', "block")
-    $('.unit-value-panels').css('display', "block")
+    $('.unit-value-panels').css('display', "grid")
 
     // $('#fullscreen-button1-toggle').css('display', "block")
     

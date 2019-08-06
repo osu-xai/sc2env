@@ -327,6 +327,8 @@ function sizeNonGeneratedElements() {
 	$("#p1_top").css("border", "2px solid blue");
 	$("#p1_top").css("border-radius", "2px");
 	$("#p1_top").css("padding", "5px");
+	$("#p1_top").css("width", "22%");
+
 
 
 
@@ -336,6 +338,7 @@ function sizeNonGeneratedElements() {
 	$("#p2_top").css("border", "2px solid blue");
 	$("#p2_top").css("border-radius", "2px");
 	$("#p2_top").css("padding", "5px");
+	$("#p2_top").css("width", "15%");
 
 
 	$("#p1_bottom").css("z-index", zIndexMap["aboveToolTip"]);
@@ -344,6 +347,7 @@ function sizeNonGeneratedElements() {
 	$("#p1_bottom").css("border", "2px solid blue");
 	$("#p1_bottom").css("border-radius", "2px");
 	$("#p1_bottom").css("padding", "5px");
+	$("#p1_bottom").css("width", "22%");
 
 
 	$("#p2_bottom").css("z-index", zIndexMap["aboveToolTip"]);
@@ -352,36 +356,38 @@ function sizeNonGeneratedElements() {
 	$("#p2_bottom").css("border", "2px solid blue");
 	$("#p2_bottom").css("border-radius", "2px");
 	$("#p2_bottom").css("padding", "5px");
+	$("#p2_bottom").css("width", "15%");
 
 
 	
 
 	$("#p1_top").css("position", "absolute");
-	$("#p1_top").css("top", "2%");
-	$("#p1_top").css("left", "2.75%");
+	$("#p1_top").css("top", "1%");
+	$("#p1_top").css("left", "2%");
 
 
 	$("#p2_top").css("position", "absolute");
-	$("#p2_top").css("top", "2%");
-	$("#p2_top").css("left", "87.5%");
+	$("#p2_top").css("top", "1%");
+	$("#p2_top").css("left", "83%");
 
 
 	$("#p1_bottom").css("position", "absolute");
-	$("#p1_bottom").css("top", "88%");
-	$("#p1_bottom").css("left", "2.7%");
+	$("#p1_bottom").css("top", "89%");
+	$("#p1_bottom").css("left", "2%");
 
 
 	$("#p2_bottom").css("position", "absolute");
-	$("#p2_bottom").css("top", "88%");
-	$("#p2_bottom").css("left", "87.5%");
+	$("#p2_bottom").css("top", "89%");
+	$("#p2_bottom").css("left", "83%");
 
 
 	$('.unit-value-panels').css('font-size', "15px")
 	$('.unit-value-panels').css('font-family', "Arial")
+
 	
 	document.getElementById('friendly.nexusHealth.top').style.position = "absolute";
 	document.getElementById('friendly.nexusHealth.top').style.top = "12.5%";
-	document.getElementById('friendly.nexusHealth.top').style.left = "2.75%";
+	document.getElementById('friendly.nexusHealth.top').style.left = "2%";
 	document.getElementById('friendly.nexusHealth.top').style.height = "20px";
 	document.getElementById('friendly.nexusHealth.top').style.fontSize = "15px";
 	document.getElementById('friendly.nexusHealth.top').style.fontFamily = "Arial";
@@ -395,7 +401,7 @@ function sizeNonGeneratedElements() {
 
 	document.getElementById('friendly.nexusHealth.bottom').style.position = "absolute";
 	document.getElementById('friendly.nexusHealth.bottom').style.top = "83.25%";
-	document.getElementById('friendly.nexusHealth.bottom').style.left = "2.75%";
+	document.getElementById('friendly.nexusHealth.bottom').style.left = "2%";
 	document.getElementById('friendly.nexusHealth.bottom').style.height = "20px";
 	document.getElementById('friendly.nexusHealth.bottom').style.fontSize = "15px";
 	document.getElementById('friendly.nexusHealth.bottom').style.fontFamily = "Arial";
@@ -410,7 +416,7 @@ function sizeNonGeneratedElements() {
 
 	document.getElementById('enemy.nexusHealth.top').style.position = "absolute";
 	document.getElementById('enemy.nexusHealth.top').style.top = "12.5%";
-	document.getElementById('enemy.nexusHealth.top').style.left = "87.5%";
+	document.getElementById('enemy.nexusHealth.top').style.left = "89%";
 	document.getElementById('enemy.nexusHealth.top').style.height = "20px";
 	document.getElementById('enemy.nexusHealth.top').style.fontSize = "15px";
 	document.getElementById('enemy.nexusHealth.top').style.fontFamily = "Arial";
@@ -424,7 +430,7 @@ function sizeNonGeneratedElements() {
 
 	document.getElementById('enemy.nexusHealth.bottom').style.position = "absolute";
 	document.getElementById('enemy.nexusHealth.bottom').style.top = "83.25%";
-	document.getElementById('enemy.nexusHealth.bottom').style.left = "87.5%";
+	document.getElementById('enemy.nexusHealth.bottom').style.left = "89%";
 	document.getElementById('enemy.nexusHealth.bottom').style.height = "20px";
 	document.getElementById('enemy.nexusHealth.bottom').style.fontSize = "15px";
 	document.getElementById('enemy.nexusHealth.bottom').style.fontFamily = "Arial";
@@ -448,7 +454,7 @@ function sizeNonGeneratedElements() {
 	var toggle_units = document.getElementById("unit-value-panels-toggle");
 	toggle_units.addEventListener('click', function(event){
 		if ($('.unit-value-panels').css('display') == 'none'){
-			$('.unit-value-panels').css('display', "block")
+			$('.unit-value-panels').css('display', "grid")
 		}
 		else{
 			$('.unit-value-panels').css('display', "none")
@@ -511,6 +517,7 @@ function sizeNonGeneratedElements() {
 	$("#explanation-control-panel").css("right", "5%");
 	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
 	$("#explanation-control-panel").css("z-index", zIndexMap["allTheWayToFront"]);
+	// $("#explanation-control-panel").css("width", widthOfTimeline);
 
 
 	$("#friendly-title").css("font-size", "18px")

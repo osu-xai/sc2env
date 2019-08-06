@@ -49,8 +49,9 @@ var unitInfoKeys = [
     "enemy.banelingBuilding.bottom",
     "enemy.immortalBuilding.bottom",
     "friendly.Pylon",
-    "enemy.Pylon",
+    "enemy.Pylon"
 ]
+
 var unitIdForKey = {};
 unitIdForKey["friendly.marineBuilding.top"] = 21;
 unitIdForKey["friendly.banelingBuilding.top"] = 28;
@@ -117,7 +118,12 @@ function addUnitCountsToFrames(frameInfos){
                 var unit = units[unitIndex];
                 var curUnitId = unit["unit_type"];
                 var curAlliance = unit["alliance"];
-                var curLane = getUnitLane(unit["y"]);
+                if (curUnitId == 60){
+                    var curLane = "NA";
+                }
+                else{
+                    var curLane = getUnitLane(unit["y"]);
+                }
                 if (curUnitId == unitId &&  curAlliance == alliance){
                     if (curLane == "NA" || curLane == lane) {
                         frame[countKey]++;
@@ -146,6 +152,7 @@ function addUnitDeltasToFrames(frameInfos){
             var frame = frameInfos[frameIndex];
             frame[deltaKey] = 0;
             frame[deltaKey + "_triggered"] = 0;
+
             if (prevFrame != undefined){
                 if (prevFrame[countKey] < frame[countKey]){
                     frame[deltaKey] = frame[countKey] - prevFrame[countKey];
