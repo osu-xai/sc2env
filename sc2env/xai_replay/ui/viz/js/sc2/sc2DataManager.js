@@ -4,6 +4,7 @@ var trimBy = 80
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
+    addWaveTriggeredToFrames(frameInfos);
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
     getDecisionPointFrames(frameInfos, 0)
@@ -104,6 +105,8 @@ laneForKey["enemy.Pylon"] = "NA";
 
 
 function addUnitCountsToFrames(frameInfos){
+    var prevWaveCounts = undefined;
+    var prevFrame = undefined;
     for (keyIndex in unitInfoKeys){
         var key = unitInfoKeys[keyIndex];
         var countKey = key +"_count";
@@ -126,18 +129,22 @@ function addUnitCountsToFrames(frameInfos){
                 }
                 if (curUnitId == unitId &&  curAlliance == alliance){
                     if (curLane == "NA" || curLane == lane) {
-                        frame[countKey]++;
+                        if (curAlliance == 4 && frame["wave_triggered"] == 1 && prevFrame["wave_triggered"] == 0){
+                            prevWaveCounts[countKey] = prevFrame[countKey];
+
+                            if (prevWaveCounts != undefined){
+                                frame[countKey] = prevWaveCounts[countKey];
+                            }
+                        }
+                        else{
+                            frame[countKey]++;
+                        }
                     }
                 }
             }
         }
+        prevFrame = frame;
     }
-    // var key = "friendly.marineBuilding.top";
-    // for (frameIndex in frameInfos){
-    //     var frame = frameInfos[frameIndex];
-    //     var deltaKey = key +"_delta"
-    //     console.log("frame " + frameIndex + " delta " + frame[deltaKey])
-    // }
 }
 
 function addUnitDeltasToFrames(frameInfos){
@@ -187,13 +194,54 @@ function addUnitDeltasToFrames(frameInfos){
             prevFrame = frame;
         }
     }
-    // var key = "friendly.marineBuilding.top";
-    // for (frameIndex in frameInfos){
-    //     var frame = frameInfos[frameIndex];
-    //     var deltaKey = key +"_delta"
-    //     console.log("frame " + frameIndex + " delta " + frame[deltaKey])
-    // }
 }
+
+
+
+function addWaveTriggeredToFrames(frameInfos){
+    var key = "wave_triggered";
+    var count = undefined
+    for (var frameIndex = 0; frameIndex < frameInfos.length-1; frameIndex++){
+        var currFrame = frameInfos[frameIndex]
+        var nextFrame = frameInfos[frameIndex+1]
+        var currUnits = currFrame["units"]
+        var nextUnits = nextFrame["units"]
+        var currFrameWaveNumber = undefined;
+        var nextFrameWaveNumber = undefined;
+        for (var currUnitsIndex in currUnits){
+            var currUnit = currUnits[currUnitsIndex]
+            if (currUnit["unit_type"] == 45){
+                if(currUnit["shield"] == 42){
+                    currFrameWaveNumber = currUnit["health"] - 1; //first wave is 0
+                }
+            }
+        }
+        for (var nextUnitsIndex in nextUnits){
+            var nextUnit = nextUnits[nextUnitsIndex]
+            if (nextUnit["unit_type"] == 45){
+                if(nextUnit["shield"] == 42){
+                    nextFrameWaveNumber = nextUnit["health"] - 1; //first wave is 0
+                }
+            }
+        }
+        if(nextFrameWaveNumber > currFrameWaveNumber){
+            nextFrame[key] = 1;
+            count = 0;
+        }
+        else if (count != undefined && count <= 40){
+            nextFrame[key] = 1;
+            count++;
+        }
+        else{
+            nextFrame[key] = 0;
+        }
+    }
+}
+
+
+
+
+
 function getSC2DataManagerFromFrameInfos(frameInfos) {
     var dm = {};
     dm.frameInfos = frameInfos;
