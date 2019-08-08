@@ -5,4 +5,6 @@ cd sc2env/xai_replay/ui/viz/
 python -m RangeHTTPServer &
 cd ./py_backend/
 python python_websocket.py &
-echo "The UI is not running at \"http://localhost:8000/\"..."
+
+sleep 1
+echo "The UI is now running on: http://localhost:8000/"
