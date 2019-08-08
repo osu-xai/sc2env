@@ -105,8 +105,8 @@ laneForKey["enemy.Pylon"] = "NA";
 
 
 function addUnitCountsToFrames(frameInfos){
-    var prevWaveCounts = undefined;
-    var prevFrame = undefined;
+    var prevWaveCounts = {};
+    var prevFrame = {};
     for (keyIndex in unitInfoKeys){
         var key = unitInfoKeys[keyIndex];
         var countKey = key +"_count";
@@ -130,8 +130,13 @@ function addUnitCountsToFrames(frameInfos){
                 if (curUnitId == unitId &&  curAlliance == alliance){
                     if (curLane == "NA" || curLane == lane) {
                         if (curAlliance == 4 && frame["wave_triggered"] == 1 && prevFrame["wave_triggered"] == 0){
-                            prevWaveCounts[countKey] = prevFrame[countKey];
-
+                            if (countKey in prevFrame){
+                                prevWaveCounts[countKey] = prevFrame[countKey];
+                            }
+                            else{
+                                prevFrame[countKey] = 0;
+                                prevWaveCounts[countKey] = prevFrame[countKey];
+                            }
                             if (prevWaveCounts != undefined){
                                 frame[countKey] = prevWaveCounts[countKey];
                             }
@@ -142,8 +147,8 @@ function addUnitCountsToFrames(frameInfos){
                     }
                 }
             }
+            prevFrame[countKey] = frame[countKey];
         }
-        prevFrame = frame;
     }
 }
 
