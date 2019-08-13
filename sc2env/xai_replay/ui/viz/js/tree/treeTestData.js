@@ -1,15 +1,65 @@
 var treeData = undefined
-$.getJSON("./DP1pruned.json", function(json) {
+$.getJSON("js/tree/partial_decision_point_1.json", function(json) {
   treeData = generateTreeData(json);
   
   var jsonTreeData = JSON.stringify(treeData);
   var cy = cytoscape(treeData);
 
-  // fillActionNodes();
+
+  cy.nodeHtmlLabel(
+    [
+      {
+        query: 'node', // cytoscape query selector
+        halign: 'center', // title vertical position. Can be 'left',''center, 'right'
+        valign: 'center', // title vertical position. Can be 'top',''center, 'bottom'
+        halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
+        valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
+        cssClass: '', // any classes will be as attribute of <div> container for every title
+        tpl: function (data) { return  '<img src="imgs/tree/test/JPGs/' + data.id + '.jpg' + '" style="padding-top:8%;"></img>' +
+                                        getAfterStateValue(data)   } // your html template here
+      }
+    ]
+  );
+
   // drawActionCanvas();
 });
 
+function getAfterStateValue(data){
+  var afterStateQValue =  + data["after state q_value"]
+  var bestStateQValue = data["best q_value"];
+  if(data['root']){
+    return getBestStateDiv(bestStateQValue.toFixed(5));
+  }
+    if (afterStateQValue == 0){
+      if (data["name"].indexOf("(best)") != -1){
+        return getBestStateDiv(bestStateQValue.toFixed(5));
+      }
+      else{
+        return getAfterStateDiv(bestStateQValue.toFixed(5));
+      }
+    }
+    else{
+      if (data["name"].indexOf("(best)") != -1){
+        return getBestStateDiv(bestStateQValue.toFixed(5));
+      }
+      else{
+        return getAfterStateDiv(bestStateQValue.toFixed(5)); //switch
+      }
+    }
 
+}
+
+function getAfterStateDiv(afterStateValue){
+  return '<div style="color:blue;font-size:200px;text-align:center;">' + afterStateValue.replace(/^[0]+/, "")
+  + '</div>';
+}
+
+
+
+function getBestStateDiv(bestStateValue){
+  return '<div style="color:lime;font-size:200px;text-align:center;">' + bestStateValue.replace(/^[0]+/, "")
+  + '</div>';
+}
 
 function generateTreeData(inputJsonTree) {
   var treeData = {
@@ -19,9 +69,28 @@ function generateTreeData(inputJsonTree) {
     style: cytoscape.stylesheet()
       .selector('node')
       .css({
-        'shape': 'barrel',
-        'height': 250,
-        'width': 300,
+        'height': 1000,
+        'width': 1200,
+        'background-fit': 'cover',
+        'border-color': ' #000',
+        'border-width': 3,
+        'border-opacity': 0.5,
+      })
+      .selector('friendlyAction')
+      .css({
+        'shape' : 'polygon',
+        'height': 1000,
+        'width': 1200,
+        'background-fit': 'cover',
+        'border-color': ' #000',
+        'border-width': 3,
+        'border-opacity': 0.5,
+      })
+      .selector('node[points]')
+      .css({
+        'shape-polygon-points': 'data(points)',
+        'height': 1000,
+        'width': 1200,
         'background-fit': 'cover',
         'border-color': ' #000',
         'border-width': 3,
@@ -51,7 +120,7 @@ function generateTreeData(inputJsonTree) {
       padding: 30, // padding on fit
       circle: false, // put depths in concentric circles if true, put depths top down if false
       grid: false, // whether to create an even grid into which the DAG is placed (circle:false only)
-      spacingFactor: 1.5, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+      spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
       avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
       nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
       roots: undefined, // the roots of the trees
@@ -85,6 +154,7 @@ function generateTreeData(inputJsonTree) {
     rootNode["data"][key] = inputJsonTree[key];
   }
   rootNode["data"]["id"] = inputJsonTree["name"];
+  rootNode["data"]["root"] = "iAmRoot";
   rootNode["classes"] = "stateNode";
   nodes.push(rootNode);
   
@@ -116,73 +186,52 @@ function generateTreeData(inputJsonTree) {
 
 
   function getFriendlyActionsUnderState(stateNode){
-    var stateNodeKeys = Object.keys(stateNode);
-    for (var keyIndex in stateNodeKeys){
-      var key = stateNodeKeys[keyIndex];
-      if (key.indexOf("action_max") != -1){
-        var friendlyAction = stateNode[key];
-        var className = "friendlyAction";
-        var cyNode = getDataFromInputNode(friendlyAction, stateNode["name"], className);
-        nodes.push(cyNode);
-        var cyEdge = getEdge(stateNode["name"], cyNode["data"]["id"]);
-        edges.push(cyEdge);
-        getEnemyActionsUnderFriendlyAction(friendlyAction);
-      }
+    var children = stateNode["children"][0];
+    for (var childIndex in children){
+      var friendlyAction = children[childIndex];
+      var className = "friendlyAction";
+      var cyNode = getDataFromInputNode(friendlyAction, stateNode["name"], className);
+      cyNode["data"]["type"] = "friendlyAction";
+      cyNode["data"]["points"] = [-1, 1, 1, 1, 1, -.75, 0, -1, -1, -.75];
+      nodes.push(cyNode);
+      var cyEdge = getEdge(stateNode["name"], cyNode["data"]["id"]);
+      edges.push(cyEdge);
+      getEnemyActionsUnderFriendlyAction(friendlyAction);
     }
   }
 
   function getEnemyActionsUnderFriendlyAction(friendlyAction){
-    var friendlyActionKeys = Object.keys(friendlyAction);
-    for (var keyIndex in friendlyActionKeys){
-      var key = friendlyActionKeys[keyIndex];
-      if (key.indexOf("action_min") != -1){
-        var enemyAction = friendlyAction[key];
-        var className = "enemyAction";
-        var cyNode = getDataFromInputNode(enemyAction, friendlyAction["name"], className);
-        nodes.push(cyNode);
-        var cyEdge = getEdge(friendlyAction["name"], cyNode["data"]["id"]);
-        edges.push(cyEdge);
-        getStateNodesUnderEnemyActions(enemyAction);
-      }
+    var children = friendlyAction["children"][0];
+    for (var childIndex in children){
+      var enemyAction = children[childIndex];
+      var className = "enemyAction";
+      var cyNode = getDataFromInputNode(enemyAction, friendlyAction["name"], className);
+      cyNode["data"]["type"] = "enemyAction";
+      cyNode["data"]["points"] = [-1, -1, 1, -1, 1, .75, 0, 1, -1, .75];
+      nodes.push(cyNode);
+      var cyEdge = getEdge(friendlyAction["name"], cyNode["data"]["id"]);
+      edges.push(cyEdge);
+      getStateNodesUnderEnemyActions(enemyAction);
     }
 
   }
 
 
   function getStateNodesUnderEnemyActions(enemyAction){
-    var enemyActionKeys = Object.keys(enemyAction);
-    for (var keyIndex in enemyActionKeys){
-      var key = enemyActionKeys[keyIndex];
-      if (key.indexOf("_state") != -1){
-        var stateNode = enemyAction[key]
-        var className = "stateNode";
-        var cyNode = getDataFromInputNode(stateNode, enemyAction["name"], className);
-        nodes.push(cyNode);
-        var cyEdge = getEdge(enemyAction["name"], cyNode["data"]["id"]);
-        edges.push(cyEdge);
-        getFriendlyActionsUnderState(stateNode);
-      }
+    var children = enemyAction["children"][0];
+    for (var childIndex in children){
+      var stateNode = children[childIndex];
+      var className = "stateNode";
+      var cyNode = getDataFromInputNode(stateNode, enemyAction["name"], className);
+      nodes.push(cyNode);
+      var cyEdge = getEdge(enemyAction["name"], cyNode["data"]["id"]);
+      edges.push(cyEdge);
+      getFriendlyActionsUnderState(stateNode);
     }
   }
   return treeData;
 }
 
-function fillActionNodes(){
-
-  cy.nodeHtmlLabel(
-    [
-      {
-        query: 'node', // cytoscape query selector
-        halign: 'center', // title vertical position. Can be 'left',''center, 'right'
-        valign: 'center', // title vertical position. Can be 'top',''center, 'bottom'
-        halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
-        valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
-        cssClass: '', // any classes will be as attribute of <div> container for every title
-        tpl: function (data) { return  '<div style="color:red;font-size:15px;">' + '<b>Node: ' + data.id + '</b></div>' } // your html template here
-      }
-    ]
-  );
-}
 
 // //hide nodes at init for all past d = 0,1
 // function drawActionCanvas(){
@@ -206,15 +255,6 @@ function fillActionNodes(){
 //   //   ctx.stroke();
 //   });
 // }
-
-
-/* <div style="color:red;font-size:15px;">' + '<b>Node: ' + data.id + '</b></div>\
-                                      <div style="color:red;font-size:15px;">' + 'Marines: ' + data.state[0] + '</div>\
-                                      <div style="color:red;font-size:15px;">' + 'Banelings: ' + data.state[1] + '</div>\
-                                      <div style="color:red;font-size:15px;">' + 'Immortals: ' + data.state[2] + '</div>\
-                                      <div style="color:red;font-size:15px;">' + 'Pylons: ' + data.state[3] + '</div>\
-                                      <div style="color:red;font-size:15px;">' + 'Top Nexus: ' + data.state[4] + '</div>\
-                                      <div style="color:red;font-size:15px;">' + 'Bot Nexus: ' + data.state[5] + '</div>' */
 
 // cy.bind('click ', 'node', function (evt) {
 //   // cy.center( this );
