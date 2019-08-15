@@ -49,7 +49,7 @@
     "children": [
         [
             {
-                "name": "dp1_level1_action_max_0",
+                "name": "dp1_level1_action_max_0_0",
                 "mineral": 0.0,
                 "Pylons": 0.0,
                 "BOT Marines": 0.0,
@@ -101,7 +101,7 @@
                 ]
             },
             {
-                "name": "dp1_level1_action_max_1(best)",
+                "name": "dp1_level1_action_max_1(best)_1(best)",
                 "mineral": 75.0,
                 "Pylons": 0.0,
                 "BOT Marines": 0.0,
@@ -151,7 +151,7 @@
                 "children": [
                     [
                         {
-                            "name": "dp1_level1_action_min_10",
+                            "name": "dp1_level1_action_min_10_10",
                             "mineral": 150.0,
                             "Pylons": 0.0,
                             "BOT Marines": 0.0,
@@ -203,7 +203,7 @@
                             ]
                         },
                         {
-                            "name": "dp1_level1_action_min_11",
+                            "name": "dp1_level1_action_min_11_11",
                             "mineral": 150.0,
                             "Pylons": 0.0,
                             "BOT Marines": 0.0,
@@ -255,7 +255,7 @@
                             ]
                         },
                         {
-                            "name": "dp1_level1_action_min_12(best)",
+                            "name": "dp1_level1_action_min_12(best)_12(best)",
                             "mineral": 150.0,
                             "Pylons": 0.0,
                             "BOT Marines": 0.0,
@@ -305,7 +305,7 @@
                             "children": [
                                 [
                                     {
-                                        "name": "dp2_level2_state_120(best)",
+                                        "name": "dp2_level2_state_120(best)_120(best)",
                                         "mineral": 175.0,
                                         "Pylons": 0.0,
                                         "BOT Marines": 0.0,
@@ -355,7 +355,7 @@
                                         "children": [
                                             [
                                                 {
-                                                    "name": "dp2_level2_action_max_1200(best)",
+                                                    "name": "dp2_level2_action_max_1200(best)_1200(best)",
                                                     "mineral": 125.0,
                                                     "Pylons": 0.0,
                                                     "BOT Marines": 1.0,
@@ -405,7 +405,7 @@
                                                     "children": [
                                                         [
                                                             {
-                                                                "name": "dp2_level2_action_min_12000",
+                                                                "name": "dp2_level2_action_min_12000_12000",
                                                                 "mineral": 175.0,
                                                                 "Pylons": 0.0,
                                                                 "BOT Marines": 0.0,
@@ -457,7 +457,7 @@
                                                                 ]
                                                             },
                                                             {
-                                                                "name": "dp2_level2_action_min_12001",
+                                                                "name": "dp2_level2_action_min_12001_12001",
                                                                 "mineral": 175.0,
                                                                 "Pylons": 0.0,
                                                                 "BOT Marines": 0.0,
@@ -509,7 +509,7 @@
                                                                 ]
                                                             },
                                                             {
-                                                                "name": "dp2_level2_action_min_12002",
+                                                                "name": "dp2_level2_action_min_12002_12002",
                                                                 "mineral": 175.0,
                                                                 "Pylons": 0.0,
                                                                 "BOT Marines": 0.0,
@@ -561,7 +561,7 @@
                                                                 ]
                                                             },
                                                             {
-                                                                "name": "dp2_level2_action_min_12003(best)",
+                                                                "name": "dp2_level2_action_min_12003(best)_12003(best)",
                                                                 "mineral": 175.0,
                                                                 "Pylons": 0.0,
                                                                 "BOT Marines": 0.0,
@@ -611,7 +611,7 @@
                                                                 "children": [
                                                                     [
                                                                         {
-                                                                            "name": "dp2_level2_state_120030(best)",
+                                                                            "name": "dp2_level2_state_120030(best)_120030(best)",
                                                                             "mineral": 225.0,
                                                                             "Pylons": 0.0,
                                                                             "BOT Marines": 1.0,
@@ -669,7 +669,7 @@
                                                     ]
                                                 },
                                                 {
-                                                    "name": "dp2_level2_action_max_1201",
+                                                    "name": "dp2_level2_action_max_1201_1201",
                                                     "mineral": 125.0,
                                                     "Pylons": 0.0,
                                                     "BOT Marines": 0.0,
@@ -721,7 +721,7 @@
                                                     ]
                                                 },
                                                 {
-                                                    "name": "dp2_level2_action_max_1202",
+                                                    "name": "dp2_level2_action_max_1202_1202",
                                                     "mineral": 75.0,
                                                     "Pylons": 0.0,
                                                     "BOT Marines": 2.0,
@@ -773,7 +773,7 @@
                                                     ]
                                                 },
                                                 {
-                                                    "name": "dp2_level2_action_max_1203",
+                                                    "name": "dp2_level2_action_max_1203_1203",
                                                     "mineral": 175.0,
                                                     "Pylons": 0.0,
                                                     "BOT Marines": 0.0,
@@ -831,7 +831,7 @@
                             ]
                         },
                         {
-                            "name": "dp1_level1_action_min_13",
+                            "name": "dp1_level1_action_min_13_13",
                             "mineral": 150.0,
                             "Pylons": 0.0,
                             "BOT Marines": 0.0,
@@ -886,7 +886,7 @@
                 ]
             },
             {
-                "name": "dp1_level1_action_max_2",
+                "name": "dp1_level1_action_max_2_2",
                 "mineral": 25.0,
                 "Pylons": 0.0,
                 "BOT Marines": 1.0,
@@ -938,7 +938,7 @@
                 ]
             },
             {
-                "name": "dp1_level1_action_max_3",
+                "name": "dp1_level1_action_max_3_3",
                 "mineral": 0.0,
                 "Pylons": 0.0,
                 "BOT Marines": 0.0,

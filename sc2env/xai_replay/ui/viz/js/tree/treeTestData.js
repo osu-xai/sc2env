@@ -62,16 +62,15 @@ var treeData = {
 }
 
 
-$.getJSON("js/tree/partial_decision_point_1.json", function(rawSc2Json) {
+$.getJSON("js/tree/json/partial_decision_point_2.json", function(rawSc2Json) {
   
   createRootNode(rawSc2Json);
   getFriendlyActionsUnderState(rawSc2Json);
 
   var cy = cytoscape(treeData);
   intitTreeLables(cy);
-  intitTreeFunctions(cy);
-  
-
+  // intitTreeFunctions(cy);
+  childrenFollowParents(cy)
 
 });
 
@@ -91,7 +90,25 @@ function intitTreeLables(cy){
   );
 }
 
+
+function childrenFollowParents(cy){
+  cy.nodes().forEach(function( ele ){
+    // nodesMatching gets pulled along with dragWith on drag
+    cy.automove({
+      nodesMatching: ele.successors().targets(),
+      reposition: 'drag',
+      dragWith: ele,
+    });
+  });
+}
+
 function intitTreeFunctions(cy){
+  cy.nodes().ungrabify();
+
+  var nodes = cy.nodes().sort(function( a, b ){
+    return a.data('best q_value') - b.data('best q_value');
+  });
+
   cy.bind('click ', 'node', function (evt) {
     var pos = cy.nodes(this.data().id).renderedPosition();
     var center = cy.center()
@@ -125,14 +142,14 @@ function intitTreeFunctions(cy){
 
 function getNodeGlyphs(data){
   if (data.id.indexOf("action_max") != -1 || data.id.indexOf("action_min") != -1){
-    return '<img src="imgs/tree/test/JPGs/' + data.id + '.jpg' + '" style="padding-top:8%;padding-bottom:5%;display:inline;"></img>'
+    return '<img src="imgs/tree/DP2/' + data.id + '.jpg' + '" style="padding-top:8%;padding-bottom:5%;display:inline;"></img>'
   }
   else{
-    return '<div style="width:200%; height:180%;position:relative;right:17%;top:0%">' +
-              '<img src="imgs/tree/test/JPGs/' + data.id + '' +'.jpg' + '" style="left:0%;;display:inline;"></img>' +
-              '<img src="imgs/tree/test/JPGs/' + data.id + '' +'.jpg' + '" style="padding-left:5%;;display:inline;"></img>' +
+    return '<div style="width:200%; height:180%;position:relative;right:16%;top:0%">' +
+              '<img src="imgs/tree/DP2/' + data.id + '' +'.jpg' + '" style="left:0%;;display:inline;"></img>' +
+              '<img src="imgs/tree/DP2/' + data.id + '_enemy' +'.jpg' + '" style="padding-left:5%;;display:inline;"></img>' +
               '<div style="font-size:125px;color:blue;padding-left:1%;;display:inline;">FRIENDLY</div>' +
-              '<div style="font-size:125px;color:blue;padding-left:12%;;display:inline;">ENEMY</div>' +
+              '<div style="font-size:125px;color:blue;padding-left:11%;;display:inline;">ENEMY</div>' +
            '</div>'
   }
 }
