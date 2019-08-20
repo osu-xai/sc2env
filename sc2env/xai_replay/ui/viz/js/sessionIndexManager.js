@@ -79,7 +79,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         }
 		//$("#why-button").remove();
 		this.replaySequencerIndex = index;
-        console.log('sessionIndex ' + index);
+        // console.log('sessionIndex ' + index);
 
         //SC2_TODO_SALif (this.decisionPointSteps.includes(index)){
         //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);
@@ -97,7 +97,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 	}
 	
 	sim.getProgressBarValue = function() {
-		var value = Math.floor((this.replaySequencerIndex / this.replaySequencerMaxIndex ) * 100);
+		var value = ((this.replaySequencerIndex / this.replaySequencerMaxIndex ) * 100);
 		//console.log('progress value to paint: ' + value);
 		return value;
 	}

@@ -1,10 +1,21 @@
 // Cw = 24, Ch = 24
 // corigin is center of map.  Sincemap is 40x40, CoriginX = 20, CoriginY = 20
 // XedgeToCamera = 20 - 12, YedgeToCamera = 20 - 12
-var cameraWidth = 28;
-var cameraHeight = 28;
-var cameraOriginX = 28;
-var cameraOriginY = 28;
+
+// 64w by 128h game units is new dims
+
+
+var videoScaleFactor = .365;
+var uncroppedPercentage = 0.875
+var videoHeightExtensionForCrop = 1.1
+
+var aspectRatio = 1.5
+var pillarBoxLeft = undefined;
+
+var cameraWidth = 114;
+var cameraHeight = 56;
+var cameraOriginX = 64;
+var cameraOriginY = 32;
 var xEdgeToCamera = cameraOriginX - cameraWidth/2;
 var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 // 1520 x 1280 is dimensions of video frame, try half that
@@ -14,14 +25,13 @@ var yEdgeToCamera = cameraOriginY - cameraHeight/2;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.03; 
 // var sc2GameOrigPixelWidth          = 1600;
 // var sc2GameOrigPixelHeight         = 1600;
-var sc2GameOrigPixelViewableWidth  = 512;
-var sc2GameOrigPixelViewableHeight = 512;
+var sc2GameOrigPixelViewableWidth  = 2048 * aspectRatio;
+var sc2GameOrigPixelViewableHeight = 2048;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 
 //var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
 //var sc2GameOrigPixelOffscreenToBottomY = (sc2GameOrigPixelHeight - sc2GameOrigPixelViewableHeight)/2;//160
 
-var videoScaleFactor = 1;
 var sc2GameOrigPixelViewableWidth_Scaled  = sc2GameOrigPixelViewableWidth * videoScaleFactor;
 var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * videoScaleFactor;
 var roughlyHalfWidthOfUnitInGameUnits = cameraWidth * roughlyHalfWidthOfUnitAsPercentageOfCanvas;
@@ -46,7 +56,7 @@ var gameContainerWidth = sc2GameRenderWidth + 520;
 var playInterval = 400;
 var framesPerSecond = 25;
 var recorderCaptureInterval = 8;
-var videoPlaybackRate = 1 / recorderCaptureInterval;
+var videoPlaybackRate = 4 / recorderCaptureInterval;
 var relativeReplayDir = "./replays";
 var activeSC2UIManager = undefined;
 
@@ -56,13 +66,14 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.videoFilepath = getVideoFilepath(filenameRoot);
     uim.jumped = false;
     createVideoElement(uim.videoFilepath);
+    toggleOnUIElements()
 
     uim.renderTooltipsForCurrentStep = function() {
         clearGameBoard();
         var unitInfos = this.dataManager.getUnitInfos(sessionIndexManager.getCurrentIndex());
         for (i in unitInfos){
             var unitInfo = unitInfos[i];
-            createToolTips(unitInfo); 
+            // createToolTips(unitInfo); 
         }
     }
 
@@ -73,21 +84,24 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         this.pause();
         var currentTime = frameNumber / framesPerSecond;
         this.jumped = true;
-		//console.log("frame number " + frameIndex + " currentTime " + currentTime)
-        video.currentTime = currentTime;
+        video.currentTime = currentTime + (trimBy / framesPerSecond);
         // event will fire that will trigger expressFrameInfo
         
         //sessionIndexManager.setReplaySequencerIndex(frameNumber);
-       // this.renderStateForCurrentStep();
+        //this.renderStateForCurrentStep();
         //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
-
+    
     uim.expressFrameInfo = function(frameNumber) {
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
+        frame = this.dataManager.getFrameInfo(frameNumber);
+        renderUnitValues(frame);
         userStudyAdjustmentsForFrameChange();
+        
         if (this.jumped){
+            getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
         }
@@ -117,21 +131,43 @@ function createVideoElement(path){
         existingVideo.remove();
     }
     video = document.createElement("video");
-	video.setAttribute("width", sc2GameRenderWidth + "px");
-    video.setAttribute("height",sc2GameRenderHeight + "px");
+	video.setAttribute("width", "100%");
+    video.setAttribute("height", $(window).height() * videoHeightExtensionForCrop);
     video.setAttribute("id","video");
 	video.src = path;
-	$("#scaii-gameboard").append(video);
-	
+    $("#scaii-gameboard").append(video);
+    var renderedVideoHeight = video.clientHeight
+    var renderedVideoWidth =  video.clientWidth
+    var trueRenderedVideoWidth = renderedVideoHeight * aspectRatio;
+    pillarBoxLeft = (renderedVideoWidth - trueRenderedVideoWidth) / 2; // the grey thing on the side of the video - nick
+
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
-        var frameNumber = Math.round(video.currentTime * framesPerSecond);
+        var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
         activeSC2UIManager.expressFrameInfo(frameNumber);
+        // video.currentTime = 1/framesPerSecond + video.currentTime
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
-	configureGameboardCanvas();
+    configureGameboardCanvas();
+
+    $("#gameboard").css("left", pillarBoxLeft);
+    // setting the gameboard canvas to the viewable hieght so full dimensions are visible
+    $("#gameboard").css("height", $(window).height() * uncroppedPercentage);
+    $("#gameboard").css("width", trueRenderedVideoWidth);
+
+
 	video.load();	
-	video.playbackRate = videoPlaybackRate;
+    video.playbackRate = videoPlaybackRate;
+    video.currentTime = trimBy / framesPerSecond
+    toggleOnUIElements();
+}
+
+function toggleOnUIElements(){
+    $('#unit-value-panels-toggle').css('display', "block")
+    $('.unit-value-panels').css('display', "grid")
+
+    // $('#fullscreen-button1-toggle').css('display', "block")
+    
 }
 
 function getTooltipColorRGBAForUnit(unitInfo){
@@ -180,7 +216,7 @@ function translateUnitXToCanvasX(unitX){
     var unitXCamera = unitX - xEdgeToCamera;
     var unitXPercentAcrossCanvas = unitXCamera / cameraWidth;
     var canvasX = gameboard_canvas.width * unitXPercentAcrossCanvas;
-    //console.log(' unitX ' + unitX + 'unitXCamera ' + unitXCamera + ' %acrossCanvas ' + unitXPercentAcrossCanvas + 'canvasX ' + canvasX + ' canvasWidth ' + gameboard_canvas.width);
+    
     return canvasX;
 }
 
@@ -188,6 +224,7 @@ function translateUnitYToCanvasY(unitY){
     var unitYCamera = cameraHeight - (unitY - yEdgeToCamera);
     var unitYPercentAcrossCanvas = unitYCamera / cameraHeight;
     var canvasY = gameboard_canvas.height * unitYPercentAcrossCanvas;
+
     return canvasY;
 }
 
@@ -226,7 +263,7 @@ function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
-    var percentCanvasX = (Number(canvasX) / Number(canvasWidth));
+    var percentCanvasX = ((Number(canvasX)) / Number(canvasWidth));
     var unitSpaceX = cameraWidth * percentCanvasX + xEdgeToCamera;
     return unitSpaceX;
 }
@@ -237,6 +274,7 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
     //  Translating canvas x coords to game unit x coords
     //  1. mouse hovers at x coord
     //  2. xcoord translated to %canvasX
+
     var percentCanvasY = (canvasHeight - Number(canvasY)) / Number(canvasHeight);
     var unitSpaceY = cameraHeight * percentCanvasY + yEdgeToCamera;
     return unitSpaceY;
@@ -271,7 +309,6 @@ function vidStep(){
 	}
 	else {
 		var currentTime = frameNumber / framesPerSecond;
-		console.log("frame number " + frameNumber + " currentTime " + currentTime)
 		video.currentTime = currentTime;
 		window.setTimeout(vidStep, 500);
 		//window.requestAnimationFrame(vidStep);

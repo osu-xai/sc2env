@@ -6,7 +6,7 @@ function paintProgress(value) {
 	renderExplanationSelectors();
 }
 
-var cursorHeight = 60;
+var cursorHeight = 45;
 var cursorWidth = 4;
 function showPositionOnTimeline(value) {
 	drawExplanationTimeline();
@@ -21,9 +21,9 @@ function showPositionOnTimeline(value) {
 	var ctx = expl_ctrl_ctx;
 	ctx.beginPath();
 
-	ctx.fillStyle = 'darkgrey';
+	ctx.fillStyle = 'white';
 	ctx.lineWidth = 1;
-	ctx.strokeStyle = 'darkgray';
+	ctx.strokeStyle = 'white';
 	var upperLeftVertexX = xLeft;
 	var upperLeftVertexY = yTop;
 	var upperRightVertexX = xRight;
@@ -44,6 +44,9 @@ function showPositionOnTimeline(value) {
 
 function processTimelineClick(e) {
 	var clickX = e.offsetX - timelineMargin;
+	if (clickX < 0){
+		clickX = 0;
+	}
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
 	var targetStepString = "" + replaySequenceTargetStep;
 	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
@@ -81,6 +84,7 @@ var tryResume = function (e) {
 
 function resumeGame() {
 	controlsManager.userClickedResume();
+	// video.currentTime = 80 / framesPerSecond
 	activeSC2UIManager.play();
 	//SC2_TODO_NAV_TEST - new logic that re-engages the driver loop
 	// if play button cue arrow present, remove it

@@ -104,8 +104,8 @@ class TugOfWar():
                 camera_width_world_units = 28,
                 #use_camera_position = True,
             )
-            #step_mul_value = 4
-            step_mul_value = 16
+            step_mul_value = 4
+            # step_mul_value = 16
 
         else:
             aif=features.AgentInterfaceFormat(

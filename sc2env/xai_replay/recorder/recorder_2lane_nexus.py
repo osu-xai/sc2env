@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 from s2clientprotocol import sc2api_pb2 as sc_pb
-#import explanation_pb2 as expl_pb 
+import sc2env.xai_replay.ui.viz.py_backend.proto.explanation_pb2 as expl_pb 
 from pysc2.lib import features
 import sys
 REPLAY_DIR_PATH = "../sc2env/sc2env/xai_replay/ui/viz/replays"
@@ -15,21 +15,22 @@ class XaiReplayRecorder2LaneNexus():
     """
     
     def __init__(self, sc2_env, game_number, env_name, action_component_names, replay_dimension = 256):
-        print("RECORDER IS ALIVE")
         time_string = "{}".format(int(time.time()))
-        self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".json")
-        self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".mp4")
-        self.saliency_pathname = os.path.join(REPLAY_DIR_PATH,"game_" +  time_string + "_" + str(replay_dimension) + ".expl")
+
+        self.game_number = game_number
+        self.json_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".json")
+        self.video_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".mp4")
+        self.saliency_pathname = os.path.join(REPLAY_DIR_PATH,"game_" + str(self.game_number) + "_" +  time_string + "_" + str(replay_dimension) + ".expl")
+
         self.sc2_env = sc2_env
         #self.game_clock_tick = 0
-        self.frames = []
+        self.frames = [] 
         self.action_component_names = action_component_names
         self.video = imutil.Video(filename=self.video_pathname)
         self.decision_point_number = 1
         self.explanation_points_array = []
         self.current_wave_number = 0
         self.jpg_number = 0
-
 
     def save_jpg(self):
         observation = self.get_observation()
@@ -40,15 +41,15 @@ class XaiReplayRecorder2LaneNexus():
         return observation
 
     def save_game_rgb_screen(self, observation): 
-        print("fetching RGB screen")
+        # print("fetching RGB screen")
         rgb_screen = features.Feature.unpack_rgb_image(observation.observation.render_data.map).astype(np.int32)  
-        print(f"SAVING IMAGE")
-        imutil.show(rgb_screen, filename="twoLane" + str(self.jpg_number) + ".jpg")
+        # print(f"SAVING IMAGE")
+        # imutil.show(rgb_screen, filename="twoLane" + str(self.jpg_number) + ".jpg")
         #imutil.show(self.last_timestep.observation['rgb_screen'], filename="test.jpg")
-        #self.video.write_frame(rgb_screen, normalize=False)
+        self.video.write_frame(rgb_screen, normalize=False)
 
     def record_decision_point(self, action_p1, action_p2, state_p1, state_p2, cumulative_rewards):
-        print("record_decision_point...")
+        # print("record_decision_point...")
         observation = self.get_observation()
         frame_info = {}
         # if rewards == [[]]:
@@ -61,6 +62,11 @@ class XaiReplayRecorder2LaneNexus():
             frame_info["cumulative_rewards"] = cumulative_rewards
         
         frame_info["action_component_names"] = self.action_component_names
+        # print("action p1: " + str(action_p1))
+        # print("action p1: " + str(action_p2))
+        # print("state p2: " + str(state_p1))
+        # print("state p2: " + str(state_p2))
+
         # frame_info["action_p1"] = create_action_dict(action_p1)
         # frame_info["action_p2"] = create_action_dict(action_p2)
         # frame_info["state_p1"] = create_state_dict(state_p1)
@@ -88,38 +94,42 @@ class XaiReplayRecorder2LaneNexus():
         #     self.current_wave_number = wave_number
         # else:
         #     frame_info["start_of_wave"] = False
+        
         for unit in observation.observation.raw_data.units:
             x = {}
-            x["display_type"] = unit.display_type
-            x["alliance"] = unit.alliance
-            x["tag"] = unit.tag
+            # x["display_type"] = unit.display_type
+            
+            # x["tag"] = unit.tag
             x["unit_type"] = unit.unit_type
-            x["owner"] = unit.owner
-            x["facing"] = unit.facing
-            x["radius"] = unit.radius
-            x["build_progress"] = unit.build_progress
-            x["cloak"] = unit.cloak
-            x["is_selected"] = unit.is_selected
-            x["is_on_screen"] = unit.is_on_screen
-            x["is_blip"] = unit.is_blip
+            # x["owner"] = unit.owner
+            # x["facing"] = unit.facing
+            # x["radius"] = unit.radius
+            # x["build_progress"] = unit.build_progress
+            # x["cloak"] = unit.cloak
+            # x["is_selected"] = unit.is_selected
+            # x["is_on_screen"] = unit.is_on_screen
+            # x["is_blip"] = unit.is_blip
             x["health"] = unit.health
-            x["health_max"] = unit.health_max
             x["shield"] = unit.shield
-            x["energy"] = unit.energy
-            x["is_flying"] = unit.is_flying
-            x["is_burrowed"] = unit.is_burrowed
-            x["shield_max"] = unit.shield_max
-            x["energy_max"] = unit.energy_max
-            x["x"] = unit.pos.x
-            x["y"] = unit.pos.y
-            x["z"] = unit.pos.z
+            # x["energy"] = unit.energy
+            # x["is_flying"] = unit.is_flying
+            # x["is_burrowed"] = unit.is_burrowed
+            # x["shield_max"] = unit.shield_max
+            # x["energy_max"] = unit.energy_max
+            if(unit.unit_type != 45):
+                x["alliance"] = unit.alliance
+                x["x"] = unit.pos.x
+                x["y"] = unit.pos.y
+                x["health_max"] = unit.health_max
+
+            # x["z"] = unit.pos.z
             units.append(x)
         frame_info["units"] = units
     
         
 
     def record_game_clock_tick(self, cumulative_rewards):
-        print("record_clock tick...")
+        
         observation = self.get_observation()
         frame_info = {}
         frame_info["cumulative_rewards"] = clone_rewards_dict(cumulative_rewards)
@@ -149,9 +159,11 @@ class XaiReplayRecorder2LaneNexus():
         f.write("\n")
         f.close()
         # expl_points_pb = expl_pb.ExplanationPoints(explanation_points = self.explanation_points_array)
-        # data = expl_points_pb.SerializeToString()
-        # output_file = open(self.saliency_pathname,"wb")
-        # output_file.write(data)
+
+        expl_points_pb = expl_pb.ExplanationPoints(explanation_points = [])
+        data = expl_points_pb.SerializeToString()
+        output_file = open(self.saliency_pathname,"wb")
+        output_file.write(data)
 
     # def record_saliency_for_decision_point(self, saliencies):
     #     # since we already appended the corresponding frame to the frames list in record_decision_point, 

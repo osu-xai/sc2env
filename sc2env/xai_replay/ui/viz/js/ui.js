@@ -15,7 +15,10 @@ zIndexMap["clickBlockerRectangle"] = 10;
 zIndexMap["whyButton"] = 11;
 zIndexMap["arrow"] = 20;
 zIndexMap["tooltip"] = 30;
-zIndexMap["allTheWayToFront"] = 40;
+zIndexMap["aboveToolTip"] = 40;
+zIndexMap["allTheWayToFront"] = 80;
+zIndexMap["modalPopUp"] = 90
+
 //var game_background_color = "#123456";
 //var game_background_color = "#000000";
 //var game_background_color = "#f0f0f0";
@@ -35,7 +38,7 @@ pauseResumeButton.setAttribute("id", "pauseResumeButton");
 
 // explanation controls
 var expl_ctrl_canvas = document.createElement("canvas");
-expl_ctrl_canvas.setAttribute("style", "z-index:" + zIndexMap["explControl"]);
+expl_ctrl_canvas.setAttribute("style", "z-index:" + (zIndexMap["allTheWayToFront"]+1));
 expl_ctrl_canvas.setAttribute("id", "expl-control-canvas");
 var expl_ctrl_ctx = expl_ctrl_canvas.getContext("2d");
 expl_ctrl_ctx.imageSmoothingEnabled = false;
@@ -49,7 +52,7 @@ var explanationControlYPosition = 36;
 var controlsManager = configureControlsManager(pauseResumeButton, rewindButton);
 
 //scaling
-var gameScaleFactor = 6;
+var gameScaleFactor = 1;
 var spacingFactor = 1;
 var sizingFactor = 1;
 
@@ -61,14 +64,16 @@ var mostRecentClickHadCtrlKeyDepressed;
 function configureGameboardCanvas(){ //gameboard canvas will be used to draw things in front of video
 	gameboard_canvas.width = sc2GameRenderWidth;
     gameboard_canvas.height = sc2GameRenderHeight;
-    gameboard_canvas.setAttribute("id","gameboard");
-	$("#scaii-gameboard").css("width", gameboard_canvas.width);
-	$("#scaii-gameboard").css("height", gameboard_canvas.height);
+	gameboard_canvas.setAttribute("id","gameboard");
+	screen_height = $(window).height()
+	$("#scaii-gameboard").css("width", "100%");
+	$("#scaii-gameboard").css("height", screen_height * uncroppedPercentage); //cropping video in ui
 	$("#scaii-gameboard").css("background-color", game_background_color);
 	$("#scaii-gameboard").css("border-style", "solid");
 	$("#scaii-gameboard").css("position", "relative");
+	$("#scaii-gameboard").css("overflow", "hidden");
 	$("#scaii-gameboard").append()
-	gameboard_canvas.setAttribute("style", "position:absolute;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:" + sc2GameRenderWidth + "px;height:" + sc2GameRenderHeight + ";");
+	gameboard_canvas.setAttribute("style", "position:absolute;z-index:" + zIndexMap["inFrontOfVideo"] + ";margin:auto;font-family:Arial;padding:0px;width:100%;" + "height:" + (gameboard_canvas.height - (gameboard_canvas.height*.2)) + "px;");
 	var scaiiGameboard = document.getElementById("scaii-gameboard");
 	if (gameboard_canvas.parentNode != scaiiGameboard){
 		$("#scaii-gameboard").append(gameboard_canvas);
@@ -124,7 +129,9 @@ var timelineMargin = 40;
 var explanationControlCanvasHeight = 70;
 var timelineHeight = 16;
 function drawExplanationTimeline() {
-	expl_ctrl_ctx.clearRect(0,0, expl_ctrl_canvas.width, expl_ctrl_canvas.height);
+	// var video = document.getElementById("video");
+	// var video_width = video.offsetWidth
+	expl_ctrl_ctx.clearRect(0,0, $(window).width(), expl_ctrl_canvas.height);
 	// just use width of gameboard for now, may need to be bigger
 	
 	expl_ctrl_canvas.height = explanationControlCanvasHeight;
@@ -138,11 +145,11 @@ function drawExplanationTimeline() {
 	}
 	let ctx = expl_ctrl_ctx;
 	
-	expl_ctrl_canvas.width = gameContainerWidth;
+	expl_ctrl_canvas.width = $(window).width()*.9;
 	ctx.beginPath();
 	ctx.moveTo(timelineMargin,explanationControlYPosition);
 	ctx.lineWidth = timelineHeight;
-	ctx.strokeStyle = 'darkgrey';
+	ctx.strokeStyle = 'white';
 	ctx.lineTo(expl_ctrl_canvas.width - timelineMargin,explanationControlYPosition);
 	ctx.stroke();
 	ctx.restore();
@@ -220,6 +227,7 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
 		var x = evt.offsetX;
 		var y = evt.offsetY;
+
 		//$("#step-value").html( x + " , " + y);
 		var unitId = activeSC2DataManager.getClosestUnitIdInRange(x, y);
 		if (unitId == undefined) {
@@ -251,7 +259,7 @@ function sizeNonGeneratedElements() {
 	var acronymWidth      = gameContainerWidth * percentWidthAcronym;
 	var replayLabelWidth  = gameContainerWidth * percentWidthReplayLabel;
 	var fileSelectorWidth = gameContainerWidth * percentWidthFileSelector;
-	$("#game-titled-container").css("width", gameContainerWidth + "px");
+	$("#game-titled-container").css("width", "100%");
 	// 150
 	$("#scaii-acronym").css("padding-left", "20px");
 	$("#scaii-acronym").css("width", acronymWidth + "px");
@@ -262,7 +270,7 @@ function sizeNonGeneratedElements() {
 	$("#game-replay-label").css("padding-right", "10px");
 
 	// 300
-	$("#replay-file-selector").css("width", fileSelectorWidth + "px");
+	$("#replay-file-selector").css("width",  "16%");
 
 	
 	$("#scaii-acronym").css("padding-top", "10px");
@@ -278,14 +286,219 @@ function sizeNonGeneratedElements() {
 	$("#right-side-quadrant-labels").css("height", gameboard_canvas.height + "px");
 
 	var rewardsPanelWidth = gameContainerWidth - gameboard_canvas.width - 2 * quadrantLabelWidth;
-	$("#reward-values-panel").css("height", gameboard_canvas.height + "px");
-	$("#reward-values-panel").css("width", rewardsPanelWidth + "px");
+	$("#reward-values-panel").css("height", 225 + "px");
+	$("#reward-values-panel").css("width", 340 + "px");
+	$("#reward-values-panel").css("position","absolute");
+	$("#reward-values-panel").css("top", "55%");
+	$("#reward-values-panel").css("float", "left");
+	$("#reward-values-panel").css("display", "none");
+	$("#reward-values-panel").css("color", "white");
+	$("#reward-values-panel").css("background-color", "Navy");
+	$("#reward-values-panel").css("border", "2px solid blue");
+	$("#reward-values-panel").css("border-radius", "2px");
+	$("#reward-values-panel").css("padding", "5px");
+
+
+	$('#reward-values-panel-toggle').css('float', "left")
+	$('#reward-values-panel-toggle').css('text-align', "center")
+	$('#reward-values-panel-toggle').css('font-size', "10px")
+	$('#reward-values-panel-toggle').css('width', "70px")
+	$('#reward-values-panel-toggle').css('height', "100%")
+    
+	var toggle_rewards = document.getElementById("reward-values-panel-toggle");
+	toggle_rewards.addEventListener('click', function(event){
+		if (document.getElementsByTagName('video')){
+			if ($('#reward-values-panel').css('display') == 'none'){
+				$('#reward-values-panel').css('display', "block")
+			}
+			else{
+				$('#reward-values-panel').css('display', "none")
+			}
+		}
+		else{
+			alert("No Units to show. Load the video and try again.")
+		}
+	});
+		
+
+	$("#p1_top").css("z-index", zIndexMap["aboveToolTip"]);
+	$("#p1_top").css("color", "white");
+	$("#p1_top").css("background-color", "Navy");
+	$("#p1_top").css("border", "2px solid blue");
+	$("#p1_top").css("border-radius", "2px");
+	$("#p1_top").css("padding", "5px");
+	$("#p1_top").css("width", "22%");
+
+
+
+
+	$("#p2_top").css("z-index", zIndexMap["aboveToolTip"]);
+	$("#p2_top").css("color", "white");
+	$("#p2_top").css("background-color", "Navy");
+	$("#p2_top").css("border", "2px solid blue");
+	$("#p2_top").css("border-radius", "2px");
+	$("#p2_top").css("padding", "5px");
+	$("#p2_top").css("width", "15%");
+
+
+	$("#p1_bottom").css("z-index", zIndexMap["aboveToolTip"]);
+	$("#p1_bottom").css("color", "white");
+	$("#p1_bottom").css("background-color", "Navy");
+	$("#p1_bottom").css("border", "2px solid blue");
+	$("#p1_bottom").css("border-radius", "2px");
+	$("#p1_bottom").css("padding", "5px");
+	$("#p1_bottom").css("width", "22%");
+
+
+	$("#p2_bottom").css("z-index", zIndexMap["aboveToolTip"]);
+	$("#p2_bottom").css("color", "white");
+	$("#p2_bottom").css("background-color", "Navy");
+	$("#p2_bottom").css("border", "2px solid blue");
+	$("#p2_bottom").css("border-radius", "2px");
+	$("#p2_bottom").css("padding", "5px");
+	$("#p2_bottom").css("width", "15%");
+
+
+	
+
+	$("#p1_top").css("position", "absolute");
+	$("#p1_top").css("top", "1%");
+	$("#p1_top").css("left", "2%");
+
+
+	$("#p2_top").css("position", "absolute");
+	$("#p2_top").css("top", "1%");
+	$("#p2_top").css("left", "83%");
+
+
+	$("#p1_bottom").css("position", "absolute");
+	$("#p1_bottom").css("top", "89%");
+	$("#p1_bottom").css("left", "2%");
+
+
+	$("#p2_bottom").css("position", "absolute");
+	$("#p2_bottom").css("top", "89%");
+	$("#p2_bottom").css("left", "83%");
+
+
+	$('.unit-value-panels').css('font-size', "15px")
+	$('.unit-value-panels').css('font-family', "Arial")
+
+	
+	document.getElementById('friendly.nexusHealth.top').style.position = "absolute";
+	document.getElementById('friendly.nexusHealth.top').style.top = "12.5%";
+	document.getElementById('friendly.nexusHealth.top').style.left = "2%";
+	document.getElementById('friendly.nexusHealth.top').style.height = "20px";
+	document.getElementById('friendly.nexusHealth.top').style.fontSize = "15px";
+	document.getElementById('friendly.nexusHealth.top').style.fontFamily = "Arial";
+	document.getElementById('friendly.nexusHealth.top').style.display = "block";
+	document.getElementById('friendly.nexusHealth.top').style.zIndex = "50";
+	document.getElementById('friendly.nexusHealth.top').style.color = "white";
+	document.getElementById('friendly.nexusHealth.top').style.background = "navy";
+	document.getElementById('friendly.nexusHealth.top').style.border = "2px solid blue";
+	document.getElementById('friendly.nexusHealth.top').style.borderRadius = "2px";
+	document.getElementById('friendly.nexusHealth.top').style.padding = "5px";
+
+	document.getElementById('friendly.nexusHealth.bottom').style.position = "absolute";
+	document.getElementById('friendly.nexusHealth.bottom').style.top = "83.25%";
+	document.getElementById('friendly.nexusHealth.bottom').style.left = "2%";
+	document.getElementById('friendly.nexusHealth.bottom').style.height = "20px";
+	document.getElementById('friendly.nexusHealth.bottom').style.fontSize = "15px";
+	document.getElementById('friendly.nexusHealth.bottom').style.fontFamily = "Arial";
+	document.getElementById('friendly.nexusHealth.bottom').style.display = "block";
+	document.getElementById('friendly.nexusHealth.bottom').style.zIndex = "50";
+	document.getElementById('friendly.nexusHealth.bottom').style.color = "white";
+	document.getElementById('friendly.nexusHealth.bottom').style.background = "navy";
+	document.getElementById('friendly.nexusHealth.bottom').style.border = "2px solid blue";
+	document.getElementById('friendly.nexusHealth.bottom').style.borderRadius = "2px";
+	document.getElementById('friendly.nexusHealth.bottom').style.padding = "5px";
+
+
+	document.getElementById('enemy.nexusHealth.top').style.position = "absolute";
+	document.getElementById('enemy.nexusHealth.top').style.top = "12.5%";
+	document.getElementById('enemy.nexusHealth.top').style.left = "89%";
+	document.getElementById('enemy.nexusHealth.top').style.height = "20px";
+	document.getElementById('enemy.nexusHealth.top').style.fontSize = "15px";
+	document.getElementById('enemy.nexusHealth.top').style.fontFamily = "Arial";
+	document.getElementById('enemy.nexusHealth.top').style.display = "block";
+	document.getElementById('enemy.nexusHealth.top').style.zIndex = "50";
+	document.getElementById('enemy.nexusHealth.top').style.color = "white";
+	document.getElementById('enemy.nexusHealth.top').style.background = "navy";
+	document.getElementById('enemy.nexusHealth.top').style.border = "2px solid blue";
+	document.getElementById('enemy.nexusHealth.top').style.borderRadius = "2px";
+	document.getElementById('enemy.nexusHealth.top').style.padding = "5px";
+
+	document.getElementById('enemy.nexusHealth.bottom').style.position = "absolute";
+	document.getElementById('enemy.nexusHealth.bottom').style.top = "83.25%";
+	document.getElementById('enemy.nexusHealth.bottom').style.left = "89%";
+	document.getElementById('enemy.nexusHealth.bottom').style.height = "20px";
+	document.getElementById('enemy.nexusHealth.bottom').style.fontSize = "15px";
+	document.getElementById('enemy.nexusHealth.bottom').style.fontFamily = "Arial";
+	document.getElementById('enemy.nexusHealth.bottom').style.display = "block";
+	document.getElementById('enemy.nexusHealth.bottom').style.zIndex = "50";
+	document.getElementById('enemy.nexusHealth.bottom').style.color = "white";
+	document.getElementById('enemy.nexusHealth.bottom').style.background = "navy";
+	document.getElementById('enemy.nexusHealth.bottom').style.border = "2px solid blue";
+	document.getElementById('enemy.nexusHealth.bottom').style.borderRadius = "2px";
+	document.getElementById('enemy.nexusHealth.bottom').style.padding = "5px";
+	
+
+	
+	$('#unit-value-panels-toggle').css('float', "left")
+	$('#unit-value-panels-toggle').css('text-align', "center")
+	$('#unit-value-panels-toggle').css('font-size', "12px")
+	$('#unit-value-panels-toggle').css('font-family', "Arial")
+	$('#unit-value-panels-toggle').css('width', "80px")
+	$('#unit-value-panels-toggle').css('height', "30px")
+
+	var toggle_units = document.getElementById("unit-value-panels-toggle");
+	toggle_units.addEventListener('click', function(event){
+		if ($('.unit-value-panels').css('display') == 'none'){
+			$('.unit-value-panels').css('display', "grid")
+		}
+		else{
+			$('.unit-value-panels').css('display', "none")
+		}
+	});
+	
+	$('#fullscreen-button1-toggle').css('float', "left")
+	$('#fullscreen-button1-toggle').css('text-align', "center")
+	$('#fullscreen-button1-toggle').css('font-size', "12px")
+	$('#fullscreen-button1-toggle').css('font-family', "Arial")
+	$('#fullscreen-button1-toggle').css('width', "80px")
+	$('#fullscreen-button1-toggle').css('height', "30px")
+
+
+	$('#fullscreen-modal').css('width', "90%")
+	$('#fullscreen-modal').css('height', "80%")
+	$('#fullscreen-modal').css('left', "5%")
+	$('#fullscreen-modal').css('right', "5%")
+	$('#fullscreen-modal').css('top', "7%")
+	$('#fullscreen-modal').css('bottom', "5%")
+
+	$('#fullscreen-modal').css('position', "absolute")
+	$('#fullscreen-modal').css('background-color', "white")
+	$('#fullscreen-modal').css('border-radius', "10px")
+	$('#fullscreen-modal').css('z-index', zIndexMap["modalPopUp"])
+
+
+
+
+	var toggle_fullscreen_modal = document.getElementById("fullscreen-button1-toggle");
+	toggle_fullscreen_modal.addEventListener('click', function(event){
+		if ($('#fullscreen-modal').css('display') == 'none'){
+			$('#fullscreen-modal').css('display', "block")
+		}
+		else{
+			$('#fullscreen-modal').css('display', "none")
+		}
+	});
 	
 	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
 	var stepValueWidth = 100;
 	var stepValuePaddingLeft = centerPointOfVideo - stepValueWidth - 40;
 	$("#step-value").css("width", stepValueWidth + "px");
-	$("#step-value").css("padding-left", stepValuePaddingLeft + "px");
+	$("#step-value").css("margin-left", ($(window).width()/2)-120);
 	
 	
 	
@@ -294,9 +507,57 @@ function sizeNonGeneratedElements() {
 	$("#playback-controls-panel").css("margin-left", "10px");
 	$("#playback-controls-panel").css("margin-top", "10px");
 	$("#playback-controls-panel").css("margin-bottom", "10px");
-	
+	$("#playback-controls-panel").css("z-index", zIndexMap["allTheWayToFront"]);
 
-    $("#explanation-control-panel").css("height", "85px");
+
+	$("#explanation-control-panel").css("height", "60px")
+	$("#explanation-control-panel").css("position", "absolute");
+	$("#explanation-control-panel").css("top", "45%");
+	$("#explanation-control-panel").css("left", "5%");
+	$("#explanation-control-panel").css("right", "5%");
+	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
+	$("#explanation-control-panel").css("z-index", zIndexMap["allTheWayToFront"]);
+	// $("#explanation-control-panel").css("width", widthOfTimeline);
+
+
+	$("#friendly-title").css("font-size", "18px")
+	$("#enemy-title").css("font-size", "18px")
+
+	$("#p1_mineral").css("font-size", "15px")
+
+
+
+	$("#p1_pylon").css("font-size", "15px")
+
+
+
+	$("#p2_pylon").css("font-size", "15px")
+
+
+	$("#friendly-lane-neutral-container").css("color", "white");
+	$("#friendly-lane-neutral-container").css("background-color", "Navy");
+	$("#friendly-lane-neutral-container").css("border", "2px solid blue");
+	$("#friendly-lane-neutral-container").css("border-radius", "2px");
+	$("#friendly-lane-neutral-container").css("padding", "5px");
+	$("#friendly-lane-neutral-container").css("float", "left");
+	$("#friendly-lane-neutral-container").css("width", "41%");
+	$("#friendly-lane-neutral-container").css("height", "25px");
+	$("#friendly-lane-neutral-container").css("font-size", "15px")
+
+	
+	$(".lane-neutral-info").css("font-family", "Arial")
+
+	$("#enemy-lane-neutral-container").css("font-size", "15px")
+	$("#enemy-lane-neutral-container").css("color", "white");
+	$("#enemy-lane-neutral-container").css("background-color", "Navy");
+	$("#enemy-lane-neutral-container").css("border", "2px solid blue");
+	$("#enemy-lane-neutral-container").css("border-radius", "2px");
+	$("#enemy-lane-neutral-container").css("padding", "5px");
+	$("#enemy-lane-neutral-container").css("width", "42%");
+	$("#enemy-lane-neutral-container").css("height", "25px");
+
+
+
 }
 
 function clearGameBoard() { 
@@ -339,11 +600,13 @@ var subtractPixels = function(a,b){
 }
 
 
+
+
 expl_ctrl_canvas.addEventListener('click', function (event) {
 	if (!isUserInputBlocked()){
 		var matchingStep = getMatchingExplanationStep(expl_ctrl_ctx, event.offsetX, event.offsetY);
 		if (matchingStep == undefined){
-            processTimelineClick(event);
+			processTimelineClick(event);
 		}
 		else{
 			if (matchingStep == sessionIndexManager.getCurrentIndex()) {

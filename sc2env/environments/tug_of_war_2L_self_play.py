@@ -58,7 +58,7 @@ unit_types_player2 = {
     60 : 14, # 'Pylon'
     59 : 29, # 'Nexus'
     48 : 21, # 'Marine'
-    9 : 22, # 'Baneling'
+    9 : 22, # 'Baneling' 
     83 : 23 # 'Immortal'
 }
 reward_dict = {
@@ -103,8 +103,9 @@ class TugOfWar():
                 camera_width_world_units = 28,
                 #use_camera_position = True,
             )
-            #step_mul_value = 4
-            step_mul_value = 16
+
+            step_mul_value = 4
+            # step_mul_value = 16
 
         else:
             aif=features.AgentInterfaceFormat(

@@ -36,32 +36,32 @@ function askBackendForExplanationSaliencyInfo(stepNumber) {
 	// }
 }
 
-function renderWhyButton(step, x, y){
-    $("#why-button").remove();
-    var whyButton = document.createElement("BUTTON");
-    var buttonId = "why-button";
-    whyButton.setAttribute("id", buttonId);
-    var why = document.createTextNode("why?");
-    whyButton.appendChild(why);          
-    whyButton.setAttribute("style", 'z-index:' + zIndexMap["whyButton"] + ';position:relative;left:' + x + 'px;top:-17px;font-family:Arial;');
-    $("#explanation-control-panel").append(whyButton);
-    $("#" + buttonId).click(function(e) {
-        //SC2_TODO_STUDY 
-        // if (currentExplManager.chartVisible) {
-        //     var logLine = templateMap["hideWhy"];
-        //     logLine = logLine.replace("<HIDE_WHY>", "NA");
-        //     targetClickHandler(e, logLine);
-        // }
-        // else {
-        //     var logLine = templateMap["showWhy"];
-        //     logLine = logLine.replace("<SHW_WHY>", "NA");
-        //     targetClickHandler(e, logLine);
-        // }
-        //SC2_TODO_STUDY_END
-        e.preventDefault();
-        processWhyClick(step);
-    })
-}
+// function renderWhyButton(step, x, y){
+//     $("#why-button").remove();
+//     var whyButton = document.createElement("BUTTON");
+//     var buttonId = "why-button";
+//     whyButton.setAttribute("id", buttonId);
+//     var why = document.createTextNode("why?");
+//     whyButton.appendChild(why);          
+//     whyButton.setAttribute("style", 'z-index:' + zIndexMap["whyButton"] + ';position:relative;left:' + x + 'px;top:-17px;font-family:Arial;');
+//     $("#explanation-control-panel").append(whyButton);
+//     $("#" + buttonId).click(function(e) {
+//         //SC2_TODO_STUDY 
+//         // if (currentExplManager.chartVisible) {
+//         //     var logLine = templateMap["hideWhy"];
+//         //     logLine = logLine.replace("<HIDE_WHY>", "NA");
+//         //     targetClickHandler(e, logLine);
+//         // }
+//         // else {
+//         //     var logLine = templateMap["showWhy"];
+//         //     logLine = logLine.replace("<SHW_WHY>", "NA");
+//         //     targetClickHandler(e, logLine);
+//         // }
+//         //SC2_TODO_STUDY_END
+//         e.preventDefault();
+//         processWhyClick(step);
+//     })
+// }
 function addFunctionsToRawChart(rawChart){
     var ch = addColorToBars(rawChart);
     ch = addUtilityFunctions(ch);

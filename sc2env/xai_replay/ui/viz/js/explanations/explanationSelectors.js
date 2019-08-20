@@ -51,7 +51,7 @@ function configureExplanationSelectorDiamond(decisionPointNumber,step){
         }
         else {
             setExplanationInfoForDPAtStep(step);
-            renderWhyButton(step, xPositionOfWhyButton, yPositionOfWhyButton);
+            //renderWhyButton(step, xPositionOfWhyButton, yPositionOfWhyButton);
         }
 		
         boldThisStepInLegend(step);
@@ -116,9 +116,9 @@ function setExplanationInfoForDPAtStep(step) {
     else {
 		var step = sessionIndexManager.getCurrentIndex();
         var frameInfo = activeSC2DataManager.getFrameInfo(step);
-        var rawChart = convertSC2QValuesToJSChart(frameInfo);
-        currentExplManager.setChartData(rawChart, step);
-        askBackendForExplanationSaliencyInfo(step);
+        //var rawChart = convertSC2QValuesToJSChart(frameInfo);
+        //currentExplManager.setChartData(rawChart, step);
+        //askBackendForExplanationSaliencyInfo(step);
     }
 }
 
