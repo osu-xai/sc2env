@@ -21,7 +21,7 @@ async def hello(websocket, path):
     #session_config = pb.SC2ReplaySessionConfig()
     #sp.replay_session_config = session_config
     #rc = scaii_packet.replay_choice_config.add()
-
+ 
 
     #file_names = ["test_1520x1280"]
     #rc.replay_filenames = file_names

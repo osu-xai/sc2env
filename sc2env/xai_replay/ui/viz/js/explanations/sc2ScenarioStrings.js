@@ -21,12 +21,12 @@ scoreFlavor["damageToZealot"]               = "score";
 scoreFlavor["damageToZergling"]             = "score";
 
 var prettyPrintRewardName = {};
-prettyPrintRewardName["damageToWeakEnemyGroup"]       = "damage to weak enemy groups";
-prettyPrintRewardName["destoryToWeakEnemyGroup"]      = "destruction of weak enemy groups";
-prettyPrintRewardName["damageToStrongEnemyGroup"]     = "damage to strong enemy groups";
-prettyPrintRewardName["destoryToStrongEnemyGroup"]    = "destruction of  strong enemy groups";
-prettyPrintRewardName["damageToWeakFriendGroup"]      = "damage to weak friendly groups";
-prettyPrintRewardName["destoryToWeakFriendGroup"]     = "destruction of  weak friendly groups";
+prettyPrintRewardName["damge_to_player1_bottom_2"]      = "Damage to Player 1 Bottom Nexus";
+prettyPrintRewardName["damge_to_player1_top_2"]         = "Damage to Player 1 Top Nexus";
+prettyPrintRewardName["damge_to_player2_bottom_1"]      = "Damage to Player 2 Bottom Nexus";
+prettyPrintRewardName["damge_to_player2_top_1"]         = "Damage to Player 2 Top Nexus";
+prettyPrintRewardName["player1_wins_1"]                 = "Player 1 Wins"
+prettyPrintRewardName["player2_wins_2"]                 = "Player 2 Wins";
 prettyPrintRewardName["damageToStrongFriendGroup"]    = "damage to strong friendly groups";
 prettyPrintRewardName["destoryToStrongFriendGroup"]   = "destruction of strong friendly groups";
 

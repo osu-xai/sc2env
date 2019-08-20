@@ -295,8 +295,8 @@ function renameEntityInfoForIUI(s) { //SC2_TODO_TT - rename unit types for SC2
     if (s == "48"){
         return "Marine";
     }
-    else if (s == "52"){
-        return "Thor";
+    else if (s == "9"){
+        return "Baneling";
     }
     if (s == "83"){
         return "Immortal";

@@ -29,6 +29,7 @@ function getFailureChecker() {
 }
 function runTests(){
     var fc = getFailureChecker();
+    runVideoManagerTests(fc);
     runQuestionAccessManagerTests(fc);
     runChartManagerTests(fc);
     runChartDataSelectionTests(fc);

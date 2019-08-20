@@ -6,7 +6,9 @@ var activeStudyQuestionManager = undefined;
 //SC2_DEFERRED var stateMonitor = undefined;
 //SC2_DEFERRED var userActionMonitor = undefined;
 var treatmentID = undefined;
-
+var previousFrameUnitCounts = {}
+var currentFrameUnitCounts = {}
+var currentFriendlyMineralHealth = 0
 // Since studyMode is controlled at front end, backend is unaware which mode and will always send 
 // questions if it finds them.  So, we need to check userStudyMode here.
 function handleStudyQuestions(studyQuestions){ //SC2_OK
@@ -208,6 +210,154 @@ function userStudyAdjustmentsForFrameChange(){
 }
 var totalsString = "total score";
 
+function getUnitLane(basicUnitYPos){
+    var lane = "bottom"
+    if (basicUnitYPos > 32){
+        lane = "top"
+    }
+    return lane
+}
+
+function getMineralHealth(frameInfo){
+    var recorderUnitId = 45
+    for (var i in frameInfo.units){
+        var unit = frameInfo.units[i]
+        if (unit.unit_type == recorderUnitId){
+            var recorderUnit = unit
+            var mineralHealthSheildValue = 4
+            if (recorderUnit.shield == mineralHealthSheildValue){
+                currentFriendlyMineralHealth = recorderUnit.health - 1
+             }
+        }
+    }
+    return currentFriendlyMineralHealth
+}
+
+function getNexusUnits(frameInfo){
+    var nexusUnit = 59;
+    var nexusUnits = []
+    for (var unitIndex in frameInfo.units){
+        var unit = frameInfo.units[unitIndex]
+        if (unit["unit_type"] == nexusUnit){
+            nexusUnits.push(unit)
+        }
+    }
+    return nexusUnits
+}
+
+function getNexusHealthForUnit(alliance, lane, nexusUnits){
+    for (var unitIndex in nexusUnits){
+        var unit = nexusUnits[unitIndex];
+        curLane = getUnitLane(unit.y);
+        curAlliance = unit.alliance;
+        if (alliance == curAlliance && curLane == lane){
+            return unit.health;
+        }
+    }
+    return 0;
+}
+
+function getWave(frameInfo){
+    var units = frameInfo["units"]
+    for (unitIndex in units){
+        var unit = units[unitIndex]
+        if (unit["unit_type"] == 45){
+            if (unit["shield"] == 42){
+                var waveNumber = unit["health"]
+                return waveNumber;
+            }
+        }
+    }
+}
+
+var htmlTextForKey = {};
+htmlTextForKey["friendly.marineBuilding.top"] = "Marines: ";
+htmlTextForKey["friendly.banelingBuilding.top"] = "Banelings: ";
+htmlTextForKey["friendly.immortalBuilding.top"] = "Immortals: ";
+htmlTextForKey["friendly.marineBuilding.bottom"] = "Marines: ";
+htmlTextForKey["friendly.banelingBuilding.bottom"] = "Banelings: ";
+htmlTextForKey["friendly.immortalBuilding.bottom"] = "Immortals: ";
+htmlTextForKey["enemy.marineBuilding.top"] = "Marines: ";
+htmlTextForKey["enemy.banelingBuilding.top"] = "Banelings: ";
+htmlTextForKey["enemy.immortalBuilding.top"] = "Immortals: ";
+htmlTextForKey["enemy.marineBuilding.bottom"] = "Marines: ";
+htmlTextForKey["enemy.banelingBuilding.bottom"] = "Banelings: ";
+htmlTextForKey["enemy.immortalBuilding.bottom"] = "Immortals: ";
+htmlTextForKey["friendly.Pylon"] = "Pylons: ";
+htmlTextForKey["enemy.Pylon"] = "Pylons: ";
+
+
+var htmlAllianceTextForKey = {};
+htmlAllianceTextForKey["friendly.marineBuilding.top"] = "Friendly ";
+htmlAllianceTextForKey["friendly.banelingBuilding.top"] = "Friendly ";
+htmlAllianceTextForKey["friendly.immortalBuilding.top"] = "Friendly ";
+htmlAllianceTextForKey["friendly.marineBuilding.bottom"] = "Friendly ";
+htmlAllianceTextForKey["friendly.banelingBuilding.bottom"] = "Friendly ";
+htmlAllianceTextForKey["friendly.immortalBuilding.bottom"] = "Friendly ";
+htmlAllianceTextForKey["enemy.marineBuilding.top"] = "Enemy ";
+htmlAllianceTextForKey["enemy.banelingBuilding.top"] = "Enemy ";
+htmlAllianceTextForKey["enemy.immortalBuilding.top"] = "Enemy ";
+htmlAllianceTextForKey["enemy.marineBuilding.bottom"] = "Enemy ";
+htmlAllianceTextForKey["enemy.banelingBuilding.bottom"] = "Enemy ";
+htmlAllianceTextForKey["enemy.immortalBuilding.bottom"] = "Enemy ";
+htmlAllianceTextForKey["friendly.Pylon"] = "Friendly ";
+htmlAllianceTextForKey["enemy.Pylon"] = "Enemy ";
+
+
+
+function renderUnitValues(frameInfo){
+        var unit = frameInfo
+        for (unitCount in unitInfoKeys){
+            if(unit[unitInfoKeys[unitCount] + "_delta_triggered"] == 1){
+
+                if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
+                    document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "+" + (unit[unitInfoKeys[unitCount] + "_delta"])
+                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML =  (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
+                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+                }
+
+                else{
+                    if(frameInfo['wave_triggered'] == 1){
+                        document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                        document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
+                        document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+                    }
+
+                }
+            }
+
+            else{
+                if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
+                    document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "NA"
+                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
+                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+                }
+                else{
+                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
+                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+                }
+            } 
+        }
+
+        var nexusUnits = getNexusUnits(frameInfo);
+        document.getElementById("friendly.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"top",nexusUnits);
+        document.getElementById("friendly.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"bottom",nexusUnits);
+        document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
+        document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
+        
+        for (var i = 0; i < decisionPoints.length; i++){
+            if (frameInfo.frame_number >= decisionPoints[i] + 2){
+                pauseGame();
+                decisionPoints.splice(i,1);
+                return;
+            }
+        }
+}
+
+
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
     rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;
@@ -253,10 +403,10 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	var rewardKeyDiv = document.createElement("DIV");
 	rewardKeyDiv.setAttribute("class", "r" + index +"c0");
 	if (key == totalsString){
-		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:18px;font-weight:bold;padding-bottom:7px; padding-top:20px");
+		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:3px;padding-top:10px;background-color:rgba(0,0,0,0);");
 	}
 	else {
-		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:18px;padding-bottom:3px");
+		rewardKeyDiv.setAttribute("style", "font-family:Arial;font-size:14px;padding-bottom:3px;background-color:rgba(0,0,0,0);");
 	}
 	
 	rewardKeyDiv.innerHTML = prettyPrintRewardName[key];
@@ -272,10 +422,10 @@ function addCumRewardPair(index, key, val){//SC2_OK
 	rewardValDiv.setAttribute("id", id);
 	rewardValDiv.setAttribute("class", "r" + index +"c1");
 	if (key == totalsString){
-		rewardValDiv.setAttribute("style", "margin-left: 20px;font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:7px; padding-top:20px");
+		rewardValDiv.setAttribute("style", "margin-left: 10px;font-family:Arial;font-size:14px;font-weight:bold;padding-bottom:3px;padding-top:10px;background-color:rgba(0,0,0,0);");
 	}
 	else {
-		rewardValDiv.setAttribute("style", "margin-left: 20px;font-family:Arial;font-size:14px;");
+		rewardValDiv.setAttribute("style", "margin-left: 10px;font-family:Arial;font-size:14px;background-color:rgba(0,0,0,0);");
 	}
 	
 	rewardValDiv.innerHTML = val;
