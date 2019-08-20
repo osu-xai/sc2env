@@ -1,125 +1,0 @@
-%PDF-1.7
-
-4 0 obj
-<<
-/C0 [ 0.64706 0.64706 0.64706 ]
-/C1 [ 0.64706 0.64706 0.64706 ]
-/Domain [ 0.0 1.0 ]
-/FunctionType 2
-/N 1.0
->>
-endobj
-5 0 obj
-<<
-/C0 [ 0.64706 0.64706 0.64706 ]
-/C1 [ 0.92941 0.4902 0.19216 ]
-/Domain [ 0.0 1.0 ]
-/FunctionType 2
-/N 1.0
->>
-endobj
-6 0 obj
-<<
-/C0 [ 0.92941 0.4902 0.19216 ]
-/C1 [ 0.92941 0.4902 0.19216 ]
-/Domain [ 0.0 1.0 ]
-/FunctionType 2
-/N 1.0
->>
-endobj
-7 0 obj
-<<
-/Bounds [ 0.4992 0.4992 ]
-/Domain [ 0.0 1.0 ]
-/Encode [ 0.0 1.0 0.0 1.0 0.0 1.0 ]
-/FunctionType 3
-/Functions [ 4 0 R 5 0 R 6 0 R ]
->>
-endobj
-8 0 obj
-<<
-/Matrix [ 0.75 0.0 0.0 -0.75 0.0 792.0 ]
-/PatternType 2
-/Shading <<
-/ColorSpace /DeviceRGB
-/Coords [ 0.0 621.28003 0.0 721.91998 ]
-/Extend [ true true ]
-/Function 7 0 R
-/ShadingType 2
->>
-/Type /Pattern
->>
-endobj
-9 0 obj
-<<
-/Filter /FlateDecode
-/Length 429
->>
-stream
-xœ”ÏNÃ0ÆïyŠ'ÍäO'oÁNœQìĞNbÛû»4‰“2 —y¿¨Ÿ?Çv5 ×ô´nƒãş“Íá´¨Oeò¿}pıP!Â)vƒu‚Kô‹Â! ÅŸ%Ö¥7%^e|Vïê$=ì+(G¨Á{R2#Up´`ÇöE0’(è,©,9²ìºJ4ø¬^ÃEéÇæè‚öp©ŒåŒ!£³Œ`ÂoX8İ«²ç"hö2› °s]µq¹PÿI›sò9nö÷»ÑF; C]B÷wıèµëP<=¿Şïo×Ë0İJl†ÛtÓ¬ÉıZÔ¨CÁgÉ‘x"SÑ5CÙ`Êø÷TÇİ3ıTêÜÕ#ıÖÅ©½G®âz?ÑÀÈ#hr©#f3zı=å}ğ×l’“µz>İB)lõÛ¡a"7:÷«òyÅ¼ó1
-ÌÎ·ÔL«nÁ>•5Ÿ[nògC¤cº}n„7AI¼”"0/ØfIĞº¶5™`Å‰}Dc°ˆd1CÛ•m‘SÎÓÖ]¹Ü–ªRÒÌ5£`Å[·U'õ¯+6
-endstream
-endobj
-10 0 obj
-<<
-/Pattern <<
-/Pattern1 8 0 R
->>
->>
-endobj
-3 0 obj
-<<
-/Contents [ 9 0 R ]
-/CropBox [ 0.0 0.0 612.0 792.0 ]
-/MediaBox [ 0.0 0.0 612.0 792.0 ]
-/Parent 2 0 R
-/Resources 10 0 R
-/Rotate 0
-/Type /Page
->>
-endobj
-2 0 obj
-<<
-/Count 1
-/Kids [ 3 0 R ]
-/Type /Pages
->>
-endobj
-1 0 obj
-<<
-/Pages 2 0 R
-/Type /Catalog
->>
-endobj
-11 0 obj
-<<
-/Author (saira)
-/CreationDate (D:20190813141714-07'00')
-/ModDate (D:20190813141714-07'00')
-/Producer (Microsoft: Print To PDF)
-/Title (MacroDPG v6.xlsm)
->>
-endobj
-xref
-0 12
-0000000000 65535 f
-0000001540 00000 n
-0000001481 00000 n
-0000001319 00000 n
-0000000009 00000 n
-0000000137 00000 n
-0000000264 00000 n
-0000000390 00000 n
-0000000542 00000 n
-0000000765 00000 n
-0000001266 00000 n
-0000001589 00000 n
-trailer
-<<
-/Info 11 0 R
-/Root 1 0 R
-/Size 12
->>
-startxref
-1765
-%%EOF

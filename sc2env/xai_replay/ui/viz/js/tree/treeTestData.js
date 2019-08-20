@@ -62,7 +62,7 @@ var treeData = {
 }
 
 
-$.getJSON("js/tree/json/partial_decision_point_2.json", function(rawSc2Json) {
+$.getJSON("js/tree/json/partial_decision_point_22.json", function(rawSc2Json) {
   
   createRootNode(rawSc2Json);
   getFriendlyActionsUnderState(rawSc2Json);
