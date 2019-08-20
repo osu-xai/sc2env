@@ -15,6 +15,7 @@ from abp.examples.pysc2.tug_of_war.sadq_2p_2l_human_play import run_task as run_
 from abp.examples.pysc2.tug_of_war.sadq_2p_2l_deexplanation import run_task as run_task_2p_2l_deexplanation
 from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed import run_task as run_task_2p_2l_grid_decomposed
 from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed_trans import run_task as run_task_2p_2l_grid_decomposed_trans
+from abp.examples.pysc2.tug_of_war.model_base_TS_grid import run_task as run_task_mbts_grid
 
 def main():
     parser = argparse.ArgumentParser()
@@ -132,6 +133,8 @@ def main():
         run_task_2p_2l_grid_decomposed(evaluation_config, network_config, reinforce_config, map_name = map_name)
     elif args.task == 'task_2p_2l_grid_decomposed_trans':
         run_task_2p_2l_grid_decomposed_trans(evaluation_config, network_config, reinforce_config, map_name = map_name)
+    elif args.task == 'task_mbts_grid':
+        run_task_mbts_grid(evaluation_config, network_config, reinforce_config, map_name = map_name)    
     else:
         print("need task")
     return 0

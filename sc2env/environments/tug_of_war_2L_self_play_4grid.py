@@ -631,6 +631,7 @@ class TugOfWar():
 #         print(self.action_space_dict[num_of_pylon][mineral])
 
         if is_train == 0 or is_train == 1:
+            
             big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
             top_lane = np.zeros((len(big_A), 7))
             bottom_lane = np.zeros((len(big_A), 7))
@@ -644,6 +645,7 @@ class TugOfWar():
     #         print(bottom_lane)
             
             big_A = np.vstack((top_lane, bottom_lane))
+            big_A = np.unique(big_A, axis=0)
     #         print(big_A)
     #         return big_A
 
