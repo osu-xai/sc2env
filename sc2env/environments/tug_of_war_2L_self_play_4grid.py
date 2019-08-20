@@ -705,14 +705,20 @@ class TugOfWar():
         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
         actions = np.array(actions)
         # Add all candidate acgtions to the corressponding vector of the state matrix
-        s[:,1:8] += actions
+        s[:,1:7] += actions[:, : -1]
         
 #         print((self.maker_cost_np * actions[: -1]).shape)
         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions[:, :-1], axis = 1)
         
+        
         index_has_pylon = actions[:, -1] > 0
-        num_of_pylon = s[index_has_pylon, self.pylon_index]
-        s[index_has_pylon, self.miner_index] -= (self.pylon_cost + (num_of_pylon - 1) * 100)
+        while sum(index_has_pylon) != 0:
+            num_of_pylon = s[index_has_pylon, self.pylon_index]
+            s[index_has_pylon, self.pylon_index] += 1
+            s[index_has_pylon, self.miner_index] -= (self.pylon_cost + num_of_pylon * 100)
+            
+            actions[index_has_pylon, -1] -= 1
+            index_has_pylon = actions[:, -1] > 0
         
         assert np.sum(s[:, self.miner_index] >= 0) == s.shape[0]
         return s
