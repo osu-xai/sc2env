@@ -475,58 +475,6 @@
                                                                     1.0,
                                                                     0.0,
                                                                     0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    1.0,
-                                                                    1.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    -0.0,
-                                                                    -0.0,
-                                                                    -0.0,
-                                                                    -0.0,
-                                                                    -0.0,
-                                                                    0.0,
-                                                                    -0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    -0.0,
-                                                                    1998.5225830078125,
-                                                                    2000.5738525390625,
-                                                                    1997.869384765625,
-                                                                    1998.7183837890625,
-                                                                    2.0
-                                                                ],
-                                                                "action": "0000000",
-                                                                "best q_value": 0.7555368542671204,
-                                                                "after state q_value": 0.8032192587852478,
-                                                                "tree path": "12001",
-                                                                "children": [
-                                                                    []
-                                                                ]
-                                                            },
-                                                            {
-                                                                "name": "dp2_level2_action_min_12002_12002",
-                                                                "mineral": 175.0,
-                                                                "Pylons": 0.0,
-                                                                "BOT Marines": 0.0,
-                                                                "TOP Marines": 0.0,
-                                                                "BOT Banelings": 1.0,
-                                                                "TOP Banelings": 0.0,
-                                                                "BOT Immortals": 0.0,
-                                                                "TOP Immortals": 0.0,
-                                                                "state": [
-                                                                    175.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    1.0,
-                                                                    0.0,
-                                                                    0.0,
                                                                     1.0,
                                                                     1.0,
                                                                     0.0,
@@ -555,13 +503,13 @@
                                                                 "action": "1100000",
                                                                 "best q_value": 0.7378603219985962,
                                                                 "after state q_value": 0.7825304865837097,
-                                                                "tree path": "12002",
+                                                                "tree path": "12001",
                                                                 "children": [
                                                                     []
                                                                 ]
                                                             },
                                                             {
-                                                                "name": "dp2_level2_action_min_12003(best)_12003(best)",
+                                                                "name": "dp2_level2_action_min_12002(best)_12002(best)",
                                                                 "mineral": 175.0,
                                                                 "Pylons": 0.0,
                                                                 "BOT Marines": 0.0,
@@ -607,11 +555,11 @@
                                                                 "action": "0001000",
                                                                 "best q_value": 0.725222110748291,
                                                                 "after state q_value": 0.7663097977638245,
-                                                                "tree path": "12003",
+                                                                "tree path": "12002",
                                                                 "children": [
                                                                     [
                                                                         {
-                                                                            "name": "dp2_level2_state_120030(best)_120030(best)",
+                                                                            "name": "dp2_level2_state_120020(best)_120020(best)",
                                                                             "mineral": 225.0,
                                                                             "Pylons": 0.0,
                                                                             "BOT Marines": 1.0,
@@ -657,12 +605,64 @@
                                                                             "action": null,
                                                                             "best q_value": 0.725222110748291,
                                                                             "after state q_value": null,
-                                                                            "tree path": "120030",
+                                                                            "tree path": "120020",
                                                                             "children": [
                                                                                 []
                                                                             ]
                                                                         }
                                                                     ]
+                                                                ]
+                                                            },
+                                                            {
+                                                                "name": "dp2_level2_action_min_12003_12003",
+                                                                "mineral": 175.0,
+                                                                "Pylons": 0.0,
+                                                                "BOT Marines": 0.0,
+                                                                "TOP Marines": 0.0,
+                                                                "BOT Banelings": 1.0,
+                                                                "TOP Banelings": 0.0,
+                                                                "BOT Immortals": 0.0,
+                                                                "TOP Immortals": 0.0,
+                                                                "state": [
+                                                                    175.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0,
+                                                                    0.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    -0.0,
+                                                                    -0.0,
+                                                                    -0.0,
+                                                                    -0.0,
+                                                                    -0.0,
+                                                                    0.0,
+                                                                    -0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    -0.0,
+                                                                    1998.5225830078125,
+                                                                    2000.5738525390625,
+                                                                    1997.869384765625,
+                                                                    1998.7183837890625,
+                                                                    2.0
+                                                                ],
+                                                                "action": "0100000",
+                                                                "best q_value": 0.7283982038497925,
+                                                                "after state q_value": 0.7209374904632568,
+                                                                "tree path": "12003",
+                                                                "children": [
+                                                                    []
                                                                 ]
                                                             }
                                                         ]
@@ -982,7 +982,7 @@
                     1.0
                 ],
                 "action": "0200000",
-                "best q_value": 0.699770987033844,
+                "best q_value": 0.6940794587135315,
                 "after state q_value": 0.779852032661438,
                 "tree path": "3",
                 "children": [

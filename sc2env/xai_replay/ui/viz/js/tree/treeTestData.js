@@ -16,7 +16,7 @@ var treeData = {
     .css({
       'shape': 'polygon',
       'shape-polygon-points': 'data(points)',
-      'height': 1100,
+      'height': 1200,
       'width': 1100,
       'background-fit': 'cover',
       'border-color': ' #000',
@@ -26,7 +26,7 @@ var treeData = {
     .css({
       'shape': 'polygon',
       'shape-polygon-points': 'data(points)',
-      'height': 1100,
+      'height': 1200,
       'width': 1100,
       'background-fit': 'cover',
       'border-color': ' #000',
@@ -63,24 +63,33 @@ var treeData = {
 }
 
 var cy = undefined;
-$.getJSON("js/tree/json/partial_decision_point_22.json", function(rawSc2Json) {
+$.getJSON("js/tree/json/partial_decision_point_21.json", function(rawSc2Json) {
   
   createRootNode(rawSc2Json);
   getFriendlyActionsUnderState(rawSc2Json);
 
   cy = cytoscape(treeData);
-  intitTreeLables(cy);
   childrenFollowParents(cy);
-  
+  var biggestUnitCountAtDP = 0;
+  cy.nodes().forEach(function( ele ){
+    var unitValuesDict = parseActionString(ele.data());
+    var biggestUnitCount = getNumberOfColumns(unitValuesDict);
+    if (biggestUnitCount > biggestUnitCountAtDP){
+      biggestUnitCountAtDP = biggestUnitCount;
+      console.log(biggestUnitCountAtDP)
+    }
+  });
+  intitTreeLables(cy, biggestUnitCountAtDP);
+  intitTreeFunctions(cy);
+
 
 });
 
 function finishInit(){
-    createNodeGraphs();
-    intitTreeFunctions(cy);
+
 }
 
-function intitTreeLables(cy){
+function intitTreeLables(cy, biggestUnitCountAtDP){
   cy.nodeHtmlLabel(
     [
       {
@@ -90,228 +99,248 @@ function intitTreeLables(cy){
         halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
         valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
         cssClass: '', // any classes will be as attribute of <div> container for every title
-        tpl: function (data) { return   getNodeGlyphs(data) + getAfterStateValue(data)   } // your html template here
+        tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountAtDP) + getAfterStateValue(data)   } // your html template here
       }
     ]
   );
 }
 
+function getEnemyGraphString(data, unitValuesDict, biggestUnitCountAtDP){
+return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto auto; height: 800; width: 800;">' +
+          '<style>' + 
+          '#' + data.id + '_unit_graph_container ' + '{' +
+            'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCountAtDP) + ';' +
+            'background-color: white; height:700px;width:700px;' +
+          '}' +
+        '</style>' +
+        '<div id="' + data.id + '_unit_graph_container">' +
+          drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCountAtDP) + drawMarines(unitValuesDict["TOP Marines"]) + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCountAtDP) + drawBanelings(unitValuesDict["TOP Banelings"]) + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCountAtDP) + drawImmortals(unitValuesDict["TOP Immortals"]) + 
+          '<div style="background-color:black; grid-column-end: span ' + biggestUnitCountAtDP + ';"></div>' +
+          drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCountAtDP) + drawMarines(unitValuesDict["BOT Marines"]) + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCountAtDP) + drawBanelings(unitValuesDict["BOT Banelings"]) + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCountAtDP) + drawImmortals(unitValuesDict["BOT Immortals"]) + 
+        '</div>' +
+        '<style>' + 
+          '#' + data.id + '_nexus_graph_container ' + '{' +
+            'display: grid; grid-gap: 12px; grid-template-rows: auto auto; grid-template-columns: auto;' +
+            'background-color: black; height:700px;width:100px;' +
+          '}' +
+        '</style>' +
+        '<div id="' + data.id + '_nexus_graph_container">' +
+          drawNexusHealth(data["state"][29]) +
+          drawNexusHealth(data["state"][30]) +
+        '</div>' +
+        '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
+          drawPylonPlaceHolderDivs(unitValuesDict["Pylons"]) + drawPylons(unitValuesDict["Pylons"]) + 
+        '</div>' +
+        '<div></div>' +
+      '</div>';
+}
 
-function getNodeGlyphs(data){
-  if (data.id.indexOf("action_max") != -1 || data.id.indexOf("action_min") != -1){
-    return  '<style>' + 
-              '#' + data.id + '_graph_container' + '{' +
-                'display: grid; grid-template-rows: auto auto auto auto auto auto auto;' + getNumberOfColumns(data);
-            '</style>';
+
+function getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP){
+  return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto auto; height: 800; width: 800;">' +
+            '<style>' + 
+              '#' + data.id + '_nexus_graph_container ' + '{' +
+                'display: grid; grid-gap: 12px; grid-template-rows: auto auto; grid-template-columns: auto;' +
+                'background-color: black; height:700px;width:100px; margin-top:140%;' +
+              '}' +
+            '</style>' +
+            '<div id="' + data.id + '_nexus_graph_container">' +
+              drawNexusHealth(data["state"][27]) +
+              drawNexusHealth(data["state"][28]) +
+            '</div>' +
+            '<style>' + 
+              '#' + data.id + '_unit_graph_container ' + '{' +
+                'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCountAtDP) + ';' +
+                'background-color: white; height:700px;width:700px; margin-top:20%;' +
+              '}' +
+            '</style>' +
+            '<div id="' + data.id + '_unit_graph_container">' +
+              drawMarines(unitValuesDict["TOP Marines"]) + drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCountAtDP) +
+              drawBanelings(unitValuesDict["TOP Banelings"]) + drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCountAtDP) +
+              drawImmortals(unitValuesDict["TOP Immortals"]) + drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCountAtDP) +
+              '<div style="background-color:black; grid-column-end: span ' + biggestUnitCountAtDP + ';"></div>' +
+              drawMarines(unitValuesDict["BOT Marines"]) + drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCountAtDP) +
+              drawBanelings(unitValuesDict["BOT Banelings"]) + drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCountAtDP) +
+              drawImmortals(unitValuesDict["BOT Immortals"]) + drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCountAtDP) +
+            '</div>' +
+            '<div></div>' +
+            '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
+              drawPylons(unitValuesDict["Pylons"]) + drawPylonPlaceHolderDivs(unitValuesDict["Pylons"]) + 
+            '</div>' +
+          '</div>';
+}
+
+function getNodeGlyphs(data, biggestUnitCountAtDP){
+  var unitValuesDict = parseActionString(data);
+  if (data.id.indexOf("action_max") != -1){
+    return getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP);
+  }
+  else if (data.id.indexOf("action_min") != -1){
+    return getEnemyGraphString(data, unitValuesDict, biggestUnitCountAtDP);
   }
   else{
-    return '<canvas id="' + data.id + '_graph" width="700" height="700" style="bottom:0%;margin-top:10%;background-color:white;border:1px solid #000000;"></canvas>' + 
-           '<canvas id="' + data.id + '_graph_enemy" width="700" height="700" style="bottom:0%;margin-top:10%;background-color:white;border:1px solid #000000;"></canvas>';
+    return '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto;">' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP) + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCountAtDP) + '</div>';
   }
 }
 
-// function getNodeGlyphs(data){
-//   if (data.id.indexOf("action_max") != -1 || data.id.indexOf("action_min") != -1){
-//     return '<canvas id="' + data.id + '_graph" width="700" height="700" style="bottom:0%;margin-top:10%;background-color:white;border:1px solid #000000;"></canvas>';
-//   }
-//   else{
-//     return '<canvas id="' + data.id + '_graph" width="700" height="700" style="bottom:0%;margin-top:10%;background-color:white;border:1px solid #000000;"></canvas>' + 
-//            '<canvas id="' + data.id + '_graph_enemy" width="700" height="700" style="bottom:0%;margin-top:10%;background-color:white;border:1px solid #000000;"></canvas>';
-//   }
-// }
 
-function createNodeGraphs(){
-  cy.nodes().forEach(function( ele ){
-
-    var unitValuesDict = parseActionString(ele);
-
-    if (unitValuesDict["Enemy"]){
-      var c = document.getElementById(ele.data("id") + "_graph_enemy");
-      var ctx = c.getContext("2d");
-
-      ctx.beginPath();
-      ctx.rect(0,294,700,12);
-      ctx.fillStyle = "black";
-      ctx.fill();
-      var enemyUnitDict = unitValuesDict["Enemy"];
-      // var maxActionTaken = Object.keys(enemyUnitDict).reduce(function(a, b){ return enemyUnitDict[a] > enemyUnitDict[b] ? a : b });
-
-      drawMarines(ctx, unitValuesDict["Enemy"], maxActionTaken);
-      drawBanelings(ctx, unitValuesDict["Enemy"], maxActionTaken);
-      drawImmortals(ctx, unitValuesDict["Enemy"], maxActionTaken);
-      drawPylons(ctx, unitValuesDict["Enemy"], maxActionTaken);
-      drawNexusHealth(ctx, ele);
-    }
-    var c = document.getElementById(ele.data("id") + "_graph");
-    var ctx = c.getContext("2d");
-
-    ctx.beginPath();
-    ctx.rect(0,294,700,12);
-    ctx.fillStyle = "black";
-    ctx.fill();
-
-    var maxActionTaken = Object.keys(unitValuesDict).reduce(function(a, b){ return unitValuesDict[a] > unitValuesDict[b] ? a : b });
-
-    drawMarines(ctx, unitValuesDict, maxActionTaken);
-    drawBanelings(ctx, unitValuesDict, maxActionTaken);
-    drawImmortals(ctx, unitValuesDict, maxActionTaken);
-    drawPylons(ctx, unitValuesDict, maxActionTaken);
-    drawNexusHealth(ctx, ele);
-
-    ctx.beginPath();
-    ctx.moveTo(0,600);
-    ctx.lineTo(700,600);
-    ctx.moveTo(600,700);
-    ctx.lineTo(600,0);
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = "black";
-    ctx.stroke();
-  });
+function drawNexusHealth(nexusHealth){
+  var nexusHealthPercent = (nexusHealth/2000) * 100;
+  return '<div style="background-color: rgba(200,0,0,1)"><div style="position: relative; bottom:0%; background-color: green; height: ' + nexusHealthPercent + '%"></div></div>';
 }
 
-// function getStateValues(ele){
-//     stateDict = {};
-//     currState = ele.data("state");
-//     stateDict["TOP Marines"] = currState[15];
-//     stateDict["TOP Banelings"] = currState[16];
-//     stateDict["TOP Immortals"] = currState[17];
-//     stateDict["BOT Marines"] = currState[18];
-//     stateDict["BOT Banelings"] = currState[19];
-//     stateDict["BOT Immortals"] = currState[20];
-//     stateDict["Pylons"] = currState[7];
 
-//     stateDict["Enemy"] = {};
-//     stateDict["TOP Marines"] = currState[21];
-//     stateDict["TOP Banelings"] = currState[22];
-//     stateDict["TOP Immortals"] = currState[23];
-//     stateDict["BOT Marines"] = currState[24];
-//     stateDict["BOT Banelings"] = currState[25];
-//     stateDict["BOT Immortals"] = currState[26];
-//     stateDict["Pylons"] = currState[14];
-//     return stateDict;
-// }
+function drawPylons(pylonCount){
+  var pylonString = "";
+  var maxPylons = 3;
+  for (var i = 0; i < pylonCount; i++){
+    pylonString += '<div style="text-align: center; background-color:yellow;"></div>';
+  }
+  return pylonString;
+}
 
-// function getActionValues(ele){
-//   var action = ele.data("action");
-//   var actionDict = {};
+function drawPylonPlaceHolderDivs(pylonCount){
+  var pylonString = "";
+  var maxPylons = 3;
+  for(var i = 0; i < (maxPylons-pylonCount); i++){
+    pylonString += '<div style="background-color:rgba(255,255,0,.10);"></div>'
+  }
+  return pylonString;
+}
 
-//   for (var i = 0; i < action.length; i++) {
-//     if (i == 0){
-//       actionDict["TOP Marines"] = action.charAt(i);
-//     }
-//     else if(i == 1){
-//       actionDict["TOP Banelings"] = action.charAt(i);
-//     }
-//     else if(i == 2){
-//       actionDict["TOP Immortals"] = action.charAt(i);
-//     }
-//     else if(i == 3){
-//       actionDict["BOT Marines"] = action.charAt(i);
-//     }
-//     else if(i == 4){
-//       actionDict["BOT Banelings"] = action.charAt(i);
-//     }
-//     else if(i == 5){
-//       actionDict["BOT Immortals"] = action.charAt(i);
-//     }
-//     else if(i == 6){
-//       actionDict["Pylons"] = action.charAt(i);
-//     }
-//   }
-//   return actionDict;
-// }
+function drawMarines(marineCount){
+  var marineString = "";
+  for(var i = 0; i < marineCount; i++){
+    marineString += '<div style="text-align: center; background-color:lightgrey;">'
+    // if (i == marineCount-1){
+    //   marineString += marineCount;
+    // }
+    marineString += '</div>'
+  }
+  return marineString;
+}
 
-// function parseActionString(ele){
-//   if (ele.data("action") == null){
-//     var stateDict = getStateValues(ele);
-//     return stateDict;
-//   }
-//   else{
-//     var actionDict = getActionValues(ele);
-//     return actionDict;
-//   }
-// }
+function drawBanelings(banelingCount){
+  var banelingString = "";
+  for(var i = 0; i < banelingCount; i++){
+    banelingString += '<div style="text-align: center; font-size:50px; background-color:orange;">'
+    // if (i == banelingCount-1){
+    //   banelingString += banelingCount;
+    // }
+    banelingString += '</div>'
+  }
+  return banelingString;
+}
 
-// function drawPylons(ctx, unitValuesDict){
-//   var pylonLimit = 3;
-//   var pylons = unitValuesDict["Pylons"];
+function drawImmortals(immortalCount){
+  var immortalString = "";
+  for(var i = 0; i < immortalCount; i++){
+    immortalString += '<div style="text-align: center; background-color:blue;">'
+    // if (i == immortalCount-1){
+    //   immortalString += marineCount;
+    // }
+    immortalString += '</div>'
+  }
+  return immortalString;
+}
+function drawPlaceHolderDivs(unitCount, colCount){
+  var placeholder = "";
+  for(var i = 0; i < (colCount-unitCount); i++){
+    placeholder += '<div style="background-color:rgba(0,0,0,0);"></div>'
+  }
+  return placeholder
+}
+
+function getColumnStylingString(biggestUnitCount){
+  var columsString = "";
+  for (var i = 0; i < biggestUnitCount; i++){
+    columsString += " auto";
+  }
+  return columsString;
+}
+
+function getNumberOfColumns(unitValuesDict){
   
-//   ctx.beginPath();
-//   for (var i = 0; i < pylons; i++){
-//     ctx.rect(0 + (i * ((600 - ((pylonLimit-2)*10))/pylonLimit) + (i*10)), 600, (600-(10*(pylonLimit-1)))/pylonLimit, 700);
-//     ctx.fillStyle = "yellow";
-//     ctx.fill();
-//   }
-// }
+  var maxActionTaken = Object.keys(unitValuesDict).reduce(function(a, b){ return unitValuesDict[a] > unitValuesDict[b] ? a : b });
+  var friendlyMaxValue = unitValuesDict[maxActionTaken];
 
-// function drawNexusHealth(ctx, ele){
-//   var topFriendlyNexus = ele.data("state")[27];
-//   var botFriendlyNexus = ele.data("state")[28];
+  if ("Enemy" == maxActionTaken){
+    var unitValuesDictEnemy = unitValuesDict["Enemy"];
+    var maxActionTakenEnemy = Object.keys(unitValuesDictEnemy).reduce(function(a, b){ return unitValuesDictEnemy[a] > unitValuesDictEnemy[b] ? a : b });
+    var enemyMaxValue = unitValuesDictEnemy[maxActionTakenEnemy];
+    return enemyMaxValue;
+  }
+  return friendlyMaxValue;
+}
 
-//   ctx.beginPath();
-//   ctx.rect(615, 294, 70, (-1* ((topFriendlyNexus/2000) * 294)));
-//   ctx.fillStyle = "green";
-//   ctx.fill();
+function getStateValues(data){
+    stateDict = {};
+    currState = data["state"];
+    stateDict["TOP Marines"] = currState[1];
+    stateDict["TOP Banelings"] = currState[2];
+    stateDict["TOP Immortals"] = currState[3];
+    stateDict["BOT Marines"] = currState[4];
+    stateDict["BOT Banelings"] = currState[5];
+    stateDict["BOT Immortals"] = currState[6];
+    stateDict["Pylons"] = currState[7];
 
-//   ctx.beginPath();
-//   ctx.rect(615, 600, 70,  (-1 *((botFriendlyNexus/2000) * 294)));
-//   ctx.fillStyle = "green";
-//   ctx.fill();
-// }
+    stateDict["Enemy"] = {};
+    var stateDictEnemy = stateDict["Enemy"];
+    stateDictEnemy["TOP Marines"] = currState[8];
+    stateDictEnemy["TOP Banelings"] = currState[9];
+    stateDictEnemy["TOP Immortals"] = currState[10];
+    stateDictEnemy["BOT Marines"] = currState[11];
+    stateDictEnemy["BOT Banelings"] = currState[12];
+    stateDictEnemy["BOT Immortals"] = currState[13];
+    stateDictEnemy["Pylons"] = currState[14];
+    return stateDict;
+}
 
-// function drawMarines(ctx, unitValuesDict, maxActionTaken){
-//   var topMar = unitValuesDict["TOP Marines"];
-//   var botMar = unitValuesDict["BOT Marines"];
-//   var maxActionTakenValue = unitValuesDict[maxActionTaken];
-//   for(var i = 0; i < topMar; i++){
-//     ctx.beginPath();
-//     ctx.rect(0 + (i * ((600 - ((maxActionTakenValue-1)*10))/maxActionTakenValue) + (i*10)), 0, (600-(10*(maxActionTakenValue-1)))/maxActionTakenValue, 98)
-//     ctx.fillStyle = "lightgrey";
-//     ctx.fill();
-//   }
-//   for(var i = 0; i < botMar; i++){
-//     ctx.beginPath();
-//     ctx.rect(0 + (i * ((600 - ((maxActionTakenValue-1)*10))/maxActionTakenValue) + (i*10)), 306, (600-(10*(maxActionTakenValue-1)))/maxActionTakenValue, 98)
-//     ctx.fillStyle = "lightgrey";
-//     ctx.fill();
-//   }
-// }
+function getActionValues(data){
+  var action = data["action"];
+  var actionDict = {};
 
-// function drawBanelings(ctx, unitValuesDict, maxActionTaken){
-//   var topBan = unitValuesDict["TOP Banelings"];
-//   var botBan = unitValuesDict["BOT Banelings"];
-//   var maxActionTakenValue = unitValuesDict[maxActionTaken];
-//   for(var i = 0; i < topBan; i++){
-//     ctx.beginPath();
-//     ctx.rect(0 + (i * ((600 - ((maxActionTakenValue-1)*10))/maxActionTakenValue) + (i*10)), 98, (600-(10*(maxActionTakenValue-1)))/maxActionTakenValue, 98)
-//     ctx.fillStyle = "orange";
-//     ctx.fill();
-//   }
-//   for(var i = 0; i < botBan; i++){
-//     ctx.beginPath();
-//     ctx.rect(0 + (i * ((600 - ((maxActionTakenValue-1)*10))/maxActionTakenValue) + (i*10)), 404, (600-(10*(maxActionTakenValue-1)))/maxActionTakenValue, 98)
-//     ctx.fillStyle = "orange";
-//     ctx.fill();
-//   }
-// }
+  for (var i = 0; i < action.length; i++) {
+    if (i == 0){
+      actionDict["TOP Marines"] = action.charAt(i);
+    }
+    else if(i == 1){
+      actionDict["TOP Banelings"] = action.charAt(i);
+    }
+    else if(i == 2){
+      actionDict["TOP Immortals"] = action.charAt(i);
+    }
+    else if(i == 3){
+      actionDict["BOT Marines"] = action.charAt(i);
+    }
+    else if(i == 4){
+      actionDict["BOT Banelings"] = action.charAt(i);
+    }
+    else if(i == 5){
+      actionDict["BOT Immortals"] = action.charAt(i);
+    }
+    else if(i == 6){
+      actionDict["Pylons"] = action.charAt(i);
+    }
+  }
+  return actionDict;
+}
 
-// function drawImmortals(ctx, unitValuesDict, maxActionTaken){
-//   var topImm = unitValuesDict["TOP Immortals"];
-//   var botImm = unitValuesDict["BOT Immortals"];
-//   var maxActionTakenValue = unitValuesDict[maxActionTaken];
-//   for(var i = 0; i < topImm; i++){
-//     ctx.beginPath();
-//     ctx.rect(0 + (i * ((600 - ((maxActionTakenValue-1)*10))/maxActionTakenValue) + (i*10)), 196, (600-(10*(maxActionTakenValue-1)))/maxActionTakenValue, 98)
-//     ctx.fillStyle = "blue";
-//     ctx.fill();
-//   }
-//   for(var i = 0; i < botImm; i++){
-//     ctx.beginPath();
-//     ctx.rect(0 + (i * ((600 - ((maxActionTakenValue-1)*10))/maxActionTakenValue) + (i*10)), 502, (600-(10*(maxActionTakenValue-1)))/maxActionTakenValue, 98)
-//     ctx.fillStyle = "blue";
-//     ctx.fill();
-//   }
-// }
+function parseActionString(data){
+  if (data["action"] == null){
+    var stateDict = getStateValues(data);
+    return stateDict;
+  }
+  else{
+    var actionDict = getActionValues(data);
+    return actionDict;
+  }
+}
+
 
 function childrenFollowParents(cy){
   cy.nodes().forEach(function( ele ){
@@ -339,7 +368,7 @@ function intitTreeFunctions(cy){
       // Restore the removed nodes from saved data
       this.scratch().restData.restore();
       this.scratch({ restData: null });
-      createNodeGraphs();
+      // createNodeGraphs();
     }
   });
 }
