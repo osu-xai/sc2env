@@ -352,6 +352,8 @@ function renderUnitValues(frameInfo){
             if (frameInfo.frame_number >= decisionPoints[i] + 2){
                 pauseGame();
                 decisionPoints.splice(i,1);
+                removeTree();
+                initTree("js/tree/json/partial_decision_point_" + getWave(frameInfo) + ".json");
                 return;
             }
         }

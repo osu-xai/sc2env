@@ -166,7 +166,7 @@ function toggleOnUIElements(){
     $('#unit-value-panels-toggle').css('display', "block")
     $('.unit-value-panels').css('display', "grid")
 
-    // $('#fullscreen-button1-toggle').css('display', "block")
+    $('#fullscreen-button1-toggle').css('display', "block")
     
 }
 
@@ -174,26 +174,6 @@ function getTooltipColorRGBAForUnit(unitInfo){
     return "#ffffff";
 }
 
-function getSC2QuadrantName(x,y){
-    var halfWidth = sc2GameRenderWidth / 2;
-    var halfHeight = sc2GameRenderHeight / 2;
-    if (x < halfWidth) {
-        if (y < halfHeight) {
-            return "upperLeftQuadrant";
-        }
-        else {
-            return "lowerLeftQuadrant";
-        }
-    }
-    else {
-        if (y < halfHeight) {
-            return "upperRightQuadrant";
-        }
-        else {
-            return "lowerRightQuadrant";
-        }
-    }
-}
 
 
 // function translateUnitXToCanvasXOld(unitX){

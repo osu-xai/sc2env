@@ -8,29 +8,41 @@ var treeData = {
       'shape': 'roundrectangle',
       'height': 1100,
       'width': 1800,
+      'background-color': 'LightSlateGray',
       'background-fit': 'cover',
-      'border-color': ' #000',
+      'border-color': 'black',
       'border-width': 10,
+      'border-radius': 5,
     })
     .selector('.friendlyAction')
     .css({
       'shape': 'polygon',
       'shape-polygon-points': 'data(points)',
+      'background-color': 'LightSlateGray',
       'height': 1200,
       'width': 1100,
       'background-fit': 'cover',
-      'border-color': ' #000',
+      'border-color': 'black',
       'border-width': 10,
+      'border-radius': 5,
     })
     .selector('.enemyAction')
     .css({
       'shape': 'polygon',
       'shape-polygon-points': 'data(points)',
+      'background-color': 'LightSlateGray',
       'height': 1200,
       'width': 1100,
       'background-fit': 'cover',
-      'border-color': ' #000',
+      'border-color': 'black',
       'border-width': 10,
+      'border-radius': 5,
+    })
+    .selector('.principalVariation')
+    .css({
+      'background-color': 'SteelBlue',
+      'border-color': 'black',
+
     })
     .selector('edge')
     .css({
@@ -51,7 +63,7 @@ var treeData = {
     nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
     roots: undefined, // the roots of the trees
     maximal: false, // whether to shift nodes down their natural BFS depths in order to avoid upwards edges (DAGS only)
-    animate: false, // whether to transition the node positions
+    animate: false, // wihether to transition the node positions
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
@@ -63,33 +75,32 @@ var treeData = {
 }
 
 var cy = undefined;
-$.getJSON("js/tree/json/partial_decision_point_21.json", function(rawSc2Json) {
-  
-  createRootNode(rawSc2Json);
-  getFriendlyActionsUnderState(rawSc2Json);
+function initTree(jsonPath){
+  $.getJSON(jsonPath, function(rawSc2Json) {
+    
+    createRootNode(rawSc2Json);
+    getFriendlyActionsUnderState(rawSc2Json);
 
-  cy = cytoscape(treeData);
-  childrenFollowParents(cy);
-  var biggestUnitCountAtDP = 0;
-  cy.nodes().forEach(function( ele ){
-    var unitValuesDict = parseActionString(ele.data());
-    var biggestUnitCount = getNumberOfColumns(unitValuesDict);
-    if (biggestUnitCount > biggestUnitCountAtDP){
-      biggestUnitCountAtDP = biggestUnitCount;
-      console.log(biggestUnitCountAtDP)
-    }
+    cy = cytoscape(treeData);
+    childrenFollowParents(cy);
+    var biggestUnitCountTuple = getLargestUnitCount(cy);
+    intitTreeLables(cy, biggestUnitCountTuple);
+    intitTreeFunctions(cy);
+    sortNodes(cy);
+    // parentAboveChildren(cy)
   });
-  intitTreeLables(cy, biggestUnitCountAtDP);
-  intitTreeFunctions(cy);
-
-
-});
-
+}
 function finishInit(){
 
 }
 
-function intitTreeLables(cy, biggestUnitCountAtDP){
+function removeTree(){
+    treeData["elements"] = {  nodes: [],
+                              edges: []
+                            };
+}
+
+function intitTreeLables(cy, biggestUnitCountTuple){
   cy.nodeHtmlLabel(
     [
       {
@@ -99,73 +110,59 @@ function intitTreeLables(cy, biggestUnitCountAtDP){
         halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
         valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
         cssClass: '', // any classes will be as attribute of <div> container for every title
-        tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountAtDP) + getAfterStateValue(data)   } // your html template here
+        tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getAfterStateValue(data)   } // your html template here
       }
     ]
   );
 }
 
-function getEnemyGraphString(data, unitValuesDict, biggestUnitCountAtDP){
-return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto auto; height: 800; width: 800;">' +
-          '<style>' + 
-          '#' + data.id + '_unit_graph_container ' + '{' +
-            'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCountAtDP) + ';' +
-            'background-color: white; height:700px;width:700px;' +
-          '}' +
-        '</style>' +
-        '<div id="' + data.id + '_unit_graph_container">' +
-          drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCountAtDP) + drawMarines(unitValuesDict["TOP Marines"]) + 
-          drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCountAtDP) + drawBanelings(unitValuesDict["TOP Banelings"]) + 
-          drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCountAtDP) + drawImmortals(unitValuesDict["TOP Immortals"]) + 
-          '<div style="background-color:black; grid-column-end: span ' + biggestUnitCountAtDP + ';"></div>' +
-          drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCountAtDP) + drawMarines(unitValuesDict["BOT Marines"]) + 
-          drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCountAtDP) + drawBanelings(unitValuesDict["BOT Banelings"]) + 
-          drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCountAtDP) + drawImmortals(unitValuesDict["BOT Immortals"]) + 
-        '</div>' +
-        '<style>' + 
-          '#' + data.id + '_nexus_graph_container ' + '{' +
-            'display: grid; grid-gap: 12px; grid-template-rows: auto auto; grid-template-columns: auto;' +
-            'background-color: black; height:700px;width:100px;' +
-          '}' +
-        '</style>' +
-        '<div id="' + data.id + '_nexus_graph_container">' +
-          drawNexusHealth(data["state"][29]) +
-          drawNexusHealth(data["state"][30]) +
-        '</div>' +
-        '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
-          drawPylonPlaceHolderDivs(unitValuesDict["Pylons"]) + drawPylons(unitValuesDict["Pylons"]) + 
-        '</div>' +
-        '<div></div>' +
-      '</div>';
+function getLargestUnitCount(cy){
+  var biggestUnitCountAtState = 0;
+  var biggestUnitCountAtAction = 0;
+  cy.nodes().forEach(function( ele ){
+    var unitValuesDict = parseActionString(ele.data());
+    var biggestUnitCount = getNumberOfColumns(unitValuesDict);
+    if (ele.data("id").indexOf("_action_max") != -1 || ele.data("id").indexOf("_action_min") != -1){
+      if (biggestUnitCount > biggestUnitCountAtAction){
+        biggestUnitCountAtAction = biggestUnitCount;
+      }
+    }
+    else{
+      if (biggestUnitCount > biggestUnitCountAtState){
+        biggestUnitCountAtState = biggestUnitCount;
+      }
+    }
+  });
+  return [biggestUnitCountAtState, biggestUnitCountAtAction];
 }
 
-
-function getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP){
+function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
   return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto auto; height: 800; width: 800;">' +
             '<style>' + 
               '#' + data.id + '_nexus_graph_container ' + '{' +
-                'display: grid; grid-gap: 12px; grid-template-rows: auto auto; grid-template-columns: auto;' +
-                'background-color: black; height:700px;width:100px; margin-top:140%;' +
+                'display: grid; grid-template-rows: auto 12px auto; grid-template-columns: auto; justify-content:start;' +
+                'background-color: ivory; height:700px;width:100px; margin-top:140%;' +
               '}' +
             '</style>' +
             '<div id="' + data.id + '_nexus_graph_container">' +
               drawNexusHealth(data["state"][27]) +
+              '<div style="background-color:black;"></div>' +
               drawNexusHealth(data["state"][28]) +
             '</div>' +
             '<style>' + 
               '#' + data.id + '_unit_graph_container ' + '{' +
-                'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCountAtDP) + ';' +
-                'background-color: white; height:700px;width:700px; margin-top:20%;' +
+                'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCount) + ';' +
+                'background-color: ivory; height:700px;width:700px; margin-top:20%;' +
               '}' +
             '</style>' +
             '<div id="' + data.id + '_unit_graph_container">' +
-              drawMarines(unitValuesDict["TOP Marines"]) + drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCountAtDP) +
-              drawBanelings(unitValuesDict["TOP Banelings"]) + drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCountAtDP) +
-              drawImmortals(unitValuesDict["TOP Immortals"]) + drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCountAtDP) +
-              '<div style="background-color:black; grid-column-end: span ' + biggestUnitCountAtDP + ';"></div>' +
-              drawMarines(unitValuesDict["BOT Marines"]) + drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCountAtDP) +
-              drawBanelings(unitValuesDict["BOT Banelings"]) + drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCountAtDP) +
-              drawImmortals(unitValuesDict["BOT Immortals"]) + drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCountAtDP) +
+              drawMarines(unitValuesDict["TOP Marines"]) + drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) +
+              drawBanelings(unitValuesDict["TOP Banelings"]) + drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) +
+              drawImmortals(unitValuesDict["TOP Immortals"]) + drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) +
+              '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
+              drawMarines(unitValuesDict["BOT Marines"]) + drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) +
+              drawBanelings(unitValuesDict["BOT Banelings"]) + drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) +
+              drawImmortals(unitValuesDict["BOT Immortals"]) + drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) +
             '</div>' +
             '<div></div>' +
             '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
@@ -174,23 +171,58 @@ function getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP){
           '</div>';
 }
 
-function getNodeGlyphs(data, biggestUnitCountAtDP){
+
+function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
+return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800; width: 800;">' +
+          '<style>' + 
+          '#' + data.id + '_unit_graph_container ' + '{' +
+            'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCount) + ';' +
+            'background-color: ivory; height:700px;width:700px;' +
+          '}' +
+        '</style>' +
+        '<div id="' + data.id + '_unit_graph_container">' +
+          drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) + drawMarines(unitValuesDict["TOP Marines"]) + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) + drawBanelings(unitValuesDict["TOP Banelings"]) + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) + drawImmortals(unitValuesDict["TOP Immortals"]) + 
+          '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
+          drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) + drawMarines(unitValuesDict["BOT Marines"]) + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) + drawBanelings(unitValuesDict["BOT Banelings"]) + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) + drawImmortals(unitValuesDict["BOT Immortals"]) + 
+        '</div>' +
+        '<style>' + 
+          '#' + data.id + '_nexus_graph_container ' + '{' +
+            'display: grid; grid-template-rows: auto 12px auto; grid-template-columns: auto; justify-content:end;' +
+            'background-color: ivory; height:700px;width:100px;' +
+          '}' +
+        '</style>' +
+        '<div id="' + data.id + '_nexus_graph_container">' +
+          drawNexusHealth(data["state"][29]) +
+          '<div style="background-color:black;grid-row-end:span 1;"></div>' +
+          drawNexusHealth(data["state"][30]) +
+        '</div>' +
+        '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto;">' + 
+          drawPylonPlaceHolderDivs(unitValuesDict["Pylons"]) + drawPylons(unitValuesDict["Pylons"]) + 
+        '</div>' +
+        '<div></div>' +
+      '</div>';
+}
+
+function getNodeGlyphs(data, biggestUnitCountTuple){
   var unitValuesDict = parseActionString(data);
   if (data.id.indexOf("action_max") != -1){
-    return getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP);
+    return getFriendlyGraphString(data, unitValuesDict, biggestUnitCountTuple[1]);
   }
   else if (data.id.indexOf("action_min") != -1){
-    return getEnemyGraphString(data, unitValuesDict, biggestUnitCountAtDP);
+    return getEnemyGraphString(data, unitValuesDict, biggestUnitCountTuple[1]);
   }
   else{
-    return '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto;">' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCountAtDP) + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCountAtDP) + '</div>';
+    return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:80px;font-weight:bold;position:absolute;top:3%;left:15%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCountTuple[0]) + '<div style="color:ivory;font-size:80px;font-weight:bold;position:absolute;top:3%;left:67%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCountTuple[0]) + '</div>';
   }
 }
 
-
 function drawNexusHealth(nexusHealth){
-  var nexusHealthPercent = (nexusHealth/2000) * 100;
-  return '<div style="background-color: rgba(200,0,0,1)"><div style="position: relative; bottom:0%; background-color: green; height: ' + nexusHealthPercent + '%"></div></div>';
+  var nexusHealthPercent = (1-(nexusHealth/2000)) * 100;
+  return '<div style="bottom:0%;background-color:green;margin:10px;width:50px;"><div style="background-color:ivory;margin:2.5px;position:relative;width:45px;height:' + nexusHealthPercent + '%;"></div></div>';
 }
 
 
@@ -198,7 +230,7 @@ function drawPylons(pylonCount){
   var pylonString = "";
   var maxPylons = 3;
   for (var i = 0; i < pylonCount; i++){
-    pylonString += '<div style="text-align: center; background-color:yellow;"></div>';
+    pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
   }
   return pylonString;
 }
@@ -207,7 +239,7 @@ function drawPylonPlaceHolderDivs(pylonCount){
   var pylonString = "";
   var maxPylons = 3;
   for(var i = 0; i < (maxPylons-pylonCount); i++){
-    pylonString += '<div style="background-color:rgba(255,255,0,.10);"></div>'
+    pylonString += '<div style="border: 4px solid yellow;background-color:rgba(255,255,0,.30);height:25px;margin:15px;"></div>'
   }
   return pylonString;
 }
@@ -215,7 +247,7 @@ function drawPylonPlaceHolderDivs(pylonCount){
 function drawMarines(marineCount){
   var marineString = "";
   for(var i = 0; i < marineCount; i++){
-    marineString += '<div style="text-align: center; background-color:lightgrey;">'
+    marineString += '<div style="text-align:center;background-color:darkgrey;">'
     // if (i == marineCount-1){
     //   marineString += marineCount;
     // }
@@ -227,7 +259,7 @@ function drawMarines(marineCount){
 function drawBanelings(banelingCount){
   var banelingString = "";
   for(var i = 0; i < banelingCount; i++){
-    banelingString += '<div style="text-align: center; font-size:50px; background-color:orange;">'
+    banelingString += '<div style="text-align: center; font-size:50px; background-color:DarkOrange;">'
     // if (i == banelingCount-1){
     //   banelingString += banelingCount;
     // }
@@ -260,21 +292,44 @@ function getColumnStylingString(biggestUnitCount){
   for (var i = 0; i < biggestUnitCount; i++){
     columsString += " auto";
   }
-  return columsString;
+  return columsString
 }
 
 function getNumberOfColumns(unitValuesDict){
-  
+  var unitValuesDictEnemy = undefined;
+  var maxActionTakenEnemy = undefined;
+  var enemyMaxValue = undefined;
+
+  if ("Enemy" in unitValuesDict){
+    unitValuesDictEnemy = unitValuesDict["Enemy"];
+    unitValuesDict["Enemy"] = null;
+  }
+
   var maxActionTaken = Object.keys(unitValuesDict).reduce(function(a, b){ return unitValuesDict[a] > unitValuesDict[b] ? a : b });
   var friendlyMaxValue = unitValuesDict[maxActionTaken];
 
-  if ("Enemy" == maxActionTaken){
-    var unitValuesDictEnemy = unitValuesDict["Enemy"];
-    var maxActionTakenEnemy = Object.keys(unitValuesDictEnemy).reduce(function(a, b){ return unitValuesDictEnemy[a] > unitValuesDictEnemy[b] ? a : b });
-    var enemyMaxValue = unitValuesDictEnemy[maxActionTakenEnemy];
-    return enemyMaxValue;
+  if ("Enemy" in unitValuesDict){
+    maxActionTakenEnemy = Object.keys(unitValuesDictEnemy).reduce(function(a, b){ return unitValuesDictEnemy[a] > unitValuesDictEnemy[b] ? a : b });
+    enemyMaxValue = unitValuesDictEnemy[maxActionTakenEnemy];
+    if (enemyMaxValue > friendlyMaxValue){
+      if (enemyMaxValue < 5){
+        return 5;
+      }
+      return enemyMaxValue;
+    }
+    else{
+      if (friendlyMaxValue < 5){
+        return 5;
+      }
+      return friendlyMaxValue;
+    }
   }
-  return friendlyMaxValue;
+  else{
+    if (friendlyMaxValue < 5){
+      return 5;
+    }
+    return friendlyMaxValue;
+  }
 }
 
 function getStateValues(data){
@@ -341,6 +396,31 @@ function parseActionString(data){
   }
 }
 
+function getAfterStateValue(data){
+  var afterStateQValue =  + data["after state q_value"]
+  var bestStateQValue = data["best q_value"];
+  if(data['root']){
+    return '<div style="color:rgb(255, 140, 26);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+  }
+    if (afterStateQValue == 0){
+      if (data["id"].indexOf("best") != -1){
+        return '<div style="color:rgb(255, 140, 26);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+      }
+      else{
+        return '<div style="color:Turquoise;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+      }
+    }
+    else{
+      if (data["id"].indexOf("best") != -1){
+        return '<div style="color:rgb(255, 140, 26);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+      }
+      else{
+        return '<div style="color:Turquoise;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+      }
+    }
+}
+
+
 
 function childrenFollowParents(cy){
   cy.nodes().forEach(function( ele ){
@@ -354,8 +434,8 @@ function childrenFollowParents(cy){
 }
 
 function intitTreeFunctions(cy){
-  cy.nodes().ungrabify();
-
+  // cy.nodes().ungrabify();
+  cy.center(cy.nodes());
   //toggle show and hide nodes on hover over. Dont allow nodes at at d =0,1 to hide
   cy.on('click', 'node', function (evt) {
     if (this.scratch().restData == undefined || this.scratch().restData == null) {
@@ -374,30 +454,6 @@ function intitTreeFunctions(cy){
 }
 
 
-function getAfterStateValue(data){
-  var afterStateQValue =  + data["after state q_value"]
-  var bestStateQValue = data["best q_value"];
-  if(data['root']){
-    return '<div style="color:lime;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
-  }
-    if (afterStateQValue == 0){
-      if (data["name"].indexOf("(best)") != -1){
-        return '<div style="color:lime;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
-      }
-      else{
-        return '<div style="color:blue;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
-      }
-    }
-    else{
-      if (data["name"].indexOf("(best)") != -1){
-        return '<div style="color:lime;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
-      }
-      else{
-        return '<div style="color:blue;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
-      }
-    }
-}
-
 
 function createRootNode(inputJsonTree){
   var nodes = treeData["elements"]["nodes"];
@@ -410,7 +466,7 @@ function createRootNode(inputJsonTree){
   }
   rootNode["data"]["id"] = inputJsonTree["name"];
   rootNode["data"]["root"] = "iAmRoot";
-  rootNode["classes"] = "stateNode";
+  rootNode["classes"] = "stateNode rootNode principalVariation";
   nodes.push(rootNode);
 }
 
@@ -424,9 +480,16 @@ function getDataFromInputNode(inputNode, parentId, cyClass){
       cyNode["data"][key] = inputNode[key];
     }
   }
-  cyNode["data"]["id"] = inputNode["name"];
   cyNode["data"]["sc2_parent_id"] = parentId;
-  cyNode["classes"] = cyClass;
+  
+  if (inputNode["name"].indexOf("(best)") != -1){
+    cyNode["data"]["id"] = trimBestNotationDuplicate(inputNode["name"]);
+    cyNode["classes"] = cyClass + " principalVariation";
+  }
+  else{
+    cyNode["data"]["id"] = inputNode["name"];
+    cyNode["classes"] = cyClass;
+  }
   return cyNode;
 }
 
@@ -450,7 +513,7 @@ function getFriendlyActionsUnderState(stateNode){
     cyNode["data"]["type"] = "friendlyAction";
     cyNode["data"]["points"] = [-1, 1, 1, 1, 1, -.75, 0, -1, -1, -.75];
     nodes.push(cyNode);
-    var cyEdge = getEdge(stateNode["name"], cyNode["data"]["id"]);
+    var cyEdge = getEdge(trimBestNotationDuplicate(stateNode["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
     edges.push(cyEdge);
     getEnemyActionsUnderFriendlyAction(friendlyAction);
   }
@@ -468,7 +531,7 @@ function getEnemyActionsUnderFriendlyAction(friendlyAction){
     cyNode["data"]["type"] = "enemyAction";
     cyNode["data"]["points"] = [-1, -1, 1, -1, 1, .75, 0, 1, -1, .75];
     nodes.push(cyNode);
-    var cyEdge = getEdge(friendlyAction["name"], cyNode["data"]["id"]);
+    var cyEdge = getEdge(trimBestNotationDuplicate(friendlyAction["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
     edges.push(cyEdge);
     getStateNodesUnderEnemyActions(enemyAction);
   }
@@ -485,9 +548,59 @@ function getStateNodesUnderEnemyActions(enemyAction){
     var className = "stateNode";
     var cyNode = getDataFromInputNode(stateNode, enemyAction["name"], className);
     nodes.push(cyNode);
-    var cyEdge = getEdge(enemyAction["name"], cyNode["data"]["id"]);
+    var cyEdge = getEdge(trimBestNotationDuplicate(enemyAction["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
     edges.push(cyEdge);
     getFriendlyActionsUnderState(stateNode);
   }
 }
 
+function trimBestNotationDuplicate(id){
+  var index = id.indexOf("(best)");
+  if (index != -1){
+    id = id.slice(0, index) + id.slice(index + "(best)".length);
+  }
+  return id;
+}
+
+function sortNodes(cy){
+  cy.nodes().forEach(function( ele ){
+    var currParent = ele.incomers();
+    var currSiblings = currParent.outgoers();
+    currSiblings.forEach(function( sib ){
+      if (ele.data("id").indexOf("_action_max") != -1){
+        if (ele.data("best q_value") > sib.data("best q_value") && ele.position('x') > sib.position('x')){
+          var switchPosition = ele.position('x');
+          ele.position('x', sib.position('x')); 
+          sib.position('x', switchPosition);
+        }
+      }
+      else if (ele.data("id").indexOf("_action_min") != -1){
+        if (ele.data("best q_value") < sib.data("best q_value") && ele.position('x') > sib.position('x')){
+          var switchPosition = ele.position('x');
+          ele.position('x', sib.position('x')); 
+          sib.position('x', switchPosition);
+        }
+      }
+    });
+  });
+}
+
+function parentAboveChildren(cy){
+  cy.nodes().forEach(function( ele ){
+    var currChildren = ele.outgoers();
+    if (currChildren.size() > 0){
+      var sumOfChildrenX = 0;
+      var countOfChildren = 0;
+      currChildren.forEach(function( child ){
+        sumOfChildrenX += child.position('x');
+        countOfChildren += 1;
+      });
+      var calculatedParentPos = sumOfChildrenX/countOfChildren;
+      var shiftValue = calculatedParentPos - ele.position('x');
+      // ele.position('x', calculatedParentPos);
+      currChildren.forEach(function( child ){
+          child.shift('x', shiftValue);
+      });
+    }
+  });
+}

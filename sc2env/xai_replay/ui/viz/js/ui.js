@@ -469,17 +469,19 @@ function sizeNonGeneratedElements() {
 	$('#fullscreen-button1-toggle').css('height', "30px")
 
 
-	$('#fullscreen-modal').css('width', "90%")
-	$('#fullscreen-modal').css('height', "80%")
-	$('#fullscreen-modal').css('left', "5%")
-	$('#fullscreen-modal').css('right', "5%")
-	$('#fullscreen-modal').css('top', "7%")
-	$('#fullscreen-modal').css('bottom', "5%")
+	$('#fullscreen-modal').css('width', "95%")
+	$('#fullscreen-modal').css('height', "88%")
+	$('#fullscreen-modal').css('margin-left', "2%")
+	// $('#fullscreen-modal').css('right', "5%")
+	// $('#fullscreen-modal').css('top', "7%")
+	$('#fullscreen-modal').css('margin-bottom', "8%")
 
 	$('#fullscreen-modal').css('position', "absolute")
-	$('#fullscreen-modal').css('background-color', "white")
+	$('#fullscreen-modal').css('background-color', "whitesmoke")
 	$('#fullscreen-modal').css('border-radius', "10px")
 	$('#fullscreen-modal').css('z-index', zIndexMap["modalPopUp"])
+	$('#fullscreen-modal').css('border', "3px solid black")
+
 
 
 
