@@ -54,16 +54,14 @@ var treeData = {
     }),
   layout: {
     name: 'breadthfirst',
-    sort: function(a, b){ return a.data('best q_value') + b.data('best q_value') },
     fit: true, // whether to fit the viewport to the graph
     directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
     padding: 30, // padding on fit
-    spacingFactor: .75, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+    spacingFactor: 1.25, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
     avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
     nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
     roots: undefined, // the roots of the trees
     maximal: false, // whether to shift nodes down their natural BFS depths in order to avoid upwards edges (DAGS only)
-    animate: false, // wihether to transition the node positions
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
@@ -76,23 +74,49 @@ var treeData = {
 
 var cy = undefined;
 function initTree(jsonPath){
-  $.getJSON(jsonPath, function(rawSc2Json) {
+  // $.getJSON(jsonPath, function(rawSc2Json) {
+  $.getJSON("js/tree/whole_decision_point_1.json", function(rawSc2Json) {
     
     createRootNode(rawSc2Json);
     getFriendlyActionsUnderState(rawSc2Json);
 
     cy = cytoscape(treeData);
     childrenFollowParents(cy);
+    var root = cy.$('.rootNode');
     var biggestUnitCountTuple = getLargestUnitCount(cy);
     intitTreeLables(cy, biggestUnitCountTuple);
-    intitTreeFunctions(cy);
+    intitTreeFunctions(cy);    
     sortNodes(cy);
-    // parentAboveChildren(cy)
+    parentAboveChildren(cy, root);
   });
 }
-function finishInit(){
 
-}
+// const observer = new MutationObserver(function (mutations){
+//   mutations.forEach(function (mutation){
+//     if (mutation.addedNodes.length){
+//       for (var i in mutation.addedNodes){
+//         console.log(mutation.addedNodes);
+//       }
+//       cy.nodes().forEach(function( ele ){
+//         var nexusToolTip = document.getElementById( ele.data("id") + "_nexus_graph_container" )
+//         nexusToolTip.addEventListener('mouseover', function (event){
+//           console.log("NEXUS")
+//           var toolTip = document.createElement("div");
+//           var toolTipVal = document.createTextNode("nexus health: ")
+//           toolTip.appendChild(toolTipVal);
+//           toolTip.appendChild(toolTip);
+//           toolTip.style.backgroundColor = "black";
+//           toolTip.style.color = "white";
+//           toolTip.style.zIndex = 1000;
+//         });
+//       });
+//     }
+//   })
+// })
+
+// const treeContainer = document.getElementById("cy");
+// observer.observe(treeContainer, {childList:true});
+
 
 function removeTree(){
     treeData["elements"] = {  nodes: [],
@@ -173,7 +197,7 @@ function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
 
 
 function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
-return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800; width: 800;">' +
+return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800; width: 800;" onload="finishInit()">' +
           '<style>' + 
           '#' + data.id + '_unit_graph_container ' + '{' +
             'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCount) + ';' +
@@ -224,7 +248,6 @@ function drawNexusHealth(nexusHealth){
   var nexusHealthPercent = (1-(nexusHealth/2000)) * 100;
   return '<div style="bottom:0%;background-color:green;margin:10px;width:50px;"><div style="background-color:ivory;margin:2.5px;position:relative;width:45px;height:' + nexusHealthPercent + '%;"></div></div>';
 }
-
 
 function drawPylons(pylonCount){
   var pylonString = "";
@@ -448,7 +471,6 @@ function intitTreeFunctions(cy){
       // Restore the removed nodes from saved data
       this.scratch().restData.restore();
       this.scratch({ restData: null });
-      // createNodeGraphs();
     }
   });
 }
@@ -575,6 +597,7 @@ function sortNodes(cy){
         }
       }
       else if (ele.data("id").indexOf("_action_min") != -1){
+
         if (ele.data("best q_value") < sib.data("best q_value") && ele.position('x') > sib.position('x')){
           var switchPosition = ele.position('x');
           ele.position('x', sib.position('x')); 
@@ -585,22 +608,17 @@ function sortNodes(cy){
   });
 }
 
-function parentAboveChildren(cy){
-  cy.nodes().forEach(function( ele ){
-    var currChildren = ele.outgoers();
-    if (currChildren.size() > 0){
-      var sumOfChildrenX = 0;
-      var countOfChildren = 0;
-      currChildren.forEach(function( child ){
-        sumOfChildrenX += child.position('x');
-        countOfChildren += 1;
-      });
-      var calculatedParentPos = sumOfChildrenX/countOfChildren;
-      var shiftValue = calculatedParentPos - ele.position('x');
-      // ele.position('x', calculatedParentPos);
-      currChildren.forEach(function( child ){
-          child.shift('x', shiftValue);
-      });
-    }
+function parentAboveChildren(cy, node){
+  var allLeaves = cy.nodes().leaves().size()
+  var children = node.outgoers().targets();
+  var i = 0;
+  children.forEach(function (child){
+    var leaves = child.successors().targets().leaves().size();
+    grandchild = child.outgoers().targets().size();
+    var maxNodeWidth = cy.$('.stateNode').width();
+    child.position('x', i * grandchild * (maxNodeWidth + 300));
+    parentAboveChildren(cy, child)
+    i++;
   });
 }
+
