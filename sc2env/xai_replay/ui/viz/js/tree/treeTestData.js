@@ -74,8 +74,8 @@ var treeData = {
 
 var cy = undefined;
 function initTree(jsonPath){
-  // $.getJSON(jsonPath, function(rawSc2Json) {
-  $.getJSON("js/tree/whole_decision_point_1.json", function(rawSc2Json) {
+    $.getJSON(jsonPath, function(rawSc2Json) {
+  // $.getJSON("js/tree/whole_decision_point_1.json", function(rawSc2Json) {
     
     createRootNode(rawSc2Json);
     getFriendlyActionsUnderState(rawSc2Json);
@@ -318,40 +318,44 @@ function getColumnStylingString(biggestUnitCount){
   return columsString
 }
 
+// action_max present == friendly action, action_min present== enemy action 
+//friendly does work for enemy actions - enemy key only references enemy state.  For enemy action nodes the friendly max value is 
+// taken from the perspective of the enemy actually being the friendly.  
 function getNumberOfColumns(unitValuesDict){
   var unitValuesDictEnemy = undefined;
   var maxActionTakenEnemy = undefined;
   var enemyMaxValue = undefined;
 
   if ("Enemy" in unitValuesDict){
+    // have to null out this value to prevent a dictionary from being interpreted as a value (it was made a dictionary to enable code reuse)
     unitValuesDictEnemy = unitValuesDict["Enemy"];
     unitValuesDict["Enemy"] = null;
   }
 
   var maxActionTaken = Object.keys(unitValuesDict).reduce(function(a, b){ return unitValuesDict[a] > unitValuesDict[b] ? a : b });
-  var friendlyMaxValue = unitValuesDict[maxActionTaken];
+  var maxValue = unitValuesDict[maxActionTaken];
 
   if ("Enemy" in unitValuesDict){
     maxActionTakenEnemy = Object.keys(unitValuesDictEnemy).reduce(function(a, b){ return unitValuesDictEnemy[a] > unitValuesDictEnemy[b] ? a : b });
     enemyMaxValue = unitValuesDictEnemy[maxActionTakenEnemy];
-    if (enemyMaxValue > friendlyMaxValue){
+    if (enemyMaxValue > maxValue){
       if (enemyMaxValue < 5){
         return 5;
       }
       return enemyMaxValue;
     }
     else{
-      if (friendlyMaxValue < 5){
+      if (maxValue < 5){
         return 5;
       }
-      return friendlyMaxValue;
+      return maxValue;
     }
   }
   else{
-    if (friendlyMaxValue < 5){
+    if (maxValue < 5){
       return 5;
     }
-    return friendlyMaxValue;
+    return maxValue;
   }
 }
 
@@ -584,10 +588,12 @@ function trimBestNotationDuplicate(id){
   return id;
 }
 
+// search at each depth level for siblings and then if finds, check whether it's principle variation is higher (action_max), and x coordinate
+// higher (farther to the right), then switch places with sibling.
 function sortNodes(cy){
   cy.nodes().forEach(function( ele ){
-    var currParent = ele.incomers();
-    var currSiblings = currParent.outgoers();
+    var currParent = ele.incomers().targets();
+    var currSiblings = currParent.outgoers().targets();
     currSiblings.forEach(function( sib ){
       if (ele.data("id").indexOf("_action_max") != -1){
         if (ele.data("best q_value") > sib.data("best q_value") && ele.position('x') > sib.position('x')){
