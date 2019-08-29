@@ -3,46 +3,34 @@ var treeData = {
   boxSelectionEnabled: false,
   autounselectify: true,
   style: cytoscape.stylesheet()
+    .selector('node')
+    .css({
+      'background-color': 'LightSlateGray',
+      'height': 1200,
+      'width': 1100,
+      'background-fit': 'cover',
+      'border-color': 'black'
+    })
     .selector('.stateNode')
     .css({
       'shape': 'roundrectangle',
       'height': 1100,
-      'width': 1800,
-      'background-color': 'LightSlateGray',
-      'background-fit': 'cover',
-      'border-color': 'black',
-      'border-width': 10,
-      'border-radius': 5,
+      'width': 1800
     })
     .selector('.friendlyAction')
     .css({
       'shape': 'polygon',
-      'shape-polygon-points': 'data(points)',
-      'background-color': 'LightSlateGray',
-      'height': 1200,
-      'width': 1100,
-      'background-fit': 'cover',
-      'border-color': 'black',
-      'border-width': 10,
-      'border-radius': 5,
+      'shape-polygon-points': 'data(points)'
     })
     .selector('.enemyAction')
     .css({
       'shape': 'polygon',
-      'shape-polygon-points': 'data(points)',
-      'background-color': 'LightSlateGray',
-      'height': 1200,
-      'width': 1100,
-      'background-fit': 'cover',
-      'border-color': 'black',
-      'border-width': 10,
-      'border-radius': 5,
+      'shape-polygon-points': 'data(points)'
     })
     .selector('.principalVariation')
     .css({
       'background-color': 'SteelBlue',
-      'border-color': 'black',
-
+      'border-color': 'black'
     })
     .selector('edge')
     .css({
@@ -87,7 +75,6 @@ function initTree(jsonPath){
     intitTreeLables(cy, biggestUnitCountTuple);
     intitTreeFunctions(cy);    
     sortNodes(cy);
-    parentAboveChildren(cy, root);
   });
 }
 
@@ -134,7 +121,7 @@ function intitTreeLables(cy, biggestUnitCountTuple){
         halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
         valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
         cssClass: '', // any classes will be as attribute of <div> container for every title
-        tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getAfterStateValue(data)   } // your html template here
+        tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getBestQValue(data)   } // your html template here
       }
     ]
   );
@@ -180,13 +167,13 @@ function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
               '}' +
             '</style>' +
             '<div id="' + data.id + '_unit_graph_container">' +
-              drawMarines(unitValuesDict["TOP Marines"]) + drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) +
-              drawBanelings(unitValuesDict["TOP Banelings"]) + drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) +
-              drawImmortals(unitValuesDict["TOP Immortals"]) + drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) +
+              drawUnitDiv(unitValuesDict["TOP Marines"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) +
+              drawUnitDiv(unitValuesDict["TOP Banelings"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) +
+              drawUnitDiv(unitValuesDict["TOP Immortals"], 'blue') + drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) +
               '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
-              drawMarines(unitValuesDict["BOT Marines"]) + drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) +
-              drawBanelings(unitValuesDict["BOT Banelings"]) + drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) +
-              drawImmortals(unitValuesDict["BOT Immortals"]) + drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) +
+              drawUnitDiv(unitValuesDict["BOT Marines"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) +
+              drawUnitDiv(unitValuesDict["BOT Banelings"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) +
+              drawUnitDiv(unitValuesDict["BOT Immortals"], 'blue') + drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) +
             '</div>' +
             '<div></div>' +
             '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
@@ -205,13 +192,13 @@ return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto 
           '}' +
         '</style>' +
         '<div id="' + data.id + '_unit_graph_container">' +
-          drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) + drawMarines(unitValuesDict["TOP Marines"]) + 
-          drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) + drawBanelings(unitValuesDict["TOP Banelings"]) + 
-          drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) + drawImmortals(unitValuesDict["TOP Immortals"]) + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) + drawUnitDiv(unitValuesDict["TOP Marines"], 'darkGrey') + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) + drawUnitDiv(unitValuesDict["TOP Banelings"]) + 
+          drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) + drawUnitDiv(unitValuesDict["TOP Immortals"]) + 
           '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
-          drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) + drawMarines(unitValuesDict["BOT Marines"]) + 
-          drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) + drawBanelings(unitValuesDict["BOT Banelings"]) + 
-          drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) + drawImmortals(unitValuesDict["BOT Immortals"]) + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) + drawUnitDiv(unitValuesDict["BOT Marines"], 'darkGrey') + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) + drawUnitDiv(unitValuesDict["BOT Banelings"], 'darkOrange') + 
+          drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) + drawUnitDiv(unitValuesDict["BOT Immortals"], 'blue') + 
         '</div>' +
         '<style>' + 
           '#' + data.id + '_nexus_graph_container ' + '{' +
@@ -267,41 +254,14 @@ function drawPylonPlaceHolderDivs(pylonCount){
   return pylonString;
 }
 
-function drawMarines(marineCount){
-  var marineString = "";
-  for(var i = 0; i < marineCount; i++){
-    marineString += '<div style="text-align:center;background-color:darkgrey;">'
-    // if (i == marineCount-1){
-    //   marineString += marineCount;
-    // }
-    marineString += '</div>'
+function drawUnitDiv(unitCount, color){
+  var unitDivString = "";
+  for(var i = 0; i < unitCount; i++){
+    unitDivString += '<div style="text-align:center;background-color:' + color + ';"></div>'
   }
-  return marineString;
+  return unitDivString;
 }
 
-function drawBanelings(banelingCount){
-  var banelingString = "";
-  for(var i = 0; i < banelingCount; i++){
-    banelingString += '<div style="text-align: center; font-size:50px; background-color:DarkOrange;">'
-    // if (i == banelingCount-1){
-    //   banelingString += banelingCount;
-    // }
-    banelingString += '</div>'
-  }
-  return banelingString;
-}
-
-function drawImmortals(immortalCount){
-  var immortalString = "";
-  for(var i = 0; i < immortalCount; i++){
-    immortalString += '<div style="text-align: center; background-color:blue;">'
-    // if (i == immortalCount-1){
-    //   immortalString += marineCount;
-    // }
-    immortalString += '</div>'
-  }
-  return immortalString;
-}
 function drawPlaceHolderDivs(unitCount, colCount){
   var placeholder = "";
   for(var i = 0; i < (colCount-unitCount); i++){
@@ -386,29 +346,14 @@ function getActionValues(data){
   var action = data["action"];
   var actionDict = {};
 
-  for (var i = 0; i < action.length; i++) {
-    if (i == 0){
-      actionDict["TOP Marines"] = action.charAt(i);
-    }
-    else if(i == 1){
-      actionDict["TOP Banelings"] = action.charAt(i);
-    }
-    else if(i == 2){
-      actionDict["TOP Immortals"] = action.charAt(i);
-    }
-    else if(i == 3){
-      actionDict["BOT Marines"] = action.charAt(i);
-    }
-    else if(i == 4){
-      actionDict["BOT Banelings"] = action.charAt(i);
-    }
-    else if(i == 5){
-      actionDict["BOT Immortals"] = action.charAt(i);
-    }
-    else if(i == 6){
-      actionDict["Pylons"] = action.charAt(i);
-    }
-  }
+  actionDict["TOP Marines"] = action.charAt(0);
+  actionDict["TOP Banelings"] = action.charAt(1);
+  actionDict["TOP Immortals"] = action.charAt(2);
+  actionDict["BOT Marines"] = action.charAt(3);
+  actionDict["BOT Banelings"] = action.charAt(4);
+  actionDict["BOT Immortals"] = action.charAt(5);
+  actionDict["Pylons"] = action.charAt(6);
+
   return actionDict;
 }
 
@@ -423,31 +368,30 @@ function parseActionString(data){
   }
 }
 
-function getAfterStateValue(data){
-  var afterStateQValue =  + data["after state q_value"]
+function getBestQValue(data){
+  // var afterStateQValue = data["after state q_value"];
   var bestStateQValue = data["best q_value"];
+  var name = data["name"];
   if(data['root']){
-    return '<div style="color:rgb(255, 140, 26);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+    return '<div style="color:rgba(255,140,26,1);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
   }
-    if (afterStateQValue == 0){
-      if (data["id"].indexOf("best") != -1){
-        return '<div style="color:rgb(255, 140, 26);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+    if (name.indexOf("_action") != -1){
+      if (name.indexOf("best") != -1){
+        return '<div style="color:rgba(255,140,26,1);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
       else{
         return '<div style="color:Turquoise;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
     }
     else{
-      if (data["id"].indexOf("best") != -1){
-        return '<div style="color:rgb(255, 140, 26);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+      if (name.indexOf("best") != -1){
+        return '<div style="color:rgba(255,140,26,1);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
       else{
         return '<div style="color:Turquoise;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
     }
 }
-
-
 
 function childrenFollowParents(cy){
   cy.nodes().forEach(function( ele ){
@@ -478,8 +422,6 @@ function intitTreeFunctions(cy){
     }
   });
 }
-
-
 
 function createRootNode(inputJsonTree){
   var nodes = treeData["elements"]["nodes"];
@@ -600,6 +542,7 @@ function sortNodes(cy){
           var switchPosition = ele.position('x');
           ele.position('x', sib.position('x')); 
           sib.position('x', switchPosition);
+          switchChildrenPositions(cy, ele, sib)
         }
       }
       else if (ele.data("id").indexOf("_action_min") != -1){
@@ -608,22 +551,34 @@ function sortNodes(cy){
           var switchPosition = ele.position('x');
           ele.position('x', sib.position('x')); 
           sib.position('x', switchPosition);
+          switchChildrenPositions(cy, ele, sib)
         }
       }
     });
   });
 }
 
-function parentAboveChildren(cy, node){
-  var allLeaves = cy.nodes().leaves().size()
-  var children = node.outgoers().targets();
+function switchChildrenPositions(cy, currNode, switchNode){
+  var currNodeChildren = currNode.successors().targets();
+  var switchNodeChildren = switchNode.successors().targets();
+
+  var currNodeChildrenPositions = [];
+  currNodeChildren.forEach(function( child ){
+    currNodeChildrenPositions.push(child.relativePosition('x'));
+  });
+  var switchChildrenPositions = [];
+  switchNodeChildren.forEach(function( child ){
+    switchChildrenPositions.push(child.relativePosition('x'));
+  });
+  
   var i = 0;
-  children.forEach(function (child){
-    var leaves = child.successors().targets().leaves().size();
-    grandchild = child.outgoers().targets().size();
-    var maxNodeWidth = cy.$('.stateNode').width();
-    child.position('x', i * grandchild * (maxNodeWidth + 300));
-    parentAboveChildren(cy, child)
+  switchNodeChildren.forEach(function( child ){
+    child.relativePosition('x', currNodeChildrenPositions[i]);
+    i++;
+  });
+  i = 0;
+  currNodeChildren.forEach(function( child ){
+    child.relativePosition('x', switchChildrenPositions[i]);
     i++;
   });
 }
