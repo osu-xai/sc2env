@@ -450,7 +450,7 @@ function getDataFromInputNode(inputNode, parentId, cyClass){
   }
   cyNode["data"]["sc2_parent_id"] = parentId;
   
-  if (inputNode["name"].indexOf("(best)") != -1){
+  if (inputNode["name"].indexOf("best") != -1){
     cyNode["data"]["id"] = trimBestNotationDuplicate(inputNode["name"]);
     cyNode["classes"] = cyClass + " principalVariation";
   }
@@ -534,7 +534,7 @@ function trimBestNotationDuplicate(id){
 // higher (farther to the right), then switch places with sibling.
 function sortNodes(cy){
   cy.nodes().forEach(function( ele ){
-    var currParent = ele.incomers().targets();
+    var currParent = ele.incomers().sources();
     var currSiblings = currParent.outgoers().targets();
     currSiblings.forEach(function( sib ){
       if (ele.data("id").indexOf("_action_max") != -1){
