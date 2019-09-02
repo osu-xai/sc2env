@@ -1,21 +1,29 @@
 Bootstrap: docker
 From : ubuntu:16.04
 
+        # as per https://sylabs.io/guides/3.2/user-guide/definition_files.html
+
+%environment
+	export PYTHONPATH=/sc2/sc2env:/sc2/abp:/sc2/sc2env/sc2env/xai_replay/ui/viz/py_backend/proto
+
 %post
 	apt-get update
+        apt-get install -y unzip
 	apt-get install -y curl
 	curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > Miniconda3-latest-Linux-x86_64.sh
 	chmod +x Miniconda3-latest-Linux-x86_64.sh 
 	./Miniconda3-latest-Linux-x86_64.sh -b
-
+	pwd
+        ls
 	
 	miniconda3/bin/activate
 	miniconda3/bin/conda install -y python=3.6
-        export PATH=$PATH:/root/miniconda3/bin
+        export PATH=$PATH:/miniconda3/bin
 	rm Miniconda3-latest-Linux-x86_64.sh
 
 	apt-get install -y git
 	mkdir /sc2
+	# ----------------------  install sc2env ----------------------------
 	cd /sc2
 
 	git clone https://github.com/osu-xai/sc2env.git
@@ -56,36 +64,31 @@ From : ubuntu:16.04
 	# pip install git+https://github.com/greydanus/excitationbp.git#egg=excitationbp
 	# pip install git+https://github.com/osu-xai/pytorch-saliency
 
-	export PYTHONPATH=/sc2/sc2env:/sc2/abp:/sc2/sc2env/sc2env/xai_replay/ui/viz/py_backend/proto
-
+	
 
 	#pip install libscaii
 	#(before Lawrence uploaded libscaii to PyPl (the python package index) had to do pip install #git+https://github.com/lwneal/libscaii)
 
 	#update imutil
 
+	# ----------------------  install jpg rendering assistance ----------------------------
 	apt install -y libosmesa6-dev
 	apt-get install -y ffmpeg  # to install jpg renderer
 
-	=================================================
-	# to support replay UI
+	# ----------------------  install replay UI support ----------------------------
 	pip install rangehttpserver
 	pip install websockets 
 
-###############################################################
 
-files section:  position  miniconda_shell.sh at /
+	# ----------------------  install SC2 ----------------------------
 
-##########################################
-# install SC2
 	cd /sc2/sc2env/scripts
 	apt-get install -y wget
 
 
-
 	wget -nc https://blzdistsc2-a.akamaihd.net/Linux/SC2.4.1.2.60604_2018_05_16.zip
 	unzip -P iagreetotheeula SC2.4.1.2.60604_2018_05_16.zip
-#ln -s $(pwd)/StarCraftII $HOME/StarCraftII
+	#ln -s $(pwd)/StarCraftII $HOME/StarCraftII
 
 	wget -nc https://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip
 	unzip -P iagreetotheeula Melee.zip -d StarCraftII/Maps/
@@ -94,9 +97,8 @@ files section:  position  miniconda_shell.sh at /
 	unzip mini_games.zip -d StarCraftII/Maps/
 	rm *.zip
 
-# after finish, put do files section and environment section and labels section
-# then try building container to see if it builds
-# then try running it
+
+
 
 
 
