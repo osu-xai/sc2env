@@ -76,41 +76,6 @@ function parseActionString(data){
 }
 
 
-function getEnemyActionsUnderFriendlyAction(friendlyAction){
-    var nodes = treeData["elements"]["nodes"];
-    var edges = treeData["elements"]["edges"];
-  
-    var children = friendlyAction["children"][0];
-    for (var childIndex in children){
-        var enemyAction = children[childIndex];
-        var className = "enemyAction";
-        var cyNode = getDataFromInputNode(enemyAction, friendlyAction["name"], className);
-        cyNode["data"]["type"] = "enemyAction";
-        cyNode["data"]["points"] = [-1, -1, 1, -1, 1, .75, 0, 1, -1, .75];
-        nodes.push(cyNode);
-        var cyEdge = getEdge(trimBestNotationDuplicate(friendlyAction["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
-        edges.push(cyEdge);
-        getStateNodesUnderEnemyActions(enemyAction);
-    }
-}
-  
-function getStateNodesUnderEnemyActions(enemyAction){
-    var nodes = treeData["elements"]["nodes"];
-    var edges = treeData["elements"]["edges"];
-  
-    var children = enemyAction["children"][0];
-    for (var childIndex in children){
-        var stateNode = children[childIndex];
-        var className = "stateNode";
-        var cyNode = getDataFromInputNode(stateNode, enemyAction["name"], className);
-        nodes.push(cyNode);
-        var cyEdge = getEdge(trimBestNotationDuplicate(enemyAction["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
-        edges.push(cyEdge);
-        getFriendlyActionsUnderState(stateNode);
-    }
-}
-
-
 
 // html id's don't allow parens.  Xian only removed the parens from one instance, not the duplicate, so we mop up.
 function trimBestNotationDuplicate(id){
