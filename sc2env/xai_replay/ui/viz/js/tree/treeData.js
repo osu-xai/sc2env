@@ -65,17 +65,26 @@ var cy = undefined;
 function initTree(jsonPath){
         $.getJSON(jsonPath, function(rawSc2Json) {
         // $.getJSON("js/tree/whole_decision_point_1.json", function(rawSc2Json) {
-        
-        createRootNode(rawSc2Json);
-        cyPopulateFriendlyActionUnderState(rawSc2Json);
+        generateBackingTreeOfCynodes(rawSc2Json);
+        populatePrincipalVariationTree(backingTreeRoot);
+        // alert("creating tree")
+        // createRootNode(rawSc2Json);
 
+        // cyPopulateFriendlyActionUnderState(rawSc2Json);
+        // //alert("telling cytoscape about it")
         cy = cytoscape(treeData);
-        childrenFollowParents(cy);
-        var root = cy.$('.rootNode');
+        // //alert("telling children to follow parents")
+        // childrenFollowParents(cy);
+        // var root = cy.$('.rootNode');
+        // //alert("biggest unit count")
         var biggestUnitCountTuple = getLargestUnitCount(cy);
+        // //alert("initTreeLabels")
         intitTreeLables(cy, biggestUnitCountTuple);
-        intitTreeFunctions(cy);    
-        sortNodes(cy);
+        // //alert("initTreeFunctions")
+        // intitTreeFunctions(cy);    
+        // //alert("sortNodes")
+        // sortNodes(cy);
+        // alert("done");
     });
 }
 
@@ -171,7 +180,7 @@ function createRootNode(inputJsonTree){
 }
 
 
-function getDataFromInputNode(inputNode, parentId, cyClass){
+function getCyNodeFromJsonNode(inputNode, parentId, cyClass){
     var cyNode = {};
     cyNode["data"] = {};
     var nodeKeys = Object.keys(inputNode);
@@ -204,59 +213,61 @@ function getEdge(source, target){
     return cyEdge
 }
 
-
-
+function populateCompleteTree(jsonStateNode){
+    cyPopulateFriendlyActionUnderState(jsonStateNode);
+}
+var enemyActionShapePoints =    [-1, -1, 1, -1, 1, .75, 0, 1, -1, .75]
+var friendlyActionShapePoints = [-1, 1, 1, 1, 1, -.75, 0, -1, -1, -.75]
 // from raw json, populating cytoscape data (recursive)
-function cyPopulateFriendlyActionUnderState(stateNode){
+function cyPopulateFriendlyActionUnderState(jsonStateNode){
     var nodes = treeData["elements"]["nodes"];
     var edges = treeData["elements"]["edges"];
   
-    var children = stateNode["children"][0];
+    var children = jsonStateNode["children"][0];
     for (var childIndex in children){
-        var friendlyAction = children[childIndex];
+        var jsonFriendlyActionNode = children[childIndex];
         var className = "friendlyAction";
-        var cyNode = getDataFromInputNode(friendlyAction, stateNode["name"], className);
-        cyNode["data"]["type"] = "friendlyAction";
-        cyNode["data"]["points"] = [-1, 1, 1, 1, 1, -.75, 0, -1, -1, -.75];
-        nodes.push(cyNode);
-        var cyEdge = getEdge(trimBestNotationDuplicate(stateNode["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
+        var cyFriendlyActionNode = getCyNodeFromJsonNode(jsonFriendlyActionNode, jsonStateNode["name"], className);
+        cyFriendlyActionNode["data"]["type"] = "friendlyAction";
+        cyFriendlyActionNode["data"]["points"] = friendlyActionShapePoints;
+        nodes.push(cyFriendlyActionNode);
+        var cyEdge = getEdge(trimBestNotationDuplicate(jsonStateNode["name"]), trimBestNotationDuplicate(cyFriendlyActionNode["data"]["id"]));
         edges.push(cyEdge);
-        cyPopulateEnemyActionsUnderFriendlyAction(friendlyAction);
+        cyPopulateEnemyActionsUnderFriendlyAction(jsonFriendlyActionNode);
     }
 }
 
 
-
-function cyPopulateEnemyActionsUnderFriendlyAction(friendlyAction){
+function cyPopulateEnemyActionsUnderFriendlyAction(jsonFriendlyActionNode){
     var nodes = treeData["elements"]["nodes"];
     var edges = treeData["elements"]["edges"];
   
-    var children = friendlyAction["children"][0];
+    var children = jsonFriendlyActionNode["children"][0];
     for (var childIndex in children){
-        var enemyAction = children[childIndex];
+        var jsonEnemyActionNode = children[childIndex];
         var className = "enemyAction";
-        var cyNode = getDataFromInputNode(enemyAction, friendlyAction["name"], className);
-        cyNode["data"]["type"] = "enemyAction";
-        cyNode["data"]["points"] = [-1, -1, 1, -1, 1, .75, 0, 1, -1, .75];
-        nodes.push(cyNode);
-        var cyEdge = getEdge(trimBestNotationDuplicate(friendlyAction["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
+        var cyEnemyActionNode = getCyNodeFromJsonNode(jsonEnemyActionNode, jsonFriendlyActionNode["name"], className);
+        cyEnemyActionNode["data"]["type"] = "enemyAction";
+        cyEnemyActionNode["data"]["points"] = enemyActionShapePoints;
+        nodes.push(cyEnemyActionNode);
+        var cyEdge = getEdge(trimBestNotationDuplicate(jsonFriendlyActionNode["name"]), trimBestNotationDuplicate(cyEnemyActionNode["data"]["id"]));
         edges.push(cyEdge);
-        cyPopulateStateNodesUnderEnemyActions(enemyAction);
+        cyPopulateStateNodesUnderEnemyActions(jsonEnemyActionNode);
     }
 }
   
-function cyPopulateStateNodesUnderEnemyActions(enemyAction){
+function cyPopulateStateNodesUnderEnemyActions(jsonEnemyActionNode){
     var nodes = treeData["elements"]["nodes"];
     var edges = treeData["elements"]["edges"];
   
-    var children = enemyAction["children"][0];
+    var children = jsonEnemyActionNode["children"][0];
     for (var childIndex in children){
-        var stateNode = children[childIndex];
+        var jsonStateNode = children[childIndex];
         var className = "stateNode";
-        var cyNode = getDataFromInputNode(stateNode, enemyAction["name"], className);
-        nodes.push(cyNode);
-        var cyEdge = getEdge(trimBestNotationDuplicate(enemyAction["name"]), trimBestNotationDuplicate(cyNode["data"]["id"]));
+        var cyStateNode = getCyNodeFromJsonNode(jsonStateNode, jsonEnemyActionNode["name"], className);
+        nodes.push(cyStateNode);
+        var cyEdge = getEdge(trimBestNotationDuplicate(jsonEnemyActionNode["name"]), trimBestNotationDuplicate(cyStateNode["data"]["id"]));
         edges.push(cyEdge);
-        cyPopulateFriendlyActionUnderState(stateNode);
+        cyPopulateFriendlyActionUnderState(jsonStateNode);
     }
 }

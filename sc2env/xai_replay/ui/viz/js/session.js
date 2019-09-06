@@ -353,7 +353,8 @@ function renderUnitValues(frameInfo){
                 pauseGame();
                 decisionPoints.splice(i,1);
                 removeTree();
-                initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + ".json");
+                alert("calling initTree");
+                initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
                 return;
             }
         }

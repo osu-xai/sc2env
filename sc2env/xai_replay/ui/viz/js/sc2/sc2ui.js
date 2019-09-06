@@ -93,6 +93,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     }
     
     uim.expressFrameInfo = function(frameNumber) {
+        console.log("expressingFrameInfo");
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
