@@ -5,21 +5,21 @@ From : ubuntu:16.04
 
 %environment
 	export PYTHONPATH=/sc2/sc2env:/sc2/abp:/sc2/sc2env/sc2env/xai_replay/ui/viz/py_backend/proto
+	export USER=`whoami`
+	export PATH=$PATH:/home/$USER/anaconda3/bin
 
-%post
+%post 
 	apt-get update
         apt-get install -y unzip
-	apt-get install -y curl
-	curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > Miniconda3-latest-Linux-x86_64.sh
-	chmod +x Miniconda3-latest-Linux-x86_64.sh 
-	./Miniconda3-latest-Linux-x86_64.sh -b
-	pwd
-        ls
+	apt-get install -y wget
+	wget -nc https://repo.continuum.io/archive/Anaconda3-2019.03-Linux-x86_64.sh
+	chmod +x Anaconda3-2019.03-Linux-x86_64.sh 
+	./Anaconda3-2019.03-Linux-x86_64.sh -b
 	
-	miniconda3/bin/activate
-	miniconda3/bin/conda install -y python=3.6
-        export PATH=$PATH:/miniconda3/bin
-	rm Miniconda3-latest-Linux-x86_64.sh
+	anaconda3/bin/activate
+	anaconda3/bin/conda install -y python=3.6
+        export PATH=$PATH:/anaconda3/bin
+	rm Anaconda3-2019.03-Linux-x86_64.sh
 
 	apt-get install -y git
 	mkdir /sc2
