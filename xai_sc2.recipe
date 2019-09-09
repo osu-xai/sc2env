@@ -4,11 +4,12 @@ From : ubuntu:16.04
         # as per https://sylabs.io/guides/3.2/user-guide/definition_files.html
 
 %environment
-	export PYTHONPATH=/sc2/sc2env:/sc2/abp:/sc2/sc2env/sc2env/xai_replay/ui/viz/py_backend/proto
 	export USER=`whoami`
-	export PATH=$PATH:/home/$USER/anaconda3/bin
+	export PYTHONPATH=/sc2/sc2env:/sc2/abp:/sc2/sc2env/sc2env/xai_replay/ui/viz/py_backend/proto:
+	export PATH=$PATH:/anaconda3/bin
 
 %post 
+	cd /
 	apt-get update
         apt-get install -y unzip
 	apt-get install -y bzip2
@@ -61,9 +62,9 @@ From : ubuntu:16.04
 	pip install pandas
 	pip install pyyaml
 	pip install coverage
-	# pip install scaii>=0.2.0
-	# pip install git+https://github.com/greydanus/excitationbp.git#egg=excitationbp
-	# pip install git+https://github.com/osu-xai/pytorch-saliency
+	pip install scaii>=0.2.0
+	pip install git+https://github.com/greydanus/excitationbp.git#egg=excitationbp
+	pip install git+https://github.com/osu-xai/pytorch-saliency
 
 	
 
@@ -84,8 +85,6 @@ From : ubuntu:16.04
 	# ----------------------  install SC2 ----------------------------
 
 	cd /sc2/sc2env/scripts
-	apt-get install -y wget
-
 
 	wget -nc https://blzdistsc2-a.akamaihd.net/Linux/SC2.4.1.2.60604_2018_05_16.zip
 	unzip -P iagreetotheeula SC2.4.1.2.60604_2018_05_16.zip
