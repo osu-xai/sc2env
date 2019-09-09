@@ -489,7 +489,18 @@ function sizeNonGeneratedElements() {
 	var toggle_fullscreen_modal = document.getElementById("fullscreen-button1-toggle");
 	toggle_fullscreen_modal.addEventListener('click', function(event){
 		if ($('#fullscreen-modal').css('display') == 'none'){
-			$('#fullscreen-modal').css('display', "block")
+            $('#fullscreen-modal').css('display', "block")
+            if (buildTreeOnDemand){
+                var step = sessionIndexManager.getCurrentIndex();
+                if (step != frameOfCurrentTree){
+                    alert("on-demand build of tree for step " + 0);
+                    forgetCyTree();
+                    forgetBackingTree();
+                    var frameInfo = activeSC2DataManager.getFrameInfo(step);
+                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
+                    frameOfCurrentTree = step;
+                }
+            }
 		}
 		else{
 			$('#fullscreen-modal').css('display', "none")

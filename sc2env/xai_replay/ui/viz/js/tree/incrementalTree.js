@@ -1,4 +1,9 @@
 var backingTreeRoot = undefined;
+var buildTreeOnDemand = false;
+var frameOfCurrentTree = undefined;
+function forgetBackingTree(){
+    backingTreeRoot = undefined;
+}
 function generateBackingTreeOfCynodes(jsonStateNode){
     alert("start tree build");
     backingTreeRoot = createBackingTreeRootNode(jsonStateNode);

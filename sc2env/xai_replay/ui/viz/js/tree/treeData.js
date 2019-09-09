@@ -90,7 +90,7 @@ function initTree(jsonPath){
 }
 
 
-function removeTree(){
+function forgetCyTree(){
     treeData["elements"] = {  nodes: [],
                               edges: []
                             };

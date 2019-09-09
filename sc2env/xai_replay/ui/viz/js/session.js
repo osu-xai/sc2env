@@ -352,9 +352,12 @@ function renderUnitValues(frameInfo){
             if (frameInfo.frame_number >= decisionPoints[i] + 2){
                 pauseGame();
                 decisionPoints.splice(i,1);
-                removeTree();
-                alert("calling initTree");
-                initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
+                //alert("calling initTree");
+                if (!buildTreeOnDemand){
+                    forgetCyTree();
+                    alert("automatic build of tree for step " + 0);
+                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
+                }
                 return;
             }
         }
