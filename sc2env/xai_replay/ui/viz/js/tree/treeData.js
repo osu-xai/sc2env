@@ -73,6 +73,7 @@ function initTree(jsonPath){
         // cyPopulateFriendlyActionUnderState(rawSc2Json);
         // //alert("telling cytoscape about it")
         cy = cytoscape(treeData);
+        cy.center();
         // //alert("telling children to follow parents")
         // childrenFollowParents(cy);
         // var root = cy.$('.rootNode');
@@ -84,7 +85,7 @@ function initTree(jsonPath){
         // intitTreeFunctions(cy);    
         // //alert("sortNodes")
         // sortNodes(cy);
-        // alert("done");
+        //alert("done");
     });
 }
 
