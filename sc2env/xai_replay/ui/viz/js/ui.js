@@ -493,7 +493,6 @@ function sizeNonGeneratedElements() {
             if (buildTreeOnDemand){
                 var step = sessionIndexManager.getCurrentIndex();
                 if (step != frameOfCurrentTree){
-                    alert("on-demand build of tree for step " + 0);
                     forgetCyTree();
                     forgetBackingTree();
                     var frameInfo = activeSC2DataManager.getFrameInfo(step);

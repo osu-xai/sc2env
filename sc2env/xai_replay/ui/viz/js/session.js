@@ -355,7 +355,6 @@ function renderUnitValues(frameInfo){
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
                     forgetCyTree();
-                    alert("automatic build of tree for step " + 0);
                     initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
                 }
                 return;
