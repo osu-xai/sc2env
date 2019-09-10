@@ -1,19 +1,55 @@
 
-function intitTreeFunctions(cy){
-    // cy.nodes().ungrabify();
+var userExpandedNodes = [];
+function intitTreeEvents(cy){
+    //toggle show and hide nodes on click.
+    addOrRemoveSubTree(cy);
     cy.center(cy.nodes());
-    //toggle show and hide nodes on hover over. Dont allow nodes at at d =0,1 to hide
+}
+
+function addOrRemoveSubTree(cy){
     cy.on('click', 'node', function (evt) {
-        if (this.scratch().restData == undefined || this.scratch().restData == null) {
-            // Save node data and remove
-            this.scratch({
-            restData: this.successors().targets().remove()
-            });
+        var currNode = evt.target;
+        if (currNode.successors().targets().size() <= 0){
+            populatePrincipalVariationTree(currNode);
+            if (currNode.hasClass("principalVariation") == false){
+                userExpandedNodes.push(currNode.data("id"));
+            }
+            cy = cytoscape(treeData);
         }
-        else {
-            // Restore the removed nodes from saved data
-            this.scratch().restData.restore();
-            this.scratch({ restData: null });
+        else{
+            var currentNodeId = currNode.data("id");
+            removePrincipalVariationTree(currNode);
+            cy = cytoscape(treeData);
+            for (var i = 0; i < userExpandedNodes.length; i++){
+                if (userExpandedNodes[i].indexOf(currentNodeId) != -1){
+                    cy.$('#' + userExpandedNodes[i]).removeClass("selectedNode")
+                    userExpandedNodes.splice(i, 1);
+                } 
+            }  
         }
+        cy.ready(function (){
+            for (var i = 0; i < userExpandedNodes.length; i++){
+                var newSubTree = cy.$('#' + userExpandedNodes[i]).successors().targets();
+                newSubTree.addClass("userAddedNode");
+                var clickedOnNode = cy.$('#' + userExpandedNodes[i]);
+                clickedOnNode.addClass("selectedNode");
+
+                cy.style()        
+                .selector('.userAddedNode')
+                .css({
+                    'background-color': 'SlateBlue',
+                })
+                .selector('.selectedNode')
+                .css({
+                    'background-color': 'PaleVioletRed',
+                })
+                .update();    
+            }         
+        });
+        childrenFollowParents(cy);
+        sortNodes(cy);
+        var biggestUnitCountTuple = getLargestUnitCount(cy);
+        intitTreeLables(cy, biggestUnitCountTuple);
+        intitTreeEvents(cy);
     });
 }

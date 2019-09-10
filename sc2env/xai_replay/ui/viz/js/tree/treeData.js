@@ -7,35 +7,43 @@ var treeData = {
         .css({
             'background-color': 'LightSlateGray',
             'height': 1200,
-            'width': 1100,
+            'width': 1800,
             'background-fit': 'cover',
-            'border-color': 'black'
+            'border-color': 'black',
+            'border-width': '10px'
         })
         .selector('.stateNode')
         .css({
             'shape': 'roundrectangle',
-            'height': 1100,
-            'width': 1800
         })
         .selector('.friendlyAction')
         .css({
             'shape': 'polygon',
-            'shape-polygon-points': 'data(points)'
+            'shape-polygon-points': 'data(points)',
+            'width': 1100
         })
         .selector('.enemyAction')
         .css({
             'shape': 'polygon',
-            'shape-polygon-points': 'data(points)'
+            'shape-polygon-points': 'data(points)',
+            'width': 1100,
         })
         .selector('.principalVariation')
         .css({
             'background-color': 'SteelBlue',
-            'border-color': 'black'
+        })
+        .selector('.userAddedEnemyAction')
+        .css({
+            'background-color': 'Green',
+        })
+        .selector('.userAddedFriendlyAction')
+        .css({
+            'background-color': 'Green',
         })
         .selector('edge')
         .css({
             'curve-style': 'straight',
-            'width': 20,
+            'width': 30,
             'target-arrow-shape': 'triangle',
             'line-color': '#ffaaaa',
             'target-arrow-color': '#ffaaaa'
@@ -44,12 +52,12 @@ var treeData = {
         name: 'breadthfirst',
         fit: true, // whether to fit the viewport to the graph
         directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
-        padding: 30, // padding on fit
-        spacingFactor: 1.25, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+        padding: 10, // padding on fit
+        spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
         avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
         nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
         roots: undefined, // the roots of the trees
-        maximal: false, // whether to shift nodes down their natural BFS depths in order to avoid upwards edges (DAGS only)
+        maximal: true, // whether to shift nodes down their natural BFS depths in order to avoid upwards edges (DAGS only)
         ready: undefined, // callback on layoutready
         stop: undefined, // callback on layoutstop
         transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
@@ -64,31 +72,21 @@ var treeData = {
 var cy = undefined;
 function initTree(jsonPath){
         $.getJSON(jsonPath, function(rawSc2Json) {
-        // $.getJSON("js/tree/whole_decision_point_1.json", function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
         populatePrincipalVariationTree(backingTreeRoot);
-        // alert("creating tree")
         // createRootNode(rawSc2Json);
 
         // cyPopulateFriendlyActionUnderState(rawSc2Json);
-        // //alert("telling cytoscape about it")
         cy = cytoscape(treeData);
         cy.center();
-        // //alert("telling children to follow parents")
-        // childrenFollowParents(cy);
         // var root = cy.$('.rootNode');
-        // //alert("biggest unit count")
+        childrenFollowParents(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);
-        // //alert("initTreeLabels")
+        sortNodes(cy);
         intitTreeLables(cy, biggestUnitCountTuple);
-        // //alert("initTreeFunctions")
-        // intitTreeFunctions(cy);    
-        // //alert("sortNodes")
-        // sortNodes(cy);
-        //alert("done");
+        intitTreeEvents(cy);    
     });
 }
-
 
 function forgetCyTree(){
     treeData["elements"] = {  nodes: [],
@@ -111,7 +109,6 @@ function intitTreeLables(cy, biggestUnitCountTuple){
         ]
     );
 }
-
 
 function getStateValues(data){
     stateDict = {};
