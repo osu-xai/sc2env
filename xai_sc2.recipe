@@ -66,12 +66,6 @@ From : ubuntu:16.04
 	pip install git+https://github.com/greydanus/excitationbp.git#egg=excitationbp
 	pip install git+https://github.com/osu-xai/pytorch-saliency
 
-	
-
-	pip install libscaii
-	#(before Lawrence uploaded libscaii to PyPl (the python package index) had to do pip install #git+https://github.com/lwneal/libscaii)
-
-	#update imutil
 
 	# ----------------------  install jpg rendering assistance ----------------------------
 	apt install -y libosmesa6-dev
