@@ -114,8 +114,6 @@ function sortNodes(cy){
     });
 }
 
-
-
 function switchChildrenPositions(cy, currNode, switchNode){
     var currNodeChildren = currNode.successors().targets();
     var switchNodeChildren = switchNode.successors().targets();

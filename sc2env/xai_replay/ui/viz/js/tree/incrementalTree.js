@@ -5,18 +5,42 @@ function forgetBackingTree(){
     backingTreeRoot = undefined;
 }
 function generateBackingTreeOfCynodes(jsonStateNode){
-    alert("start tree build");
     backingTreeRoot = createBackingTreeRootNode(jsonStateNode);
     buildFriendlyActionCynodesUnderStateNode(jsonStateNode, backingTreeRoot);
     //validateStateNode(backingTreeRoot);
     //console.log("finalNodeCount : " + nodeCount);
-    alert("doneTreeBuild");
 }
 function populatePrincipalVariationTree(startingCyNode){
-    var nodes = treeData["elements"]["nodes"];
-    nodes.push(startingCyNode);
-    addFriendlyActionChildrenOfStateNode(startingCyNode);
+    if (cy == undefined){
+        var nodes = treeData["elements"]["nodes"];
+        nodes.push(startingCyNode);
+        addFriendlyActionChildrenOfStateNode(startingCyNode);
+    }
+    else{
+        if (startingCyNode.data("name").indexOf("_action_max") != -1){
+            addEnemyActionChildrenOfBestFriendlyAction(startingCyNode)
+        }
+        else if (startingCyNode.data("name").indexOf("_action_min") != -1){
+            addChildStateNodeOfWorstEnemyAction(startingCyNode);
+        }
+        else{
+            addFriendlyActionChildrenOfStateNode(startingCyNode);
+        }
+    }
 }
+
+function removePrincipalVariationTree(startingCyNode){
+    if (startingCyNode.data("name").indexOf("_action_max") != -1){
+        removeEnemyActionChildrenOfBestFriendlyAction(startingCyNode)
+    }
+    else if (startingCyNode.data("name").indexOf("_action_min") != -1){
+        removeChildStateNodeOfWorstEnemyAction(startingCyNode);
+    }
+    else{
+        removeFriendlyActionChildrenOfStateNode(startingCyNode);
+    }
+}
+
 
 function getBestScoreSibling(nodes) {
     var bestQValueNode = undefined;
@@ -26,8 +50,19 @@ function getBestScoreSibling(nodes) {
             bestQValueNode = node;
         }
         else{
-            if (node["data"]["best q_value"] > bestQValueNode["data"]["best q_value"]){
-                bestQValueNode = node;
+            try{
+                var nodeQValue = node.data("best q_value");
+                var bestNodeQValue = bestQValueNode.data("best q_value");
+                if (nodeQValue > bestNodeQValue){
+                    bestQValueNode = node;
+                }
+            }
+            catch(error){
+                var nodeQValue = node["data"]["best q_value"];
+                var bestNodeQValue = bestQValueNode["data"]["best q_value"]
+                if (nodeQValue > bestNodeQValue){
+                    bestQValueNode = node;
+                }
             }
         }
     }
@@ -42,27 +77,51 @@ function getWorstScoreSibling(nodes) {
             worstQValueNode = node;
         }
         else{
-            if (node["data"]["best q_value"] < worstQValueNode["data"]["best q_value"]){
-                worstQValueNode = node;
+            try{
+                var nodeQValue = node.data("best q_value");
+                var worstNodeQValue = worstQValueNode.data("best q_value");
+                if (nodeQValue < worstNodeQValue){
+                    worstQValueNode = node;
+                }
+            }
+            catch(error){
+                var nodeQValue = node["data"]["best q_value"];
+                var worstNodeQValue = worstQValueNode["data"]["best q_value"]
+                if (nodeQValue < worstNodeQValue){
+                    worstQValueNode = node;
+                }
             }
         }
     }
     return worstQValueNode;
 }
+
 function addFriendlyActionChildrenOfStateNode(stateCyNode){
     // add nodes
     var nodes = treeData["elements"]["nodes"];
-    for (var nodeIndex in stateCyNode["sc2_cyChildren"] ){
-        var node = stateCyNode["sc2_cyChildren"][nodeIndex];
+    try{
+        var stateCyNodeChildren = stateCyNode.data("sc2_cyChildren");
+    }
+    catch(error){
+        var stateCyNodeChildren = stateCyNode["data"]["sc2_cyChildren"]
+    }
+    for (var nodeIndex in stateCyNodeChildren){
+        var node = stateCyNodeChildren[nodeIndex];
         nodes.push(node);
     }
     // add edges
     var edges = treeData["elements"]["edges"];
-    for (var edgeIndex in stateCyNode["sc2_cyEdgesToCyChildren"] ){
-        var edge = stateCyNode["sc2_cyEdgesToCyChildren"][edgeIndex];
+    try{
+        var stateCyNodeEdges = stateCyNode.data("sc2_cyEdgesToCyChildren");
+    }
+    catch(error){
+        var stateCyNodeEdges = stateCyNode["data"]["sc2_cyEdgesToCyChildren"]
+    }
+    for (var edgeIndex in stateCyNodeEdges){
+        var edge = stateCyNodeEdges[edgeIndex];
         edges.push(edge);
     }
-    var bestNode = getBestScoreSibling(stateCyNode["sc2_cyChildren"]);
+    var bestNode = getBestScoreSibling(stateCyNodeChildren);
     if (bestNode != undefined){
         addEnemyActionChildrenOfBestFriendlyAction(bestNode);
     }
@@ -70,24 +129,46 @@ function addFriendlyActionChildrenOfStateNode(stateCyNode){
 function addEnemyActionChildrenOfBestFriendlyAction(friendlyActionCyNode){
     // add nodes
     var nodes = treeData["elements"]["nodes"];
-    for (var nodeIndex in friendlyActionCyNode["sc2_cyChildren"] ){
-        var node = friendlyActionCyNode["sc2_cyChildren"][nodeIndex];
+    try{
+        var friendlyActionCyNodeChildren = friendlyActionCyNode.data("sc2_cyChildren");
+    }
+    catch(error){
+        var friendlyActionCyNodeChildren = friendlyActionCyNode["data"]["sc2_cyChildren"]
+    }
+    for (var nodeIndex in friendlyActionCyNodeChildren){
+        var node = friendlyActionCyNodeChildren[nodeIndex];
         nodes.push(node);
     }
     // add edges
     var edges = treeData["elements"]["edges"];
-    for (var edgeIndex in friendlyActionCyNode["sc2_cyEdgesToCyChildren"] ){
-        var edge = friendlyActionCyNode["sc2_cyEdgesToCyChildren"][edgeIndex];
+    try{
+        var friendlyActionCyNodeEdges = friendlyActionCyNode.data("sc2_cyEdgesToCyChildren");
+    }
+    catch(error){
+        var friendlyActionCyNodeEdges = friendlyActionCyNode["data"]["sc2_cyEdgesToCyChildren"]
+    }
+    for (var edgeIndex in  friendlyActionCyNodeEdges){
+        var edge = friendlyActionCyNodeEdges[edgeIndex];
         edges.push(edge);
     }
-    var worstNode = getWorstScoreSibling(friendlyActionCyNode["sc2_cyChildren"]);
+    var worstNode = getWorstScoreSibling(friendlyActionCyNodeChildren);
     addChildStateNodeOfWorstEnemyAction(worstNode);
 }
 function addChildStateNodeOfWorstEnemyAction(enemyActionCyNode){
-    var node = enemyActionCyNode["sc2_cyChildren"][0];
+    try {
+        var node = enemyActionCyNode.data("sc2_cyChildren")[0];
+    }
+    catch(error){
+        var node = enemyActionCyNode["data"]["sc2_cyChildren"][0];
+    }
     treeData["elements"]["nodes"].push(node);
     // add edges
-    var edge = enemyActionCyNode["sc2_cyEdgesToCyChildren"][0];
+    try{
+        var edge = enemyActionCyNode.data("sc2_cyEdgesToCyChildren")[0];
+    }
+    catch(error){
+        var edge = enemyActionCyNode["data"]["sc2_cyEdgesToCyChildren"][0];
+    }
     treeData["elements"]["edges"].push(edge);
     addFriendlyActionChildrenOfStateNode(node);
 }
@@ -96,8 +177,8 @@ var enemyActionShapePoints =    [-1, -1, 1, -1, 1, .75, 0, 1, -1, .75]
 var friendlyActionShapePoints = [-1, 1, 1, 1, 1, -.75, 0, -1, -1, -.75]
 // from raw json, populating cytoscape data (recursive)
 function buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode){
-   cyStateNode["sc2_cyChildren"] = [];
-   cyStateNode["sc2_cyEdgesToCyChildren"] = [];
+   cyStateNode["data"]["sc2_cyChildren"] = [];
+   cyStateNode["data"]["sc2_cyEdgesToCyChildren"] = [];
     var children = jsonStateNode["children"][0];
     for (var childIndex in children){
         var jsonFriendlyActionNode = children[childIndex];
@@ -106,16 +187,16 @@ function buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode){
         cyFriendlyActionNode["data"]["type"] = "friendlyAction";
         cyFriendlyActionNode["data"]["points"] = friendlyActionShapePoints;
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonStateNode["name"]), trimBestNotationDuplicate(cyFriendlyActionNode["data"]["id"]));
-        cyStateNode["sc2_cyChildren"].push(cyFriendlyActionNode);
-        cyStateNode["sc2_cyEdgesToCyChildren"].push(cyEdge);
+        cyStateNode["data"]["sc2_cyChildren"].push(cyFriendlyActionNode);
+        cyStateNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
         buildEnemyActionCynodesUnderFriendlyActionCynodes(jsonFriendlyActionNode, cyFriendlyActionNode);
     }
 }
 
 
 function buildEnemyActionCynodesUnderFriendlyActionCynodes(jsonFriendlyActionNode, cyFriendlyActionNode){
-    cyFriendlyActionNode["sc2_cyChildren"] = [];
-    cyFriendlyActionNode["sc2_cyEdgesToCyChildren"] = [];
+    cyFriendlyActionNode["data"]["sc2_cyChildren"] = [];
+    cyFriendlyActionNode["data"]["sc2_cyEdgesToCyChildren"] = [];
     var children = jsonFriendlyActionNode["children"][0];
     for (var childIndex in children){
         var jsonEnemyActionNode = children[childIndex];
@@ -124,23 +205,23 @@ function buildEnemyActionCynodesUnderFriendlyActionCynodes(jsonFriendlyActionNod
         cyEnemyActionNode["data"]["type"] = "enemyAction";
         cyEnemyActionNode["data"]["points"] = enemyActionShapePoints;
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonFriendlyActionNode["name"]), trimBestNotationDuplicate(cyEnemyActionNode["data"]["id"]));
-        cyFriendlyActionNode["sc2_cyChildren"].push(cyEnemyActionNode);
-        cyFriendlyActionNode["sc2_cyEdgesToCyChildren"].push(cyEdge);
+        cyFriendlyActionNode["data"]["sc2_cyChildren"].push(cyEnemyActionNode);
+        cyFriendlyActionNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
         buildStateCyNodeUnderEnemyActionCynode(jsonEnemyActionNode, cyEnemyActionNode);
     }
 }
   
 function buildStateCyNodeUnderEnemyActionCynode(jsonEnemyActionNode, cyEnemyActionNode){
-    cyEnemyActionNode["sc2_cyChildren"] = [];
-    cyEnemyActionNode["sc2_cyEdgesToCyChildren"] = [];
+    cyEnemyActionNode["data"]["sc2_cyChildren"] = [];
+    cyEnemyActionNode["data"]["sc2_cyEdgesToCyChildren"] = [];
     var children = jsonEnemyActionNode["children"][0];
     for (var childIndex in children){
         var jsonStateNode = children[childIndex];
         var className = "stateNode";
         var cyStateNode = getCyNodeFromJsonNode(jsonStateNode, jsonEnemyActionNode["name"], className);
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonEnemyActionNode["name"]), trimBestNotationDuplicate(cyStateNode["data"]["id"]));
-        cyEnemyActionNode["sc2_cyChildren"].push(cyStateNode);
-        cyEnemyActionNode["sc2_cyEdgesToCyChildren"].push(cyEdge);
+        cyEnemyActionNode["data"]["sc2_cyChildren"].push(cyStateNode);
+        cyEnemyActionNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
         buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode);
     }
 }
@@ -154,10 +235,119 @@ function createBackingTreeRootNode(inputJsonTree){
         var key = rootNodeKeys[keyIndex];
         rootNode["data"][key] = inputJsonTree[key];
     }
-    rootNode["data"]["id"] = inputJsonTree["name"];
+    rootNode["data"]["id"] = trimBestNotationDuplicate(inputJsonTree["name"]);
     rootNode["data"]["root"] = "iAmRoot";
     rootNode["classes"] = "stateNode rootNode principalVariation";
     return rootNode;
 }
 
 
+
+function removeFriendlyActionChildrenOfStateNode(stateCyNode){
+    // add nodes
+    var nodes = treeData["elements"]["nodes"];
+    try{
+        var stateCyNodeChildren = stateCyNode.data("sc2_cyChildren");
+    }
+    catch(error){
+        var stateCyNodeChildren = stateCyNode["data"]["sc2_cyChildren"]
+    }
+    for (var nodeIndex in stateCyNodeChildren){
+        var node = stateCyNodeChildren[nodeIndex];
+        for (var treeDataNodeIndex in nodes){
+            var currNodeData = nodes[treeDataNodeIndex]["data"];
+            if (currNodeData["id"] == node["data"]["id"]){
+                nodes.splice(treeDataNodeIndex, 1);
+            }
+        }
+    }
+    // add edges
+    var edges = treeData["elements"]["edges"];
+    try{
+        var stateCyNodeEdges = stateCyNode.data("sc2_cyEdgesToCyChildren");
+    }
+    catch(error){
+        var stateCyNodeEdges = stateCyNode["data"]["sc2_cyEdgesToCyChildren"]
+    }
+    for (var edgeIndex in stateCyNodeEdges){
+        var edge = stateCyNodeEdges[edgeIndex];
+        for (treeDataEdgeIndex in edges){
+            var currEdgeData = edges[treeDataEdgeIndex]["data"]
+            if (currEdgeData["target"] == edge["data"]["target"] && currEdgeData["source"] == edge["data"]["source"]){
+                edges.splice(treeDataEdgeIndex, 1);
+            }
+        }
+    }
+    var bestNode = getBestScoreSibling(stateCyNodeChildren);
+    if (bestNode != undefined){
+        removeEnemyActionChildrenOfBestFriendlyAction(bestNode);
+    }
+}
+function removeEnemyActionChildrenOfBestFriendlyAction(friendlyActionCyNode){
+    // add nodes
+    var nodes = treeData["elements"]["nodes"];
+    try{
+        var friendlyActionCyNodeChildren = friendlyActionCyNode.data("sc2_cyChildren");
+    }
+    catch(error){
+        var friendlyActionCyNodeChildren = friendlyActionCyNode["data"]["sc2_cyChildren"]
+    }
+    for (var nodeIndex in friendlyActionCyNodeChildren){
+        var node = friendlyActionCyNodeChildren[nodeIndex];
+        for (var treeDataNodeIndex in nodes){
+            var currNodeData = nodes[treeDataNodeIndex]["data"];
+            if (currNodeData["id"] == node.data["id"]){
+                nodes.splice(treeDataNodeIndex, 1);
+            }
+        }
+    }
+    // add edges
+    var edges = treeData["elements"]["edges"];
+    try{
+        var friendlyActionCyNodeEdges = friendlyActionCyNode.data("sc2_cyEdgesToCyChildren");
+    }
+    catch(error){
+        var friendlyActionCyNodeEdges = friendlyActionCyNode["data"]["sc2_cyEdgesToCyChildren"]
+    }
+    for (var edgeIndex in  friendlyActionCyNodeEdges){
+        var edge = friendlyActionCyNodeEdges[edgeIndex];
+        for (treeDataEdgeIndex in edges){
+            var currEdgeData = edges[treeDataEdgeIndex]["data"]
+            if (currEdgeData["target"] == edge["data"]["target"] && currEdgeData["source"] == edge["data"]["source"]){
+                edges.splice(treeDataEdgeIndex, 1);
+            }
+        }
+    }
+    var worstNode = getWorstScoreSibling(friendlyActionCyNodeChildren);
+    removeChildStateNodeOfWorstEnemyAction(worstNode);
+}
+function removeChildStateNodeOfWorstEnemyAction(enemyActionCyNode){
+    try {
+        var node = enemyActionCyNode.data("sc2_cyChildren")[0];
+    }
+    catch(error){
+        var node = enemyActionCyNode["data"]["sc2_cyChildren"][0];
+    }
+    var nodes = treeData["elements"]["nodes"];
+    for (var treeDataNodeIndex in nodes){
+        var currNodeData = nodes[treeDataNodeIndex]["data"];
+        if (currNodeData["id"] == node["data"]["id"]){
+            nodes.splice(treeDataNodeIndex, 1);
+        }
+    }
+    // add edges
+    try{
+        var edge = enemyActionCyNode.data("sc2_cyEdgesToCyChildren")[0];
+    }
+    catch(error){
+        var edge = enemyActionCyNode["data"]["sc2_cyEdgesToCyChildren"][0];
+    }
+    var edges = treeData["elements"]["edges"];
+    for (treeDataEdgeIndex in edges){
+        var currEdgeData = edges[treeDataEdgeIndex]["data"]
+        if (currEdgeData["target"] == edge["data"]["target"] && currEdgeData["source"] == edge["data"]["source"]){
+            edges.splice(treeDataEdgeIndex, 1);
+        }
+    }
+    removeFriendlyActionChildrenOfStateNode(node);
+}
