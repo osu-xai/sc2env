@@ -86,7 +86,7 @@ function initTree(jsonPath){
         // //alert("sortNodes")
         // sortNodes(cy);
         //alert("done");
-    });
+    });//.error(function() { alert("can't load file " + jsonPath); })
 }
 
 

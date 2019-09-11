@@ -114,7 +114,7 @@ function loadReplayFile(filename) {//SC2_OK
     //SC2_DEFERRED_END
     clearStudyQuestionMode();
 	controlsManager.startLoadReplayFile();
-	chosenFile = filename;
+    chosenFile = filename;
 	//console.log("    file selected: " + chosenFile);
 	
     clearUIElementsForNewFile();
@@ -356,6 +356,7 @@ function renderUnitValues(frameInfo){
                 if (!buildTreeOnDemand){
                     forgetCyTree();
                     initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
+                    //initTree("js/tree/json/" + chosenFile + "/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
                 }
                 return;
             }
