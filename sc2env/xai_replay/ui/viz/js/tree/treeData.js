@@ -70,9 +70,11 @@ var treeData = {
 
   
 var cy = undefined;
-function initTree(jsonPath){
+function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
+        generateStoryLines(backingTreeRoot, frameNumber);
+        renderStoryLinesDefaultView(frameNumber);
         // populatePrincipalVariationTree(backingTreeRoot);
         createRootNode(rawSc2Json)
         populateCompleteTree(rawSc2Json)
@@ -176,6 +178,7 @@ function createRootNode(inputJsonTree){
     rootNode["data"]["id"] = inputJsonTree["name"];
     rootNode["data"]["root"] = "iAmRoot";
     rootNode["classes"] = "stateNode rootNode principalVariation";
+    rootNode["data"]["sc2_nodeType"] = "stateNode";
     nodes.push(rootNode);
 }
 
@@ -271,3 +274,32 @@ function cyPopulateStateNodesUnderEnemyActions(jsonEnemyActionNode){
         cyPopulateFriendlyActionUnderState(jsonStateNode);
     }
 }
+
+
+function openExplanationView(evt, viewName) {
+    // Declare all variables
+    var i, tabcontent, tabbuttons, tabcontentTagAlong;
+  
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    // Get all elements with class="tabcontent" and hide them
+    tabcontentTagAlong = document.getElementsByClassName("tabcontent-tag-along");
+    for (i = 0; i < tabcontentTagAlong.length; i++) {
+        tabcontentTagAlong[i].style.display = "none";
+    }
+    // Get all elements with class="tabbuttons" and remove the class "active"
+    tabbuttons = document.getElementsByClassName("tabbutton");
+    for (i = 0; i < tabbuttons.length; i++) {
+        tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+    }
+  
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(viewName).style.display = "block";
+    evt.currentTarget.className += " active";
+    if (viewName == "cy"){
+        document.getElementById("unit-legend").style.display = "block";
+    }
+  }

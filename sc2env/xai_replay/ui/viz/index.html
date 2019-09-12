@@ -138,16 +138,30 @@
                         </div>-->
                         <div id="game-row" class="flex-row">
 
-                            <div id="fullscreen-modal" style="display:none;">
-                                <ul style="list-style-type: square;font-size:18px;position:absolute;top:1%;left:1%;width:10%;background-color:#333333; border-radius: 3px; border: 2px solid black">
-                                    <li style="color:darkgray;">Marines</li>
-                                    <li style="color:darkorange;">Banelings</li>
-                                    <li style="color:blue;">Immortals</li>
-                                    <li style="color:yellow;">Pylons</li>
-                                    <li style="color:green;">Nexus Health</li>
-                                </ul>
-                                <div id="cy" style="width:100%;height:100%;position:absolute;"></div>
+                            <div id="fullscreen-modal" style="display:none;" class="master-tab-container">
+                                <div id="explanation-ui" class="flex-column" style="width:100%;height:100%;position:absolute">
+                                    <div id="explanation-tab" class="flex-row">
+                                        <button class="tabbutton active" onclick="openExplanationView(event, 'cy')">Tree View</button>
+                                        <button class="tabbutton" onclick="openExplanationView(event, 'linear')">Linear View</button>
+                                    </div>
+                                    <div id="explanation-content" style="width:100%;height:100%">
+                                        <div id="cy" style="width:100%;height:100%;display:block" class="tabcontent">
+                                            <ul id="unit-legend" class="tabcontent-tag-along" style="display:block;list-style-type: square;font-size:18px;position:absolute;top:3%;left:1%;width:10%;background-color:#333333; border-radius: 3px; border: 2px solid black">
+                                                <li style="color:darkgray;">Marines</li>
+                                                <li style="color:darkorange;">Banelings</li>
+                                                <li style="color:blue;">Immortals</li>
+                                                <li style="color:yellow;">Pylons</li>
+                                                <li style="color:green;">Nexus Health</li>
+                                            </ul>
+                                        </div>
+                                        <div id="linear" style="width:100%;height:100%;display:none" class="tabcontent"></div>
+                                    </div>
+                                </div>
                                 <!--<script src="js/tree/treeTestData.js"></script>-->
+                                <script src="js/linear/storyLineUI.js"></script>
+                                <script src="js/linear/defaultView.js"></script>
+                                <script src="js/linear/storyLine.js"></script>
+                                <script src="js/linear/storyLines.js"></script>
                                 <script src="js/tree/treeData.js"></script>
                                 <script src="js/tree/incrementalTree.js"></script>
                                 <script src="js/tree/incrementalTreeUtils.js"></script>

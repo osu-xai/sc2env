@@ -496,7 +496,9 @@ function sizeNonGeneratedElements() {
                     forgetCyTree();
                     forgetBackingTree();
                     var frameInfo = activeSC2DataManager.getFrameInfo(step);
-                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
+                    var treeDataDir = "js/tree/json/" + chosenFile;
+                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json",frameInfo.frame_number);
+                    //initTree(treeDataDir + "/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
                     frameOfCurrentTree = step;
                 }
             }
