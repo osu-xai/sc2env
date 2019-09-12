@@ -9,6 +9,7 @@ function intitTreeEvents(cy){
 function addOrRemoveSubTree(cy){
     cy.on('click', 'node', function (evt) {
         var currNode = evt.target;
+        alert(currNode.data("id"))
         if (currNode.successors().targets().size() <= 0){
             populatePrincipalVariationTree(currNode);
             if (currNode.hasClass("principalVariation") == false){

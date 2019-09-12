@@ -73,18 +73,20 @@ var cy = undefined;
 function initTree(jsonPath){
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
-        populatePrincipalVariationTree(backingTreeRoot);
-        // createRootNode(rawSc2Json);
-
-        // cyPopulateFriendlyActionUnderState(rawSc2Json);
-        cy = cytoscape(treeData);
-        cy.center();
-        // var root = cy.$('.rootNode');
-        childrenFollowParents(cy);
-        var biggestUnitCountTuple = getLargestUnitCount(cy);
-        sortNodes(cy);
-        intitTreeLables(cy, biggestUnitCountTuple);
-        intitTreeEvents(cy);    
+        // populatePrincipalVariationTree(backingTreeRoot);
+        createRootNode(rawSc2Json)
+        populateCompleteTree(rawSc2Json)
+        initQueryTrees();
+        switchQueryTrees(0, cyTreeDataList)
+        // cy = cytoscape(treeData);
+        cy.ready(function(){
+            cy.center();
+            childrenFollowParents(cy);
+            var biggestUnitCountTuple = getLargestUnitCount(cy);
+            sortNodes(cy);
+            intitTreeLables(cy, biggestUnitCountTuple);
+            intitTreeEvents(cy); 
+        });
     });
 }
 
