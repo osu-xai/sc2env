@@ -1,10 +1,10 @@
 var storyLinesForFrame = {};
 
 function generateStoryLines(backingTreeRoot, frameNumber){
-    if (storyLinesForFrame[frameNumber] == undefined){
+    if (storyLinesForFrame[frameNumber.toString()] == undefined){
         var leafStateNodes = getLeafStateNodes(backingTreeRoot);
         console.log("leafStateNode count " + leafStateNodes.length);
-        storyLinesForFrame[frameNumber] = StoryLines(leafStateNodes);
+        storyLinesForFrame[frameNumber.toString()] = new StoryLines(leafStateNodes);
     }
 }
 
@@ -21,17 +21,17 @@ function StoryLines(leafStateNodes){
     }
 }
 
-StoryLines.prototype.getWidth(){
+StoryLines.prototype.getWidth = function(){
     return this.storyLines.length;
 }
-StoryLines.prototype.getDepth(){
+StoryLines.prototype.getDepth = function(){
     return this.storyLines[0].length;
 }
-StoryLines.prototype.applyCommandSequence(commands){
+StoryLines.prototype.applyCommandSequence = function(commands){
 
 }
 
-StoryLines.prototype.clearViewData(){
+StoryLines.prototype.clearViewData = function(){
 
 }
 

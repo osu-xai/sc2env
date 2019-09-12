@@ -1,5 +1,5 @@
 var backingTreeRoot = undefined;
-var buildTreeOnDemand = false;
+var buildTreeOnDemand = true;
 var frameOfCurrentTree = undefined;
 function forgetBackingTree(){
     backingTreeRoot = undefined;
@@ -186,6 +186,8 @@ function buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode){
         var cyFriendlyActionNode = getCyNodeFromJsonNode(jsonFriendlyActionNode, jsonStateNode["name"], className);
         cyFriendlyActionNode["data"]["type"] = "friendlyAction";
         cyFriendlyActionNode["data"]["points"] = friendlyActionShapePoints;
+        cyFriendlyActionNode["data"]["sc2_cyParent"] = cyStateNode;
+        cyFriendlyActionNode["data"]["sc2_nodeType"] = className;
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonStateNode["name"]), trimBestNotationDuplicate(cyFriendlyActionNode["data"]["id"]));
         cyStateNode["data"]["sc2_cyChildren"].push(cyFriendlyActionNode);
         cyStateNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
@@ -204,6 +206,9 @@ function buildEnemyActionCynodesUnderFriendlyActionCynodes(jsonFriendlyActionNod
         var cyEnemyActionNode = getCyNodeFromJsonNode(jsonEnemyActionNode, jsonFriendlyActionNode["name"], className);
         cyEnemyActionNode["data"]["type"] = "enemyAction";
         cyEnemyActionNode["data"]["points"] = enemyActionShapePoints;
+        cyEnemyActionNode["data"]["sc2_cyParent"] = cyFriendlyActionNode;
+        cyEnemyActionNode["data"]["sc2_nodeType"] = className;
+
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonFriendlyActionNode["name"]), trimBestNotationDuplicate(cyEnemyActionNode["data"]["id"]));
         cyFriendlyActionNode["data"]["sc2_cyChildren"].push(cyEnemyActionNode);
         cyFriendlyActionNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
@@ -219,6 +224,9 @@ function buildStateCyNodeUnderEnemyActionCynode(jsonEnemyActionNode, cyEnemyActi
         var jsonStateNode = children[childIndex];
         var className = "stateNode";
         var cyStateNode = getCyNodeFromJsonNode(jsonStateNode, jsonEnemyActionNode["name"], className);
+        cyStateNode["data"]["sc2_nodeType"] = className;
+        cyStateNode["data"]["sc2_cyParent"] = cyEnemyActionNode;
+
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonEnemyActionNode["name"]), trimBestNotationDuplicate(cyStateNode["data"]["id"]));
         cyEnemyActionNode["data"]["sc2_cyChildren"].push(cyStateNode);
         cyEnemyActionNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
@@ -238,6 +246,7 @@ function createBackingTreeRootNode(inputJsonTree){
     rootNode["data"]["id"] = trimBestNotationDuplicate(inputJsonTree["name"]);
     rootNode["data"]["root"] = "iAmRoot";
     rootNode["classes"] = "stateNode rootNode principalVariation";
+    rootNode["data"]["sc2_nodeType"] = "stateNode";
     return rootNode;
 }
 

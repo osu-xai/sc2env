@@ -12,7 +12,7 @@ function createStoryLineUI(){
     ui.storyLinesDiv = ui.createStoryLinesDiv();
 
     
-    ui.createPrincipleVariationDiv = function(){
+    ui.createPrincipalVariationDiv = function(){
         var div  = document.createElement('div');
         div.setAttribute("id", "principal-variation-div");
         div.setAttribute("style", "display :grid; grid-row-gap:"+ this.gridRowGap + ";");
@@ -20,10 +20,10 @@ function createStoryLineUI(){
       
     }
 
-    ui.principleVariationDiv = ui.createPrincipleVariationDiv();
+    ui.principalVariationDiv = ui.createPrincipalVariationDiv();
 
     
-    ui.createQueryNavigator = function(){
+    ui.createQueryNavigatorDiv = function(){
         var div  = document.createElement('div');
         return div; 
     } 
@@ -41,41 +41,44 @@ function createStoryLineUI(){
         div.setAttribute("id", "story-line-ui");
         div.setAttribute("style", "display :grid");
 
-        this.queryNavigator.setAttribute("style", getGridPositionStyleString(0,0) + ';background-color:red');
-        div.append(this.queryNavigator);
+        this.queryNavigatorDiv.setAttribute("style", getGridPositionStyleString(0,0) + ';background-color:red;');
+        div.append(this.queryNavigatorDiv);
 
-        this.queryInterfaceDiv.setAttribute("style", getGridPositionStyleString(0,1) + ';background-color:green');
+        this.queryInterfaceDiv.setAttribute("style", getGridPositionStyleString(0,1) + ';background-color:green;');
         div.append(this.queryInterfaceDiv);
 
-        principleVariationDiv.setAttribute("style", getGridPositionStyleString(1,0) + ';background-color:blue');
-        div.append(principleVariationDiv);
+        this.principalVariationDiv.setAttribute("style", getGridPositionStyleString(1,0) + ';background-color:blue;');
+        div.append(this.principalVariationDiv);
         
-        this.storyLinesDiv.setAttribute("style", getGridPositionStyleString(1,1) + ';background-color:yellow');
+        this.storyLinesDiv.setAttribute("style", getGridPositionStyleString(1,1) + ';background-color:yellow;');
         div.append(this.storyLinesDiv);
-        
+        var linearDiv = document.getElementById("linear");
+        linearDiv.append(div);
         return div;
     }
 
     ui.uiDiv = ui.createUIDiv();
 
 
-
-    ui.populatePrincipleVariation = function(storyLines){
+    ui.init = function(storyLines){
+        this.populatePrincipalVariation(storyLines);
+    }
+    ui.populatePrincipalVariation = function(storyLines){
         var pv = storyLines.principalVariationStoryLine;
         addStoryLineDivToContainer(pv, this.principalVariationDiv, 0);
     }
     ui.populateStoryLinesDefault = function(storyLines){
         var containerDiv  = document.createElement('div');
         containerDiv.setAttribute("id", "story-lines-default");
-        containerDiv.setAttribute("style", 'display:grid;grid-row-gap:' + this.gridRowGap + 'margin-left:10px;margin-bottom:0px;margin-top:6px;font-family:Arial;font-size:14px;');
+        containerDiv.setAttribute("style", 'display:grid;grid-row-gap:' + this.gridRowGap + ';margin-left:10px;margin-bottom:0px;margin-top:6px;font-family:Arial;font-size:14px;');
         for (var index in storyLines.storyLines){
             var storyLine = storyLines.storyLines[index];
             addStoryLineDivToContainer(storyLine, containerDiv, index);
         }
+        $("#story-lines").append(containerDiv);
     }
+    return ui;
 }
-var storyLineUI = createStoryLineUI();
-   
 
 function getGridPositionStyleString(gridX, gridY) {
 	var columnStart = Number(gridX) + 1;
@@ -98,3 +101,6 @@ function addStoryLineDivToContainer(storyLine, container, column){
         container.append(div);
     }
 }
+
+var storyLineUI = createStoryLineUI();
+   
