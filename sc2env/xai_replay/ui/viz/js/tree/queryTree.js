@@ -26,14 +26,18 @@ function createTreeDivs(){
     for (var titledTreeListIndex in titledTreeList){
         var div = document.createElement("div");
         div.setAttribute("id", "cy" + titledTreeListIndex);
-        div.setAttribute("style", "width:100%; height:100%; display:block;");
+        div.setAttribute("style", "width:100%; height:98%; display:block;");
+        var buttonCount = 0;
         for (var i = 0; i < titledTreeList.length; i++){
             if(titledTreeListIndex != i){
                 var button = document.createElement("button");
                 var buttonText = document.createTextNode(titledTreeList[i]["title"]); 
                 button.appendChild(buttonText);  
                 button.setAttribute("onclick", "switchQueryTrees(" + i + ", cyTreeDataList)")
-                div.appendChild(button);
+                button.setAttribute("id", "cyButton" + titledTreeListIndex)
+                button.setAttribute("style", "position:absolute; z-index:1001; bottom:" + buttonCount*button.clientHeight + "px; display:block;");
+                cyDiv.appendChild(button);
+                buttonCount++;
             }
         }
             cyDiv.appendChild(div);
@@ -51,9 +55,13 @@ function appropriateCyContainers(cyTreeDataList){
 function switchQueryTrees(treeNumber, cyTreeDataList){
     for (cyTreeDataListIndex in cyTreeDataList){
         var currContainer = document.getElementById('cy' + cyTreeDataListIndex);
-        currContainer.setAttribute("style", "height:100%; width:100%; display:none;")
+        var currButton = document.getElementById('cyButton' + cyTreeDataListIndex);
+        currContainer.setAttribute("style", "height:98%; width:100%; display:none;")
+        currButton.style.display = "none";
     }
-    document.getElementById('cy' + treeNumber).setAttribute("style", "display:block; height:100%; width:100%;");
+    document.getElementById('cy' + treeNumber).setAttribute("style", "display:block; height:98%; width:100%;");
+    document.getElementById('cyButton' + treeNumber).style.display = "block";
+
     cy = cytoscape(cyTreeDataList[treeNumber]);
 
     cy.ready(function(){
