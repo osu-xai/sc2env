@@ -104,6 +104,9 @@ function unmentionNonSharedNodes(){
             for (var sharedNodesIndex in treeNodesInfo){
                 var currSharedNode = treeNodesInfo[sharedNodesIndex]
                 if (currSharedNode["cyID"] == currCyNode["data"]["id"]){
+                    if (currSharedNode["highlight"] == true){
+                        currCyNode["classes"] += " matchedQueryNode";
+                    }
                     savedNodesCopy.push(currCyNode);
                 }
             }
@@ -269,11 +272,11 @@ titledTreeList = [
                             },
                             {
                                 cyID: "dp2_level2_action_min_12012",
-                                highlight: false
+                                highlight: true
                             },
                             {
                                 cyID: "dp2_level2_state_120120",
-                                highlight: true
+                                highlight: false
                             },
                             ///////////
                             {

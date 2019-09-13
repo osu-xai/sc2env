@@ -50,10 +50,7 @@ var treeStyle =
     .principalVariation { \
         background-color: SteelBlue; \
     } \
-    .userAddedEnemyAction{ \
-        background-color: Green; \
-    } \
-    .userAddedFriendlyAction { \
+    .matchedQueryNode { \
         background-color: Green; \
     } \
     edge { \
