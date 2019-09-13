@@ -114,6 +114,13 @@ function sortNodes(cy){
     });
 }
 
+function restateLayout(cy){
+  cy.style().fromString(treeStyle).update()
+  var layout = cy.layout(treeLayout);
+  layout.run();
+}
+
+
 function switchChildrenPositions(cy, currNode, switchNode){
     var currNodeChildren = currNode.successors().targets();
     var switchNodeChildren = switchNode.successors().targets();

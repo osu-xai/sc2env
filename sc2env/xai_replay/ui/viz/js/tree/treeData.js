@@ -64,9 +64,6 @@ var treeStyle =
         target-arrow-color: #ffaaaa; \
     } ';
 
-
-
-  
 var cy = undefined;
 function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
@@ -74,18 +71,20 @@ function initTree(jsonPath, frameNumber){
         generateStoryLines(backingTreeRoot, frameNumber);
         renderStoryLinesDefaultView(frameNumber);
         // populatePrincipalVariationTree(backingTreeRoot);
+
         createRootNode(rawSc2Json)
         populateCompleteTree(rawSc2Json)
         initQueryTrees();
-        switchQueryTrees(0, cyTreeDataList)
-        // cy = cytoscape(treeData);
+        // switchQueryTrees(0, cyTreeDataList)
+        cy = cytoscape(treeData);
         cy.ready(function(){
+            restateLayout(cy);
             cy.center();
             childrenFollowParents(cy);
             var biggestUnitCountTuple = getLargestUnitCount(cy);
             sortNodes(cy);
             intitTreeLables(cy, biggestUnitCountTuple);
-            intitTreeEvents(cy); 
+            intitTreeEvents(cy);
         });
     });
 }

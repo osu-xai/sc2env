@@ -8,8 +8,7 @@ function intitTreeEvents(cy){
 
 function addOrRemoveSubTree(cy){
     cy.on('click', 'node', function (evt) {
-        var currNode = evt.target;
-        alert(currNode.data("id"))
+        var currNode = evt.target;       
         if (currNode.successors().targets().size() <= 0){
             populatePrincipalVariationTree(currNode);
             if (currNode.hasClass("principalVariation") == false){
@@ -45,7 +44,8 @@ function addOrRemoveSubTree(cy){
                     'background-color': 'PaleVioletRed',
                 })
                 .update();    
-            }         
+            } 
+            restateLayout(cy);        
         });
         childrenFollowParents(cy);
         sortNodes(cy);

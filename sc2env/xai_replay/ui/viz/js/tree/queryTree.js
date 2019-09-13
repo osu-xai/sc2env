@@ -17,6 +17,8 @@ function copyTreeDataForTitledTree(){
         var treeDataCopy = JSON.parse(JSON.stringify(treeData));
         cyTreeDataList.push(treeDataCopy);
     }
+    var treeDataCopy = JSON.parse(JSON.stringify(treeData));
+    cyTreeDataList.push(treeDataCopy);
 }
 
 
@@ -26,7 +28,7 @@ function createTreeDivs(){
     for (var titledTreeListIndex in titledTreeList){
         var div = document.createElement("div");
         div.setAttribute("id", "cy" + titledTreeListIndex);
-        div.setAttribute("style", "width:100%; height:100%; display:block;");
+        div.setAttribute("style", "width:100%; height:100%; display:none;");
         cyDiv.appendChild(div);
     }
     for (var i = 0; i < titledTreeList.length; i++){
@@ -35,9 +37,17 @@ function createTreeDivs(){
         button.appendChild(buttonText);  
         button.setAttribute("onclick", "switchQueryTrees(" + i + ", cyTreeDataList)")
         button.setAttribute("id", "cyButton" + i)
-        button.setAttribute("style", "position:absolute; z-index:1001; display:none; height:35px;");
+        button.setAttribute("style", "position:absolute; z-index:1001; display:block; height:35px;");
+        button.style.bottom = i*35 + "px";
         cyDiv.appendChild(button);
     }
+    var button = document.createElement("button");
+    var buttonText = document.createTextNode("Whole Tree View"); 
+    button.appendChild(buttonText);  
+    button.setAttribute("onclick", "hideAllQueryTrees()")
+    button.setAttribute("id", "cyButtonDefaultView")
+    button.setAttribute("style", "position:absolute; z-index:1001; display:none; height:35px;");
+    cyDiv.appendChild(button);
 }
 
 
@@ -51,8 +61,8 @@ function appropriateCyContainers(cyTreeDataList){
 
 
 function switchQueryTrees(treeNumber, cyTreeDataList){
-    var buttonCounter = 0;
-    for (cyTreeDataListIndex in cyTreeDataList){
+    var buttonCounter = 1;
+    for (cyTreeDataListIndex in titledTreeList){
         var currContainer = document.getElementById('cy' + cyTreeDataListIndex);
         var currButton = document.getElementById('cyButton' + cyTreeDataListIndex);
         currContainer.setAttribute("style", "height:100%; width:100%; display:none;")
@@ -66,6 +76,8 @@ function switchQueryTrees(treeNumber, cyTreeDataList){
             currButton.style.display = "none";
         }
     }
+    document.getElementById('cyButtonDefaultView').style.display = "block";
+    document.getElementById('cyButtonDefaultView').style.bottom = "0px";
     document.getElementById('cy' + treeNumber).setAttribute("style", "display:block; height:100%; width:100%;");
     cy = cytoscape(cyTreeDataList[treeNumber]);
 
@@ -82,7 +94,7 @@ function switchQueryTrees(treeNumber, cyTreeDataList){
 
 
 function unmentionNonSharedNodes(){
-    for (var treeDataIndex = 0; treeDataIndex < cyTreeDataList.length; treeDataIndex++){
+    for (var treeDataIndex = 0; treeDataIndex < titledTreeList.length; treeDataIndex++){
         var currTreeData = cyTreeDataList[treeDataIndex];
         var currTitledTree = titledTreeList[treeDataIndex];
         var treeNodesInfo = currTitledTree["treeNodesInfo"];
@@ -123,13 +135,16 @@ function unmentionNonSharedNodes(){
     return cyTreeDataList;
 }
 
-
-function restateLayout(cy){
-    cy.style().fromString(treeStyle).update()
-    var layout = cy.layout(treeLayout);
-    layout.run();
+function hideAllQueryTrees(){
+    for (var titledTreeListIndex in titledTreeList){
+        var currContainer = document.getElementById('cy' + titledTreeListIndex);
+        currContainer.setAttribute("style", "height:100%; width:100%; display:none;")
+        var currButton = document.getElementById('cyButton' + titledTreeListIndex);
+        currButton.style.bottom = titledTreeListIndex*35 + "px";
+        currButton.style.display = "block";
+    }
+    document.getElementById('cyButtonDefaultView').style.display = "none";
 }
-
 
 titledTreeList = [ 
                     {
@@ -233,27 +248,85 @@ titledTreeList = [
                         querys: [],
                         treeNodesInfo: [
                             {
-                                cyID: "dp1_level1_action_max_3",
-                                highlight: true
+                                cyID: "dp2_level2_action_max_1201",
+                                highlight: false
                             },
                             {
-                                cyID: "dp1_level1_action_min_30",
+                                cyID: "dp2_level2_state_120_best",
                                 highlight: false 
                             },
                             {
-                                cyID: "dp2_level2_state_300030",
+                                cyID: "dp1_level1_action_min_12_best",
                                 highlight: false
                             },
                             {
-                                cyID: "dp2_level2_action_min_30003",
+                                cyID: "dp1_level1_action_max_1_best",
                                 highlight: false
                             },
                             {
-                                cyID: "dp2_level2_action_max_3000",
+                                cyID: "dp1_level1_state",
                                 highlight: false
                             },
                             {
-                                cyID: "dp2_level2_state_300",
+                                cyID: "dp2_level2_action_min_12012",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_120120",
+                                highlight: true
+                            },
+                            ///////////
+                            {
+                                cyID: "dp2_level2_state_020320",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_02032",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_0203",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_020",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_02",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_0",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            },
+                            ///////////////
+                            {
+                                cyID: "dp2_level2_state_120130",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_12013",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_1201",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp2_level2_state_120_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_12_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_1_best",
                                 highlight: false
                             },
                             {
@@ -262,4 +335,4 @@ titledTreeList = [
                             }
                         ]
                     }
-                ]
+                ];
