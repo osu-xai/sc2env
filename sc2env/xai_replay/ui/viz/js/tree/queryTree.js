@@ -1,5 +1,4 @@
 var cyTreeDataList = [];
-var cyQuery = undefined;
 
 function initQueryTrees(){
     copyTreeDataForTitledTree();
@@ -18,7 +17,10 @@ function copyTreeDataForTitledTree(){
         var treeDataCopy = JSON.parse(JSON.stringify(treeData));
         cyTreeDataList.push(treeDataCopy);
     }
+    var treeDataCopy = JSON.parse(JSON.stringify(treeData));
+    cyTreeDataList.push(treeDataCopy);
 }
+
 
 function createTreeDivs(){
     var titledTreeList = getTitledTreeList();
@@ -26,23 +28,28 @@ function createTreeDivs(){
     for (var titledTreeListIndex in titledTreeList){
         var div = document.createElement("div");
         div.setAttribute("id", "cy" + titledTreeListIndex);
-        div.setAttribute("style", "width:100%; height:98%; display:block;");
-        var buttonCount = 0;
-        for (var i = 0; i < titledTreeList.length; i++){
-            if(titledTreeListIndex != i){
-                var button = document.createElement("button");
-                var buttonText = document.createTextNode(titledTreeList[i]["title"]); 
-                button.appendChild(buttonText);  
-                button.setAttribute("onclick", "switchQueryTrees(" + i + ", cyTreeDataList)")
-                button.setAttribute("id", "cyButton" + titledTreeListIndex)
-                button.setAttribute("style", "position:absolute; z-index:1001; bottom:" + buttonCount*button.clientHeight + "px; display:block;");
-                cyDiv.appendChild(button);
-                buttonCount++;
-            }
-        }
-            cyDiv.appendChild(div);
+        div.setAttribute("style", "width:100%; height:100%; display:none;");
+        cyDiv.appendChild(div);
     }
+    for (var i = 0; i < titledTreeList.length; i++){
+        var button = document.createElement("button");
+        var buttonText = document.createTextNode(titledTreeList[i]["title"]); 
+        button.appendChild(buttonText);  
+        button.setAttribute("onclick", "switchQueryTrees(" + i + ", cyTreeDataList)")
+        button.setAttribute("id", "cyButton" + i)
+        button.setAttribute("style", "position:absolute; z-index:1001; display:block; height:35px;");
+        button.style.bottom = i*35 + "px";
+        cyDiv.appendChild(button);
+    }
+    var button = document.createElement("button");
+    var buttonText = document.createTextNode("Whole Tree View"); 
+    button.appendChild(buttonText);  
+    button.setAttribute("onclick", "hideAllQueryTrees()")
+    button.setAttribute("id", "cyButtonDefaultView")
+    button.setAttribute("style", "position:absolute; z-index:1001; display:none; height:35px;");
+    cyDiv.appendChild(button);
 }
+
 
 function appropriateCyContainers(cyTreeDataList){
     for (cyTreeDataListIndex in cyTreeDataList){
@@ -52,16 +59,26 @@ function appropriateCyContainers(cyTreeDataList){
     }
 }
 
+
 function switchQueryTrees(treeNumber, cyTreeDataList){
-    for (cyTreeDataListIndex in cyTreeDataList){
+    var buttonCounter = 1;
+    for (cyTreeDataListIndex in titledTreeList){
         var currContainer = document.getElementById('cy' + cyTreeDataListIndex);
         var currButton = document.getElementById('cyButton' + cyTreeDataListIndex);
-        currContainer.setAttribute("style", "height:98%; width:100%; display:none;")
-        currButton.style.display = "none";
+        currContainer.setAttribute("style", "height:100%; width:100%; display:none;")
+        
+        if (cyTreeDataListIndex != treeNumber){
+            currButton.style.bottom = buttonCounter*35 + "px";
+            buttonCounter++;
+            currButton.style.display = "block";
+        }
+        else{
+            currButton.style.display = "none";
+        }
     }
-    document.getElementById('cy' + treeNumber).setAttribute("style", "display:block; height:98%; width:100%;");
-    document.getElementById('cyButton' + treeNumber).style.display = "block";
-
+    document.getElementById('cyButtonDefaultView').style.display = "block";
+    document.getElementById('cyButtonDefaultView').style.bottom = "0px";
+    document.getElementById('cy' + treeNumber).setAttribute("style", "display:block; height:100%; width:100%;");
     cy = cytoscape(cyTreeDataList[treeNumber]);
 
     cy.ready(function(){
@@ -73,11 +90,11 @@ function switchQueryTrees(treeNumber, cyTreeDataList){
         intitTreeLables(cy, biggestUnitCountTuple);
         intitTreeEvents(cy); 
     });
-    return cy;
 }
 
+
 function unmentionNonSharedNodes(){
-    for (var treeDataIndex = 0; treeDataIndex < cyTreeDataList.length; treeDataIndex++){
+    for (var treeDataIndex = 0; treeDataIndex < titledTreeList.length; treeDataIndex++){
         var currTreeData = cyTreeDataList[treeDataIndex];
         var currTitledTree = titledTreeList[treeDataIndex];
         var treeNodesInfo = currTitledTree["treeNodesInfo"];
@@ -87,6 +104,9 @@ function unmentionNonSharedNodes(){
             for (var sharedNodesIndex in treeNodesInfo){
                 var currSharedNode = treeNodesInfo[sharedNodesIndex]
                 if (currSharedNode["cyID"] == currCyNode["data"]["id"]){
+                    if (currSharedNode["highlight"] == true){
+                        currCyNode["classes"] += " matchedQueryNode";
+                    }
                     savedNodesCopy.push(currCyNode);
                 }
             }
@@ -118,166 +138,204 @@ function unmentionNonSharedNodes(){
     return cyTreeDataList;
 }
 
-function restateLayout(cy){
-    cy.style()
-    .selector('node')
-    .css({
-        'background-color': 'LightSlateGray',
-        'height': 1200,
-        'width': 1800,
-        'background-fit': 'cover',
-        'border-color': 'black',
-        'border-width': '10px'
-    })
-    .selector('.stateNode')
-    .css({
-        'shape': 'roundrectangle',
-    })
-    .selector('.friendlyAction')
-    .css({
-        'shape': 'polygon',
-        'shape-polygon-points': 'data(points)',
-        'width': 1100
-    })
-    .selector('.enemyAction')
-    .css({
-        'shape': 'polygon',
-        'shape-polygon-points': 'data(points)',
-        'width': 1100,
-    })
-    .selector('.principalVariation')
-    .css({
-        'background-color': 'SteelBlue',
-    })
-    .selector('.userAddedEnemyAction')
-    .css({
-        'background-color': 'Green',
-    })
-    .selector('.userAddedFriendlyAction')
-    .css({
-        'background-color': 'Green',
-    })
-    .selector('edge')
-    .css({
-        'curve-style': 'straight',
-        'width': 30,
-        'target-arrow-shape': 'triangle',
-        'line-color': '#ffaaaa',
-        'target-arrow-color': '#ffaaaa'
-    })
-    .update();
-    var layout = cy.layout({
-        name: 'breadthfirst',
-        fit: true, // whether to fit the viewport to the graph
-        directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
-        padding: 10, // padding on fit
-        spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
-        avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-        nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
-        roots: undefined, // the roots of the trees
-        maximal: true, // whether to shift nodes down their natural BFS depths in order to avoid upwards edges (DAGS only)
-        ready: undefined, // callback on layoutready
-        stop: undefined, // callback on layoutstop
-        transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
-    })
-    layout.run();
+function hideAllQueryTrees(){
+    for (var titledTreeListIndex in titledTreeList){
+        var currContainer = document.getElementById('cy' + titledTreeListIndex);
+        currContainer.setAttribute("style", "height:100%; width:100%; display:none;")
+        var currButton = document.getElementById('cyButton' + titledTreeListIndex);
+        currButton.style.bottom = titledTreeListIndex*35 + "px";
+        currButton.style.display = "block";
+    }
+    document.getElementById('cyButtonDefaultView').style.display = "none";
 }
 
-
-titledTreeList = [ {
-                                    title: "test tree 1",
-                                    querys: [],
-                                    treeNodesInfo: [
-                                                        {
-                                                            cyID: "dp1_level1_action_min_12_best",
-                                                            highlight: true
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_state_120_best",
-                                                            highlight: false 
-                                                        },
-                                                        {
-                                                            cyID: "dp1_level1_action_max_1_best",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp1_level1_state",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_action_max_1200_best",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_action_min_12002_best",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_state_120020_best",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp1_level1_action_max_3",
-                                                            highlight: true
-                                                        },
-                                                        {
-                                                            cyID: "dp1_level1_action_min_30",
-                                                            highlight: false 
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_state_300030",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_action_min_30003",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_action_max_3000",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp2_level2_state_300",
-                                                            highlight: false
-                                                        },
-                                                        {
-                                                            cyID: "dp1_level1_state",
-                                                            highlight: false
-                                                        }
-                                                    ]
-                        },
-                        {
+titledTreeList = [ 
+                    {
+                        title: "test tree 1",
+                        querys: [],
+                        treeNodesInfo: [
+                            {
+                                cyID: "dp1_level1_action_min_12_best",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp2_level2_state_120_best",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_1_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_1200_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_12002_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_120020_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_3",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_30",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp2_level2_state_300030",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_30003",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_3000",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_300",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            }
+                        ]
+                    },
+                    {
                         title: "test tree 2",
                         querys: [],
                         treeNodesInfo: [
-                                            {
-                                                cyID: "dp1_level1_action_max_3",
-                                                highlight: true
-                                            },
-                                            {
-                                                cyID: "dp1_level1_action_min_30",
-                                                highlight: false 
-                                            },
-                                            {
-                                                cyID: "dp2_level2_state_300030",
-                                                highlight: false
-                                            },
-                                            {
-                                                cyID: "dp2_level2_action_min_30003",
-                                                highlight: false
-                                            },
-                                            {
-                                                cyID: "dp2_level2_action_max_3000",
-                                                highlight: false
-                                            },
-                                            {
-                                                cyID: "dp2_level2_state_300",
-                                                highlight: false
-                                            },
-                                            {
-                                                cyID: "dp1_level1_state",
-                                                highlight: false
-                                            }
-                                    ]
-                        }
-                    ]
+                            {
+                                cyID: "dp1_level1_action_max_3",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_30",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp2_level2_state_300030",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_30003",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_3000",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_300",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            }
+                        ]
+                    },
+                    {
+                        title: "test tree 3",
+                        querys: [],
+                        treeNodesInfo: [
+                            {
+                                cyID: "dp2_level2_action_max_1201",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_120_best",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_12_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_1_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_12012",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp2_level2_state_120120",
+                                highlight: false
+                            },
+                            ///////////
+                            {
+                                cyID: "dp2_level2_state_020320",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_02032",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_0203",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_state_020",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_02",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_0",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            },
+                            ///////////////
+                            {
+                                cyID: "dp2_level2_state_120130",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp2_level2_action_min_12013",
+                                highlight: false 
+                            },
+                            {
+                                cyID: "dp2_level2_action_max_1201",
+                                highlight: true
+                            },
+                            {
+                                cyID: "dp2_level2_state_120_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_min_12_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_action_max_1_best",
+                                highlight: false
+                            },
+                            {
+                                cyID: "dp1_level1_state",
+                                highlight: false
+                            }
+                        ]
+                    }
+                ];

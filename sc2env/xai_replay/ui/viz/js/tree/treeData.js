@@ -1,54 +1,16 @@
-var treeData = {
-    container: document.getElementById('cy'),
-    boxSelectionEnabled: false,
-    autounselectify: true,
-    style: cytoscape.stylesheet()
-        .selector('node')
-        .css({
-            'background-color': 'LightSlateGray',
-            'height': 1200,
-            'width': 1800,
-            'background-fit': 'cover',
-            'border-color': 'black',
-            'border-width': '10px'
-        })
-        .selector('.stateNode')
-        .css({
-            'shape': 'roundrectangle',
-        })
-        .selector('.friendlyAction')
-        .css({
-            'shape': 'polygon',
-            'shape-polygon-points': 'data(points)',
-            'width': 1100
-        })
-        .selector('.enemyAction')
-        .css({
-            'shape': 'polygon',
-            'shape-polygon-points': 'data(points)',
-            'width': 1100,
-        })
-        .selector('.principalVariation')
-        .css({
-            'background-color': 'SteelBlue',
-        })
-        .selector('.userAddedEnemyAction')
-        .css({
-            'background-color': 'Green',
-        })
-        .selector('.userAddedFriendlyAction')
-        .css({
-            'background-color': 'Green',
-        })
-        .selector('edge')
-        .css({
-            'curve-style': 'straight',
-            'width': 30,
-            'target-arrow-shape': 'triangle',
-            'line-color': '#ffaaaa',
-            'target-arrow-color': '#ffaaaa'
-        }),
-    layout: {
+var treeData = {    
+                    container: document.getElementById('cy'),
+                    boxSelectionEnabled: false,
+                    autounselectify: true,
+                    layout: treeLayout,
+                    style: treeStyle,
+                    elements : {
+                        nodes: [],
+                        edges: []
+                    }
+                };
+
+var treeLayout = {
         name: 'breadthfirst',
         fit: true, // whether to fit the viewport to the graph
         directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
@@ -61,14 +23,44 @@ var treeData = {
         ready: undefined, // callback on layoutready
         stop: undefined, // callback on layoutstop
         transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
-    },
-    elements : {
-        nodes: [],
-        edges: []
     }
-}
 
-  
+var treeStyle =
+    'node{ \
+        background-color: LightSlateGray; \
+        height: 1200; \
+        width: 1800; \
+        background-fit: cover; \
+        border-color: black; \
+        border-width: 10px; \
+    } \
+    .stateNode{ \
+        shape: roundrectangle; \
+    } \
+    .friendlyAction{ \
+        shape: polygon; \
+        shape-polygon-points: data(points); \
+        width: 1100; \
+    } \
+    .enemyAction{ \
+        shape: polygon; \
+        shape-polygon-points: data(points); \
+        width: 1100; \
+    } \
+    .principalVariation { \
+        background-color: SteelBlue; \
+    } \
+    .matchedQueryNode { \
+        background-color: Green; \
+    } \
+    edge { \
+        curve-style: straight; \
+        width: 30; \
+        target-arrow-shape: triangle; \
+        line-color: #ffaaaa; \
+        target-arrow-color: #ffaaaa; \
+    } ';
+
 var cy = undefined;
 function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
@@ -76,18 +68,20 @@ function initTree(jsonPath, frameNumber){
         generateStoryLines(backingTreeRoot, frameNumber);
         renderStoryLinesDefaultView(frameNumber);
         // populatePrincipalVariationTree(backingTreeRoot);
+
         createRootNode(rawSc2Json)
         populateCompleteTree(rawSc2Json)
         initQueryTrees();
-        switchQueryTrees(0, cyTreeDataList)
-        // cy = cytoscape(treeData);
+        // switchQueryTrees(0, cyTreeDataList)
+        cy = cytoscape(treeData);
         cy.ready(function(){
+            restateLayout(cy);
             cy.center();
             childrenFollowParents(cy);
             var biggestUnitCountTuple = getLargestUnitCount(cy);
             sortNodes(cy);
             intitTreeLables(cy, biggestUnitCountTuple);
-            intitTreeEvents(cy); 
+            intitTreeEvents(cy);
         });
     });
 }
