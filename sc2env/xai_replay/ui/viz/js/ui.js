@@ -474,7 +474,7 @@ function sizeNonGeneratedElements() {
 	$('#fullscreen-modal').css('margin-left', "2%")
 	// $('#fullscreen-modal').css('right', "5%")
 	// $('#fullscreen-modal').css('top', "7%")
-	$('#fullscreen-modal').css('margin-bottom', "8%")
+	// $('#fullscreen-modal').css('margin-bottom', "8%")
 
 	$('#fullscreen-modal').css('position', "absolute")
 	$('#fullscreen-modal').css('background-color', "whitesmoke")
