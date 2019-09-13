@@ -75,25 +75,21 @@ function initTree(jsonPath, frameNumber){
         generateBackingTreeOfCynodes(rawSc2Json);
         generateStoryLines(backingTreeRoot, frameNumber);
         renderStoryLinesDefaultView(frameNumber);
-        populatePrincipalVariationTree(backingTreeRoot);
-        // createRootNode(rawSc2Json);
-
-        // cyPopulateFriendlyActionUnderState(rawSc2Json);
-        cy = cytoscape(treeData);
-        cy.center();
-        // var root = cy.$('.rootNode');
-        childrenFollowParents(cy);
-        var biggestUnitCountTuple = getLargestUnitCount(cy);
-        sortNodes(cy);
-        intitTreeLables(cy, biggestUnitCountTuple);
-        intitTreeEvents(cy);    
-
-        // //alert("initTreeFunctions")
-        // intitTreeFunctions(cy);    
-        // //alert("sortNodes")
-        // sortNodes(cy);
-        //alert("done");
-    });//.error(function() { alert("can't load file " + jsonPath); })
+        // populatePrincipalVariationTree(backingTreeRoot);
+        createRootNode(rawSc2Json)
+        populateCompleteTree(rawSc2Json)
+        initQueryTrees();
+        switchQueryTrees(0, cyTreeDataList)
+        // cy = cytoscape(treeData);
+        cy.ready(function(){
+            cy.center();
+            childrenFollowParents(cy);
+            var biggestUnitCountTuple = getLargestUnitCount(cy);
+            sortNodes(cy);
+            intitTreeLables(cy, biggestUnitCountTuple);
+            intitTreeEvents(cy); 
+        });
+    });
 }
 
 function forgetCyTree(){
