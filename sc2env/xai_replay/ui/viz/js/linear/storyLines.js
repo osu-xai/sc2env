@@ -4,12 +4,13 @@ function generateStoryLines(backingTreeRoot, frameNumber){
     if (storyLinesForFrame[frameNumber.toString()] == undefined){
         var leafStateNodes = getLeafStateNodes(backingTreeRoot);
         console.log("leafStateNode count " + leafStateNodes.length);
-        storyLinesForFrame[frameNumber.toString()] = new StoryLines(leafStateNodes);
+        var storyLineList = deriveStoryLinesFromLeafNodes(leafStateNodes);
+        storyLinesForFrame[frameNumber.toString()] = new StoryLines(storyLineList);
     }
 }
 
-function StoryLines(leafStateNodes){
-    this.storyLines = deriveStoryLinesFromLeafNodes(leafStateNodes);
+function StoryLines(storyLineList){
+    this.storyLines = storyLineList;
     this.storyLines.sort(function(a,b){
         return b.getPredictedValue() - a.getPredictedValue();
     });
@@ -19,6 +20,8 @@ function StoryLines(leafStateNodes){
         var sl = this.storyLines[index];
         console.log("... " + sl.getPredictedValue());
     }
+    this.maxStateUnitCount = this.getMaxStateUnitCount();
+    this.maxActionUnitCount = this.getMaxActionUnitCount();
 }
 
 StoryLines.prototype.getWidth = function(){
@@ -33,6 +36,29 @@ StoryLines.prototype.applyCommandSequence = function(commands){
 
 StoryLines.prototype.clearViewData = function(){
 
+}
+StoryLines.prototype.getMaxStateUnitCount = function(){
+    var max = 0;
+    for (var index in this.storyLines){
+        var storyLine = this.storyLines[index];
+        var curMax = storyLine.getMaxStateUnitCount();
+        if (curMax > max){
+            max = curMax;
+        }
+    }
+    return max;
+}
+
+StoryLines.prototype.getMaxActionUnitCount = function(){
+    var max = 0;
+    for (var index in this.storyLines){
+        var storyLine = this.storyLines[index];
+        var curMax = storyLine.getMaxActionUnitCount();
+        if (curMax > max){
+            max = curMax;
+        }
+    }
+    return max;
 }
 
 function getLeafStateNodes(root){
