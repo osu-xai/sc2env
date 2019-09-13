@@ -108,7 +108,7 @@ function intitTreeLables(cy, biggestUnitCountTuple){
             halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
             valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
             cssClass: '', // any classes will be as attribute of <div> container for every title
-            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getBestQValue(data)   } // your html template here
+            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple,treeViewConstants) + getBestQValue(data, treeViewConstants)   } // your html template here
         }
         ]
     );

@@ -18,15 +18,17 @@
 
 var main = function () {
     var sl1 = getStoryLineFromIdList(["1","1.1action_max","1.1.1action_min","1.1.1.1","1.1.1.1.1action_max","1.1.1.1.1.1action_min","1.1.1.1.1.1.1"]);
-    var sl2 = getStoryLineFromIdList(["2","2.2action_max","2.2.2action_min","2.2.2.2","2.2.2.2.2action_max","2.2.2.2.2.2action_min","2.2.2.2.2.2.2"]);
-    var sl3 = getStoryLineFromIdList(["3","3.3action_max","3.3.3action_min","3.3.3.3","3.3.3.3.3action_max","3.3.3.3.3.3action_min","3.3.3.3.3.3.3"]);
-    var sl4 = getStoryLineFromIdList(["4","4.4action_max","4.4.4action_min","4.4.4.4","4.4.4.4.4action_max","4.4.4.4.4.4action_min","4.4.4.4.4.4.4"]);
-    var storyLineList = [sl1,sl2,sl3,sl4];
+    var sl2 = getStoryLineFromIdList(["1","1.1action_max","1.1.1action_min","1.1.1.1","1.1.1.1.1action_max","1.1.1.1.1.1action_min","1.1.1.1.1.1.2"]);
+    var sl3 = getStoryLineFromIdList(["1","1.1action_max","1.1.1action_min","1.1.1.1","1.1.1.1.1action_max","1.1.1.1.1.1action_min","1.1.1.1.1.2.1"]);
+    var sl4 = getStoryLineFromIdList(["1","1.1action_max","1.1.1action_min","1.1.1.1","1.1.1.1.1action_max","1.1.1.1.1.1action_min","1.1.1.1.1.2.2"]);
+    var sl5 = getStoryLineFromIdList(["1","1.2action_max","2.2.2action_min","2.2.2.2","2.2.2.2.2action_max","2.2.2.2.2.2action_min","2.2.2.2.2.2.2"]);
+    var sl6 = getStoryLineFromIdList(["1","3.3action_max","3.3.3action_min","3.3.3.3","3.3.3.3.3action_max","3.3.3.3.3.3action_min","3.3.3.3.3.3.3"]);
+    var sl7 = getStoryLineFromIdList(["1","4.4action_max","4.4.4action_min","4.4.4.4","4.4.4.4.4action_max","4.4.4.4.4.4action_min","4.4.4.4.4.4.4"]);
+    var storyLineList = [sl1,sl2,sl3,sl4,sl5,sl6,sl7];
     var storyLines = new StoryLines(storyLineList);
     storyLinesForFrame["0"] = storyLines;
     storyLineUI.init(storyLines);
     renderStoryLinesDefaultView(0);
-    document.body.style.zoom=0.5;
     //var linearDiv = document.getElementById("linear");
     //linearDiv.setAttribute("width", window.innerWidth);
     //linearDiv.setAttribute("height", window.innerHeight);
@@ -47,6 +49,7 @@ function getCynodeForEntry(id, depth,qValue){
     var n = {};
     n["data"] = {};
     n["data"]["id"] = id;
+    n["data"]["name"] = id;
     var nodeType = getTypeForDepth(depth)
     n["data"]["sc2_nodeType"] = nodeType;
     n["data"]["best q_value"] = qValue;
