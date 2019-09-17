@@ -151,7 +151,7 @@ function hideAllQueryTrees(){
 
 titledTreeList = [ 
                     {
-                        title: "test tree 1",
+                        title: "Test Tree 1",
                         querys: [],
                         treeNodesInfo: [
                             {
@@ -213,7 +213,7 @@ titledTreeList = [
                         ]
                     },
                     {
-                        title: "test tree 2",
+                        title: "Test Tree 2",
                         querys: [],
                         treeNodesInfo: [
                             {
@@ -247,7 +247,7 @@ titledTreeList = [
                         ]
                     },
                     {
-                        title: "test tree 3",
+                        title: "Test Tree 3",
                         querys: [],
                         treeNodesInfo: [
                             {
@@ -314,11 +314,11 @@ titledTreeList = [
                             },
                             {
                                 cyID: "dp2_level2_action_min_12013",
-                                highlight: false 
+                                highlight: true 
                             },
                             {
                                 cyID: "dp2_level2_action_max_1201",
-                                highlight: true
+                                highlight: false
                             },
                             {
                                 cyID: "dp2_level2_state_120_best",

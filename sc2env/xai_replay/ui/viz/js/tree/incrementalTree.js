@@ -29,6 +29,7 @@ function populatePrincipalVariationTree(startingCyNode){
     }
 }
 
+
 function removePrincipalVariationTree(startingCyNode){
     if (startingCyNode.data("name").indexOf("_action_max") != -1){
         removeEnemyActionChildrenOfBestFriendlyAction(startingCyNode)

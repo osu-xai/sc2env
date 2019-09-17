@@ -4,6 +4,7 @@ var treeData = {
                     autounselectify: true,
                     layout: treeLayout,
                     style: treeStyle,
+                    headless: false,
                     elements : {
                         nodes: [],
                         edges: []
@@ -51,7 +52,7 @@ var treeStyle =
         background-color: SteelBlue; \
     } \
     .matchedQueryNode { \
-        background-color: Green; \
+        background-color: #9F2D0D; \
     } \
     edge { \
         curve-style: straight; \
@@ -59,20 +60,27 @@ var treeStyle =
         target-arrow-shape: triangle; \
         line-color: #ffaaaa; \
         target-arrow-color: #ffaaaa; \
-    } ';
+    } \
+    .userAddedNode { \
+        background-color: SlateBlue; \
+    } \
+    .selectedNode{ \
+        background-color: PaleVioletRed; \
+    }';
 
 var cy = undefined;
 function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
-        generateStoryLines(backingTreeRoot, frameNumber);
-        renderStoryLinesDefaultView(frameNumber);
+        // generateStoryLines(backingTreeRoot, frameNumber);
+        // renderStoryLinesDefaultView(frameNumber);
         // populatePrincipalVariationTree(backingTreeRoot);
+        populatePrincipalVariationTrajectory(backingTreeRoot);
 
-        createRootNode(rawSc2Json)
-        populateCompleteTree(rawSc2Json)
-        initQueryTrees();
-        // switchQueryTrees(0, cyTreeDataList)
+        // createRootNode(rawSc2Json)
+        // populateCompleteTree(rawSc2Json)
+        // initQueryTrees();
+
         cy = cytoscape(treeData);
         cy.ready(function(){
             restateLayout(cy);

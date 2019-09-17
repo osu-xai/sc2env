@@ -26,6 +26,7 @@
       <script src="js/tree/cytoscape.min.js"></script>
       <script src="js/tree/cytoscape-node-html-label-1.1.2/dist/cytoscape-node-html-label.min.js"></script>
       <script src="js/tree/cytoscape.js-automove-master/cytoscape-automove.js"></script>
+      <script src="js/tree/cytoscape-dblclick/cytoscape-dblclick.js"></script>
 
       <script src="js/userStudy/questions/questionAccessManager.js"></script>
       <script src="js/sc2/sc2DataManager.js"></script>
@@ -148,14 +149,16 @@
                                     </div>
                                     <div id="explanation-content" style="width:100%;height:100%">
                                         <div id="cy" style="width:100%;height:100%;display:block;padding:0px;" class="tabcontent">
-                                            <ul id="unit-legend" class="tabcontent-tag-along" style="display:block;list-style-type: square;font-size:18px;position:absolute;top:3%;left:1%;width:10%;background-color:#333333; border-radius: 3px; border: 2px solid black">
-                                                <li style="color:darkgray;">Marines</li>
-                                                <li style="color:darkorange;">Banelings</li>
-                                                <li style="color:blue;">Immortals</li>
-                                                <li style="color:yellow;">Pylons</li>
-                                                <li style="color:green;">Nexus Health</li>
-                                            </ul>
+                                      
                                         </div>
+                                        <ul id="unit-legend" class="tabcontent-tag-along" style="display:block;list-style-type: square;font-size:18px;position:absolute;top:3%;left:1%;width:10%;background-color:#333333; border-radius: 3px; border: 2px solid black">
+                                            <li style="color:darkgray;">Marines</li>
+                                            <li style="color:darkorange;">Banelings</li>
+                                            <li style="color:blue;">Immortals</li>
+                                            <li style="color:yellow;">Pylons</li>
+                                            <li style="color:green;">Nexus Health</li>
+                                        </ul>
+                                        <div style="position: absolute; top:20%; z-index:100;padding:30px;">Trajectory View?<input type="checkbox" checked=true id="trajectory-view" ></div>
                                         <div id="linear" style="width:100%;height:100%;display:none" class="tabcontent"></div>
                                     </div>
                                 </div>
@@ -171,6 +174,7 @@
                                 <script src="js/tree/treeHtml.js"></script>
                                 <script src="js/tree/treeUtils.js"></script>
                                 <script src="js/tree/queryTree.js"></script>
+                                <script src="js/tree/incrementalTrajectory.js"></script>
                             </div>
 
                             <div id="unit-value-panels-containter" class="unit-value-panels" style="height:87%;width:99%;display:none;position: absolute;">
