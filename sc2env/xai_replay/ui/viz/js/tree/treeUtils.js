@@ -1,3 +1,4 @@
+var trajectoryStartingEdges = {};
 
 function getLargestUnitCount(cy){
     var biggestUnitCountAtState = 0;
