@@ -20,7 +20,7 @@ function handleClickEvent(cy){
 
 function addOrRemoveTrajectory(currNode){
     if (currNode.outgoers().targets().size() < 2){
-        alert("adding Nodes")
+        //alert("adding Nodes")
         var startingEdge = populateNextBestTrajectory(currNode);
         trajectoryStartingEdges[currNode.data("id")] = startingEdge;
         if (currNode.hasClass("principalVariation") == false){
@@ -28,7 +28,7 @@ function addOrRemoveTrajectory(currNode){
         }
     }
     else{
-        alert("removing nodes")
+        //alert("removing nodes")
         var currentNodeId = currNode.data("id");
         removePrincipalVariationTree(currNode);
         var edgeToBeRemoved = trajectoryStartingEdges[currNode.data("id")]
