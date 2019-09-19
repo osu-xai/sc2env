@@ -122,17 +122,17 @@ function addStoryLineDivToContainer(storyLine, container, column, storyLines){
         //div.innerHTML = getNodeGlyphs(node["data"], ( storyLines.maxStateUnitCount, storyLines.maxActionUnitCount),treeViewConstants) + getBestQValue(node["data"], treeViewConstants);
         div.innerHTML = id + ' s ' + storyLines.maxStateUnitCount + ',a ' + storyLines.maxActionUnitCount;
         //div.innerHTML = '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800; width: 800;" onload="finishInit()">' +
-        '<style>#dp1_level1_state_unit_graph_container {display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns: auto auto auto auto auto;background-color: ivory; height:700px;width:700px;}</style>' +
-        '<div id="dp1_level1_state_unit_graph_container"><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div> <div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:black; grid-column-end: span 5;"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
-            '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div></div></div>'
+        // '<style>#dp1_level1_state_unit_graph_container {display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns: auto auto auto auto auto;background-color: ivory; height:700px;width:700px;}</style>' +
+        // '<div id="dp1_level1_state_unit_graph_container"><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div> <div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:black; grid-column-end: span 5;"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div>' +
+        //     '<div style="background-color:rgba(0,0,0,0);"></div><div style="background-color:rgba(0,0,0,0);"></div></div></div>'
         container.append(div);
     }
 }
