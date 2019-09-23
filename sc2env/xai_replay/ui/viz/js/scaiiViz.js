@@ -40,7 +40,7 @@ var main2 = function(){
 	//window.requestAnimationFrame(vidStep);
 }
 var main = function () {
-    runTests();
+    //runTests();
 	initUI();
 	var debug = true;
 	if (debug) {
