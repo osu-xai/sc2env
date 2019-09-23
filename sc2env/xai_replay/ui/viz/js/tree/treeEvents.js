@@ -71,28 +71,15 @@ function handleClickEventOrig(cy){
 }
 
 function addOrRemoveTrajectory(currNode){
-    if (currNode.outgoers().targets().size() < 2){
-        //alert("adding Nodes")
-        var startingEdge = populateNextBestTrajectory(currNode);
-        trajectoryStartingEdges[currNode.data("id")] = startingEdge;
+    if (currNode.outgoers().targets().size() < currNode.data("sc2_cyChildren").length){
+        addNextBestPrincipalVariation(cy, currNode);
         if (currNode.hasClass("principalVariation") == false){
             userExpandedNodes.push(currNode.data("id"));
         }
     }
     else{
-        //alert("removing nodes")
         var currentNodeId = currNode.data("id");
-        removePrincipalVariationTree(currNode);
-        var edgeToBeRemoved = trajectoryStartingEdges[currNode.data("id")]
-        var edges = treeData["elements"]["edges"];
-        for (var edgeIndex in edges){
-            var currEdge = edges[edgeIndex];
-            if (edgeToBeRemoved == currEdge){
-                console.log(currNode.data("id"))
-                edges.splice(edgeIndex,1);
-            }
-        }
-        trajectoryStartingEdges[currNode["data"]["id"]] = undefined;
+        removePrincipalVariation(cy, currNode);
         for (var i = 0; i < userExpandedNodes.length; i++){
             if (userExpandedNodes[i].indexOf(currentNodeId) != -1){
                 cy.$('#' + userExpandedNodes[i]).removeClass("selectedNode")
@@ -100,7 +87,6 @@ function addOrRemoveTrajectory(currNode){
             } 
         }  
     }
-    refreshCy();
 }
 
 function addOrRemoveIncrementalTree(currNode){
