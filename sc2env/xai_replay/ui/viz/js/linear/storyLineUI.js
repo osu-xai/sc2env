@@ -137,5 +137,5 @@ function addStoryLineDivToContainer(storyLine, container, column, storyLines){
     }
 }
 
-var storyLineUI = createStoryLineUI();
+//var storyLineUI = createStoryLineUI();
    

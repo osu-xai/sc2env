@@ -147,4 +147,51 @@ function switchChildrenPositions(cy, currNode, switchNode){
     });
 }
   
-  
+function generateNodeActionMenu(id){
+    var div = document.getElementById(id);
+    //$("#" + id).css("visibility", "hidden");
+    $("#" + id).css("padding", "20px");
+    $("#" + id).css("background-color", "#E0E0E0");
+
+    var nodeActionsLabel = document.createElement("LABEL");
+    nodeActionsLabel.setAttribute("id", "node-actions-label");
+    nodeActionsLabel.innerHTML = "Node Actions";    
+    div.append(nodeActionsLabel);
+    $("#node-actions-label").css("font-size", "30px");
+    $("#node-actions-label").css("text-align", "center");
+    $("#node-actions-label").css("padding", "20px");
+
+    var nextBestActionId = "next-best-action-button";
+    var nextBestActionButton = document.createElement("button");
+    nextBestActionButton.onmousedown = function(){ depressButton(nextBestActionId); };
+    nextBestActionButton.onmouseup = function(){ undepressButton(nextBestActionId); showNextBestAction() };
+    nextBestActionButton.setAttribute("id", nextBestActionId);
+    nextBestActionButton.setAttribute("width", "200px");
+    nextBestActionButton.setAttribute("disabled", "true");
+    var nextBestActionButtonText = document.createTextNode("Show next best action");
+    nextBestActionButton.appendChild(nextBestActionButtonText);          
+    nextBestActionButton.setAttribute("style",'font-family:Arial;');
+    div.append(nextBestActionButton)
+    $("#next-best-action-button").css("margin", "3px");
+    $("#next-best-action-button").css("opacity", "1.0");    
+    $("#next-best-action-button").css("background-image", "");
+    $("#next-best-action-button").css("color", "white");
+
+    var nextBestFutureId = "next-best-future-button";
+
+    var nextBestFutureButton = document.createElement("button");
+    nextBestFutureButton.setAttribute("id", nextBestFutureId);
+    nextBestFutureButton.onmousedown = function(){ depressButton(nextBestFutureId); };
+    nextBestFutureButton.onmouseup = function(){ undepressButton(nextBestFutureId); showNextBestFuture() };
+    var nextBestFutureButtonText = document.createTextNode("Show next best future");
+    nextBestFutureButton.appendChild(nextBestFutureButtonText);          
+    nextBestFutureButton.setAttribute("style",'font-family:Arial;');
+    nextBestFutureButton.setAttribute("disabled", "true");
+    div.append(nextBestFutureButton)
+    $("#next-best-future-button").css("margin", "3px");
+    $("#next-best-future-button").css("background-image", "");
+    $("#next-best-future-button").css("border-width", "1px");
+    $("#next-best-future-button").css("opacity", "1.0");
+    $("#next-best-future-button").css("color", "white");
+}
+

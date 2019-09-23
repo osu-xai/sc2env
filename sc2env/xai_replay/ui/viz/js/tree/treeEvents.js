@@ -5,16 +5,68 @@ function intitTreeEvents(cy){
     cy.center(cy.nodes());
 }
 
-
+function showNextBestAction(){
+    //alert("show next best action");
+}
+function showNextBestFuture(){
+    addOrRemoveTrajectory(currFocusNode);
+}
+var currFocusNode = undefined;
 function handleClickEvent(cy){
     cy.on('click', 'node', function (evt) {
         var currNode = evt.target;
-        if(document.getElementById("trajectory-view").checked == true){
-            addOrRemoveTrajectory(currNode);
+      
+        if (currFocusNode == undefined){
+            // clicking a node activates its menu
+            enableActionMenu();
+            currFocusNode = currNode;
         }
-        else{
-            addOrRemoveIncrementalTree(currNode);
+        else if (currFocusNode == currNode){
+            // clicking the same node again turns off the menu
+            disableActionMenu();
+            currFocusNode = undefined;
         }
+        else {
+            // clicking node n when node m has a menu just changes the currFocusNode
+            currFocusNode = currNode;
+        }
+    });
+}
+function colorButtonEnabled(id){
+    $("#" + id).css("background-image", "linear-gradient(rgb(40, 72, 251) 1%, rgb(4, 31, 185) 5%, rgb(4, 18, 117) 60%)"); 
+}
+function colorButtonDisabled(id){
+    $("#" + id).css("background-image", "linear-gradient(rgb(200, 200, 251) 1%, rgb(150, 150, 185) 5%, rgb(80, 80, 117) 60%)");
+}
+function depressButton(id){
+    $("#" + id).css("background-image", "linear-gradient(rgb(40, 72, 100) 1%, rgb(4, 31, 50) 5%, rgb(4, 18, 30) 60%)");
+}
+function undepressButton(id){
+    colorButtonEnabled(id);
+}
+function disableActionMenu(id){
+    $("#next-best-action-button").attr("disabled", true);
+    $("#next-best-future-button").attr("disabled", true);
+    colorButtonDisabled("next-best-action-button");
+    colorButtonDisabled("next-best-future-button");
+    
+}
+function enableActionMenu(){
+    $("#next-best-action-button").attr("disabled", false);
+    $("#next-best-future-button").attr("disabled", false);
+    colorButtonEnabled("next-best-action-button");
+    colorButtonEnabled("next-best-future-button");
+    
+}
+function handleClickEventOrig(cy){
+    cy.on('click', 'node', function (evt) {
+        var currNode = evt.target;
+        //if(document.getElementById("trajectory-view").checked == true){
+        //    addOrRemoveTrajectory(currNode);
+        //}
+        ////else{
+        addOrRemoveIncrementalTree(currNode);
+//}
     });
 }
 
@@ -52,7 +104,6 @@ function addOrRemoveTrajectory(currNode){
 }
 
 function addOrRemoveIncrementalTree(currNode){
-    var currNode = evt.target;       
     if (currNode.successors().targets().size() <= 0){
         populatePrincipalVariationTree(currNode);
         if (currNode.hasClass("principalVariation") == false){

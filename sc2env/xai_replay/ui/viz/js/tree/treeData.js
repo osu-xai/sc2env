@@ -76,12 +76,12 @@ function initTree(jsonPath, frameNumber){
         // renderStoryLinesDefaultView(frameNumber);
         // populatePrincipalVariationTree(backingTreeRoot);
         populatePrincipalVariationTrajectory(backingTreeRoot);
-
+        generateNodeActionMenu("node-menu");
         // createRootNode(rawSc2Json)
         // populateCompleteTree(rawSc2Json)
         // initQueryTrees();
-
         cy = cytoscape(treeData);
+
         cy.ready(function(){
             restateLayout(cy);
             cy.center();
