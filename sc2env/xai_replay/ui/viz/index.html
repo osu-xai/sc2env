@@ -54,6 +54,7 @@
       <script src="js/test/chartDataTests/msxGeometryTests.js"></script>
       <script src="js/test/videoPlaybackManagerTests.js"></script>
       <script src="js/test/tests.js"></script>
+      <script src="js/test/treeTests.js"></script>
       <script src="js/userStudy/studyTabs.js"></script>
       <script src="js/userStudy/questions/studyQuestionsEntities.js"></script>
       <script src="js/userStudy/logging/logTemplates.js"></script>
@@ -146,13 +147,18 @@
                                         <div id="cy" style="width:100%;height:100%;display:block;padding:0px;" class="tabcontent">
                                       
                                         </div>
-                                        <ul id="unit-legend" class="tabcontent-tag-along" style="padding:20px;display:block;list-style-type: square;font-size:30px;position:absolute;top:3%;left:1%;width:10%;background-color:#E0E0E0; border-radius: 3px;">
-                                            <li style="color:darkgray;">Marines</li>
-                                            <li style="color:darkorange;">Banelings</li>
-                                            <li style="color:blue;">Immortals</li>
-                                            <li style="color:yellow;">Pylons</li>
-                                            <li style="color:green;">Nexus Health</li>
-                                        </ul>
+                                        <div id="unit-legend" class="tabcontent-tag-along" style="display: grid;grid-template-columns: 20% 80%;padding:10px;font-size:30px;position:absolute;top:3%;left:1%;width:10%;background-color:#E8E8E8; border-radius: 3px;">
+                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;background-color:darkgray;"></div>
+                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;">Marines</div>
+                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;background-color:darkorange;"></div>
+                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;">Banelings</div>
+                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;background-color:blue;"></div>
+                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;">Immortals</div>
+                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;background-color:yellow;"></div>
+                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;">Pylons</div>
+                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:5; grid-row-end:6;background-color:green;"></div>
+                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:5; grid-row-end:6;">Nexus Health</div>
+                                        </div>
                                         <div id="node-menu" class="flex-column" style="position: absolute; left:20%; top:3%; z-index:100;padding:30px;"></div>
                                         <!--<div id="linear" style="width:100%;height:100%;display:none" class="tabcontent"></div>-->
                                     </div>
