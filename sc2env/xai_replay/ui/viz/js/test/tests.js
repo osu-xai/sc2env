@@ -59,7 +59,7 @@ function runTests(){
         runMsxRankingTests(fc, chartTesting);
         runMsxGeometryTests (fc, chartTesting);
     }
-    
+    runTreeTests(fc);
     var message = "";
     for (var i in fc.testNames){
         var testName = fc.testNames[i];
