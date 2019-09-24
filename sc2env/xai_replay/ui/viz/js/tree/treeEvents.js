@@ -6,11 +6,12 @@ function intitTreeEvents(cy){
 }
 
 function showNextBestAction(){
-    //alert("show next best action");
+    addSibling(cy, currFocusNode);
 }
 function showNextBestFuture(){
     addOrRemoveTrajectory(currFocusNode);
 }
+var selectedNodeClasses = undefined;
 var currFocusNode = undefined;
 function handleClickEvent(cy){
     cy.on('click', 'node', function (evt) {
@@ -19,6 +20,7 @@ function handleClickEvent(cy){
         if (currFocusNode == undefined){
             // clicking a node activates its menu
             enableActionMenu();
+            //highlightNode(currNode);
             currFocusNode = currNode;
         }
         else if (currFocusNode == currNode){
@@ -31,6 +33,10 @@ function handleClickEvent(cy){
             currFocusNode = currNode;
         }
     });
+}
+function highlightNode(n){
+    n["classes"] = " highlightedNode" ;
+    refreshCy();
 }
 function colorButtonEnabled(id){
     $("#" + id).css("background-image", "linear-gradient(rgb(40, 72, 251) 1%, rgb(4, 31, 185) 5%, rgb(4, 18, 117) 60%)"); 

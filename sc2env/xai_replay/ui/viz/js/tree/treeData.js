@@ -54,6 +54,9 @@ var treeStyle =
     .matchedQueryNode { \
         background-color: #9F2D0D; \
     } \
+    .highlightedNode { \
+        background-color: yellow; \
+    } \
     edge { \
         curve-style: straight; \
         width: 30; \
@@ -301,7 +304,7 @@ function openExplanationView(evt, viewName) {
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(viewName).style.display = "block";
     evt.currentTarget.className += " active";
-    if (viewName == "cy"){
-        document.getElementById("unit-legend").style.display = "block";
-    }
+    //if (viewName == "cy"){
+    //    document.getElementById("unit-legend").style.display = "block";
+    //}
   }
