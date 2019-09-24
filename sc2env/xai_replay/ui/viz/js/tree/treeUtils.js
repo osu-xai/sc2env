@@ -146,7 +146,8 @@ function switchChildrenPositions(cy, currNode, switchNode){
         i++;
     });
 }
-  
+
+var actionButtonIds = [];  
 function generateNodeActionMenu(id){
     var div = document.getElementById(id);
     //$("#" + id).css("visibility", "hidden");
@@ -162,36 +163,53 @@ function generateNodeActionMenu(id){
     $("#node-actions-label").css("padding", "20px");
 
     var nextBestActionId = "next-best-action-button";
-    var nextBestActionButton = document.createElement("button");
-    nextBestActionButton.onmousedown = function(){ depressButton(nextBestActionId); };
-    nextBestActionButton.onmouseup = function(){ undepressButton(nextBestActionId); showNextBestAction() };
-    nextBestActionButton.setAttribute("id", nextBestActionId);
-    nextBestActionButton.setAttribute("width", "200px");
-    nextBestActionButton.setAttribute("disabled", "true");
-    var nextBestActionButtonText = document.createTextNode("Show next best action");
-    nextBestActionButton.appendChild(nextBestActionButtonText);          
-    nextBestActionButton.setAttribute("style",'font-family:Arial;');
+    var nextBestActionButton = getNodeActionButton(nextBestActionId, "Show next best action", showNextBestAction);
     div.append(nextBestActionButton)
-    $("#next-best-action-button").css("margin", "3px");
-    $("#next-best-action-button").css("opacity", "1.0");    
-    $("#next-best-action-button").css("background-image", "");
-    $("#next-best-action-button").css("color", "white");
+    decorateNodeActionButton(nextBestActionId);
+    actionButtonIds.push(nextBestActionId);
 
     var nextBestFutureId = "next-best-future-button";
-
-    var nextBestFutureButton = document.createElement("button");
-    nextBestFutureButton.setAttribute("id", nextBestFutureId);
-    nextBestFutureButton.onmousedown = function(){ depressButton(nextBestFutureId); };
-    nextBestFutureButton.onmouseup = function(){ undepressButton(nextBestFutureId); showNextBestFuture() };
-    var nextBestFutureButtonText = document.createTextNode("Show next best future");
-    nextBestFutureButton.appendChild(nextBestFutureButtonText);          
-    nextBestFutureButton.setAttribute("style",'font-family:Arial;');
-    nextBestFutureButton.setAttribute("disabled", "true");
+    var nextBestFutureButton = getNodeActionButton(nextBestFutureId, "Show next best future", showNextBestFuture);
     div.append(nextBestFutureButton)
-    $("#next-best-future-button").css("margin", "3px");
-    $("#next-best-future-button").css("background-image", "");
-    $("#next-best-future-button").css("border-width", "1px");
-    $("#next-best-future-button").css("opacity", "1.0");
-    $("#next-best-future-button").css("color", "white");
+    decorateNodeActionButton(nextBestFutureId);
+    actionButtonIds.push(nextBestFutureId);
+
+    var hideNodeId = "hide-node-button";
+    var hideNodeButton = getNodeActionButton(hideNodeId, "Hide node", hideNode);
+    div.append(hideNodeButton)
+    decorateNodeActionButton(hideNodeId);
+    actionButtonIds.push(hideNodeId);
+
+    var hidePvId = "hide-pv-button";
+    var hidePvButton = getNodeActionButton(hidePvId, "Hide future", hideFuture);
+    div.append(hidePvButton)
+    decorateNodeActionButton(hidePvId);
+    actionButtonIds.push(hidePvId);
+
+    var expandPvId = "expand-pv-button";
+    var expandPvButton = getNodeActionButton(expandPvId, "Expand future", expandFuture);
+    div.append(expandPvButton)
+    decorateNodeActionButton(expandPvId);
+    actionButtonIds.push(expandPvId);
 }
 
+function getNodeActionButton(id, buttonText, f){
+    var b = document.createElement("button");
+    b.setAttribute("id", id);
+    b.setAttribute("width", "200px");
+    var text = document.createTextNode(buttonText);
+    b.appendChild(text);
+    b.onmousedown = function(){ depressButton(id); };
+    b.onmouseup = function(){ undepressButton(id); f() };
+    return b;
+}
+function decorateNodeActionButton(id){
+    var sel = "#" + id;
+    $(sel).css("margin", "3px");
+    $(sel).css("border-width", "1px");
+    $(sel).css("opacity", "1.0");
+    $(sel).css("color", "white");
+    $(sel).css("font-family", "Arial");
+    $(sel).attr("disabled", "true");
+    colorButtonDisabled(id);
+}

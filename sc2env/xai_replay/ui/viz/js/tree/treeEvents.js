@@ -1,5 +1,6 @@
 
 var userExpandedNodes = [];
+
 function intitTreeEvents(cy){
     handleClickEvent(cy);
     cy.center(cy.nodes());
@@ -8,9 +9,23 @@ function intitTreeEvents(cy){
 function showNextBestAction(){
     addSibling(cy, currFocusNode);
 }
+
 function showNextBestFuture(){
     addOrRemoveTrajectory(currFocusNode);
 }
+
+function hideNode(){
+
+}
+
+function hideFuture(){
+
+}
+
+function expandFuture(){
+
+}
+
 var selectedNodeClasses = undefined;
 var currFocusNode = undefined;
 function handleClickEvent(cy){
@@ -51,18 +66,26 @@ function undepressButton(id){
     colorButtonEnabled(id);
 }
 function disableActionMenu(id){
-    $("#next-best-action-button").attr("disabled", true);
-    $("#next-best-future-button").attr("disabled", true);
-    colorButtonDisabled("next-best-action-button");
-    colorButtonDisabled("next-best-future-button");
-    
+    for (var i in actionButtonIds){
+        var id = actionButtonIds[i];
+        disableActionMenuButton(id);
+    }
 }
 function enableActionMenu(){
-    $("#next-best-action-button").attr("disabled", false);
-    $("#next-best-future-button").attr("disabled", false);
-    colorButtonEnabled("next-best-action-button");
-    colorButtonEnabled("next-best-future-button");
-    
+    for (var i in actionButtonIds){
+        var id = actionButtonIds[i];
+        enableActionMenuButton(id);
+    }
+}
+
+function disableActionMenuButton(id){
+    $("#" + id).attr("disabled", true);
+    colorButtonDisabled(id);
+}
+
+function enableActionMenuButton(id){
+    $("#" + id).attr("disabled", false);
+    colorButtonEnabled(id);
 }
 function handleClickEventOrig(cy){
     cy.on('click', 'node', function (evt) {
