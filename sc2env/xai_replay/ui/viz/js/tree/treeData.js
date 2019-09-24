@@ -75,14 +75,11 @@ var cy = undefined;
 function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
-        // generateStoryLines(backingTreeRoot, frameNumber);
-        // renderStoryLinesDefaultView(frameNumber);
-        // populatePrincipalVariationTree(backingTreeRoot);
         populatePrincipalVariationTrajectory(backingTreeRoot);
         generateNodeActionMenu("node-menu");
+        // populatePrincipalVariationTree(backingTreeRoot);
         // createRootNode(rawSc2Json)
         // populateCompleteTree(rawSc2Json)
-        // initQueryTrees();
         cy = cytoscape(treeData);
 
         cy.ready(function(){
@@ -113,7 +110,7 @@ function intitTreeLables(cy, biggestUnitCountTuple){
             halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
             valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
             cssClass: '', // any classes will be as attribute of <div> container for every title
-            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple,treeViewConstants) + getBestQValue(data, treeViewConstants)   } // your html template here
+            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getBestQValue(data)   } // your html template here
         }
         ]
     );
@@ -279,32 +276,3 @@ function cyPopulateStateNodesUnderEnemyActions(jsonEnemyActionNode){
         cyPopulateFriendlyActionUnderState(jsonStateNode);
     }
 }
-
-
-function openExplanationView(evt, viewName) {
-    // Declare all variables
-    var i, tabcontent, tabbuttons, tabcontentTagAlong;
-  
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-    // Get all elements with class="tabcontent" and hide them
-    tabcontentTagAlong = document.getElementsByClassName("tabcontent-tag-along");
-    for (i = 0; i < tabcontentTagAlong.length; i++) {
-        tabcontentTagAlong[i].style.display = "none";
-    }
-    // Get all elements with class="tabbuttons" and remove the class "active"
-    tabbuttons = document.getElementsByClassName("tabbutton");
-    for (i = 0; i < tabbuttons.length; i++) {
-        tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
-    }
-  
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(viewName).style.display = "block";
-    evt.currentTarget.className += " active";
-    //if (viewName == "cy"){
-    //    document.getElementById("unit-legend").style.display = "block";
-    //}
-  }

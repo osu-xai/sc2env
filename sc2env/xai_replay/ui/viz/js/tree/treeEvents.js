@@ -8,22 +8,27 @@ function intitTreeEvents(cy){
 
 function showNextBestAction(){
     addSibling(cy, currFocusNode);
+    refreshCy();
 }
 
 function showNextBestFuture(){
-    addOrRemoveTrajectory(currFocusNode);
+    addNextBestPrincipalVariation(cy, currFocusNode);
+    refreshCy();
 }
 
 function hideNode(){
-
+    removeNode(cy, currFocusNode);
+    refreshCy();
 }
 
 function hideFuture(){
-
+    removePrincipalVariation(cy, currFocusNode);
+    refreshCy();
 }
 
 function expandFuture(){
-
+    addPrincipalVariationFromStartingNode(cy, currFocusNode);
+    refreshCy();
 }
 
 var selectedNodeClasses = undefined;
@@ -87,73 +92,16 @@ function enableActionMenuButton(id){
     $("#" + id).attr("disabled", false);
     colorButtonEnabled(id);
 }
-function handleClickEventOrig(cy){
-    cy.on('click', 'node', function (evt) {
-        var currNode = evt.target;
-        //if(document.getElementById("trajectory-view").checked == true){
-        //    addOrRemoveTrajectory(currNode);
-        //}
-        ////else{
-        addOrRemoveIncrementalTree(currNode);
-//}
-    });
-}
-
-function addOrRemoveTrajectory(currNode){
-    if (currNode.outgoers().targets().size() < currNode.data("sc2_cyChildren").length){
-        addNextBestPrincipalVariation(cy, currNode);
-        if (currNode.hasClass("principalVariation") == false){
-            userExpandedNodes.push(currNode.data("id"));
-        }
-    }
-    else{
-        var currentNodeId = currNode.data("id");
-        removePrincipalVariation(cy, currNode);
-        for (var i = 0; i < userExpandedNodes.length; i++){
-            if (userExpandedNodes[i].indexOf(currentNodeId) != -1){
-                cy.$('#' + userExpandedNodes[i]).removeClass("selectedNode")
-                userExpandedNodes.splice(i, 1);
-            } 
-        }  
-    }
-}
-
-function addOrRemoveIncrementalTree(currNode){
-    if (currNode.successors().targets().size() <= 0){
-        populatePrincipalVariationTree(currNode);
-        if (currNode.hasClass("principalVariation") == false){
-            userExpandedNodes.push(currNode.data("id"));
-        }
-    }
-    else{
-        var currentNodeId = currNode.data("id");
-        removePrincipalVariationTree(currNode);
-        for (var i = 0; i < userExpandedNodes.length; i++){
-            if (userExpandedNodes[i].indexOf(currentNodeId) != -1){
-                cy.$('#' + userExpandedNodes[i]).removeClass("selectedNode")
-                userExpandedNodes.splice(i, 1);
-            } 
-        }  
-    }
-    refreshCy();
-}
 
 function refreshCy(){
+    cy.destroy();
     cy = cytoscape(treeData);
-    cy.ready(function (){
-        if(userExpandedNodes.length != 0){
-            for (var i = 0; i < userExpandedNodes.length; i++){
-                var newSubTree = cy.$('#' + userExpandedNodes[i]).successors().targets();
-                newSubTree.addClass("userAddedNode");
-                var clickedOnNode = cy.$('#' + userExpandedNodes[i]);
-                clickedOnNode.addClass("selectedNode");
-            } 
-        }
-        restateLayout(cy);  
+    cy.ready(function(){
+        restateLayout(cy);
         childrenFollowParents(cy);
-        sortNodes(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);
+        sortNodes(cy);
         intitTreeLables(cy, biggestUnitCountTuple);
-        intitTreeEvents(cy);      
+        intitTreeEvents(cy);
     });
 }

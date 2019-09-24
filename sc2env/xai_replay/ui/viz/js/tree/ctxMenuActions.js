@@ -22,34 +22,33 @@ function addSibling(cy, contextNode){
                 if (nextBestSibling == undefined){
                     nextBestSibling = sibling;
                 }
-                if (nextBestSibling["data"]["best q_value"] < siblingQVal){
-                    nextBestSibling = sibling;
-                }      
+                if(siblingId.indexOf("_max") != -1){
+                    if (nextBestSibling["data"]["best q_value"] < siblingQVal){
+                        nextBestSibling = sibling;
+                    }   
+                }
+                else{
+                    if (nextBestSibling["data"]["best q_value"] > siblingQVal){
+                        nextBestSibling = sibling;
+                    }   
+                }
+                   
             }
         }
     }
-    var nodes = treeData["elements"]["nodes"];
-    var edges = treeData["elements"]["edges"];
-    nodes.push(nextBestSibling);
-    for (var e = 0; e < contextNodeAndSiblingsEdges.length; e++){
-        var edge = contextNodeAndSiblingsEdges[e];
-        if (edge["data"]["source"] == contextNodeParent.data("id") && edge["data"]["target"] == nextBestSibling["data"]["id"]){
-            edges.push(edge);
+    if (nextBestSibling != undefined){
+        var nodes = treeData["elements"]["nodes"];
+        var edges = treeData["elements"]["edges"];
+        nodes.push(nextBestSibling);
+        for (var e = 0; e < contextNodeAndSiblingsEdges.length; e++){
+            var edge = contextNodeAndSiblingsEdges[e];
+            if (edge["data"]["source"] == contextNodeParent.data("id") && edge["data"]["target"] == nextBestSibling["data"]["id"]){
+                edges.push(edge);
+            }
         }
+        cy = cytoscape(treeData);
+        return nextBestSibling;
     }
-    // cy.destroy()
-        // if (cy.destroyed()){
-            cy = cytoscape(treeData);
-        //     cy.ready(function(cy){
-        //         restateLayout(cy);
-        //         childrenFollowParents(cy);
-        //         var biggestUnitCountTuple = getLargestUnitCount(cy);
-        //         sortNodes(cy);
-        //         intitTreeLables(cy, biggestUnitCountTuple);
-        //         intitTreeEvents(cy);
-                return nextBestSibling;
-        //     });
-        // }
 }
 
 //used when you want to remove a node and its subtree (if one exists)
@@ -79,20 +78,6 @@ function removeNode(cy, contextNode){
             removeNode(cy, child);
         });
     }
-    else{
-        cy.destroy()
-        if (cy.destroyed()){
-            cy = cytoscape(treeData);
-            cy.ready(function(cy){
-                restateLayout(cy);
-                childrenFollowParents(cy);
-                var biggestUnitCountTuple = getLargestUnitCount(cy);
-                sortNodes(cy);
-                intitTreeLables(cy, biggestUnitCountTuple);
-                intitTreeEvents(cy);
-            });
-        }
-    }
 }
 
 //used to remove a PV and any subtrees from it.
@@ -102,19 +87,7 @@ function removePrincipalVariation(cy, contextNode){
     var contextNodeChildren = contextNode.outgoers().targets();
     contextNodeChildren.forEach(function (child){
         removeNode(cy, child);
-    })
-    cy.destroy()
-        if (cy.destroyed()){
-            cy = cytoscape(treeData);
-            cy.ready(function(cy){
-                restateLayout(cy);
-                childrenFollowParents(cy);
-                var biggestUnitCountTuple = getLargestUnitCount(cy);
-                sortNodes(cy);
-                intitTreeLables(cy, biggestUnitCountTuple);
-                intitTreeEvents(cy);
-            });
-        }
+    });
 }
 
 // creates a PV under the selected node (contextNode)
@@ -139,6 +112,7 @@ function addPrincipalVariationFromStartingNode(cy, contextNode){
                 }
             });     
             if (isRendered == false){
+                alert(currChild["data"]["best q_value"])
                 nonRenderedChildren.push(currChild);        
             }
         }
@@ -171,18 +145,6 @@ function addPrincipalVariationFromStartingNode(cy, contextNode){
         }
         nodes.push(nextBestChild);
         addPrincipalVariationFromStartingNode(cy, nextBestChild);
-    }
-    else{
-        cy.destroy()
-        if (cy.destroyed()){
-            cy = cytoscape(treeData);
-                restateLayout(cy);
-                childrenFollowParents(cy);
-                var biggestUnitCountTuple = getLargestUnitCount(cy);
-                sortNodes(cy);
-                intitTreeLables(cy, biggestUnitCountTuple);
-                intitTreeEvents(cy);
-        }
     }
 }
 
