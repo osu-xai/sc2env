@@ -629,7 +629,8 @@ class TugOfWar():
     def get_big_A(self, mineral, num_of_pylon, is_train = 0):
 #         print(mineral)
 #         print(self.action_space_dict[num_of_pylon][mineral])
-
+#         mineral = int(mineral)
+#         print(mineral, num_of_pylon)
         if is_train == 0 or is_train == 1:
             
             big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
