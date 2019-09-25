@@ -40,24 +40,47 @@ function handleClickEvent(cy){
         if (currFocusNode == undefined){
             // clicking a node activates its menu
             enableActionMenu();
-            //highlightNode(currNode);
+            highlightNode(currNode);
             currFocusNode = currNode;
         }
         else if (currFocusNode == currNode){
             // clicking the same node again turns off the menu
+            removeHighlightNode(currFocusNode);
             disableActionMenu();
             currFocusNode = undefined;
         }
         else {
+            removeHighlightNode(currFocusNode);
             // clicking node n when node m has a menu just changes the currFocusNode
             currFocusNode = currNode;
+            highlightNode(currFocusNode);
         }
     });
 }
 function highlightNode(n){
-    n["classes"] = " highlightedNode" ;
-    refreshCy();
+    var nId = n.data("id");
+    cy.nodes().forEach(function(node){
+        if (node.data("id") == nId){
+            node.style("background-color", "navy");
+        }
+    });
+    restateLayout(cy);
+    sortNodes(cy);
 }
+function removeHighlightNode(n){
+    var nId = n.data("id");
+    cy.nodes().forEach(function(node){
+        if (node.data("id") == nId){
+            if (node.hasClass("principalVariation") == true){
+                node.style("background-color", "SteelBlue");
+            }
+            else{
+                node.style("background-color", "LightSlateGray");
+            }        }
+    });
+    restateLayout(cy);
+    sortNodes(cy);
+} 
 function colorButtonEnabled(id){
     $("#" + id).css("background-image", "linear-gradient(rgb(40, 72, 251) 1%, rgb(4, 31, 185) 5%, rgb(4, 18, 117) 60%)"); 
 }
@@ -97,11 +120,12 @@ function refreshCy(){
     cy.destroy();
     cy = cytoscape(treeData);
     cy.ready(function(){
+        highlightNode(currFocusNode)
         restateLayout(cy);
-        childrenFollowParents(cy);
-        var biggestUnitCountTuple = getLargestUnitCount(cy);
         sortNodes(cy);
-        intitTreeLables(cy, biggestUnitCountTuple);
         intitTreeEvents(cy);
+        var biggestUnitCountTuple = getLargestUnitCount(cy);
+        intitTreeLables(cy, biggestUnitCountTuple);
+        childrenFollowParents(cy);
     });
 }

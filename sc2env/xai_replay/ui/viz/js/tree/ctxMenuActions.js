@@ -112,7 +112,6 @@ function addPrincipalVariationFromStartingNode(cy, contextNode){
                 }
             });     
             if (isRendered == false){
-                alert(currChild["data"]["best q_value"])
                 nonRenderedChildren.push(currChild);        
             }
         }

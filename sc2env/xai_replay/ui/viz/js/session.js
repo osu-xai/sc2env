@@ -355,9 +355,9 @@ function renderUnitValues(frameInfo){
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
                     forgetCyTree();
-                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json", frameInfo.frame_number);
-                    //initTree("js/tree/json/whole_decision_point_6_new.json", frameInfo.frame_number);
-                    //initTree("js/tree/json/" + chosenFile + "/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
+                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + ".json", frameInfo.frame_number);
+                    // initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json", frameInfo.frame_number);
+
                 }
                 return;
             }

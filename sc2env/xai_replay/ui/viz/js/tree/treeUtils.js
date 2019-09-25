@@ -160,7 +160,7 @@ function generateNodeActionMenu(id){
     div.append(nodeActionsLabel);
     $("#node-actions-label").css("font-size", "30px");
     $("#node-actions-label").css("text-align", "center");
-    $("#node-actions-label").css("padding", "20px");
+    $("#node-actions-label").css("padding", "10px");
 
     var nextBestActionId = "next-best-action-button";
     var nextBestActionButton = getNodeActionButton(nextBestActionId, "Show next best action", showNextBestAction);
@@ -174,6 +174,12 @@ function generateNodeActionMenu(id){
     decorateNodeActionButton(nextBestFutureId);
     actionButtonIds.push(nextBestFutureId);
 
+    var expandPvId = "expand-pv-button";
+    var expandPvButton = getNodeActionButton(expandPvId, "Expand future", expandFuture);
+    div.append(expandPvButton)
+    decorateNodeActionButton(expandPvId);
+    actionButtonIds.push(expandPvId);
+
     var hideNodeId = "hide-node-button";
     var hideNodeButton = getNodeActionButton(hideNodeId, "Hide node", hideNode);
     div.append(hideNodeButton)
@@ -186,11 +192,6 @@ function generateNodeActionMenu(id){
     decorateNodeActionButton(hidePvId);
     actionButtonIds.push(hidePvId);
 
-    var expandPvId = "expand-pv-button";
-    var expandPvButton = getNodeActionButton(expandPvId, "Expand future", expandFuture);
-    div.append(expandPvButton)
-    decorateNodeActionButton(expandPvId);
-    actionButtonIds.push(expandPvId);
 }
 
 function getNodeActionButton(id, buttonText, f){

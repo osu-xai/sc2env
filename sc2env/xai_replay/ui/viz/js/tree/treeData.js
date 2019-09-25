@@ -27,13 +27,16 @@ var treeLayout = {
     }
 
 var treeStyle =
-    'node{ \
+    'node { \
         background-color: LightSlateGray; \
         height: 1200; \
         width: 1800; \
         background-fit: cover; \
         border-color: black; \
         border-width: 10px; \
+    } \
+    .highlightedNode { \
+        background-color: navy; \
     } \
     .stateNode{ \
         shape: roundrectangle; \
@@ -50,12 +53,6 @@ var treeStyle =
     } \
     .principalVariation { \
         background-color: SteelBlue; \
-    } \
-    .matchedQueryNode { \
-        background-color: #9F2D0D; \
-    } \
-    .highlightedNode { \
-        background-color: yellow; \
     } \
     edge { \
         curve-style: straight; \
