@@ -190,11 +190,11 @@ function generateNodeActionMenu(id){
     decorateNodeActionButton(nextBestActionId);
     actionButtonIds.push(nextBestActionId);
 
-    var nextBestFutureId = "next-best-future-button";
-    var nextBestFutureButton = getNodeActionButton(nextBestFutureId, "Show next best future", showNextBestFuture);
-    div.append(nextBestFutureButton)
-    decorateNodeActionButton(nextBestFutureId);
-    actionButtonIds.push(nextBestFutureId);
+    // var nextBestFutureId = "next-best-future-button";
+    // var nextBestFutureButton = getNodeActionButton(nextBestFutureId, "Show next best future", showNextBestFuture);
+    // div.append(nextBestFutureButton)
+    // decorateNodeActionButton(nextBestFutureId);
+    // actionButtonIds.push(nextBestFutureId);
 
     var expandPvId = "expand-pv-button";
     var expandPvButton = getNodeActionButton(expandPvId, "Expand future", expandFuture);

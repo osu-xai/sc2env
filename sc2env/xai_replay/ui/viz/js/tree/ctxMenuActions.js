@@ -93,7 +93,7 @@ function removePrincipalVariation(cy, contextNode){
 // creates a PV under the selected node (contextNode)
 // requires a parent to already exist
 // contextNode does not need to be a cytoscape node, but can be one.
-function addPrincipalVariationFromStartingNode(cy, contextNode){
+function addNextBestChild(cy, contextNode){
     var nodes = treeData["elements"]["nodes"];
     var edges = treeData["elements"]["edges"];
     try{
@@ -143,8 +143,15 @@ function addPrincipalVariationFromStartingNode(cy, contextNode){
             }
         }
         nodes.push(nextBestChild);
-        addPrincipalVariationFromStartingNode(cy, nextBestChild);
+        return nextBestChild;
     }
+}
+function addPrincipalVariationFromStartingNode(cy, contextNode){
+    var nextBestChild = addNextBestChild(cy, contextNode);
+    if (nextBestChild != undefined){
+        addPrincipalVariationFromStartingNode(cy, nextBestChild)
+    }
+
 }
 
 // will get the next best sibling of selected node (contextNode) then create its PV
