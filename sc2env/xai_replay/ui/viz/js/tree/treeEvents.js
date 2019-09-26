@@ -148,7 +148,7 @@ function refreshCy(){
     cy.ready(function(){
         highlightNode(currFocusNode)
         restateLayout(cy);
-        sortNodes(cy);
+        //sortNodes(cy);
         leftJustifyNodes(cy);
         intitTreeEvents(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);

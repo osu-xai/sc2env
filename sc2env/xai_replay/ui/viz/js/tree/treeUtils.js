@@ -87,27 +87,30 @@ function trimBestNotationDuplicate(id){
     return id;
 }
 
-
 // search at each depth level for siblings and then if finds, check whether it's principle variation is higher (action_max), and x coordinate
 // higher (farther to the right), then switch places with sibling.
 function sortNodes(cy){
+    //sortedPositionRegister = {};
     cy.nodes().forEach(function( ele ){
         var currParent = ele.incomers().sources();
         var currSiblings = currParent.outgoers().targets();
         currSiblings.forEach(function( sib ){
             if (ele.data("id").indexOf("_action_max") != -1){
                 if (ele.data("best q_value") > sib.data("best q_value") && ele.position('x') > sib.position('x')){
-                    var switchPosition = ele.position('x');
-                    ele.position('x', sib.position('x')); 
-                    sib.position('x', switchPosition);
+                    var newSibPosition = ele.position('x');
+                    var newElePosition = sib.position('x');
+                    ele.position('x', newElePosition); 
+                    sib.position('x', newSibPosition);
                     switchChildrenPositions(cy, ele, sib)
+
                 }
             }
             else if (ele.data("id").indexOf("_action_min") != -1){
                 if (ele.data("best q_value") < sib.data("best q_value") && ele.position('x') > sib.position('x')){
-                    var switchPosition = ele.position('x');
-                    ele.position('x', sib.position('x')); 
-                    sib.position('x', switchPosition);
+                    var newSibPosition = ele.position('x');
+                    var newElePosition = sib.position('x');
+                    ele.position('x', newElePosition); 
+                    sib.position('x', newSibPosition);
                     switchChildrenPositions(cy, ele, sib)
                 }
             }
@@ -119,6 +122,7 @@ function leftJustifyNodes(cy){
     console.log(" --------- justifying nodes -----");
     var nodeMap = [];
     var nodeIds = [];
+    var anchorToLeft = -6000;
     gatherAllNodes(nodeMap, nodeIds, backingTreeRoot);
     var activeNodes = treeData["elements"]["nodes"];
     positionActiveNodes(backingTreeRoot, activeNodes);
@@ -127,13 +131,13 @@ function leftJustifyNodes(cy){
             console.log(" position of node " + ele.data("id") + " UNAVAILABLE ");
         }
         else{
-            
-            console.log("  position of node " + ele.position("x") );
-            console.log(" ele.width : " + ele.width());
+            var oldPosition = ele.position("x");
+            //console.log(" ele.width : " + ele.width());
             //var widthFactor = (Number(ele.width()) + 200);
             var widthFactor = 2000; // 1800 + 200 buffer since state nodes are 1800
-            console.log("setting  position of node " + ele.data("id") + " to " + ele.data("xOffset"));
-            ele.position('x', Number(ele.data("xOffset")) * widthFactor);
+            var newXPosition = Number(ele.data("xOffset")) * widthFactor + anchorToLeft;
+            console.log("changing  position of node " + ele.data("id") + " from " + oldPosition + " to position " + newXPosition + " based on xOffset " + ele.data("xOffset"));
+            ele.position('x', newXPosition);
         }
     });
 }
@@ -267,6 +271,90 @@ function positionActiveNodes(tree, activeNodes){
     // do same for next one to left in list
 }
 
+// function ChildPosition(child, xPosition) {
+//     this.child = child;
+//     this.xPosition = xPosition;
+//   }
+// function sortNodesAsPerSortedPositionRegister(node, children){
+//     var register = sortedPositionRegister[node["data"]["id"]]
+//     var sortList = [];
+//     for (var index in children){
+//         // make a sortable entity that associates position and id
+//         var child = children[index];
+//         var childId = child["data"]["id"];
+//         var xPosition = register[childId];
+//         var childPosition = new ChildPosition(child, xPosition);
+//         sortList.push(childPosition);
+//     }
+//     sortList.sort(function(a,b){
+//         if  (a.xPosition > b.xPosition){
+//             return 1;
+//         }
+//         if  (a.xPosition < b.xPosition){
+//             return -1;
+//         }
+//         return 0;
+//     });
+//     var result = [];
+//     for (var i in sortList){
+//         var childPosition = sortList[i];
+//         result.push(childPosition.child);
+//     }
+//     return result;
+// }
+
+
+function ChildScore(child, score) {
+    this.child = child;
+    this.score = score;
+}
+
+function sortNodesAsPerPredictedScore(node, children){
+    if (node["data"]["id"].indexOf("state")){
+        return sortChildren(children, sortScoreHighToLow);
+    }
+    else if (node["data"]["id"].indexOf("_action_max")){
+        return sortChildren(children, sortScoreLowToHigh);
+    }
+    else {
+        return children;
+    }
+}
+
+function sortScoreHighToLow(a,b){
+    if  (a.score < b.score){
+        return 1;
+    }
+    if  (a.score > b.score){
+        return -1;
+    }
+    return 0;
+}
+function sortScoreLowToHigh(a,b){
+    if  (a.score > b.score){
+        return 1;
+    }
+    if  (a.score < b.score){
+        return -1;
+    }
+    return 0;
+}
+function sortChildren(children, sortFunction){
+    var sortList = [];
+    for (var index in children){
+        var child = children[index];
+        var score = child["data"]["best q_value"];
+        var childScore = new ChildScore(child, score);
+        sortList.push(childScore);
+    }
+    sortList.sort(sortFunction);
+    var result = [];
+    for (var i in sortList){
+        var childScore = sortList[i];
+        result.push(childScore.child);
+    }
+    return result;
+}
 // once I have the active leaves, I can follow the parentage up, so position node and parent should work
 // the question is , how does findLeafNodes work on the active tree, not the backing tree.  
 // Could just follow the backing tree, and omit ones not in nodes
@@ -275,9 +363,11 @@ function positionActiveNodes(tree, activeNodes){
 function findChildrenExpressedAsLeavesUnderNode(node, leafNodes, activeNodes) {
     // assumes given node has been determined to be visible
     var children = node["data"]["sc2_cyChildren"];
-    if (children != undefined){
-        for (var i in children){
-            var child = children[i];
+    //sortedChildren = sortNodesAsPerSortedPositionRegister(node, children);
+    var sortedChildren = sortNodesAsPerPredictedScore(node, children);
+    if (sortedChildren != undefined){
+        for (var i in sortedChildren){
+            var child = sortedChildren[i];
             if (isNodeVisible(child, activeNodes)){
                 if (isNodeATrueLeaf(child) || isNodeExpressedAsLeaf(child, activeNodes)){
                     leafNodes.push(child);
@@ -328,6 +418,7 @@ function positionNodeAndParent(node, i){
 }
 
 function setNodePosition(node, i){
+    console.log("setting xOffset for " + node["data"]["id"] + " to position " + i);
     node["data"]["xOffset"] = i;
 }
 

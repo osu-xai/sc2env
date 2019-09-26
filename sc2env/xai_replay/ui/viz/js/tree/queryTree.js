@@ -86,7 +86,7 @@ function switchQueryTrees(treeNumber, cyTreeDataList){
         cy.center();
         childrenFollowParents(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);
-        sortNodes(cy);
+        //sortNodes(cy);
         intitTreeLables(cy, biggestUnitCountTuple);
         intitTreeEvents(cy); 
     });
