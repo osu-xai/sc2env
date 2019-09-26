@@ -93,7 +93,7 @@ function removePrincipalVariation(cy, contextNode){
 // creates a PV under the selected node (contextNode)
 // requires a parent to already exist
 // contextNode does not need to be a cytoscape node, but can be one.
-function addPrincipalVariationFromStartingNode(cy, contextNode){
+function addNextBestChild(cy, contextNode){
     var nodes = treeData["elements"]["nodes"];
     var edges = treeData["elements"]["edges"];
     try{
@@ -115,14 +115,18 @@ function addPrincipalVariationFromStartingNode(cy, contextNode){
                 nonRenderedChildren.push(currChild);        
             }
         }
-        if(contextNode.data("id").indexOf("_max") != -1){
-            var nextBestChild = getWorstScoreSibling(nonRenderedChildren);
+        if (nonRenderedChildren.length > 0){
+            if(contextNode.data("id").indexOf("_max") != -1){
+                var nextBestChild = getWorstScoreSibling(nonRenderedChildren);
+            }
+            else{
+                var nextBestChild = getBestScoreSibling(nonRenderedChildren);
+            }
         }
         else{
-            var nextBestChild = getBestScoreSibling(nonRenderedChildren);
+            alert("No more actions to expand.");
         }
     }
-
     catch{
         var children = contextNode["data"]["sc2_cyChildren"];
         var edgesToChildren = contextNode["data"]["sc2_cyEdgesToCyChildren"];
@@ -143,8 +147,15 @@ function addPrincipalVariationFromStartingNode(cy, contextNode){
             }
         }
         nodes.push(nextBestChild);
-        addPrincipalVariationFromStartingNode(cy, nextBestChild);
+        return nextBestChild;
     }
+}
+function addPrincipalVariationFromStartingNode(cy, contextNode){
+    var nextBestChild = addNextBestChild(cy, contextNode);
+    if (nextBestChild != undefined){
+        addPrincipalVariationFromStartingNode(cy, nextBestChild)
+    }
+
 }
 
 // will get the next best sibling of selected node (contextNode) then create its PV

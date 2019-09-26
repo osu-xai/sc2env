@@ -190,11 +190,11 @@ function generateNodeActionMenu(id){
     decorateNodeActionButton(nextBestActionId);
     actionButtonIds.push(nextBestActionId);
 
-    var nextBestFutureId = "next-best-future-button";
-    var nextBestFutureButton = getNodeActionButton(nextBestFutureId, "Show next best future", showNextBestFuture);
-    div.append(nextBestFutureButton)
-    decorateNodeActionButton(nextBestFutureId);
-    actionButtonIds.push(nextBestFutureId);
+    // var nextBestFutureId = "next-best-future-button";
+    // var nextBestFutureButton = getNodeActionButton(nextBestFutureId, "Show next best future", showNextBestFuture);
+    // div.append(nextBestFutureButton)
+    // decorateNodeActionButton(nextBestFutureId);
+    // actionButtonIds.push(nextBestFutureId);
 
     var expandPvId = "expand-pv-button";
     var expandPvButton = getNodeActionButton(expandPvId, "Expand future", expandFuture);
@@ -329,4 +329,27 @@ function positionNodeAndParent(node, i){
 
 function setNodePosition(node, i){
     node["data"]["xOffset"] = i;
+}
+
+function checkMenuAvailibleActions(currFocusNode){
+    var actionButtonsToBeActivted = [];
+    if ( currFocusNode.hasClass("principalVariation") == false || (currFocusNode.hasClass("principalVariation") == true && currFocusNode.hasClass("rootNode") == true)){
+        if (currFocusNode.data("id").indexOf("_max") != -1){
+            if (currFocusNode.outgoers().targets().size() > 0){
+                actionButtonsToBeActivted.push("hide-node-button");
+                actionButtonsToBeActivted.push("hide-pv-button");
+            }
+            else{
+                actionButtonsToBeActivted.push("hide-node-button");
+                actionButtonsToBeActivted.push("expand-pv-button");
+                actionButtonsToBeActivted.push("hide-node-button");
+            }
+        }
+        else if (currFocusNode.data("id").indexOf("state") != -1){
+            if (currFocusNode.outgoers().targets().size() != currFocusNode.data("sc2_cyChildren").length){
+                actionButtonsToBeActivted.push("next-best-action-button");
+            }
+        }
+    }
+    return actionButtonsToBeActivted;
 }
