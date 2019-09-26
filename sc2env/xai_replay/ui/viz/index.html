@@ -273,14 +273,22 @@
 
                         <div id="playback-controls-panel" class="flex-row">
                             <button id="reward-values-panel-toggle" alt="View Rewards" style="display: none;">Show Rewards</button>
-                            <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;">Show Units</button>
-                            <button id="fullscreen-button1-toggle" alt="enter alt text her" style="display:none;">Explanation Tree</button>
+                            <div style="width:35%">
+                                <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;">Hide Unit Information</button>
+                            </div>
+                            <div style="width:30%" class="flex-row">
+                                <button id="connect-button">Start</button>
+                                <div id="step-value" class="minor-label-text"></div>
+                                <!--<div id="rewind-control"></div>
+                                <div id="step-back-control"></div>
+                                <div id="step-forward-control"></div>-->
+                                <div id="pause-play-control"></div>
+                            </div>
+                            <div style="width:35%">
+                                <button id="fullscreen-button1-toggle"  style="display:none;">Show Explanations</button>
+                            </div>
+                            
 
-                            <div id="step-value" class="minor-label-text"></div>
-                            <div id="rewind-control"></div>
-                            <div id="step-back-control"></div>
-                            <div id="step-forward-control"></div>
-                            <div id="pause-play-control"></div>
                         </div>
                         <div id="explanation-control-panel" class="timeline-control bg" >
                         </div>

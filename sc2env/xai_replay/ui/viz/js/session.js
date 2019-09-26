@@ -72,7 +72,12 @@ var userStudyMode = false;
 var rewardDivMap = {};
 // accept the list of replay filenames
 function handleReplayChoiceConfig(config){//SC2_OK
-    $("#connectButton").remove();
+    $("#connect-button").remove();
+    var play = document.getElementById("pauseResumeButton");
+    if (play == undefined){
+        configureNavigationButtons();
+    }
+    
     var replayNames = config.getReplayFilenamesList();
      // studyQuestionMode not yet set to check, just always check - unlikely to be a problem
     // make tutorial file the default

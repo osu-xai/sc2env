@@ -176,7 +176,7 @@ function initUI() { //SC2_TEST
 	sizeNonGeneratedElements();
 	controlsManager.setControlsNotReady();
 	controlsManager.registerJQueryHandleForWaitCursor($("#tabbed-interface"));
-	configureNavigationButtons();
+	//configureNavigationButtons();
 	configureQuestionArea();
 	setUpMetadataToolTipEventHandlers();
     drawExplanationTimeline(); 
@@ -450,29 +450,33 @@ function sizeNonGeneratedElements() {
 	
 
 	
-	$('#unit-value-panels-toggle').css('float', "left")
+	$('#unit-value-panels-toggle').css('float', "right")
 	$('#unit-value-panels-toggle').css('text-align', "center")
-	$('#unit-value-panels-toggle').css('font-size', "12px")
+	$('#unit-value-panels-toggle').css('font-size', "15px")
 	$('#unit-value-panels-toggle').css('font-family', "Arial")
-	$('#unit-value-panels-toggle').css('width', "80px")
+	$('#unit-value-panels-toggle').css('width', "300px")
 	$('#unit-value-panels-toggle').css('height', "30px")
+	//$('#unit-value-panels-toggle').css('margin-left', "30%")
 
 	var toggle_units = document.getElementById("unit-value-panels-toggle");
 	toggle_units.addEventListener('click', function(event){
 		if ($('.unit-value-panels').css('display') == 'none'){
-			$('.unit-value-panels').css('display', "grid")
+			$('.unit-value-panels').css('display', "grid");
+			$('#unit-value-panels-toggle').html("Hide Unit Information");
 		}
 		else{
-			$('.unit-value-panels').css('display', "none")
+			$('.unit-value-panels').css('display', "none");
+			$('#unit-value-panels-toggle').html("Show Unit Information");
 		}
 	});
 	
 	$('#fullscreen-button1-toggle').css('float', "left")
 	$('#fullscreen-button1-toggle').css('text-align', "center")
-	$('#fullscreen-button1-toggle').css('font-size', "12px")
+	$('#fullscreen-button1-toggle').css('font-size', "15px")
 	$('#fullscreen-button1-toggle').css('font-family', "Arial")
-	$('#fullscreen-button1-toggle').css('width', "80px")
+	$('#fullscreen-button1-toggle').css('width', "300px")
 	$('#fullscreen-button1-toggle').css('height', "30px")
+	//$('#fullscreen-button1-toggle').css('margin-left', "10%")
 
 
 	$('#fullscreen-modal').css('width', "95%")
@@ -508,9 +512,11 @@ function sizeNonGeneratedElements() {
                     frameOfCurrentTree = step;
                 }
             }
+            $('#fullscreen-button1-toggle').html("Hide Explanations");
 		}
 		else{
-			$('#fullscreen-modal').css('display', "none")
+            $('#fullscreen-modal').css('display', "none")
+            $('#fullscreen-button1-toggle').html("Show Explanations");
 		}
 	});
 	
@@ -518,7 +524,8 @@ function sizeNonGeneratedElements() {
 	var stepValueWidth = 100;
 	var stepValuePaddingLeft = centerPointOfVideo - stepValueWidth - 40;
 	$("#step-value").css("width", stepValueWidth + "px");
-	$("#step-value").css("margin-left", ($(window).width()/2)-120);
+	//$("#step-value").css("margin-left", ($(window).width()/2)-120);
+	$("#step-value").css("margin-left", "40%");
 	
 	
 	
