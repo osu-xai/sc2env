@@ -152,9 +152,9 @@ function switchChildrenPositions(cy, currNode, switchNode){
     currNodeChildren.forEach(function( child ){
         currNodeChildrenPositions.push(child.relativePosition('x'));
     });
-    var switchChildrenPositions = [];
+    var temp = [];
     switchNodeChildren.forEach(function( child ){
-        switchChildrenPositions.push(child.relativePosition('x'));
+        temp.push(child.relativePosition('x'));
     });
     
     var i = 0;
@@ -164,7 +164,7 @@ function switchChildrenPositions(cy, currNode, switchNode){
     });
     i = 0;
     currNodeChildren.forEach(function( child ){
-        child.relativePosition('x', switchChildrenPositions[i]);
+        child.relativePosition('x', temp[i]);
         i++;
     });
 }
