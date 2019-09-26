@@ -3,7 +3,7 @@ var userExpandedNodes = [];
 
 function intitTreeEvents(cy){
     handleClickEvent(cy);
-    cy.center(cy.nodes());
+    //cy.center(cy.nodes());
 }
 
 function showNextBestAction(){
@@ -55,7 +55,9 @@ function handleClickEvent(cy){
             currFocusNode = currNode;
             highlightNode(currFocusNode);
         }
-    });
+        leftJustifyNodes(cy);
+        var biggestUnitCountTuple = getLargestUnitCount(cy);
+        intitTreeLables(cy, biggestUnitCountTuple);    });
 }
 function highlightNode(n){
     var nId = n.data("id");
@@ -123,6 +125,7 @@ function refreshCy(){
         highlightNode(currFocusNode)
         restateLayout(cy);
         sortNodes(cy);
+        leftJustifyNodes(cy);
         intitTreeEvents(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);
         intitTreeLables(cy, biggestUnitCountTuple);

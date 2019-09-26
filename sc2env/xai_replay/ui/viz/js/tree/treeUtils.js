@@ -115,6 +115,28 @@ function sortNodes(cy){
     });
 }
 
+function leftJustifyNodes(cy){
+    console.log(" --------- justifying nodes -----");
+    var nodeMap = [];
+    var nodeIds = [];
+    gatherAllNodes(nodeMap, nodeIds, backingTreeRoot);
+    var activeNodes = treeData["elements"]["nodes"];
+    positionActiveNodes(backingTreeRoot, activeNodes);
+    cy.nodes().forEach(function( ele ){
+        if (ele.data("xOffset") == undefined){
+            console.log(" position of node " + ele.data("id") + " UNAVAILABLE ");
+        }
+        else{
+            
+            console.log("  position of node " + ele.position("x") );
+            console.log(" ele.width : " + ele.width());
+            //var widthFactor = (Number(ele.width()) + 200);
+            var widthFactor = 2000; // 1800 + 200 buffer since state nodes are 1800
+            console.log("setting  position of node " + ele.data("id") + " to " + ele.data("xOffset"));
+            ele.position('x', Number(ele.data("xOffset")) * widthFactor);
+        }
+    });
+}
 function restateLayout(cy){
   cy.style().fromString(treeStyle).update()
   var layout = cy.layout(treeLayout);
@@ -213,4 +235,98 @@ function decorateNodeActionButton(id){
     $(sel).css("font-family", "Arial");
     $(sel).attr("disabled", "true");
     colorButtonDisabled(id);
+}
+
+
+function gatherAllNodes(nodeMap, ids, node){
+    var id = node["id"];
+    ids.push(id);
+    nodeMap[id] = node;
+    var children = node["data"]["sc2_cyChildren"];
+    if (children != undefined){
+        for (var i in children){
+            var child = children[i]; 
+            gatherAllNodes(nodeMap, ids, child);
+        }
+    }
+}
+
+function positionActiveNodes(tree, activeNodes){
+    // 0.0.0.0
+    // 0.1.0.0
+    // 0.1.0.1
+    var leafNodes = [];
+    findChildrenExpressedAsLeavesUnderNode(tree, leafNodes, activeNodes);
+    for (var i = leafNodes.length - 1; i >= 0; i--){
+        var leafNode = leafNodes[i];
+        positionNodeAndParent(leafNode, i);
+    }
+    // find all the children from left to right and add to list
+    // from the end of the list to the beginning
+    // position it and all parents to itsIndexInThatList * delta
+    // do same for next one to left in list
+}
+
+// once I have the active leaves, I can follow the parentage up, so position node and parent should work
+// the question is , how does findLeafNodes work on the active tree, not the backing tree.  
+// Could just follow the backing tree, and omit ones not in nodes
+// for position node and parent, could make a map of positions, then iterate through the ele style and lookup for the amount to set the 
+
+function findChildrenExpressedAsLeavesUnderNode(node, leafNodes, activeNodes) {
+    // assumes given node has been determined to be visible
+    var children = node["data"]["sc2_cyChildren"];
+    if (children != undefined){
+        for (var i in children){
+            var child = children[i];
+            if (isNodeVisible(child, activeNodes)){
+                if (isNodeATrueLeaf(child) || isNodeExpressedAsLeaf(child, activeNodes)){
+                    leafNodes.push(child);
+                }
+                else {
+                    findChildrenExpressedAsLeavesUnderNode(child, leafNodes, activeNodes)
+                }
+            }
+            
+        }
+    }
+}
+function isNodeVisible(node, activeNodes){
+    var isVisible = activeNodes.indexOf(node) != -1;
+    return isVisible;
+}
+
+function isNodeATrueLeaf(node){
+    var children = node["data"]["sc2_cyChildren"];
+    if (children == undefined){
+        return true;
+    }
+    if (children.length == 0){
+        return true;
+    }
+    return false;
+}
+function isNodeExpressedAsLeaf(node, activeNodes){
+    
+    var children = node["data"]["sc2_cyChildren"];
+    var visibleChildCount = 0;
+    if (children != undefined){
+        for (var i in children){
+            var child = children[i];
+            if (activeNodes.indexOf(child) != -1){
+                visibleChildCount += 1;
+            } 
+        }
+    }
+    return (visibleChildCount == 0);
+}
+function positionNodeAndParent(node, i){
+    setNodePosition(node, i);
+    var parent = node["data"]["sc2_cyParent"];
+    if (parent != undefined){
+        positionNodeAndParent(parent, i)
+    }
+}
+
+function setNodePosition(node, i){
+    node["data"]["xOffset"] = i;
 }

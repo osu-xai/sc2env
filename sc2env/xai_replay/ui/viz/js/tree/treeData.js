@@ -81,10 +81,11 @@ function initTree(jsonPath, frameNumber){
 
         cy.ready(function(){
             restateLayout(cy);
-            cy.center();
+            //cy.center();
             childrenFollowParents(cy);
             var biggestUnitCountTuple = getLargestUnitCount(cy);
             sortNodes(cy);
+            leftJustifyNodes(cy);
             intitTreeLables(cy, biggestUnitCountTuple);
             intitTreeEvents(cy);
         });
