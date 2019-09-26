@@ -6,6 +6,9 @@ function intitTreeEvents(cy){
         cy.nodes().forEach(function (node){
             if (node.data("id") == currFocusNode.data("id")){
                 currFocusNode = node;
+                disableActionMenu();
+                var actionButtonsToBeActivted = checkMenuAvailibleActions(currFocusNode);
+                enableActionMenu(actionButtonsToBeActivted);
                 highlightNode(currFocusNode);
             }
         });
@@ -56,10 +59,12 @@ function handleClickEvent(cy){
         leftJustifyNodes(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);
         intitTreeLables(cy, biggestUnitCountTuple);
-        // if (currNode.hasClass("stateNode")){
+        if (currNode.hasClass("stateNode") == true || currNode.hasClass("friendlyAction") == true){
             if (currFocusNode == undefined){
                 // clicking a node activates its menu
-                enableActionMenu();
+                disableActionMenu(); // clear menu of previous activated options
+                var actionButtonsToBeActivted = checkMenuAvailibleActions(currNode);
+                enableActionMenu(actionButtonsToBeActivted);
                 currFocusNode = currNode;
                 highlightNode(currFocusNode);
 
@@ -72,11 +77,19 @@ function handleClickEvent(cy){
             }
             else {
                 removeHighlightNode(currFocusNode);
+                disableActionMenu(); // clear menu of previous active options
                 // clicking node n when node m has a menu just changes the currFocusNode
                 currFocusNode = currNode;
+                var actionButtonsToBeActivted = checkMenuAvailibleActions(currFocusNode);
+                enableActionMenu(actionButtonsToBeActivted);   
                 highlightNode(currFocusNode);
             }
-        // }
+        }
+        else{
+            removeHighlightNode(currFocusNode);
+            disableActionMenu();
+            currFocusNode = undefined;
+        }
     });
 }
 function highlightNode(n){
@@ -106,15 +119,15 @@ function depressButton(id){
 function undepressButton(id){
     colorButtonEnabled(id);
 }
-function disableActionMenu(id){
+function disableActionMenu(){
     for (var i in actionButtonIds){
         var id = actionButtonIds[i];
         disableActionMenuButton(id);
     }
 }
-function enableActionMenu(){
-    for (var i in actionButtonIds){
-        var id = actionButtonIds[i];
+function enableActionMenu(actionButtonsToBeActivted){
+    for (var i in actionButtonsToBeActivted){
+        var id = actionButtonsToBeActivted[i];
         enableActionMenuButton(id);
     }
 }

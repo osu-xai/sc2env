@@ -115,14 +115,18 @@ function addNextBestChild(cy, contextNode){
                 nonRenderedChildren.push(currChild);        
             }
         }
-        if(contextNode.data("id").indexOf("_max") != -1){
-            var nextBestChild = getWorstScoreSibling(nonRenderedChildren);
+        if (nonRenderedChildren.length > 0){
+            if(contextNode.data("id").indexOf("_max") != -1){
+                var nextBestChild = getWorstScoreSibling(nonRenderedChildren);
+            }
+            else{
+                var nextBestChild = getBestScoreSibling(nonRenderedChildren);
+            }
         }
         else{
-            var nextBestChild = getBestScoreSibling(nonRenderedChildren);
+            alert("No more actions to expand.");
         }
     }
-
     catch{
         var children = contextNode["data"]["sc2_cyChildren"];
         var edgesToChildren = contextNode["data"]["sc2_cyEdgesToCyChildren"];
