@@ -192,6 +192,9 @@ function highlightShapeInRange(x,y) {//SC2_TEST
 function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// for hiding/showing tooltips
 	gameboard_canvas.addEventListener('click', function(evt) {
+        if (true){
+            return; // block for Study2
+        }
 		console.log("clicked!");
 		var x = evt.offsetX;
 		var y = evt.offsetY;
@@ -225,6 +228,9 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// 	$("#step-value").html( x + " , " + y);
 	// });
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
+        if (true){
+            return; // block for study 2
+        }
 		var x = evt.offsetX;
 		var y = evt.offsetY;
 
