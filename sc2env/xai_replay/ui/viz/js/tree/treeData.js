@@ -73,22 +73,33 @@ function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
         populatePrincipalVariationTrajectory(backingTreeRoot);
+       
         generateNodeActionMenu("node-menu");
         // populatePrincipalVariationTree(backingTreeRoot);
         // createRootNode(rawSc2Json)
         // populateCompleteTree(rawSc2Json)
         cy = cytoscape(treeData);
-
-        cy.ready(function(){
-            restateLayout(cy);
-            //cy.center();
-            childrenFollowParents(cy);
-            var biggestUnitCountTuple = getLargestUnitCount(cy);
-            //sortNodes(cy);
-            leftJustifyNodes(cy);
-            intitTreeLables(cy, biggestUnitCountTuple);
-            intitTreeEvents(cy);
-        });
+        var rootNodeId = backingTreeRoot["data"]["id"];
+        addNextBestChild(cy,cy.getElementById(rootNodeId));
+        refreshCy();
+        addNextBestChild(cy,cy.getElementById(rootNodeId));
+        refreshCy();
+        addNextBestChild(cy,cy.getElementById(rootNodeId));
+        refreshCy();
+        //TODO uncomment this when have real data file in play
+        //addNextBestChild(cy,cy.getElementById(rootNodeId));
+        //refreshCy();
+        
+        // cy.ready(function(){
+        //     restateLayout(cy);
+        //     //cy.center();
+        //     childrenFollowParents(cy);
+        //     var biggestUnitCountTuple = getLargestUnitCount(cy);
+        //     //sortNodes(cy);
+        //     leftJustifyNodes(cy);
+        //     intitTreeLables(cy, biggestUnitCountTuple);
+        //     intitTreeEvents(cy);
+        // });
     });
 }
 

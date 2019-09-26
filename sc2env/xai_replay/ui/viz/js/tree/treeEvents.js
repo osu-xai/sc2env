@@ -146,7 +146,9 @@ function refreshCy(){
     cy.destroy();
     cy = cytoscape(treeData);
     cy.ready(function(){
-        highlightNode(currFocusNode)
+        if (currFocusNode != undefined){
+            highlightNode(currFocusNode);
+        }
         restateLayout(cy);
         //sortNodes(cy);
         leftJustifyNodes(cy);
