@@ -424,7 +424,7 @@ function setNodePosition(node, i){
 
 function checkMenuAvailibleActions(currFocusNode){
     var actionButtonsToBeActivted = [];
-    if ( currFocusNode.hasClass("principalVariation") == false || (currFocusNode.hasClass("principalVariation") == true && currFocusNode.hasClass("rootNode") == true)){
+    if ( currFocusNode.hasClass("principalVariation") == false || (currFocusNode.hasClass("principalVariation") == true && currFocusNode.hasClass("stateNode") == true)){
         if (currFocusNode.data("id").indexOf("_max") != -1){
             if (currFocusNode.outgoers().targets().size() > 0){
                 actionButtonsToBeActivted.push("hide-node-button");
