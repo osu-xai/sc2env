@@ -134,34 +134,38 @@ function getColumnStylingString(biggestUnitCount){
   return columsString
 }
 
+//var bestQValueColorPV = "rgba(255,140,26,1)";
+//var bestQValueColor = "Turquoise";
 
+var bestQValueColorPV = "white";
+var bestQValueColor = "white";
 // bestQvalue is the percolated back up value from the leaf.
 function getBestQValue(data){
   // var afterStateQValue = data["after state q_value"];
   var bestStateQValue = data["best q_value"];
   var name = data["name"];
   if(data['root']){
-    return '<div style="color:rgba(255,140,26,1);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+    return '<div style="color:' + bestQValueColorPV + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
   }
   // TODO refactor because do same for state and action
   if (name.indexOf("_action") != -1){
       if (name.indexOf("best") != -1){
           // principle variation
-          return '<div style="color:rgba(255,140,26,1);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColorPV + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
       else{
           // others
-          return '<div style="color:Turquoise;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColor + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
   }
   else{
       //state
       if (name.indexOf("best") != -1){
           // principle variation
-          return '<div style="color:rgba(255,140,26,1);font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColorPV + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
       else{
-          return '<div style="color:Turquoise;font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColor + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
   }
 }

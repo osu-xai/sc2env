@@ -25,11 +25,11 @@ var treeLayout = {
         stop: undefined, // callback on layoutstop
         transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
     }
-// was 1200
+// was SteelBlue
 var treeStyle =
     'node { \
         background-color: LightSlateGray; \
-        height: 1700; \
+        height: 1200; \
         width: 1800; \
         background-fit: cover; \
         border-color: black; \
@@ -44,6 +44,7 @@ var treeStyle =
     .friendlyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
+        height: 1700; \
         width: 1100; \
     } \
     .enemyAction{ \
@@ -52,7 +53,7 @@ var treeStyle =
         width: 1100; \
     } \
     .principalVariation { \
-        background-color: SteelBlue; \
+        background-color: #239B56; \
     } \
     edge { \
         curve-style: straight; \
@@ -127,7 +128,7 @@ function intitTreeLables(cy, biggestUnitCountTuple){
 
 function getStateValues(data){
     stateDict = {};
-    currState = data["state"];
+    var currState = data["state"];
     stateDict["TOP Marines"] = currState[1];
     stateDict["TOP Banelings"] = currState[2];
     stateDict["TOP Immortals"] = currState[3];

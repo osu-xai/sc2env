@@ -101,7 +101,7 @@ function highlightNode(n){
 function removeHighlightNode(n){
     var nId = n.data("id");
     if (n.hasClass("principalVariation") == true){
-        n.style("background-color", "SteelBlue");
+        n.style("background-color", "#EAFAF1");// was SteelBlue
     }
     else{
         n.style("background-color", "LightSlateGray");
