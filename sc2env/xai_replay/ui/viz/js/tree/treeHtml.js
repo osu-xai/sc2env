@@ -75,10 +75,10 @@ function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
 
 function getNodeGlyphs(data, biggestUnitCountTuple){
   var unitValuesDict = parseActionString(data);
-  if (data.id.indexOf("action_max") != -1){
+  if (isFriendlyActionNode(data)){
       return getFriendlyGraphString(data, unitValuesDict, biggestUnitCountTuple[1]);
   }
-  else if (data.id.indexOf("action_min") != -1){
+  else if (isEnemyActionNode(data)){
       return getEnemyGraphString(data, unitValuesDict, biggestUnitCountTuple[1]);
   }
   else{
@@ -165,3 +165,88 @@ function getBestQValue(data){
       }
   }
 }
+
+function getChart(data){
+    if (isFriendlyActionNode(data)){
+        var chartData = data.chartData;
+        if (chartData == undefined){
+            alert("Chart Data undefined for friendly Action Node!");
+            return "";
+        }
+        else {
+            return getChartString(chartData);
+        }
+        
+    }
+    else {
+        return "";
+    }
+}
+function getChartString(chartData){
+    // make chart container div with specific dimensions that is a flex-column
+    var chartString = '<div class="flex-column" style="background-color:white;height: 400px; width: 800px;padding=30px;">' + getChartContentRow(chartData) + getXAxisRow() + '</div>';
+    return chartString;
+}
+function getChartContentRow(chartData){
+    // add flex-row that has  padding-left, then vertical line (y-axis), then spacer, then first four bar divs, then spacer, then next four divs, then padding-right
+    var content = '<div class="flex-row" style="height: 80%; padding-left:20px; padding-top:20px; padding-right:20px;">' +
+                getYAxis() + 
+                getChartSpacer() +
+                getBarDiv(chartData, 0) + 
+                getBarDiv(chartData, 1) + 
+                getBarDiv(chartData, 2) + 
+                getBarDiv(chartData, 3) +
+                getChartSpacer() +
+                getBarDiv(chartData, 4) + 
+                getBarDiv(chartData, 5) + 
+                getBarDiv(chartData, 6) + 
+                getBarDiv(chartData, 7) + 
+                getChartSpacer() +
+            '</div>';
+    return content;
+}
+function getBarDiv(chartData, index){
+    var bar = chartData[index];
+    var value = bar["value"];
+    var barPercent = value * 100;
+    var spacerPercent = (1 - value) * 100;
+    var barDiv = '<div class="flex-column" style="width:80px;height:100%;">' + getBarSpacer(spacerPercent) + getBar(barPercent, index) + '</div>'
+    //var barDiv = '<div style="width:80px;height:100%;margin-top:' + spacerPercent + '%; background-color:'+ barColors[index] + '"></div>'
+    return barDiv;
+}
+
+function getBar(percent, index){
+    var bar = '<div style="width:80px;height:' + percent + '%;background-color:'+ barColors[index] + '"></div>';
+    return bar;
+}
+
+function getBarSpacer(percent){
+    var barSpacer = '<div style="width:80px;height:' + percent + '%;"></div>';
+    return barSpacer;
+}
+
+function getChartSpacer() {
+    var spacer = '<div style="width:80px;height:100%;"></div>'
+    return spacer;
+}
+function getXAxisRow() {
+    // add horizontal line (x axid)
+    var xAxis = '<div style="width:100%;height:1px;background-color:black;"></div>'
+    return xAxis;
+}
+
+function getYAxis() {
+// add horizontal line (x axid)
+    var yAxis = '<div style="width:1px;height:100%;background-color:black;"></div>'
+    return yAxis;
+}
+ var barColors = {};
+ barColors[0] = "#111111";
+ barColors[1] = "#333333";
+ barColors[2] = "#555555";
+ barColors[3] = "#777777";
+ barColors[4] = "#999999";
+ barColors[5] = "#BBBBBB";
+ barColors[6] = "#DDDDDD";
+ barColors[7] = "#E8E8E8";
+

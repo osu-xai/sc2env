@@ -185,6 +185,11 @@ function buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode){
         var jsonFriendlyActionNode = children[childIndex];
         var className = "friendlyAction";
         var cyFriendlyActionNode = getCyNodeFromJsonNode(jsonFriendlyActionNode, jsonStateNode["name"], className);
+        var chartValues = jsonFriendlyActionNode["decom best q_value"];
+        if (chartValues == undefined){
+            chartValues = [ 0.1, 0.025, 0.05, 0.7, 0.05, 0.025, 0.025, 0.025];
+        }
+        cyFriendlyActionNode["data"]["chartData"] = createChartData(chartValues);
         cyFriendlyActionNode["data"]["type"] = "friendlyAction";
         cyFriendlyActionNode["data"]["points"] = friendlyActionShapePoints;
         cyFriendlyActionNode["data"]["sc2_cyParent"] = cyStateNode;

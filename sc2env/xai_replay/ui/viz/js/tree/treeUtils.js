@@ -444,3 +444,16 @@ function checkMenuAvailibleActions(currFocusNode){
     }
     return actionButtonsToBeActivted;
 }
+
+function isFriendlyActionNode(data){
+    if (data.id.indexOf("action_max") != -1){
+        return true;
+    }
+    return false;
+}
+function isEnemyActionNode(data){
+    if (data.id.indexOf("action_min") != -1){
+        return true;
+    }
+    return false;
+}

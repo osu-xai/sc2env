@@ -25,11 +25,11 @@ var treeLayout = {
         stop: undefined, // callback on layoutstop
         transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
     }
-
+// was 1200
 var treeStyle =
     'node { \
         background-color: LightSlateGray; \
-        height: 1200; \
+        height: 1700; \
         width: 1800; \
         background-fit: cover; \
         border-color: black; \
@@ -119,7 +119,7 @@ function intitTreeLables(cy, biggestUnitCountTuple){
             halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
             valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
             cssClass: '', // any classes will be as attribute of <div> container for every title
-            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getBestQValue(data)   } // your html template here
+            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getBestQValue(data) + getChart(data)  } // your html template here
         }
         ]
     );
