@@ -220,7 +220,7 @@ function getBarDiv(chartData, index){
 }
 
 function getBar(percent, index){
-    var bar = '<div style="width:80px;height:' + percent + '%;background-color:'+ barColors[index] + '"></div>';
+    var bar = '<div class=' + barClass[index] + ' style="width:80px;height:' + percent + '%;"></div>';
     return bar;
 }
 
@@ -244,13 +244,13 @@ function getYAxis() {
     var yAxis = '<div style="width:1px;height:100%;background-color:black;"></div>'
     return yAxis;
 }
- var barColors = {};
- barColors[0] = "#111111";
- barColors[1] = "#333333";
- barColors[2] = "#555555";
- barColors[3] = "#777777";
- barColors[4] = "#999999";
- barColors[5] = "#BBBBBB";
- barColors[6] = "#DDDDDD";
- barColors[7] = "#E8E8E8";
+ var barClass = {};
+ barClass[0] = "agent-destroys-top";
+ barClass[1] = "agent-destroys-bottom";
+ barClass[2] = "enemy-lowest-nexus-top";
+ barClass[3] = "enemy-lowest-nexus-bottom";
+ barClass[4] = "enemy-destroys-top";
+ barClass[5] = "enemy-destroys-bottom";
+ barClass[6] = "agent-lowest-nexus-top";
+ barClass[7] = "agent-lowest-nexus-bottom";
 

@@ -25,7 +25,8 @@ var treeLayout = {
         stop: undefined, // callback on layoutstop
         transform: function (node, position) {return position } // transform a given node position. Useful for changing flow direction in discrete layouts
     }
-// was SteelBlue
+// was SteelBlue  
+// PV was        background-color: #239B56; \
 var treeStyle =
     'node { \
         background-color: LightSlateGray; \
@@ -53,7 +54,7 @@ var treeStyle =
         width: 1100; \
     } \
     .principalVariation { \
-        background-color: #239B56; \
+        background-color: maroon; \
     } \
     edge { \
         curve-style: straight; \

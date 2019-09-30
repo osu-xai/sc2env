@@ -9,4 +9,35 @@ body {
     left: 0;
     top: 0;
   }
+  .legend-text {
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+  }
+.agent-destroys-top {
+    background-color:#9B59B6;
+}
+.agent-destroys-bottom {
+    background-color:#2980B9;
+}
+.enemy-lowest-nexus-top {
+    background-color:#8E44AD;
+}
+.enemy-lowest-nexus-bottom {
+    background-color:#3498DB;
+}
+
+.enemy-destroys-top {
+    background-color:#F1C40F;
+}
+.enemy-destroys-bottom {
+    background-color:#E67E22;
+}
+.agent-lowest-nexus-top {
+    background-color:#F39C12;
+}
+.agent-lowest-nexus-bottom {
+    background-color:#D35400;
+}
   

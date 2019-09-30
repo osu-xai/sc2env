@@ -87,6 +87,7 @@
 	  <link rel="stylesheet" type="text/css" href="css/explanations.css">
 	  <link rel="stylesheet" type="text/css" href="css/game.css">
       <link rel="stylesheet" type="text/css" href="css/majorContainers.css">
+      <link rel="stylesheet" type="text/css" href="css/tree.css">
       
       <!-- <link rel="stylesheet" href="css/Treant.css">
       <link rel="stylesheet" href="css/collapsable.css">
@@ -146,17 +147,56 @@
                                         <div id="cy" style="width:100%;height:100%;display:block;padding:0px;" class="tabcontent">
                                       
                                         </div>
-                                        <div id="unit-legend" class="tabcontent-tag-along" style="display: grid;grid-template-columns: 25% 75%;padding:10px;font-size:30px;position:absolute;bottom:2%;left:1%;width:10%;background-color:#E8E8E8; border-radius: 3px; font-size: 18px;">
-                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;background-color:darkgray;"></div>
-                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;">Marines</div>
-                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;background-color:darkorange;"></div>
-                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;">Banelings</div>
-                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;background-color:blue;"></div>
-                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;">Immortals</div>
-                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;background-color:yellow;"></div>
-                                            <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;">Pylons</div>
-                                            <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:5; grid-row-end:6;background-color:green;"></div>
-                                            <div style="font-size: 18px; padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:5; grid-row-end:6;">Nexus Health</div>
+                                        <div id="unit-legend" class="tabcontent-tag-along flex-column" style="padding:10px;font-size:18px;position:absolute;bottom:2%;left:1%;width:13%;background-color:ivory; border-radius: 3px;">
+                                            <div id="barracks-legend-title" style="text-align:center;padding-top:5px;padding-bottom:5px">BARRACKS PURCHASED</div>
+                                            <div id="barracks-legend" style="display:grid;grid-template-columns: 10% 90%">
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;background-color:darkgray;width:25px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;">Marine</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;background-color:darkorange;width:25px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;">Baneling</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;background-color:blue;width:25px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;">Immortal</div>
+                                            </div>
+                                            <div id="barracks-purchased-legend-title" style="text-align:center;padding-top:25px;padding-bottom:5px">BARRACKS ALREADY OWNED</div>
+                                            <div id="barracks-purchased-legend" style="display:grid;grid-template-columns: 10% 90%">
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;background-color:darkgray;width:25px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;">Marine</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;background-color:darkorange;width:25px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;">Baneling</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;background-color:blue;width:25px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;">Immortal</div>
+                                            </div>
+                                            <div id="income-legend-title" style="text-align:center;padding-top:25px;padding-bottom:5px">INCOME GENERATION</div>
+                                            <div id="income-legend" style="display:grid;grid-template-columns: 20% 80%">   
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;background-color:yellow;width:50px;"></div>
+                                                <div class="legend-text" style="grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;">Pylon Purchased</div>
+                                            </div>
+                                            <div id="health-legend-title" style="text-align:center;padding-top:25px;padding-bottom:5px;">HEALTH</div>
+                                            <div id="health legend" style="display:grid;grid-template-columns: 10% 90%"> 
+                                                <div style="height:50px;width:10px;margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:5; grid-row-end:6;background-color:green;"></div>
+                                                <div class="legend-text" style="margin-top:20px;height:50px;font-size: 18px;grid-column-start:2; grid-column-end:3; grid-row-start:5; grid-row-end:6;">Nexus Health</div>
+                                            </div>
+                                        </div>
+                                        <div id="predicted-win-legend" class="flex-column" style="padding:10px;font-size:18px;position:absolute;top:1%;right:1%;width:25%;background-color:white; border-radius: 3px;">
+                                            <div id="predicted-win-legend-title" style="text-align:center;padding-top:25px;padding-bottom:15px">PREDICTED WIN SCENARIO</div>
+                                            <div id="predicted-win-legend-entries" style="display:grid;grid-template-columns: 10% 90%">
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:1; grid-row-end:2;" class="agent-destroys-top"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:1; grid-row-end:2;">Agent destroys Enemy's top lane Nexus</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:2; grid-row-end:3;" class="agent-destroys-bottom"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:2; grid-row-end:3;">Agent destroys Enemy's bottom lane Nexus</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:3; grid-row-end:4;" class="enemy-lowest-nexus-top"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:3; grid-row-end:4;">Enemy has lowest Nexus health in top lane at game's end</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:4; grid-row-end:5;" class="enemy-lowest-nexus-bottom"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:4; grid-row-end:5;">Enemy has lowest Nexus health in bottom lane at game's end</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:5; grid-row-end:6;" class="enemy-destroys-top"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:5; grid-row-end:6;">Enemy destroys Agent's top lane Nexus</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:6; grid-row-end:7;" class="enemy-destroys-bottom"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:6; grid-row-end:7;">Enemy destroys Agent's bottom lane Nexus</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:7; grid-row-end:8;" class="agent-lowest-nexus-top"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:7; grid-row-end:8;">Agent has lowest Nexus health in top lane at game's end</div>
+                                                <div style="margin: 5px;grid-column-start:1; grid-column-end:2; grid-row-start:8; grid-row-end:9;" class="agent-lowest-nexus-bottom"></div>
+                                                <div style="padding: 3px;grid-column-start:2; grid-column-end:3; grid-row-start:8; grid-row-end:9;">Agent has lowest Nexus health in bottom lane at game's end</div>
+                                            </div>
                                         </div>
                                         <div id="node-menu" class="flex-column" style="position: absolute; left:1%; top:1%; z-index:100;padding:10px;"></div>
                                         <!--<div id="linear" style="width:100%;height:100%;display:none" class="tabcontent"></div>-->
