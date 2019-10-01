@@ -478,6 +478,20 @@ function sizeNonGeneratedElements() {
 	$('#fullscreen-button1-toggle').css('height', "30px")
 	//$('#fullscreen-button1-toggle').css('margin-left', "10%")
 
+    
+	//$('#model-free-radio').css('float', "left")
+	$('#model-free-radio').css('text-align', "center")
+	$('#model-free-radio').css('font-size', "15px")
+	$('#model-free-radio').css('font-family', "Arial")
+	//$('#model-free-radio').css('width', "300px")
+    $('#model-free-radio').css('height', "30px")
+    
+	//$('#model-based-radio').css('float', "left")
+	$('#model-based-radio').css('text-align', "center")
+	$('#model-based-radio').css('font-size', "15px")
+	$('#model-based-radio').css('font-family', "Arial")
+	//$('#model-based-radio').css('width', "300px")
+	$('#model-based-radio').css('height', "30px")
 
 	$('#fullscreen-modal').css('width', "95%")
 	$('#fullscreen-modal').css('height', "88%")

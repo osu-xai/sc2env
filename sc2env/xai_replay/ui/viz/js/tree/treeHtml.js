@@ -262,3 +262,16 @@ function getYAxis() {
  barClass[6] = "agent-lowest-nexus-top";
  barClass[7] = "agent-lowest-nexus-bottom";
 
+
+ var sc2Treatment = "ModelBased";
+
+ function setToModelFreeTreatment(){
+    sc2Treatment = "ModelFree";
+ }
+ 
+function setToModelFreeTreatment(){
+    sc2Treatment = "ModelBased";
+}
+function isTreatmentModelBased(){
+    return (sc2Treatment == "ModelBased");
+}
