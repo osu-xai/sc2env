@@ -630,9 +630,9 @@ var subtractPixels = function(a,b){
 
 
 expl_ctrl_canvas.addEventListener('click', function (event) {
-    if (true){
-        return;
-    }
+    // if (true){
+    //     return;
+    // }
 	if (!isUserInputBlocked()){
 		var matchingStep = getMatchingExplanationStep(expl_ctrl_ctx, event.offsetX, event.offsetY);
 		if (matchingStep == undefined){
