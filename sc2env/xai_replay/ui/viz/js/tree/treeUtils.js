@@ -1,23 +1,16 @@
 var trajectoryStartingEdges = {};
 
 function getLargestUnitCount(cy){
-    var biggestUnitCountAtState = 0;
-    var biggestUnitCountAtAction = 0;
+    var biggestUnitCount = 0;
     cy.nodes().forEach(function( ele ){
-      var unitValuesDict = parseActionString(ele.data());
-      var biggestUnitCount = getNumberOfColumns(unitValuesDict);
-      if (ele.data("id").indexOf("_action_max") != -1 || ele.data("id").indexOf("_action_min") != -1){
-        if (biggestUnitCount > biggestUnitCountAtAction){
-          biggestUnitCountAtAction = biggestUnitCount;
+        var unitValuesDict = parseActionString(ele.data());
+        var currUnitCount = getNumberOfColumns(unitValuesDict);
+        if (currUnitCount > biggestUnitCount){
+            biggestUnitCount = currUnitCount;
         }
-      }
-      else{
-        if (biggestUnitCount > biggestUnitCountAtState){
-          biggestUnitCountAtState = biggestUnitCount;
-        }
-      }
     });
-    return [biggestUnitCountAtState, biggestUnitCountAtAction];
+    console.log("biggest unit count = " + biggestUnitCount);
+    return biggestUnitCount;
   }
 
   
@@ -32,7 +25,7 @@ function getNumberOfColumns(unitValuesDict){
   
     if ("Enemy" in unitValuesDict){
       // have to null out this value to prevent a dictionary from being interpreted as a value (it was made a dictionary to enable code reuse)
-      unitValuesDictEnemy = unitValuesDict["Enemy"];
+      unitValuesDictEnemy = JSON.parse(JSON.stringify(unitValuesDict["Enemy"]));
       unitValuesDict["Enemy"] = null;
     }
   
@@ -66,14 +59,8 @@ function getNumberOfColumns(unitValuesDict){
   
 
 function parseActionString(data){
-    if (data["action"] == null){
-      var stateDict = getStateValues(data);
-      return stateDict;
-    }
-    else{
-      var actionDict = getActionValues(data);
-      return actionDict;
-    }
+    var unitValuesDict = getStateAndActionValues(data);
+    return unitValuesDict;
 }
 
 

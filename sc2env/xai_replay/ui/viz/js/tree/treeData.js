@@ -75,8 +75,10 @@ function initTree(jsonPath, frameNumber){
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
         populatePrincipalVariationTrajectory(backingTreeRoot);
-       
-        generateNodeActionMenu("node-menu");
+        var nodeMenuExist = document.getElementById("node-actions-label");
+        if (nodeMenuExist == undefined){
+            generateNodeActionMenu("node-menu");
+        }
         // populatePrincipalVariationTree(backingTreeRoot);
         // createRootNode(rawSc2Json)
         // populateCompleteTree(rawSc2Json)
@@ -88,13 +90,11 @@ function initTree(jsonPath, frameNumber){
         refreshCy();
         addNextBestChild(cy,cy.getElementById(rootNodeId));
         refreshCy();
-        //TODO uncomment this when have real data file in play
-        //addNextBestChild(cy,cy.getElementById(rootNodeId));
-        //refreshCy();
+        addNextBestChild(cy,cy.getElementById(rootNodeId));
+        refreshCy();
         
         // cy.ready(function(){
         //     restateLayout(cy);
-        //     //cy.center();
         //     childrenFollowParents(cy);
         //     var biggestUnitCountTuple = getLargestUnitCount(cy);
         //     //sortNodes(cy);
@@ -127,26 +127,81 @@ function intitTreeLables(cy, biggestUnitCountTuple){
     );
 }
 
-function getStateValues(data){
+function getStateAndActionValues(data){
     stateDict = {};
-    var currState = data["state"];
-    stateDict["TOP Marines"] = currState[1];
-    stateDict["TOP Banelings"] = currState[2];
-    stateDict["TOP Immortals"] = currState[3];
-    stateDict["BOT Marines"] = currState[4];
-    stateDict["BOT Banelings"] = currState[5];
-    stateDict["BOT Immortals"] = currState[6];
-    stateDict["Pylons"] = currState[7];
+    currState = data["state"];
+    stateDict["TOP Marines State"] = currState[1];
+    stateDict["TOP Banelings State"] = currState[2];
+    stateDict["TOP Immortals State"] = currState[3];
+    stateDict["BOT Marines State"] = currState[4];
+    stateDict["BOT Banelings State"] = currState[5];
+    stateDict["BOT Immortals State"] = currState[6];
+    stateDict["Pylons State"] = currState[7];
 
     stateDict["Enemy"] = {};
     var stateDictEnemy = stateDict["Enemy"];
-    stateDictEnemy["TOP Marines"] = currState[8];
-    stateDictEnemy["TOP Banelings"] = currState[9];
-    stateDictEnemy["TOP Immortals"] = currState[10];
-    stateDictEnemy["BOT Marines"] = currState[11];
-    stateDictEnemy["BOT Banelings"] = currState[12];
-    stateDictEnemy["BOT Immortals"] = currState[13];
-    stateDictEnemy["Pylons"] = currState[14];
+    stateDictEnemy["TOP Marines State"] = currState[8];
+    stateDictEnemy["TOP Banelings State"] = currState[9];
+    stateDictEnemy["TOP Immortals State"] = currState[10];
+    stateDictEnemy["BOT Marines State"] = currState[11];
+    stateDictEnemy["BOT Banelings State"] = currState[12];
+    stateDictEnemy["BOT Immortals State"] = currState[13];
+    stateDictEnemy["Pylons State"] = currState[14];
+
+    var action = data["action"];
+    if (action != null || action != undefined){
+        if (data["name"].indexOf("_min") != -1){
+            stateDictEnemy["TOP Marines Action"] = action[0];
+            stateDictEnemy["TOP Banelings Action"] = action[1];
+            stateDictEnemy["TOP Immortals Action"] = action[2];
+            stateDictEnemy["BOT Marines Action"] = action[3];
+            stateDictEnemy["BOT Banelings Action"] = action[4];
+            stateDictEnemy["BOT Immortals Action"] = action[5];
+            stateDictEnemy["Pylons Action"] = action[6];
+
+            stateDict["TOP Marines Action"] = 0;
+            stateDict["TOP Banelings Action"] = 0;
+            stateDict["TOP Immortals Action"] = 0;
+            stateDict["BOT Marines Action"] = 0;
+            stateDict["BOT Banelings Action"] = 0;
+            stateDict["BOT Immortals Action"] = 0;
+            stateDict["Pylons Action"] = 0;   
+        }
+        else{
+            stateDict["TOP Marines Action"] = action[0];
+            stateDict["TOP Banelings Action"] = action[1];
+            stateDict["TOP Immortals Action"] = action[2];
+            stateDict["BOT Marines Action"] = action[3];
+            stateDict["BOT Banelings Action"] = action[4];
+            stateDict["BOT Immortals Action"] = action[5];
+            stateDict["Pylons Action"] = action[6];
+
+            stateDictEnemy["TOP Marines Action"] = 0;
+            stateDictEnemy["TOP Banelings Action"] = 0;
+            stateDictEnemy["TOP Immortals Action"] = 0;
+            stateDictEnemy["BOT Marines Action"] = 0;
+            stateDictEnemy["BOT Banelings Action"] = 0;
+            stateDictEnemy["BOT Immortals Action"] = 0;
+            stateDictEnemy["Pylons Action"] = 0;
+        }
+    }
+    else{
+        stateDict["TOP Marines Action"] = 0;
+        stateDict["TOP Banelings Action"] = 0;
+        stateDict["TOP Immortals Action"] = 0;
+        stateDict["BOT Marines Action"] = 0;
+        stateDict["BOT Banelings Action"] = 0;
+        stateDict["BOT Immortals Action"] = 0;
+        stateDict["Pylons Action"] = 0;
+
+        stateDictEnemy["TOP Marines Action"] = 0;
+        stateDictEnemy["TOP Banelings Action"] = 0;
+        stateDictEnemy["TOP Immortals Action"] = 0;
+        stateDictEnemy["BOT Marines Action"] = 0;
+        stateDictEnemy["BOT Banelings Action"] = 0;
+        stateDictEnemy["BOT Immortals Action"] = 0;
+        stateDictEnemy["Pylons Action"] = 0;
+    }
     return stateDict;
 }
 
@@ -154,13 +209,13 @@ function getActionValues(data){
     var action = data["action"];
     var actionDict = {};
 
-    actionDict["TOP Marines"] = action.charAt(0);
-    actionDict["TOP Banelings"] = action.charAt(1);
-    actionDict["TOP Immortals"] = action.charAt(2);
-    actionDict["BOT Marines"] = action.charAt(3);
-    actionDict["BOT Banelings"] = action.charAt(4);
-    actionDict["BOT Immortals"] = action.charAt(5);
-    actionDict["Pylons"] = action.charAt(6);
+    actionDict["TOP Marines Action"] = action.charAt(0);
+    actionDict["TOP Banelings Action"] = action.charAt(1);
+    actionDict["TOP Immortals Action"] = action.charAt(2);
+    actionDict["BOT Marines Action"] = action.charAt(3);
+    actionDict["BOT Banelings Action"] = action.charAt(4);
+    actionDict["BOT Immortals Action"] = action.charAt(5);
+    actionDict["Pylons Action"] = action.charAt(6);
 
     return actionDict;
 }

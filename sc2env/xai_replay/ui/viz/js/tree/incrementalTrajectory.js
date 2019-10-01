@@ -1,26 +1,22 @@
 function populatePrincipalVariationTrajectory(startingCyNode){
-    if (cy == undefined){
-        var nodes = treeData["elements"]["nodes"];
-        nodes.push(startingCyNode);
-        addBestFriendlyActionToTrajectory(startingCyNode);
+    var nodes = treeData["elements"]["nodes"];
+    nodes.push(startingCyNode);
+    try{
+        var startingNodeDataName = startingCyNode.data("name");
+    }
+    catch{
+        var startingNodeDataName = startingCyNode["data"]["name"];
+    }
+    if (startingNodeDataName.indexOf("_action_max") != -1){
+        addWorstEnemyActionToTrajectory(startingCyNode)
+    }
+    else if (startingNodeDataName.indexOf("_action_min") != -1){
+        addChildStateNodeOfWorstEnemyActionToTrajectory(startingCyNode);
     }
     else{
-        try{
-            var startingNodeDataName = startingCyNode.data("name");
-        }
-        catch{
-            var startingNodeDataName = startingCyNode["data"]["name"];
-        }
-        if (startingNodeDataName.indexOf("_action_max") != -1){
-            addWorstEnemyActionToTrajectory(startingCyNode)
-        }
-        else if (startingNodeDataName.indexOf("_action_min") != -1){
-            addChildStateNodeOfWorstEnemyActionToTrajectory(startingCyNode);
-        }
-        else{
-            addBestFriendlyActionToTrajectory(startingCyNode);
-        }
+        addBestFriendlyActionToTrajectory(startingCyNode);
     }
+
 }
 
 function populateNextBestTrajectory(clickedNode){

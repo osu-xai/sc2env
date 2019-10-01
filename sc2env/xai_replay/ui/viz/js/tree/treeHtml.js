@@ -9,9 +9,9 @@ function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
               '}' +
             '</style>' +
             '<div id="' + data.id + '_nexus_graph_container">' +
-              drawNexusHealth(data["state"][27]) +
+              drawNexusHealth(data["state"][63]) +
               '<div style="background-color:black;"></div>' +
-              drawNexusHealth(data["state"][28]) +
+              drawNexusHealth(data["state"][64]) +
             '</div>' +
             '<style>' + 
               '#' + data.id + '_unit_graph_container ' + '{' +
@@ -20,17 +20,17 @@ function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
               '}' +
             '</style>' +
             '<div id="' + data.id + '_unit_graph_container">' +
-              drawUnitDiv(unitValuesDict["TOP Marines"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) +
-              drawUnitDiv(unitValuesDict["TOP Banelings"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) +
-              drawUnitDiv(unitValuesDict["TOP Immortals"], 'blue') + drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) +
+              drawStateUnitDiv(unitValuesDict["TOP Marines State"]-unitValuesDict["TOP Marines Action"], "darkGrey") + drawActionUnitDiv(unitValuesDict["TOP Marines Action"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["TOP Marines State"], biggestUnitCount) +
+              drawStateUnitDiv(unitValuesDict["TOP Banelings State"]-unitValuesDict["TOP Banelings Action"], "darkOrange") + drawActionUnitDiv(unitValuesDict["TOP Banelings Action"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["TOP Banelings State"], biggestUnitCount) +
+              drawStateUnitDiv(unitValuesDict["TOP Immortals State"]-unitValuesDict["TOP Immortals Action"], "blue") + drawActionUnitDiv(unitValuesDict["TOP Immortals Action"], 'blue') + drawPlaceHolderDivs(unitValuesDict["TOP Immortals State"], biggestUnitCount) +
               '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
-              drawUnitDiv(unitValuesDict["BOT Marines"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) +
-              drawUnitDiv(unitValuesDict["BOT Banelings"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) +
-              drawUnitDiv(unitValuesDict["BOT Immortals"], 'blue') + drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) +
+              drawStateUnitDiv(unitValuesDict["BOT Marines State"]-unitValuesDict["BOT Marines Action"], "darkGrey") + drawActionUnitDiv(unitValuesDict["BOT Marines Action"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["BOT Marines State"], biggestUnitCount) +
+              drawStateUnitDiv(unitValuesDict["BOT Banelings State"]-unitValuesDict["BOT Banelings Action"], "darkOrange") + drawActionUnitDiv(unitValuesDict["BOT Banelings Action"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["BOT Banelings State"], biggestUnitCount) +
+              drawStateUnitDiv(unitValuesDict["BOT Immortals State"]-unitValuesDict["BOT Immortals Action"], "blue") + drawActionUnitDiv(unitValuesDict["BOT Immortals Action"], 'blue') + drawPlaceHolderDivs(unitValuesDict["BOT Immortals State"], biggestUnitCount) +
             '</div>' +
             '<div></div>' +
             '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
-              drawPylons(unitValuesDict["Pylons"]) + drawPylonPlaceHolderDivs(unitValuesDict["Pylons"]) + 
+              drawPylons(unitValuesDict["Pylons State"]) + drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + 
             '</div>' +
           '</div>';
 }
@@ -46,13 +46,13 @@ function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
             '}' +
           '</style>' +
           '<div id="' + data.id + '_unit_graph_container">' +
-            drawPlaceHolderDivs(unitValuesDict["TOP Marines"], biggestUnitCount) + drawUnitDiv(unitValuesDict["TOP Marines"], 'darkGrey') + 
-            drawPlaceHolderDivs(unitValuesDict["TOP Banelings"], biggestUnitCount) + drawUnitDiv(unitValuesDict["TOP Banelings"]) + 
-            drawPlaceHolderDivs(unitValuesDict["TOP Immortals"], biggestUnitCount) + drawUnitDiv(unitValuesDict["TOP Immortals"]) + 
+            drawPlaceHolderDivs(unitValuesDict["TOP Marines State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["TOP Marines Action"], 'darkGrey') + drawStateUnitDiv(unitValuesDict["TOP Marines State"]-unitValuesDict["TOP Marines Action"], "darkGrey") +
+            drawPlaceHolderDivs(unitValuesDict["TOP Banelings State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["TOP Banelings Action"], "darkOrange") + drawStateUnitDiv(unitValuesDict["TOP Banelings State"]-unitValuesDict["TOP Banelings Action"], "darkOrange") +
+            drawPlaceHolderDivs(unitValuesDict["TOP Immortals State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["TOP Immortals Action"], "blue") + drawStateUnitDiv(unitValuesDict["TOP Immortals State"]-unitValuesDict["TOP Immortals Action"], "blue") +
             '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
-            drawPlaceHolderDivs(unitValuesDict["BOT Marines"], biggestUnitCount) + drawUnitDiv(unitValuesDict["BOT Marines"], 'darkGrey') + 
-            drawPlaceHolderDivs(unitValuesDict["BOT Banelings"], biggestUnitCount) + drawUnitDiv(unitValuesDict["BOT Banelings"], 'darkOrange') + 
-            drawPlaceHolderDivs(unitValuesDict["BOT Immortals"], biggestUnitCount) + drawUnitDiv(unitValuesDict["BOT Immortals"], 'blue') + 
+            drawPlaceHolderDivs(unitValuesDict["BOT Marines State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["BOT Marines Action"], 'darkGrey') + drawStateUnitDiv(unitValuesDict["BOT Marines State"]-unitValuesDict["BOT Marines Action"], "darkGrey") +
+            drawPlaceHolderDivs(unitValuesDict["BOT Banelings State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["BOT Banelings Action"], 'darkOrange') + drawStateUnitDiv(unitValuesDict["BOT Banelings State"]-unitValuesDict["BOT Banelings Action"], "darkOrange") + 
+            drawPlaceHolderDivs(unitValuesDict["BOT Immortals State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["BOT Immortals Action"], 'blue') + drawStateUnitDiv(unitValuesDict["BOT Immortals State"]-unitValuesDict["BOT Immortals Action"], "blue") +
           '</div>' +
           '<style>' + 
             '#' + data.id + '_nexus_graph_container ' + '{' +
@@ -61,28 +61,28 @@ function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
             '}' +
           '</style>' +
           '<div id="' + data.id + '_nexus_graph_container">' +
-            drawNexusHealth(data["state"][29]) +
+            drawNexusHealth(data["state"][65]) +
             '<div style="background-color:black;grid-row-end:span 1;"></div>' +
-            drawNexusHealth(data["state"][30]) +
+            drawNexusHealth(data["state"][66]) +
           '</div>' +
           '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto;">' + 
-            drawPylonPlaceHolderDivs(unitValuesDict["Pylons"]) + drawPylons(unitValuesDict["Pylons"]) + 
+            drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + drawPylons(unitValuesDict["Pylons State"]) + 
           '</div>' +
           '<div></div>' +
         '</div>';
 }
 
 
-function getNodeGlyphs(data, biggestUnitCountTuple){
+function getNodeGlyphs(data, biggestUnitCount){
   var unitValuesDict = parseActionString(data);
   if (isFriendlyActionNode(data)){
-      return getFriendlyGraphString(data, unitValuesDict, biggestUnitCountTuple[1]);
+      return getFriendlyGraphString(data, unitValuesDict, biggestUnitCount);
   }
   else if (isEnemyActionNode(data)){
-      return getEnemyGraphString(data, unitValuesDict, biggestUnitCountTuple[1]);
+      return getEnemyGraphString(data, unitValuesDict, biggestUnitCount);
   }
   else{
-      return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:80px;font-weight:bold;position:absolute;top:3%;left:15%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCountTuple[0]) + '<div style="color:ivory;font-size:80px;font-weight:bold;position:absolute;top:3%;left:67%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCountTuple[0]) + '</div>';
+      return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:8%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCount) + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:60%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount) + '</div>';
   }
 }
   
@@ -110,14 +110,22 @@ function drawPylonPlaceHolderDivs(pylonCount){
 }
   
 
-function drawUnitDiv(unitCount, color){
+function drawActionUnitDiv(unitCount, color){
   var unitDivString = "";
   for(var i = 0; i < unitCount; i++){
-      unitDivString += '<div style="text-align:center;background-color:' + color + ';"></div>'
+      unitDivString += '<div style="text-align:center;border:15px solid black;background-color:' + color + ';"></div>'
   }
   return unitDivString;
 }
-  
+
+function drawStateUnitDiv(unitCount, color){
+  var unitStateDivString = "";
+  for(var i = 0; i < unitCount; i++){
+      unitStateDivString += '<div style="text-align:center;background-color:' + color + ';"></div>'
+  }
+  return unitStateDivString;
+}
+
 function drawPlaceHolderDivs(unitCount, colCount){
   var placeholder = "";
   for(var i = 0; i < (colCount-unitCount); i++){
