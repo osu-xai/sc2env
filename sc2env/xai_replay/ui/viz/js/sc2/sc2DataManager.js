@@ -1,6 +1,11 @@
+const forwardDP = 3;
+const forwardDPCheck = true;
+const interestingDPs = [3,4,5,10,11,14,15,16,27,28,29,30,31,32,33]
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
+var interestingDPsByFrame = [];
+
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
@@ -8,12 +13,20 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
     getDecisionPointFrames(frameInfos, 0)
+    getInterestingFrameNumbersForDPs();
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
 function getSC2DataManagerFromJson(jsonData){
-    var frameInfos =getFrameInfosFromJson(jsonData);
+    var frameInfos = getFrameInfosFromJson(jsonData);
     return getSC2DataManagerFromFrameInfos(frameInfos);
+}
+
+function getInterestingFrameNumbersForDPs(){
+    for (var dpIndex in interestingDPs){
+        var currInterestingDP = interestingDPs[dpIndex];
+        interestingDPsByFrame.push(decisionPoints[currInterestingDP-1]);
+    }
 }
 
 function trimFirstFrames(frameInfos, trimBy){
@@ -201,8 +214,6 @@ function addUnitDeltasToFrames(frameInfos){
     }
 }
 
-
-
 function addWaveTriggeredToFrames(frameInfos){
     var key = "wave_triggered";
     var count = undefined
@@ -242,10 +253,6 @@ function addWaveTriggeredToFrames(frameInfos){
         }
     }
 }
-
-
-
-
 
 function getSC2DataManagerFromFrameInfos(frameInfos) {
     var dm = {};

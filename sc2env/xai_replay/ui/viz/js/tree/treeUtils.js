@@ -414,18 +414,43 @@ function checkMenuAvailibleActions(currFocusNode){
     if ( currFocusNode.hasClass("principalVariation") == false || (currFocusNode.hasClass("principalVariation") == true && currFocusNode.hasClass("stateNode") == true)){
         if (currFocusNode.data("id").indexOf("_max") != -1){
             if (currFocusNode.outgoers().targets().size() > 0){
-                actionButtonsToBeActivted.push("hide-node-button");
-                actionButtonsToBeActivted.push("hide-pv-button");
+                if (isTreatmentModelBased()){
+                    actionButtonsToBeActivted.push("hide-node-button");
+                    $('#hide-pv-button').css("display","block");
+                    $('#expand-pv-button').css("display","block");
+                    actionButtonsToBeActivted.push("hide-pv-button");
+                }
+                else{
+                    $('#hide-pv-button').css("display","none");
+                    actionButtonsToBeActivted.push("hide-node-button");
+                }
             }
             else{
-                actionButtonsToBeActivted.push("hide-node-button");
-                actionButtonsToBeActivted.push("expand-pv-button");
-                actionButtonsToBeActivted.push("hide-node-button");
+                if (isTreatmentModelBased()){
+                    $('#expand-pv-button').css("display","block");
+                    $('#hide-pv-button').css("display","block");
+                    actionButtonsToBeActivted.push("expand-pv-button");
+                    actionButtonsToBeActivted.push("hide-node-button");
+                }
+                else{
+                    $('#hide-pv-button').css("display","none");
+                    $('#expand-pv-button').css("display","none");
+                    actionButtonsToBeActivted.push("hide-node-button");
+                }
             }
         }
         else if (currFocusNode.data("id").indexOf("state") != -1){
             if (currFocusNode.outgoers().targets().size() != currFocusNode.data("sc2_cyChildren").length){
-                actionButtonsToBeActivted.push("next-best-action-button");
+                if (isTreatmentModelBased()){
+                    $('#expand-pv-button').css("display","block");
+                    $('#hide-pv-button').css("display","block");
+                    actionButtonsToBeActivted.push("next-best-action-button");
+                }
+                else{
+                    $('#hide-pv-button').css("display","none");
+                    $('#expand-pv-button').css("display","none");
+                    actionButtonsToBeActivted.push("next-best-action-button");
+                }
             }
         }
     }
