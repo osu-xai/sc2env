@@ -151,7 +151,7 @@ function createVideoElement(path){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
 
-        if(!checkIfFrameIsInteresting(frameNumber)){
+        if(!checkIfFrameIsInteresting(frameNumber) && forwardDPCheck){
             activeSC2UIManager.jumpToFrame(nextDPOfInterest)
         }
         else{
