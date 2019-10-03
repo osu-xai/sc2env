@@ -159,9 +159,9 @@ function refreshCy(){
     });
 }
 
-function finishInit(nodeId){
-    var cyNode = cy.getElementById(nodeId)
-    var canvasId = getArmyStrengthCanvasId(nodeId);
-    var state = cyNode.data("state");
-    renderUnitsOnField(canvasId, state);
-}
+// function finishInit(nodeId){
+//     var cyNode = cy.getElementById(nodeId)
+//     var canvasId = getArmyStrengthCanvasId(nodeId);
+//     var state = cyNode.data("state");
+//     renderUnitsOnField(canvasId, state);
+// }

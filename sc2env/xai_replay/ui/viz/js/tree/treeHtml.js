@@ -84,7 +84,7 @@ function getNodeGlyphs(data, biggestUnitCount){
   else{
       //return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:8%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCount) + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:60%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount) + '</div>';
       //return '<div class="flex-column" style="margin:50px;" onload="finishInit("' + data.id + '")">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>'
-      return '<div class="flex-column" style="margin:50px;" onload="onloadTest">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>'
+      return '<div class="flex-column" style="margin:50px;" onload="onloadTest">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div><script>alert(' + data.id + ');</script>';
     }
 }
 var unitCountsCanvasWidth = 1600;
@@ -98,9 +98,19 @@ function getGameStateRow(data){
     return '<div class="flex-row" >' + getNexusStates(data,63,64) + getUnitCountsCanvas(data) + getNexusStates(data,65,66) + '</div>';
 }
 
+// function waitingForCanvasToBeAddedToDOM(canvasId, state){
+//     var canvas = document.getElementById(canvasId);
+//     if (canvas != undefined){
+//         clearInterval(canvasScanners[canvasId]);
+//         renderUnitsOnField(canvasId, state);
+//     }
+// }
+// var canvasScanners = {};
+
 function getUnitCountsCanvas(data){
-    console.log("creating canvas id : " + getArmyStrengthCanvasId(data.id));
-    return '<canvas id="' + getArmyStrengthCanvasId(data.id) + '" style="background-color:white;height:' + unitCountsCanvasHeight + 'px;width:' + unitCountsCanvasWidth + 'px;"></canvas>';
+    var canvasId = getArmyStrengthCanvasId(data.id);
+    //canvasScanners[canvasId] = setInterval(waitingForCanvasToBeAddedToDOM(canvasId, data.state), 300);
+    return '<canvas id="' + canvasId + '" style="background-color:white;height:' + unitCountsCanvasHeight + 'px;width:' + unitCountsCanvasWidth + 'px;"></canvas>';
 }
 
 function getNexusStates(data, topIndex, bottomIndex){
