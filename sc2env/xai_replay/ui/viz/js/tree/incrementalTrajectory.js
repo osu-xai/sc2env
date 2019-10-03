@@ -93,7 +93,12 @@ function addBestFriendlyActionToTrajectory(stateCyNode){
                 edges.push(edge);
             }
         }
-        addWorstEnemyActionToTrajectory(bestNode);
+        if(isTreatmentModelBased()){
+            addWorstEnemyActionToTrajectory(bestNode);
+        }
+        else{
+            return;
+        }
     }    
 }
 function addWorstEnemyActionToTrajectory(friendlyActionCyNode){

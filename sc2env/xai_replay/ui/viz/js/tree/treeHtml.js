@@ -326,11 +326,46 @@ function getYAxis() {
 
  function setToModelFreeTreatment(){
     sc2Treatment = "ModelFree";
+    forgetCyTree();
+    populatePrincipalVariationTrajectory(backingTreeRoot);
+    var nodeMenuExist = document.getElementById("node-actions-label");
+    if (nodeMenuExist == undefined){
+        generateNodeActionMenu("node-menu");
+    }
+    cy = cytoscape(treeData);
+    var rootNodeId = backingTreeRoot["data"]["id"];
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    checkMenuAvailibleActions(cy.getElementById(rootNodeId))
  }
  
-function setToModelFreeTreatment(){
+function setToModelBasedTreatment(){
     sc2Treatment = "ModelBased";
+    forgetCyTree();
+    populatePrincipalVariationTrajectory(backingTreeRoot);
+    var nodeMenuExist = document.getElementById("node-actions-label");
+    if (nodeMenuExist == undefined){
+        generateNodeActionMenu("node-menu");
+    }
+    cy = cytoscape(treeData);
+    var rootNodeId = backingTreeRoot["data"]["id"];
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    refreshCy();
+    checkMenuAvailibleActions(cy.getElementById(rootNodeId))
 }
+
 function isTreatmentModelBased(){
     return (sc2Treatment == "ModelBased");
 }

@@ -65,8 +65,11 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.dataManager = sc2DataManager;
     uim.videoFilepath = getVideoFilepath(filenameRoot);
     uim.jumped = false;
+
     createVideoElement(uim.videoFilepath);
     toggleOnUIElements()
+
+   
 
     uim.renderTooltipsForCurrentStep = function() {
         clearGameBoard();
@@ -91,6 +94,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         //this.renderStateForCurrentStep();
         //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
+
     
     uim.expressFrameInfo = function(frameNumber) {
         console.log("expressingFrameInfo");
@@ -100,16 +104,16 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         frame = this.dataManager.getFrameInfo(frameNumber);
         renderUnitValues(frame);
         userStudyAdjustmentsForFrameChange();
-        
+        getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
+
         if (this.jumped){
-            getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
         }
         checkForEndOfGame()
     }
     uim.play = function(){
-        video.play();
+        video.play()
     }
     uim.pause = function() {
         video.pause();
@@ -118,6 +122,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.jumpToFrame(0);
     return uim;
 }
+
 
 
 function getVideoFilepath(chosenFile){
@@ -145,7 +150,14 @@ function createVideoElement(path){
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
-        activeSC2UIManager.expressFrameInfo(frameNumber);
+
+        if(!checkIfFrameIsInteresting(frameNumber)){
+            activeSC2UIManager.jumpToFrame(nextDPOfInterest)
+        }
+        else{
+            
+            activeSC2UIManager.expressFrameInfo(frameNumber);
+        }
         // video.currentTime = 1/framesPerSecond + video.currentTime
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
@@ -283,15 +295,69 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
 var frameNumber = 0;
 var frameCount = 92;
 
+var nextDPOfInterest = getNextInterestingDP();
+var currDPOfInterest = getCurrInterestingDP();
+
+function getNextInterestingDP(){
+    for(var dpInterestIndex in interestingDPsByFrame){
+        for (var dpIndex in decisionPoints){
+            if (decisionPoints[dpIndex] == interestingDPsByFrame[dpInterestIndex]){
+                return interestingDPsByFrame[dpInterestIndex];
+            }
+        }
+    }
+}
+function getCurrInterestingDP(){
+    for(var dpInterestIndex in interestingDPsByFrame){
+        for (var dpIndex in decisionPoints){
+            if (decisionPoints[dpIndex] == interestingDPsByFrame[dpInterestIndex]){
+                return interestingDPsByFrame[dpInterestIndex-1];
+            }
+        }
+    }
+}
+function forwardDPToFrame(frameNumber){//SC2_TEST
+    var currentTime = frameNumber / framesPerSecond;
+    video.currentTime = currentTime + (trimBy / framesPerSecond);
+}
+
+function checkIfFrameIsInteresting(frameNumber){
+    nextDPOfInterest = getNextInterestingDP();
+    currDPOfInterest = getCurrInterestingDP();
+    if (frameNumber < nextDPOfInterest && frameNumber > currDPOfInterest){
+        var dpBeforeNextIntrest = undefined;
+        for(var dpIndex in decisionPoints){
+            if (decisionPoints[dpIndex] == nextDPOfInterest){
+                dpBeforeNextIntrest = decisionPoints[dpIndex-1];
+                if (dpBeforeNextIntrest == currDPOfInterest){
+                    return true;
+                }
+                else{return false;}
+            }
+        }
+    }
+    else if(frameNumber == nextDPOfInterest){
+        return true;
+    }
+    else if(frameNumber == currDPOfInterest){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 function vidStep(){
 	frameNumber += 1;
 	if (frameNumber > frameCount - 1){
 		//stop
 	}
 	else {
-		var currentTime = frameNumber / framesPerSecond;
-		video.currentTime = currentTime;
-		window.setTimeout(vidStep, 500);
-		//window.requestAnimationFrame(vidStep);
+
+        var currentTime = frameNumber / framesPerSecond;
+        video.currentTime = currentTime;
+        window.setTimeout(vidStep, 500);
+        //window.requestAnimationFrame(vidStep);
+		
 	}
 }

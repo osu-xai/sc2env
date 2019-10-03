@@ -355,14 +355,13 @@ function renderUnitValues(frameInfo){
         
         for (var i = 0; i < decisionPoints.length; i++){
             if (frameInfo.frame_number >= decisionPoints[i] + 2){
-                pauseGame();
+                // pauseGame();
                 decisionPoints.splice(i,1);
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
                     forgetCyTree();
                     initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + ".json", frameInfo.frame_number);
                     // initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json", frameInfo.frame_number);
-
                 }
                 return;
             }
@@ -517,3 +516,4 @@ function epochIsChanging() {
 		currentExplManager.removeOverlaysAndOutlines();
 	}
 }
+

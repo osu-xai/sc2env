@@ -80,9 +80,7 @@ function initTree(jsonPath, frameNumber){
         if (nodeMenuExist == undefined){
             generateNodeActionMenu("node-menu");
         }
-        // populatePrincipalVariationTree(backingTreeRoot);
-        // createRootNode(rawSc2Json)
-        // populateCompleteTree(rawSc2Json)
+
         cy = cytoscape(treeData);
         var rootNodeId = backingTreeRoot["data"]["id"];
         addNextBestChild(cy,cy.getElementById(rootNodeId));
@@ -93,19 +91,17 @@ function initTree(jsonPath, frameNumber){
         refreshCy();
         addNextBestChild(cy,cy.getElementById(rootNodeId));
         refreshCy();
-        
-        // cy.ready(function(){
-        //     restateLayout(cy);
-        //     childrenFollowParents(cy);
-        //     var biggestUnitCountTuple = getLargestUnitCount(cy);
-        //     //sortNodes(cy);
-        //     leftJustifyNodes(cy);
-        //     intitTreeLables(cy, biggestUnitCountTuple);
-        //     intitTreeEvents(cy);
-        // });
     });
 }
-
+window.onload = function()
+{
+    $('#model-free-radio').click(function () {
+        setToModelFreeTreatment();
+    });
+    $('#model-based-radio').click(function () {
+        setToModelBasedTreatment();
+    });
+};
 function forgetCyTree(){
     treeData["elements"] = {  nodes: [],
                               edges: []

@@ -508,8 +508,6 @@ function sizeNonGeneratedElements() {
 
 
 
-
-
 	var toggle_fullscreen_modal = document.getElementById("fullscreen-button1-toggle");
 	toggle_fullscreen_modal.addEventListener('click', function(event){
 		if ($('#fullscreen-modal').css('display') == 'none'){
