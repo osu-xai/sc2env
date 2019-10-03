@@ -40,6 +40,7 @@ var treeStyle =
         background-color: navy; \
     } \
     .stateNode{ \
+        height: 1300; \
         shape: roundrectangle; \
     } \
     .friendlyAction{ \
@@ -127,6 +128,12 @@ function intitTreeLables(cy, biggestUnitCountTuple){
     );
 }
 
+function getTestCanvas(){
+    var c = document.createElement("CANVAS");
+    c.setAttribute("style", "background-color:yellow");
+    c.setAttribute("height", "200px");
+    c.setAttribute("width", "300px");
+}
 function getStateAndActionValues(data){
     stateDict = {};
     currState = data["state"];

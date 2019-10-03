@@ -232,6 +232,7 @@ function buildStateCyNodeUnderEnemyActionCynode(jsonEnemyActionNode, cyEnemyActi
         var cyStateNode = getCyNodeFromJsonNode(jsonStateNode, jsonEnemyActionNode["name"], className);
         cyStateNode["data"]["sc2_nodeType"] = className;
         cyStateNode["data"]["sc2_cyParent"] = cyEnemyActionNode;
+        cyStateNode["data"]["state"] = jsonStateNode["state"];
 
         var cyEdge = getEdge(trimBestNotationDuplicate(jsonEnemyActionNode["name"]), trimBestNotationDuplicate(cyStateNode["data"]["id"]));
         cyEnemyActionNode["data"]["sc2_cyChildren"].push(cyStateNode);

@@ -158,3 +158,10 @@ function refreshCy(){
         childrenFollowParents(cy);
     });
 }
+
+function finishInit(nodeId){
+    var cyNode = cy.getElementById(nodeId)
+    var canvasId = getArmyStrengthCanvasId(nodeId);
+    var state = cyNode.data("state");
+    renderUnitsOnField(canvasId, state);
+}
