@@ -3,11 +3,11 @@ function renderUnitsOnField(stateVector){
     var v = stateVector;
     var w = unitCountsCanvasWidth;
     var h = unitCountsCanvasHeight;
-    // renderMidLine(w,h);
-    // renderVerticalLine(1);
-    // renderVerticalLine(2);
-    // renderVerticalLine(3);
-    return renderUnitCounts(v, "agent", "top", 0, 15,16,17) +
+    return renderMidLine(w,h) +
+    renderVerticalLine(1,w,h) +
+    renderVerticalLine(2,w,h) +
+    renderVerticalLine(3,w,h) +
+    renderUnitCounts(v,"agent", "top", 0, 15,16,17) +
     renderUnitCounts(v,"agent", "top", 1, 18,19,20) +
     renderUnitCounts(v,"agent", "top", 2, 21,22,23) +
     renderUnitCounts(v,"agent", "top", 3, 24,25,26) +
@@ -28,6 +28,14 @@ function renderUnitsOnField(stateVector){
     renderUnitCounts(v,"enemy", "bottom", 3, 60,61,62);
 }
 
+function renderVerticalLine(index, w,h){
+    var x = index * w/4;
+    return '<line x1="' + x + '" x2="' + x + '" y1="0" y2="' + h + '" stroke="black" stroke-width="1"/>';
+}
+
+function renderMidLine(w,h){ 
+    return '<line x1="0" x2="' + w + '" y1="' + h/2 + '" y2="' + h/2 + '" stroke="black" stroke-width="1"/>';
+}
 // player 1 units top lane grid 1,				[15:17] (marine, bane, immortal)
 // player 1 units top lane grid 2,				[18:20] (marine, bane, immortal)
 // player 1 units top lane grid 3,				[21:23] (marine, bane, immortal)
@@ -69,13 +77,34 @@ function renderImmortalCount(player, lane, gridIndex, count){
     var xOrigin = getXOrigin(gridIndex,player);
     var yOrigin = getYOrigin(lane, "immortal");
     var playerColor = getPlayerColor(player);
-    return drawCircleAtOrigin(xOrigin, yOrigin, playerColor);
+    return drawCircleAtOrigin(xOrigin, yOrigin, playerColor, count);
 }
 
-function drawCircleAtOrigin(x,y,color){
-    return '<circle cx="' + x + '" cy="' + y + '" r="20" stroke="' + color + '" fill="' + color + '" stroke-width="4"/>'
+function drawCircleAtOrigin(x,y,color, count){
+    var randomValue = Math.floor(Math.random() * 8); 
+    var randomSign = Math.floor(Math.random() * 2);
+    if (randomSign == 0){
+        randomValue = 0 - randomValue;
+    }
+    x = x + randomValue;
+    var radius = getRadiusForCount(count);
+    return '<circle cx="' + x + '" cy="' + y + '" r="10" stroke="' + color + '" fill="' + color + '" stroke-width="4"/>'
 }
 
+function getRadiusForCount(count){
+    if (count <= 3){
+        return 3;
+    }
+    if (count <= 30){
+        return count;
+    }
+    var transformedValue = 30 + (count - 30)/2;
+    if (transformedValue > 50){
+        return 50;
+    } else {
+        return transformedValue;
+    }
+}
 function getPlayerColor(player){
     if (player == "agent"){
         return "blue";
@@ -84,9 +113,9 @@ function getPlayerColor(player){
 }
 
 var yOffsetsInQuadrantForPlayer = {};
-yOffsetsInQuadrantForPlayer["marine"] = 0;
-yOffsetsInQuadrantForPlayer["baneling"] = 1;
-yOffsetsInQuadrantForPlayer["immortal"] = 2;
+yOffsetsInQuadrantForPlayer["marine"] = 1;
+yOffsetsInQuadrantForPlayer["baneling"] = 2;
+yOffsetsInQuadrantForPlayer["immortal"] = 3;
 
 var laneIndex = {};
 laneIndex["top"] = 0;
@@ -123,27 +152,26 @@ function getPlayerXCenterInQuadrant(player){
 
 function getPlayerYCenterInQuadrant(unitType){
     var unitIndex = yOffsetsInQuadrantForPlayer[unitType];
-    var thirdOfHeightOfQuadrant = unitCountsCanvasHeight / 6;
-    var thirdOfHeightOfQuadrant = thirdOfHeightOfQuadrant / 2;
-    var yCenter = unitIndex * thirdOfHeightOfQuadrant + thirdOfHeightOfQuadrant;
+    var fourthOfHeightOfQuadrant = unitCountsCanvasHeight / 8;
+    var yCenter = unitIndex * fourthOfHeightOfQuadrant;
     return yCenter;
 }
 
 
-function getArmyStrengthCanvasId(nodeId){
-    return "state-canvas-" + nodeId;
-}
+// function getArmyStrengthCanvasId(nodeId){
+//     return "state-canvas-" + nodeId;
+// }
 
-function renderArmyStrengthCanvases(cy){
-    cy.nodes().forEach(function (node){
-        if (node.data("sc2_nodeType") == "stateNode"){
-            var nodeId = node.data("id");
-            var state = node.data("state");
-            console.log("about to search for canvas : " + getArmyStrengthCanvasId(nodeId) )
-            renderUnitsOnField(getArmyStrengthCanvasId(nodeId), state);
-        }
-    });
-}
+// function renderArmyStrengthCanvases(cy){
+//     cy.nodes().forEach(function (node){
+//         if (node.data("sc2_nodeType") == "stateNode"){
+//             var nodeId = node.data("id");
+//             var state = node.data("state");
+//             console.log("about to search for canvas : " + getArmyStrengthCanvasId(nodeId) )
+//             renderUnitsOnField(getArmyStrengthCanvasId(nodeId), state);
+//         }
+//     });
+// }
 
 
 // ui.renderChartValueLines = function (canvas, chartData, numberOfLines) {
