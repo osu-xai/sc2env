@@ -84,7 +84,7 @@ function getNodeGlyphs(data, biggestUnitCount){
   else{
       //return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:8%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCount) + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:60%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount) + '</div>';
       //return '<div class="flex-column" style="margin:50px;" onload="finishInit("' + data.id + '")">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>'
-      return '<div class="flex-column" style="margin:50px;" onload="onloadTest">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div><script>alert(' + data.id + ');</script>';
+      return '<div class="flex-column" style="margin:50px;" onload="onloadTest">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>';
     }
 }
 var unitCountsCanvasWidth = 1600;
@@ -95,22 +95,30 @@ var pylonLeftAndRightSpacerPercent = 10;
 var pylonSetPercent                = 35;
 var pylonTwixtSpacerPercent        = 10;
 function getGameStateRow(data){
-    return '<div class="flex-row" >' + getNexusStates(data,63,64) + getUnitCountsCanvas(data) + getNexusStates(data,65,66) + '</div>';
+    return '<div class="flex-row" >' + getNexusStates(data,63,64) + getUnitCountsSvg(data) + getNexusStates(data,65,66) + '</div>';
 }
 
-// function waitingForCanvasToBeAddedToDOM(canvasId, state){
-//     var canvas = document.getElementById(canvasId);
-//     if (canvas != undefined){
-//         clearInterval(canvasScanners[canvasId]);
-//         renderUnitsOnField(canvasId, state);
-//     }
-// }
-// var canvasScanners = {};
+{/* <svg width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
-function getUnitCountsCanvas(data){
-    var canvasId = getArmyStrengthCanvasId(data.id);
-    //canvasScanners[canvasId] = setInterval(waitingForCanvasToBeAddedToDOM(canvasId, data.state), 300);
-    return '<canvas id="' + canvasId + '" style="background-color:white;height:' + unitCountsCanvasHeight + 'px;width:' + unitCountsCanvasWidth + 'px;"></canvas>';
+<rect x="10" y="10" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
+<rect x="60" y="10" rx="10" ry="10" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
+
+<circle cx="25" cy="75" r="20" stroke="red" fill="transparent" stroke-width="5"/>
+<ellipse cx="75" cy="75" rx="20" ry="5" stroke="red" fill="transparent" stroke-width="5"/>
+
+<line x1="10" x2="50" y1="110" y2="150" stroke="orange" stroke-width="5"/>
+<polyline points="60 110 65 120 70 115 75 130 80 125 85 140 90 135 95 150 100 145"
+    stroke="orange" fill="transparent" stroke-width="5"/>
+
+<polygon points="50 160 55 180 70 180 60 190 65 205 50 195 35 205 40 190 30 180 45 180"
+    stroke="green" fill="transparent" stroke-width="5"/>
+
+<path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="blue" stroke-width="5"/>
+</svg> */}
+function getUnitCountsSvg(data){
+    var state = data.state;
+    return '<div style="background-color:white"><svg height="' + unitCountsCanvasHeight + '" width="' + unitCountsCanvasWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + renderUnitsOnField(state) + '</svg></div>';
+ 
 }
 
 function getNexusStates(data, topIndex, bottomIndex){
