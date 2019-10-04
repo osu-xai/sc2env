@@ -146,11 +146,11 @@ function getPylonState(pylonState){
 }
 
 function getPlayerTitlesRow() {
-    return '<div class="flex-row" width=100%>' + getPlayerTitle("FRIENDLY") + getPlayerTitle("ENEMY") + '</div>';
+    return '<div class="flex-row" width=100%>' + getPlayerTitle("FRIENDLY", getPlayerColor("agent")) + getPlayerTitle("ENEMY", getPlayerColor("enemy")) + '</div>';
 }
 
-function getPlayerTitle(name){
-    return '<div style="color:ivory;font-size:120px;font-weight:bold;width:50%;text-align:center">' + name + '</div>';
+function getPlayerTitle(name, color){
+    return '<div style="color:' + color + ';font-size:120px;font-weight:bold;width:50%;text-align:center">' + name + '</div>';
 }
   
 function getNexusHealth(nexusHealth){
@@ -343,6 +343,7 @@ function getYAxis() {
  var sc2Treatment = "ModelBased";
 
  function setToModelFreeTreatment(){
+    controlsManager.setWaitCursor();
     sc2Treatment = "ModelFree";
     forgetCyTree();
     populatePrincipalVariationTrajectory(backingTreeRoot);
@@ -361,9 +362,18 @@ function getYAxis() {
     addNextBestChild(cy,cy.getElementById(rootNodeId));
     refreshCy();
     checkMenuAvailibleActions(cy.getElementById(rootNodeId))
+    cy.zoom({
+        level: treeZoom
+      });
+    var panInfo = {};
+    panInfo["x"] = treePanX;
+    panInfo["y"] = treePanY;
+    cy.pan(panInfo);
+    controlsManager.clearWaitCursor()
  }
  
 function setToModelBasedTreatment(){
+    controlsManager.setWaitCursor();
     sc2Treatment = "ModelBased";
     forgetCyTree();
     populatePrincipalVariationTrajectory(backingTreeRoot);
@@ -382,6 +392,7 @@ function setToModelBasedTreatment(){
     addNextBestChild(cy,cy.getElementById(rootNodeId));
     refreshCy();
     checkMenuAvailibleActions(cy.getElementById(rootNodeId))
+    controlsManager.clearWaitCursor();
 }
 
 function isTreatmentModelBased(){

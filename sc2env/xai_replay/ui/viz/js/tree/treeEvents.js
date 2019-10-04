@@ -101,7 +101,7 @@ function highlightNode(n){
 function removeHighlightNode(n){
     var nId = n.data("id");
     if (n.hasClass("principalVariation") == true){
-        n.style("background-color", "#EAFAF1");// was SteelBlue
+        n.style("background-color", "#999999");// was SteelBlue  003300
     }
     else{
         n.style("background-color", "LightSlateGray");
@@ -156,6 +156,15 @@ function refreshCy(){
         var biggestUnitCountTuple = getLargestUnitCount(cy);
         intitTreeLables(cy, biggestUnitCountTuple);
         childrenFollowParents(cy);
+        if (sc2Treatment  == "ModelFree"){
+            cy.zoom({
+                level: treeZoom
+              });
+            var panInfo = {};
+            panInfo["x"] = treePanX;
+            panInfo["y"] = treePanY;
+            cy.pan(panInfo);
+        }
     });
 }
 

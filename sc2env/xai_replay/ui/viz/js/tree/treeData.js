@@ -55,7 +55,7 @@ var treeStyle =
         width: 1100; \
     } \
     .principalVariation { \
-        background-color: #003300; \
+        background-color: #999999; \
     } \
     edge { \
         curve-style: straight; \
@@ -73,6 +73,7 @@ var treeStyle =
 
 var cy = undefined;
 function initTree(jsonPath, frameNumber){
+        controlsManager.setWaitCursor();
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
         populatePrincipalVariationTrajectory(backingTreeRoot);
@@ -90,6 +91,12 @@ function initTree(jsonPath, frameNumber){
         refreshCy();
         addNextBestChild(cy,cy.getElementById(rootNodeId));
         refreshCy();
+        if (alertWithZoomAndPanValuesOfModelBasedView){
+            var zoom = cy.zoom();
+            var pan = cy.pan();
+            alert("zoom : " + zoom + "  pan x " + pan["x"] + " pan y " + pan["y"]);
+        }
+        controlsManager.clearWaitCursor();
     });
 }
 window.onload = function()

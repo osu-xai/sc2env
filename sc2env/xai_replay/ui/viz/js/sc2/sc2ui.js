@@ -121,6 +121,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         }
 
         checkForEndOfGame()
+        controlsManager.clearWaitCursor();
     }
     uim.play = function(){
         video.play()
