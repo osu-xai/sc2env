@@ -4,9 +4,9 @@ function renderUnitsOnField(stateVector){
     var w = unitCountsCanvasWidth;
     var h = unitCountsCanvasHeight;
     return renderMidLine(w,h) +
-    renderVerticalLine(1,w,h) +
-    renderVerticalLine(2,w,h) +
-    renderVerticalLine(3,w,h) +
+    //renderVerticalLine(1,w,h) +
+    //renderVerticalLine(2,w,h) +
+    //renderVerticalLine(3,w,h) +
     renderUnitCounts(v,"agent", "top", 0, 15,16,17) +
     renderUnitCounts(v,"agent", "top", 1, 18,19,20) +
     renderUnitCounts(v,"agent", "top", 2, 21,22,23) +
@@ -34,7 +34,7 @@ function renderVerticalLine(index, w,h){
 }
 
 function renderMidLine(w,h){ 
-    return '<line x1="0" x2="' + w + '" y1="' + h/2 + '" y2="' + h/2 + '" stroke="black" stroke-width="1"/>';
+    return '<line x1="0" x2="' + w + '" y1="' + h/2 + '" y2="' + h/2 + '" stroke="black" stroke-width="10"/>';
 }
 // player 1 units top lane grid 1,				[15:17] (marine, bane, immortal)
 // player 1 units top lane grid 2,				[18:20] (marine, bane, immortal)
@@ -54,62 +54,106 @@ function renderMidLine(w,h){
 // player 2 units bottom lane grid 4,			[60:62] (marine, bane, immortal)
 
 function renderUnitCounts(stateVector, player, lane, gridIndex, marineIndex, banelingIndex, immortalIndex){
-    return renderMarineCount(player, lane, gridIndex, stateVector[marineIndex]) +
-    renderBanelingCount(player, lane, gridIndex, stateVector[banelingIndex]) +
-    renderImmortalCount(player, lane, gridIndex, stateVector[immortalIndex]);
+    var marines = stateVector[marineIndex];
+    var banelings = stateVector[banelingIndex];
+    var immortals = stateVector[immortalIndex];
+
+    //console.log(lane + " lane, " + player + " gridIndex: " + gridIndex + ", marines " + marines + " banelings: " + banelings + " immortals: " + immortals);
+    return renderMarineCount(player, lane, gridIndex, marines) +
+    renderBanelingCount(player, lane, gridIndex, banelings) +
+    renderImmortalCount(player, lane, gridIndex, immortals);
 }
 
 function renderMarineCount(player, lane, gridIndex, count){
     var xOrigin = getXOrigin(gridIndex, player);
     var yOrigin = getYOrigin(lane, "marine");
     var playerColor = getPlayerColor(player);
-    return drawCircleAtOrigin(xOrigin, yOrigin, playerColor);
+    return drawEllipseAtOrigin(xOrigin, yOrigin, playerColor, count);
 }
 
 function renderBanelingCount(player, lane, gridIndex, count){
     var xOrigin = getXOrigin(gridIndex, player);
     var yOrigin = getYOrigin(lane, "baneling");
     var playerColor = getPlayerColor(player);
-    return drawCircleAtOrigin(xOrigin, yOrigin, playerColor);
+    return drawRectangleAtOrigin(xOrigin, yOrigin, playerColor, count);
 }
 
 function renderImmortalCount(player, lane, gridIndex, count){
     var xOrigin = getXOrigin(gridIndex,player);
     var yOrigin = getYOrigin(lane, "immortal");
     var playerColor = getPlayerColor(player);
-    return drawCircleAtOrigin(xOrigin, yOrigin, playerColor, count);
+    return drawTriangleAtOrigin(xOrigin, yOrigin, playerColor, count);
 }
 
-function drawCircleAtOrigin(x,y,color, count){
-    var randomValue = Math.floor(Math.random() * 8); 
+function drawRectangleAtOrigin(x,y,color, count){
+    if (count == 0){
+        return '';
+    }
+    var width = getWidthForCount(count);
+    var height = getHeightForCount(count)
+    var xLeft = x - width / 2;
+    var yTop = y - height / 2;
+    return '<rect x="' + randomShift(xLeft) + '" y="' + randomShift(yTop) + '" width="' + width + '" height="' + height + '" style="fill:' + color + ';stroke:' + color + ';stroke-width:1;" />'
+
+}
+
+function drawTriangleAtOrigin(x,y,color, count){
+    if (count == 0){
+        return '';
+    }
+    var shiftedX = randomShift(x);
+    var shiftedY = randomShift(y);
+    var immortalBoost = 3;
+    var width = getWidthForCount(count) * immortalBoost;
+    var height = getHeightForCount(count)* immortalBoost;
+    var xBottomLeft = shiftedX - width / 2;
+    var xBottomRight = shiftedX + width / 2;
+    var xTop = shiftedX;
+    var yBottomLeft = shiftedY + height / 2;
+    var yBottomRight = shiftedY + height / 2;
+    var yTop = shiftedY - height / 2;
+    var pointSequence = xBottomLeft + ',' + yBottomLeft + "," + xBottomRight + ',' + yBottomRight + "," + xTop + ',' + yTop
+    return '<polygon points="' + pointSequence + '" style="fill:' + color + ';stroke:' + color + ';stroke-width:1" />';
+}
+
+function randomShift(val){
+    var randomOffset = Math.floor(Math.random() * 20); 
     var randomSign = Math.floor(Math.random() * 2);
     if (randomSign == 0){
-        randomValue = 0 - randomValue;
+        randomOffset = 0 - randomOffset;
     }
-    x = x + randomValue;
-    var radius = getRadiusForCount(count);
-    return '<circle cx="' + x + '" cy="' + y + '" r="10" stroke="' + color + '" fill="' + color + '" stroke-width="4"/>'
+    return  val + randomOffset;
+}
+function drawEllipseAtOrigin(x,y,color, count){
+    if (count == 0){
+        return '';
+    }
+    var width = getWidthForCount(count);
+    var height = getHeightForCount(count);
+
+    return '<ellipse cx="' + randomShift(x) + '" cy="' + randomShift(y) + '" rx="' + width/2 + '" ry="' + height/2 + '" stroke="' + color + '" fill="' + color + '" stroke-width="1"/>'
 }
 
-function getRadiusForCount(count){
-    if (count <= 3){
-        return 3;
+function getWidthForCount(count){
+    var radius = (count * 4 ) + 30;
+    if (radius > 280) {
+        return 280;
     }
-    if (count <= 30){
-        return count;
+    return radius;
+}
+
+function getHeightForCount(count){
+    var radius = (count * 2) + 15;
+    if (radius > 140) {
+        return 140;
     }
-    var transformedValue = 30 + (count - 30)/2;
-    if (transformedValue > 50){
-        return 50;
-    } else {
-        return transformedValue;
-    }
+    return radius;
 }
 function getPlayerColor(player){
     if (player == "agent"){
-        return "blue";
+        return "red";
     }
-    return "red";
+    return "blue";
 }
 
 var yOffsetsInQuadrantForPlayer = {};
