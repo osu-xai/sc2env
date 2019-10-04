@@ -91,6 +91,11 @@ function initTree(jsonPath, frameNumber){
         refreshCy();
         addNextBestChild(cy,cy.getElementById(rootNodeId));
         refreshCy();
+        if (alertWithZoomAndPanValuesOfModelBasedView){
+            var zoom = cy.zoom();
+            var pan = cy.pan();
+            alert("zoom : " + zoom + "  pan x " + pan["x"] + " pan y " + pan["y"]);
+        }
     });
 }
 window.onload = function()

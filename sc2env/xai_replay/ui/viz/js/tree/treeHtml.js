@@ -361,6 +361,13 @@ function getYAxis() {
     addNextBestChild(cy,cy.getElementById(rootNodeId));
     refreshCy();
     checkMenuAvailibleActions(cy.getElementById(rootNodeId))
+    cy.zoom({
+        level: treeZoom
+      });
+    var panInfo = {};
+    panInfo["x"] = treePanX;
+    panInfo["y"] = treePanY;
+    cy.pan(panInfo);
  }
  
 function setToModelBasedTreatment(){
