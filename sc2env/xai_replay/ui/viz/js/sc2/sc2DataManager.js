@@ -14,6 +14,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addUnitDeltasToFrames(frameInfos);
     getDecisionPointFrames(frameInfos, 0)
     getInterestingFrameNumbersForDPs();
+    controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
