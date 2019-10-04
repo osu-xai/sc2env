@@ -55,7 +55,7 @@ var treeStyle =
         width: 1100; \
     } \
     .principalVariation { \
-        background-color: #003300; \
+        background-color: #999999; \
     } \
     edge { \
         curve-style: straight; \
