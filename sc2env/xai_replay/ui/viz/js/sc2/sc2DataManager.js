@@ -1,10 +1,11 @@
 const forwardDP = 3;
-const forwardDPCheck = false;
+const forwardDPCheck = true;
 const interestingDPs = [3,4,5,10,11,14,15,16,27,28,29,30,31,32,33]
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
 var interestingDPsByFrame = [];
+var decisionPointsFullCopy = [];
 
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
@@ -13,6 +14,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
     getDecisionPointFrames(frameInfos, 0)
+    for (dpIndex in decisionPoints){decisionPointsFullCopy.push(decisionPoints[dpIndex]);}
     getInterestingFrameNumbersForDPs();
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }

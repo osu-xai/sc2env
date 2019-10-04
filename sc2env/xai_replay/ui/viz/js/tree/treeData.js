@@ -80,7 +80,6 @@ function initTree(jsonPath, frameNumber){
         if (nodeMenuExist == undefined){
             generateNodeActionMenu("node-menu");
         }
-
         cy = cytoscape(treeData);
         var rootNodeId = backingTreeRoot["data"]["id"];
         addNextBestChild(cy,cy.getElementById(rootNodeId));

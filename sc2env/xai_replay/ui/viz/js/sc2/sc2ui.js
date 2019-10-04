@@ -65,6 +65,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.dataManager = sc2DataManager;
     uim.videoFilepath = getVideoFilepath(filenameRoot);
     uim.jumped = false;
+    uim.forwarded = false;
 
     createVideoElement(uim.videoFilepath);
     toggleOnUIElements()
@@ -103,6 +104,10 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
         frame = this.dataManager.getFrameInfo(frameNumber);
         renderUnitValues(frame);
+        if(!checkIfFrameIsInteresting(frameNumber) && forwardDPCheck){
+            this.forwarded = true;
+            forwardDPToFrame(nextDPOfInterest);
+        }
         userStudyAdjustmentsForFrameChange();
         getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
 
@@ -110,6 +115,11 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
         }
+        if (this.forwarded){
+            resumeGame();
+            this.forwarded = false;
+        }
+
         checkForEndOfGame()
     }
     uim.play = function(){
@@ -150,14 +160,7 @@ function createVideoElement(path){
 	video.addEventListener("timeupdate", function(){
         // frames per second is 25.  Figure out frame number from currentTime
         var frameNumber = Math.round((video.currentTime - (trimBy / framesPerSecond)) * framesPerSecond);
-
-        if(!checkIfFrameIsInteresting(frameNumber) && forwardDPCheck){
-            activeSC2UIManager.jumpToFrame(nextDPOfInterest)
-        }
-        else{
-            
-            activeSC2UIManager.expressFrameInfo(frameNumber);
-        }
+        activeSC2UIManager.expressFrameInfo(frameNumber);
         // video.currentTime = 1/framesPerSecond + video.currentTime
 	})
 	// have to call configureGameboardCanvas here again so that unit position math is correct when tooltips are made.
@@ -295,41 +298,58 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
 var frameNumber = 0;
 var frameCount = 92;
 
-var nextDPOfInterest = getNextInterestingDP();
-var currDPOfInterest = getCurrInterestingDP();
+var currDPOfInterest = getCurrInterestingDP(frameNumber);
+var nextDPOfInterest = getNextInterestingDP(currDPOfInterest);
 
-function getNextInterestingDP(){
-    for(var dpInterestIndex in interestingDPsByFrame){
-        for (var dpIndex in decisionPoints){
-            if (decisionPoints[dpIndex] == interestingDPsByFrame[dpInterestIndex]){
-                return interestingDPsByFrame[dpInterestIndex];
+function getNextInterestingDP(frameNumber){
+    for(var dpInterestIndex = 0; dpInterestIndex < interestingDPsByFrame.length; dpInterestIndex++){
+        if (frameNumber == interestingDPsByFrame[dpInterestIndex]){
+            return interestingDPsByFrame[dpInterestIndex+1];
+        }
+    }
+}
+function getCurrInterestingDP(frameNumber){
+    if (frameNumber < interestingDPsByFrame[0]){
+        forwardDPToFrame(interestingDPsByFrame[0])
+        return interestingDPsByFrame[0];
+    }
+
+    else{
+        for(var dpInterestIndex = 1; dpInterestIndex < interestingDPsByFrame.length+1; dpInterestIndex++){
+            var prevInterestingDP = interestingDPsByFrame[dpInterestIndex-1];
+            var currInterestingDP = interestingDPsByFrame[dpInterestIndex];
+
+            if (frameNumber >= prevInterestingDP && frameNumber < currInterestingDP){
+                return prevInterestingDP;
             }
         }
     }
 }
-function getCurrInterestingDP(){
-    for(var dpInterestIndex in interestingDPsByFrame){
-        for (var dpIndex in decisionPoints){
-            if (decisionPoints[dpIndex] == interestingDPsByFrame[dpInterestIndex]){
-                return interestingDPsByFrame[dpInterestIndex-1];
-            }
-        }
-    }
-}
-function forwardDPToFrame(frameNumber){//SC2_TEST
+function forwardDPToFrame(frameNumber){
     var currentTime = frameNumber / framesPerSecond;
     video.currentTime = currentTime + (trimBy / framesPerSecond);
 }
 
+function findPreviouslyVisitedDP(dpFrameNumber){
+    for(var dpIndex in decisionPointsFullCopy){
+        if (decisionPointsFullCopy[dpIndex] == dpFrameNumber){
+            return decisionPointsFullCopy[dpIndex-1];
+        }
+    }
+}
+
 function checkIfFrameIsInteresting(frameNumber){
-    nextDPOfInterest = getNextInterestingDP();
-    currDPOfInterest = getCurrInterestingDP();
+    currDPOfInterest = getCurrInterestingDP(frameNumber);
+    nextDPOfInterest = getNextInterestingDP(currDPOfInterest);
+
+    if (currDPOfInterest == 0){return false;}
     if (frameNumber < nextDPOfInterest && frameNumber > currDPOfInterest){
         var dpBeforeNextIntrest = undefined;
         for(var dpIndex in decisionPoints){
             if (decisionPoints[dpIndex] == nextDPOfInterest){
-                dpBeforeNextIntrest = decisionPoints[dpIndex-1];
+                dpBeforeNextIntrest = findPreviouslyVisitedDP(decisionPoints[dpIndex]);
                 if (dpBeforeNextIntrest == currDPOfInterest){
+                    console.log("TRUE")
                     return true;
                 }
                 else{return false;}
@@ -337,9 +357,11 @@ function checkIfFrameIsInteresting(frameNumber){
         }
     }
     else if(frameNumber == nextDPOfInterest){
+        console.log("TRUE")
         return true;
     }
     else if(frameNumber == currDPOfInterest){
+        console.log("TRUE")
         return true;
     }
     else{
