@@ -73,6 +73,7 @@ var treeStyle =
 
 var cy = undefined;
 function initTree(jsonPath, frameNumber){
+        controlsManager.setWaitCursor();
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
         populatePrincipalVariationTrajectory(backingTreeRoot);
@@ -96,6 +97,7 @@ function initTree(jsonPath, frameNumber){
             var pan = cy.pan();
             alert("zoom : " + zoom + "  pan x " + pan["x"] + " pan y " + pan["y"]);
         }
+        controlsManager.clearWaitCursor();
     });
 }
 window.onload = function()

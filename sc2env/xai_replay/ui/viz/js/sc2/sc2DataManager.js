@@ -15,6 +15,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     getDecisionPointFrames(frameInfos, 0)
     getInterestingFrameNumbersForDPs();
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
+    controlsManager.registerJQueryHandleForWaitCursor($("#fullscreen-modal"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
