@@ -101,10 +101,12 @@ function configureRewindButton(){
 function configurePauseResumeButton(){
 	pauseResumeButton.setAttribute("class", "playbackButton");
 	pauseResumeButton.setAttribute("id", "pauseResumeButton");
-	pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="16px" width="14px"/>';
+    //pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="16px" width="14px"/>';
+    
+	pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="25px" width="20px"/>';
 	$("#pause-play-control").append(pauseResumeButton);
-	$("#pauseResumeButton").css("padding-top","2px");
-	$("#pauseResumeButton").css("padding-bottom","0px");
+	$("#pauseResumeButton").css("padding-top","3px");
+	$("#pauseResumeButton").css("padding-bottom","3px");
 	$("#pauseResumeButton").css("margin-left","15px");
 	pauseResumeButton.onclick = tryPause;
 	$("#pauseResumeButton").css("opacity", "0.6");
@@ -452,7 +454,7 @@ function sizeNonGeneratedElements() {
 	
 	$('#unit-value-panels-toggle').css('float', "right")
 	$('#unit-value-panels-toggle').css('text-align', "center")
-	$('#unit-value-panels-toggle').css('font-size', "15px")
+	$('#unit-value-panels-toggle').css('font-size', "20px")
 	$('#unit-value-panels-toggle').css('font-family', "Arial")
 	$('#unit-value-panels-toggle').css('width', "300px")
 	$('#unit-value-panels-toggle').css('height', "30px")
@@ -472,9 +474,9 @@ function sizeNonGeneratedElements() {
 	
 	$('#fullscreen-button1-toggle').css('float', "left")
 	$('#fullscreen-button1-toggle').css('text-align', "center")
-	$('#fullscreen-button1-toggle').css('font-size', "15px")
+	$('#fullscreen-button1-toggle').css('font-size', "20px")
 	$('#fullscreen-button1-toggle').css('font-family', "Arial")
-	$('#fullscreen-button1-toggle').css('width', "300px")
+	$('#fullscreen-button1-toggle').css('width', "200px")
 	$('#fullscreen-button1-toggle').css('height', "30px")
 	//$('#fullscreen-button1-toggle').css('margin-left', "10%")
 
@@ -529,13 +531,14 @@ function sizeNonGeneratedElements() {
 		else{
             $('#fullscreen-modal').css('display', "none")
             $('#fullscreen-button1-toggle').html("Show Explanations");
+            $('#fullscreen-button1-toggle').attr("disable", true);
 		}
 	});
 	
 	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
 	var stepValueWidth = 100;
 	var stepValuePaddingLeft = centerPointOfVideo - stepValueWidth - 40;
-	$("#step-value").css("width", stepValueWidth + "px");
+	//$("#step-value").css("width", stepValueWidth + "px");
 	//$("#step-value").css("margin-left", ($(window).width()/2)-120);
 	$("#step-value").css("margin-left", "40%");
 	

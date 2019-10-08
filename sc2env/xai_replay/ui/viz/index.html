@@ -320,20 +320,27 @@
                             <div style="width:35%">
                                 <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;">Hide Unit Information</button>
                             </div>
-                            <div style="width:30%" class="flex-row">
-                                <button id="connect-button">Start</button>
-                                <div id="step-value" class="minor-label-text"></div>
+                            <div style="width:20%;font-size:20px" class="flex-row">
+                                <div id="step-value" style="line-height:35px"></div>
                                 <!--<div id="rewind-control"></div>
                                 <div id="step-back-control"></div>
                                 <div id="step-forward-control"></div>-->
+                                <button id="connect-button" style="font-size:20px">Start</button>
                                 <div id="pause-play-control"></div>
                             </div>
-                            <div style="width:35%">
-                                <button id="fullscreen-button1-toggle"  style="display:none;">Show Explanations</button>
+                            <div style="width:10%;font-size:20px;margin-right:30px;" class="flex-row">
+                                <label id="unlock-key-label" style="text-align:right;width:80%;line-height:35px;">Unlock Explanation</label>
+                                <input id="unlock-key-text" style="width:20%;margin-left:10px;vertical-align:middle" type="text" name="unlock-key">
                             </div>
-                            <div style="width:25%" class="flex-row">
-                                <input id="model-free-radio" style="vertical-align:middle" type="radio" name="treatment" value="model-free"> Model Free<br>
-                                <input id="model-based-radio" style="vertical-align:middle" type="radio" name="treatment" value="model-based"checked>Model Based<br>
+                            <div style="width:15%">
+                                <button id="fullscreen-button1-toggle"  style="display:none;margin-right:40px;" disabled="true">Show Explanations</button>
+                            </div>
+                            
+                            <div style="width:15%" class="flex-row">
+                                <input id="model-free-radio" display="inline" style="transform: scale(1.5);vertical-align:middle" type="radio" name="treatment" value="model-free">
+                                <label display="inline" style="margin-left:10px;line-height:35px;font-size:20px">Model Free</label>
+                                <input id="model-based-radio" display="inline" style="margin-left:15px; transform: scale(1.5);vertical-align:middle" type="radio" name="treatment" value="model-based"checked>
+                                <label display="inline" style="margin-left:10px;line-height:35px;font-size:20px">Model Based</label>
                             </div>
 
                         </div>

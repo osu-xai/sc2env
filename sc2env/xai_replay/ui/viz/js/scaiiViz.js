@@ -49,12 +49,9 @@ var main = function () {
 		connectButton.onclick = function () {
 			tryConnect('.', 0);
 		};
-		$("#connect-button").css("float", "left");
-		$("#connect-button").css("font-size", "15px");
-		$("#connect-button").css("margin-left", "250px");
+		//$("#connect-button").css("float", "left");
 		$("#connect-button").css("padding-left", "20px");
 		$("#connect-button").css("padding-right", "20px");
-		$("#connect-button").css("width", "300px");
 		$("#connect-button").css("height", "30px");
 	} else {
 		tryConnect('.', 0);
