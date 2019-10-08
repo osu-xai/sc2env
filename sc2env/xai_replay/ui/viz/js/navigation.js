@@ -180,7 +180,7 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	manager.expressResumeButton = function () {
 		//console.log('expressing RESUME button');
 		this.pauseResumeButton.onclick = tryResume;
-		this.pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="25px" width="20px"/>';
+		this.pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="24px" width="20px"/>';
 	}
 
 	//
@@ -198,7 +198,7 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 		//console.log('expressing PAUSE button');
 		console.log('video.currentTime: ' + video.currentTime);
 		this.pauseResumeButton.onclick = tryPause;
-		this.pauseResumeButton.innerHTML = '<img src="imgs/pause.png", height="25px" width="20px"/>';
+		this.pauseResumeButton.innerHTML = '<img src="imgs/pause.png", height="24px" width="20px"/>';
 	}
 
     manager.isPauseButtonDisplayed = function() {

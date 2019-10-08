@@ -358,6 +358,9 @@ function renderUnitValues(frameInfo){
                 for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
                     if (decisionPoints[i] == interestingDPsByFrame[dpIndex]){
                         pauseGame();
+                        $('#unlock-key-label').css('display', "block");
+                        $('#unlock-key-text').css('display', "block");
+                        $('#fullscreen-button1-toggle').css('display', "block")
                     }
                 }
 

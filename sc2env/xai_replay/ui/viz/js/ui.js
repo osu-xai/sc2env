@@ -103,7 +103,7 @@ function configurePauseResumeButton(){
 	pauseResumeButton.setAttribute("id", "pauseResumeButton");
     //pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="16px" width="14px"/>';
     
-	pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="25px" width="20px"/>';
+	pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="24px" width="20px"/>';
 	$("#pause-play-control").append(pauseResumeButton);
 	$("#pauseResumeButton").css("padding-top","3px");
 	$("#pauseResumeButton").css("padding-bottom","3px");
@@ -531,7 +531,11 @@ function sizeNonGeneratedElements() {
 		else{
             $('#fullscreen-modal').css('display', "none")
             $('#fullscreen-button1-toggle').html("Show Explanations");
-            $('#fullscreen-button1-toggle').attr("disable", true);
+            if(document.getElementById('key-disable-check').checked) {
+                $('#fullscreen-button1-toggle').prop('disabled', true);
+            } else {
+                $('#fullscreen-button1-toggle').prop('disabled', false);
+            }
 		}
 	});
 	

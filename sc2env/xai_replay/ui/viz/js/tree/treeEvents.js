@@ -174,7 +174,7 @@ function refreshCy(){
 //     var state = cyNode.data("state");
 //     renderUnitsOnField(canvasId, state);
 // }
-
+//currDPOfInterest
 var unlockKeys = [];
 unlockKeys[0] = "__";
 unlockKeys[1] = "ne";
@@ -217,3 +217,22 @@ unlockKeys[37] = "aw";
 unlockKeys[38] = "nc";
 unlockKeys[39] = "ol";
 unlockKeys[40] = "or";
+
+function checkUnlockKey(){
+    var code = $('#unlock-key-text').val();
+    if (code.length < 2){
+        return;
+    }
+    var step = sessionIndexManager.getCurrentIndex();
+    var dpString = sessionIndexManager.getDPThatStartsEpochForStep(step);
+    var dp = dpString.replace("DP","");
+    var unlockCode = unlockKeys[dp];
+    if (unlockCode == code){
+        $('#fullscreen-button1-toggle').prop('disabled', false);
+        $('#unlock-key-text').css('display','none')
+    }
+    else {
+        alert("unlock key " + dpString + " does not match expected value, please try again.")
+    }
+    $('#unlock-key-text').val('');
+}
