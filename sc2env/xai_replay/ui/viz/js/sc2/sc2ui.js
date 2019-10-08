@@ -312,9 +312,9 @@ function getNextInterestingDP(frameNumber){
 function getCurrInterestingDP(frameNumber){
     if (frameNumber < interestingDPsByFrame[0]){
         forwardDPToFrame(interestingDPsByFrame[0])
-        return interestingDPsByFrame[0];
+        currDPOfInterest = interestingDPsByFrame[0];
+        nextDPOfInterest = interestingDPsByFrame[1];
     }
-
     else{
         for(var dpInterestIndex = 1; dpInterestIndex < interestingDPsByFrame.length+1; dpInterestIndex++){
             var prevInterestingDP = interestingDPsByFrame[dpInterestIndex-1];
@@ -331,10 +331,18 @@ function forwardDPToFrame(frameNumber){
     video.currentTime = currentTime + (trimBy / framesPerSecond);
 }
 
-function findPreviouslyVisitedDP(dpFrameNumber){
+function findPreviousDP(dpFrameNumber){
     for(var dpIndex in decisionPointsFullCopy){
         if (decisionPointsFullCopy[dpIndex] == dpFrameNumber){
             return decisionPointsFullCopy[dpIndex-1];
+        }
+    }
+}
+
+function findNextDP(dpFrameNumber){
+    for(var dpIndex = 0; dpIndex < decisionPointsFullCopy.length; dpIndex++){
+        if (decisionPointsFullCopy[dpIndex] == dpFrameNumber){
+            return decisionPointsFullCopy[dpIndex+1];
         }
     }
 }
@@ -343,32 +351,28 @@ function checkIfFrameIsInteresting(frameNumber){
     currDPOfInterest = getCurrInterestingDP(frameNumber);
     nextDPOfInterest = getNextInterestingDP(currDPOfInterest);
 
-    if (currDPOfInterest == 0){return false;}
     if (frameNumber < nextDPOfInterest && frameNumber > currDPOfInterest){
-        var dpBeforeNextIntrest = undefined;
-        for(var dpIndex in decisionPoints){
-            if (decisionPoints[dpIndex] == nextDPOfInterest){
-                dpBeforeNextIntrest = findPreviouslyVisitedDP(decisionPoints[dpIndex]);
-                if (dpBeforeNextIntrest == currDPOfInterest){
-                    console.log("TRUE")
-                    return true;
-                }
-                else{return false;}
-            }
+        if (findPreviousDP(nextDPOfInterest) == currDPOfInterest){
+            return true;
+        }
+        else if (frameNumber < findNextDP(currDPOfInterest)){
+            return true;
+        }
+        else{
+            return false
         }
     }
     else if(frameNumber == nextDPOfInterest){
-        console.log("TRUE")
         return true;
     }
     else if(frameNumber == currDPOfInterest){
-        console.log("TRUE")
         return true;
     }
     else{
         return false;
     }
 }
+
 
 function vidStep(){
 	frameNumber += 1;

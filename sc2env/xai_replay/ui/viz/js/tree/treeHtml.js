@@ -30,7 +30,7 @@ function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
             '</div>' +
             '<div></div>' +
             '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
-              drawPylons(unitValuesDict["Pylons State"]) + drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + 
+               drawStatePylons(unitValuesDict["Pylons State"] - unitValuesDict["Pylons Action"]) + drawActionPylons(unitValuesDict["Pylons Action"]) + drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + 
             '</div>' +
           '</div>';
 }
@@ -66,7 +66,7 @@ function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
             drawNexusHealth(data["state"][66]) +
           '</div>' +
           '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto;">' + 
-            drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + drawPylons(unitValuesDict["Pylons State"]) + 
+            drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + drawStatePylons(unitValuesDict["Pylons State"] - unitValuesDict["Pylons Action"]) + drawActionPylons(unitValuesDict["Pylons Action"]) +
           '</div>' +
           '<div></div>' +
         '</div>';
@@ -141,7 +141,7 @@ function getSpacerAsWideAsNexusHealth() {
 }
 function getPylonState(pylonState){
     return '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto;width:' + pylonSetPercent + '%;">' + 
-    drawPylonPlaceHolderDivs(pylonState) + drawPylons(pylonState) + 
+    drawPylonPlaceHolderDivs(pylonState) + drawStatePylons(pylonState) + 
           '</div>';
 }
 
@@ -167,12 +167,23 @@ function drawNexusHealth(nexusHealth){
   return '<div style="bottom:0%;background-color:green;margin:10px;width:50px;"><div style="background-color:ivory;margin:2.5px;position:relative;width:45px;height:' + nexusHealthPercent + '%;"></div></div>';
 }
 
-function drawPylons(pylonCount){
+function drawStatePylons(pylonCount){
   var pylonString = "";
   var maxPylons = 3;
   for (var i = 0; i < pylonCount; i++){
       //pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
-      pylonString += '<div style="text-align:center;background-color:yellow;height:35px;margin:15px;"></div>';
+      pylonString += '<div style="text-align:center;border: 8px solid yellow;background-color:yellow;height:35px;margin:15px;"></div>';
+    }
+  return pylonString;
+}
+
+
+function drawActionPylons(pylonCount){
+  var pylonString = "";
+  var maxPylons = 3;
+  for (var i = 0; i < pylonCount; i++){
+      //pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
+      pylonString += '<div style="text-align:center;border: 8px solid black;background-color:yellow;height:35px;margin:15px;"></div>';
     }
   return pylonString;
 }
@@ -181,7 +192,7 @@ function drawPylonPlaceHolderDivs(pylonCount){
   var pylonString = "";
   var maxPylons = 3;
   for(var i = 0; i < (maxPylons-pylonCount); i++){
-      pylonString += '<div style="border: 4px solid yellow;background-color:rgba(255,255,0,.30);height:35px;margin:15px;"></div>'
+      pylonString += '<div style="border: 8px solid yellow;background-color:rgba(255,255,0,.30);height:35px;margin:15px;"></div>'
   }
   return pylonString;
 }
