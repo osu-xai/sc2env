@@ -355,7 +355,12 @@ function renderUnitValues(frameInfo){
         
         for (var i = 0; i < decisionPoints.length; i++){
             if (frameInfo.frame_number >= decisionPoints[i] + 2){
-                // pauseGame();
+                for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
+                    if (decisionPoints[i] == interestingDPsByFrame[dpIndex]){
+                        pauseGame();
+                    }
+                }
+
                 decisionPoints.splice(i,1);
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){

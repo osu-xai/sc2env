@@ -114,9 +114,10 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         if (this.jumped){
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
+            
         }
         if (this.forwarded){
-            resumeGame();
+            pauseGame();
             this.forwarded = false;
         }
 
