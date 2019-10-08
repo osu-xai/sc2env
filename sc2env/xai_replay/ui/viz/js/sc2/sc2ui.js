@@ -68,9 +68,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.forwarded = false;
 
     createVideoElement(uim.videoFilepath);
-    toggleOnUIElements()
-
-   
+    toggleOnUIElements();   
 
     uim.renderTooltipsForCurrentStep = function() {
         clearGameBoard();
@@ -114,7 +112,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         if (this.jumped){
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
-            
+
         }
         if (this.forwarded){
             pauseGame();
@@ -254,8 +252,6 @@ function translateUnitYToCanvasY(unitY){
 //     return unitSpaceX;
 // }
 
-
-
 function translateCanvasXCoordToGameUnitXCoord(canvasX, canvasWidth){
     //
     //  Translating canvas x coords to game unit x coords
@@ -299,81 +295,6 @@ function translateCanvasYCoordToGameUnitYCoord(canvasY, canvasHeight){
 
 var frameNumber = 0;
 var frameCount = 92;
-
-var currDPOfInterest = getCurrInterestingDP(frameNumber);
-var nextDPOfInterest = getNextInterestingDP(currDPOfInterest);
-
-function getNextInterestingDP(frameNumber){
-    for(var dpInterestIndex = 0; dpInterestIndex < interestingDPsByFrame.length; dpInterestIndex++){
-        if (frameNumber == interestingDPsByFrame[dpInterestIndex]){
-            return interestingDPsByFrame[dpInterestIndex+1];
-        }
-    }
-}
-function getCurrInterestingDP(frameNumber){
-    if (frameNumber < interestingDPsByFrame[0]){
-        forwardDPToFrame(interestingDPsByFrame[0])
-        currDPOfInterest = interestingDPsByFrame[0];
-        nextDPOfInterest = interestingDPsByFrame[1];
-    }
-    else{
-        for(var dpInterestIndex = 1; dpInterestIndex < interestingDPsByFrame.length+1; dpInterestIndex++){
-            var prevInterestingDP = interestingDPsByFrame[dpInterestIndex-1];
-            var currInterestingDP = interestingDPsByFrame[dpInterestIndex];
-
-            if (frameNumber >= prevInterestingDP && frameNumber < currInterestingDP){
-                return prevInterestingDP;
-            }
-        }
-    }
-}
-function forwardDPToFrame(frameNumber){
-    var currentTime = frameNumber / framesPerSecond;
-    video.currentTime = currentTime + (trimBy / framesPerSecond);
-}
-
-function findPreviousDP(dpFrameNumber){
-    for(var dpIndex in decisionPointsFullCopy){
-        if (decisionPointsFullCopy[dpIndex] == dpFrameNumber){
-            return decisionPointsFullCopy[dpIndex-1];
-        }
-    }
-}
-
-function findNextDP(dpFrameNumber){
-    for(var dpIndex = 0; dpIndex < decisionPointsFullCopy.length; dpIndex++){
-        if (decisionPointsFullCopy[dpIndex] == dpFrameNumber){
-            return decisionPointsFullCopy[dpIndex+1];
-        }
-    }
-}
-
-function checkIfFrameIsInteresting(frameNumber){
-    currDPOfInterest = getCurrInterestingDP(frameNumber);
-    nextDPOfInterest = getNextInterestingDP(currDPOfInterest);
-
-    if (frameNumber < nextDPOfInterest && frameNumber > currDPOfInterest){
-        if (findPreviousDP(nextDPOfInterest) == currDPOfInterest){
-            return true;
-        }
-        else if (frameNumber < findNextDP(currDPOfInterest)){
-            return true;
-        }
-        else{
-            return false
-        }
-    }
-    else if(frameNumber == nextDPOfInterest){
-        return true;
-    }
-    else if(frameNumber == currDPOfInterest){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
 
 function vidStep(){
 	frameNumber += 1;

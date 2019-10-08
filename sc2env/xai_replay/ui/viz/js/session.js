@@ -353,14 +353,10 @@ function renderUnitValues(frameInfo){
         document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
         document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
         
+        changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number)
         for (var i = 0; i < decisionPoints.length; i++){
             if (frameInfo.frame_number >= decisionPoints[i] + 2){
-                for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
-                    if (decisionPoints[i] == interestingDPsByFrame[dpIndex]){
-                        pauseGame();
-                    }
-                }
-
+                pauseAtInterestingDp(decisionPoints[i]);
                 decisionPoints.splice(i,1);
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
@@ -372,7 +368,22 @@ function renderUnitValues(frameInfo){
             }
         }
 }
+function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
+    if (frameNumber < interestingDPsByFrame[0]){
+        video.playbackRate = 1;
+    }
+    else{
+        video.playbackRate = videoPlaybackRate;
+    }
+}
 
+function pauseAtInterestingDp(currDecisionPoint){
+    for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
+        if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
+            pauseGame();
+        }
+    }
+}
 
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
     rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
