@@ -357,8 +357,6 @@ function renderUnitValues(frameInfo){
         for (var i = 0; i < decisionPoints.length; i++){
             if (frameInfo.frame_number >= decisionPoints[i] + 2){
                 pauseAtInterestingDp(decisionPoints[i]);
-                enableExplanationControls();
-
                 decisionPoints.splice(i,1);
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
@@ -383,6 +381,7 @@ function pauseAtInterestingDp(currDecisionPoint){
     for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
         if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
             pauseGame();
+            enableExplanationControls();
         }
     }
 }
