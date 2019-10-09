@@ -379,19 +379,18 @@ function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
     }
 }
 
-<<<<<<< HEAD
 function disableExplanationControls(){
     $('#unlock-key-label').css('display', "none");
     $('#unlock-key-text').css('display', "none");
     $('#fullscreen-button1-toggle').css('display', "none")
-=======
+}
+
 function pauseAtInterestingDp(currDecisionPoint){
     for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
         if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
             pauseGame();
         }
     }
->>>>>>> 434588bef9b86fd4d88bf668652d8bac05467975
 }
 
 function enableExplanationControls(){
