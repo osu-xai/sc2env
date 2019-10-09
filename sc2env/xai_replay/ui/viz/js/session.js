@@ -354,16 +354,14 @@ function renderUnitValues(frameInfo){
         document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
         
         for (var i = 0; i < decisionPoints.length; i++){
-            if (frameInfo.frame_number >= decisionPoints[i] + 2){
+            if (frameInfo.frame_number >= Number(decisionPoints[i]) + 2){
                 for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
                     if (decisionPoints[i] == interestingDPsByFrame[dpIndex]){
+                        console.log("yes, pause game!");
                         pauseGame();
-                        $('#unlock-key-label').css('display', "block");
-                        $('#unlock-key-text').css('display', "block");
-                        $('#fullscreen-button1-toggle').css('display', "block")
+                        enableExplanationControls();
                     }
                 }
-
                 decisionPoints.splice(i,1);
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
@@ -376,7 +374,17 @@ function renderUnitValues(frameInfo){
         }
 }
 
+function disableExplanationControls(){
+    $('#unlock-key-label').css('display', "none");
+    $('#unlock-key-text').css('display', "none");
+    $('#fullscreen-button1-toggle').css('display', "none")
+}
 
+function enableExplanationControls(){
+    $('#unlock-key-label').css('display', "block");
+    $('#unlock-key-text').css('display', "block");
+    $('#fullscreen-button1-toggle').css('display', "block")
+}
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
     rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;

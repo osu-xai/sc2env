@@ -101,6 +101,14 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         console.log("expressingFrameInfo");
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
+
+        if (sessionIndexManager.isAtDecisionPoint()){
+            var dpString = sessionIndexManager.getDPThatStartsEpochForStep(frameNumber);
+            var dp = dpString.replace("DP","");
+            if (isInterestingDP(Number(dp))){
+                enableExplanationControls();
+            }
+        }
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
         frame = this.dataManager.getFrameInfo(frameNumber);
         renderUnitValues(frame);
@@ -125,6 +133,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         controlsManager.clearWaitCursor();
     }
     uim.play = function(){
+        disableExplanationControls();
         video.play()
     }
     uim.pause = function() {

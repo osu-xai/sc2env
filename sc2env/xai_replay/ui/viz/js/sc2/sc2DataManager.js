@@ -1,6 +1,6 @@
 const forwardDP = 3;
 const forwardDPCheck = false;
-const interestingDPs = [3,4,5,,10,11,14,15,16,,27,28,29,30,31,32,33]
+const interestingDPs = [3,4,5,10,11,14,15,16,27,28,29,30,31,32,33]
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
@@ -26,6 +26,15 @@ function getSC2DataManagerFromJson(jsonData){
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
+function isInterestingDP(dp){
+    for (var index in interestingDPs){
+        var intDP = interestingDPs[index];
+        if (intDP == dp){
+            return true;
+        }
+    }
+    return false;
+}
 function getInterestingFrameNumbersForDPs(){
     for (var dpIndex in interestingDPs){
         var currInterestingDP = interestingDPs[dpIndex];

@@ -229,7 +229,8 @@ function checkUnlockKey(){
     var unlockCode = unlockKeys[dp];
     if (unlockCode == code){
         $('#fullscreen-button1-toggle').prop('disabled', false);
-        $('#unlock-key-text').css('display','none')
+        $('#unlock-key-text').css('display','none');
+        $('#unlock-key-text-label').css('display','none');
     }
     else {
         alert("unlock key " + dpString + " does not match expected value, please try again.")
