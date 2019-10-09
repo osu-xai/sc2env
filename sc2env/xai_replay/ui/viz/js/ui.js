@@ -526,14 +526,8 @@ function sizeNonGeneratedElements() {
                     frameOfCurrentTree = step;
                 }
             }
-            $('#fullscreen-button1-toggle').html("Hide Explanations");
-		}
-		else{
-            $('#fullscreen-modal').css('display', "none")
-            $('#fullscreen-button1-toggle').html("Show Explanations");
-            if(!(document.getElementById('key-disable-check').checked)) {
-                $('#fullscreen-button1-toggle').css('display', 'none');
-            }
+            // hide the 'show explanation' button
+            $('#fullscreen-button1-toggle').css('display', "none");
 		}
 	});
 	

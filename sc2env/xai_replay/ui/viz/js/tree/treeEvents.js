@@ -237,3 +237,9 @@ function checkUnlockKey(){
     }
     $('#unlock-key-text').val('');
 }
+
+function hideExplanations(){
+    $('#fullscreen-modal').css('display', "none")
+    $('#unlock-key-text').css('display','none');
+    $('#unlock-key-label').css('display','none');
+}

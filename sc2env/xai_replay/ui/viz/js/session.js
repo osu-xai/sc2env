@@ -381,21 +381,27 @@ function pauseAtInterestingDp(currDecisionPoint){
     for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
         if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
             pauseGame();
-            enableExplanationControls();
+            showExplanationControls();
         }
     }
 }
 
-function enableExplanationControls(){
+function showExplanationControls(){
     $('#unlock-key-label').css('display', "block");
     $('#unlock-key-text').css('display', "block");
-    $('#fullscreen-button1-toggle').css('display', "block")
+    $('#fullscreen-button1-toggle').css('display', "block");
+    if(isExplanationLockEnabled()) {
+        $('#fullscreen-button1-toggle').prop('disabled', true);
+    }
 }
 
-function disableExplanationControls(){
+function isExplanationLockEnabled(){
+    return !(document.getElementById('key-disable-check').checked);
+}
+function hideExplanationControls(){
     $('#unlock-key-label').css('display', "none");
     $('#unlock-key-text').css('display', "none");
-    $('#fullscreen-button1-toggle').css('display', "none")
+    $('#fullscreen-button1-toggle').css('display', "none");
 }
 
 function expressCumulativeRewards(frameInfo) { //SC2_TEST

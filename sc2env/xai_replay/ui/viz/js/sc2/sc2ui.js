@@ -104,7 +104,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
             var dpString = sessionIndexManager.getDPThatStartsEpochForStep(frameNumber);
             var dp = dpString.replace("DP","");
             if (isInterestingDP(Number(dp))){
-                enableExplanationControls();
+                showExplanationControls();
             }
         }
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
@@ -131,7 +131,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         controlsManager.clearWaitCursor();
     }
     uim.play = function(){
-        disableExplanationControls();
+        hideExplanationControls();
         video.play()
     }
     uim.pause = function() {
@@ -191,26 +191,12 @@ function toggleOnUIElements(){
     $('#unit-value-panels-toggle').css('display', "block")
     $('.unit-value-panels').css('display', "grid")
 
-    //$('#fullscreen-button1-toggle').css('display', "block")
     $('#model-free-radio').css('display', "inline")
     $('#model-free-radio-label').css('display', "inline")
     $('#model-based-radio').css('display', "inline")
     $('#model-based-radio-label').css('display', "inline")
     $('#key-disable-check').css('display', "inline")
     $('#key-disable-check-label').css('display', "inline")
-    if(document.getElementById('key-disable-check').checked) {
-        $('#fullscreen-button1-toggle').prop('disabled', true);
-    } else {
-        $('#fullscreen-button1-toggle').prop('disabled', false);
-    }
-}
-
-function keyDisableCheck(){
-    if(document.getElementById('key-disable-check').checked) {
-        $('#fullscreen-button1-toggle').prop('disabled', true);
-    } else {
-        $('#fullscreen-button1-toggle').prop('disabled', false);
-    }
 }
 
 function getTooltipColorRGBAForUnit(unitInfo){
