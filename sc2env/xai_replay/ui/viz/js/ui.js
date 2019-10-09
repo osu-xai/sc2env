@@ -531,10 +531,8 @@ function sizeNonGeneratedElements() {
 		else{
             $('#fullscreen-modal').css('display', "none")
             $('#fullscreen-button1-toggle').html("Show Explanations");
-            if(document.getElementById('key-disable-check').checked) {
-                $('#fullscreen-button1-toggle').prop('disabled', true);
-            } else {
-                $('#fullscreen-button1-toggle').prop('disabled', false);
+            if(!(document.getElementById('key-disable-check').checked)) {
+                $('#fullscreen-button1-toggle').css('display', 'none');
             }
 		}
 	});
