@@ -106,7 +106,7 @@ function sortNodes(cy){
 }
 
 function leftJustifyNodes(cy){
-    console.log(" --------- justifying nodes -----");
+    //console.log(" --------- justifying nodes -----");
     var nodeMap = [];
     var nodeIds = [];
     var anchorToLeft = -6000;
@@ -123,7 +123,7 @@ function leftJustifyNodes(cy){
             //var widthFactor = (Number(ele.width()) + 200);
             var widthFactor = 2000; // 1800 + 200 buffer since state nodes are 1800
             var newXPosition = Number(ele.data("xOffset")) * widthFactor + anchorToLeft;
-            console.log("changing  position of node " + ele.data("id") + " from " + oldPosition + " to position " + newXPosition + " based on xOffset " + ele.data("xOffset"));
+            //console.log("changing  position of node " + ele.data("id") + " from " + oldPosition + " to position " + newXPosition + " based on xOffset " + ele.data("xOffset"));
             ele.position('x', newXPosition);
         }
     });
