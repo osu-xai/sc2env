@@ -353,15 +353,12 @@ function renderUnitValues(frameInfo){
         document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
         document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
         
+        changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number)
         for (var i = 0; i < decisionPoints.length; i++){
-            if (frameInfo.frame_number >= Number(decisionPoints[i]) + 2){
-                for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
-                    if (decisionPoints[i] == interestingDPsByFrame[dpIndex]){
-                        console.log("yes, pause game!");
-                        pauseGame();
-                        enableExplanationControls();
-                    }
-                }
+            if (frameInfo.frame_number >= decisionPoints[i] + 2){
+                pauseAtInterestingDp(decisionPoints[i]);
+                enableExplanationControls();
+
                 decisionPoints.splice(i,1);
                 //alert("calling initTree");
                 if (!buildTreeOnDemand){
@@ -373,11 +370,28 @@ function renderUnitValues(frameInfo){
             }
         }
 }
+function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
+    if (frameNumber < interestingDPsByFrame[0]){
+        video.playbackRate = 1;
+    }
+    else{
+        video.playbackRate = videoPlaybackRate;
+    }
+}
 
+<<<<<<< HEAD
 function disableExplanationControls(){
     $('#unlock-key-label').css('display', "none");
     $('#unlock-key-text').css('display', "none");
     $('#fullscreen-button1-toggle').css('display', "none")
+=======
+function pauseAtInterestingDp(currDecisionPoint){
+    for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
+        if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
+            pauseGame();
+        }
+    }
+>>>>>>> 434588bef9b86fd4d88bf668652d8bac05467975
 }
 
 function enableExplanationControls(){
