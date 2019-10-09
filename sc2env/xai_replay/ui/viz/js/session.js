@@ -379,12 +379,6 @@ function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
     }
 }
 
-function disableExplanationControls(){
-    $('#unlock-key-label').css('display', "none");
-    $('#unlock-key-text').css('display', "none");
-    $('#fullscreen-button1-toggle').css('display', "none")
-}
-
 function pauseAtInterestingDp(currDecisionPoint){
     for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
         if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
@@ -398,6 +392,13 @@ function enableExplanationControls(){
     $('#unlock-key-text').css('display', "block");
     $('#fullscreen-button1-toggle').css('display', "block")
 }
+
+function disableExplanationControls(){
+    $('#unlock-key-label').css('display', "none");
+    $('#unlock-key-text').css('display', "none");
+    $('#fullscreen-button1-toggle').css('display', "none")
+}
+
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
     rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
 	var total = 0;
