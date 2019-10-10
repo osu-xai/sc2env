@@ -207,42 +207,6 @@ function getNexusHealthBarPart(percentHeight, color){
 
 
 
-function getEnemyGraphStringOrig(data, unitValuesDict, biggestUnitCount){
-  return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800px; width: 800px;" >' +
-            '<style>' + 
-            '#' + data.id + '_unit_graph_container ' + '{' +
-              'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCount) + ';' +
-              'background-color: ivory; height:700px;width:700px;' +
-            '}' +
-          '</style>' +
-          '<div id="' + data.id + '_unit_graph_container">' +
-            drawPlaceHolderDivs(unitValuesDict["TOP Marines State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["TOP Marines Action"], 'darkGrey') + drawStateUnitDiv(unitValuesDict["TOP Marines State"]-unitValuesDict["TOP Marines Action"], "darkGrey") +
-            drawPlaceHolderDivs(unitValuesDict["TOP Banelings State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["TOP Banelings Action"], "darkOrange") + drawStateUnitDiv(unitValuesDict["TOP Banelings State"]-unitValuesDict["TOP Banelings Action"], "darkOrange") +
-            drawPlaceHolderDivs(unitValuesDict["TOP Immortals State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["TOP Immortals Action"], "blue") + drawStateUnitDiv(unitValuesDict["TOP Immortals State"]-unitValuesDict["TOP Immortals Action"], "blue") +
-            '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
-            drawPlaceHolderDivs(unitValuesDict["BOT Marines State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["BOT Marines Action"], 'darkGrey') + drawStateUnitDiv(unitValuesDict["BOT Marines State"]-unitValuesDict["BOT Marines Action"], "darkGrey") +
-            drawPlaceHolderDivs(unitValuesDict["BOT Banelings State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["BOT Banelings Action"], 'darkOrange') + drawStateUnitDiv(unitValuesDict["BOT Banelings State"]-unitValuesDict["BOT Banelings Action"], "darkOrange") + 
-            drawPlaceHolderDivs(unitValuesDict["BOT Immortals State"], biggestUnitCount) + drawActionUnitDiv(unitValuesDict["BOT Immortals Action"], 'blue') + drawStateUnitDiv(unitValuesDict["BOT Immortals State"]-unitValuesDict["BOT Immortals Action"], "blue") +
-          '</div>' +
-          '<style>' + 
-            '#' + data.id + '_nexus_graph_container ' + '{' +
-              'display: grid; grid-template-rows: auto 12px auto; grid-template-columns: auto; justify-content:end;' +
-              'background-color: ivory; height:700px;width:100px;' +
-            '}' +
-          '</style>' +
-          '<div id="' + data.id + '_nexus_graph_container">' +
-            drawNexusHealth(data["state"][65]) +
-            '<div style="background-color:black;grid-row-end:span 1;"></div>' +
-            drawNexusHealth(data["state"][66]) +
-          '</div>' +
-          '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto;">' + 
-            drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + drawStatePylons(unitValuesDict["Pylons State"] - unitValuesDict["Pylons Action"]) + drawActionPylons(unitValuesDict["Pylons Action"]) +
-          '</div>' +
-          '<div></div>' +
-        '</div>';
-}
-
-
 function getNodeGlyphs(data, biggestUnitCount){
   var unitValuesDict = parseActionString(data);
   if (isFriendlyActionNode(data)){
@@ -333,16 +297,6 @@ function drawStatePylons(pylonCount){
 }
 
 
-function drawActionPylons(pylonCount){
-  var pylonString = "";
-  var maxPylons = 3;
-  for (var i = 0; i < pylonCount; i++){
-      //pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
-      pylonString += '<div style="text-align:center;border: 8px solid black;background-color:yellow;height:35px;margin:15px;"></div>';
-    }
-  return pylonString;
-}
-
 function drawPylonPlaceHolderDivs(pylonCount){
   var pylonString = "";
   var maxPylons = 3;
@@ -351,42 +305,6 @@ function drawPylonPlaceHolderDivs(pylonCount){
   }
   return pylonString;
 }
-  
-
-function drawActionUnitDiv(unitCount, color){
-  var unitDivString = "";
-  for(var i = 0; i < unitCount; i++){
-      unitDivString += '<div style="text-align:center;border:15px solid black;background-color:' + color + ';"></div>'
-  }
-  return unitDivString;
-}
-
-function drawStateUnitDiv(unitCount, color){
-  var unitStateDivString = "";
-  for(var i = 0; i < unitCount; i++){
-      unitStateDivString += '<div style="text-align:center;background-color:' + color + ';"></div>'
-  }
-  return unitStateDivString;
-}
-
-function drawPlaceHolderDivs(unitCount, colCount){
-  var placeholder = "";
-  for(var i = 0; i < (colCount-unitCount); i++){
-      placeholder += '<div style="background-color:rgba(0,0,0,0);"></div>'
-  }
-  return placeholder
-}
-  
-function getColumnStylingString(biggestUnitCount){
-  var columsString = "";
-  for (var i = 0; i < biggestUnitCount; i++){
-      columsString += " auto";
-  }
-  return columsString
-}
-
-//var bestQValueColorPV = "rgba(255,140,26,1)";
-//var bestQValueColor = "Turquoise";
 
 var bestQValueColorPV = "white";
 var bestQValueColor = "white";
