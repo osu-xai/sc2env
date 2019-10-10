@@ -112,10 +112,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
         frame = this.dataManager.getFrameInfo(frameNumber);
         renderUnitValues(frame);
-        // if(!checkIfFrameIsInteresting(frameNumber) && forwardDPCheck){
-        //     this.forwarded = true;
-        //     forwardDPToFrame(nextDPOfInterest);
-        // }
+
         userStudyAdjustmentsForFrameChange();
         getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
 
@@ -123,10 +120,6 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
 
-        }
-        if (this.forwarded){
-            pauseGame();
-            this.forwarded = false;
         }
 
         checkForEndOfGame()
