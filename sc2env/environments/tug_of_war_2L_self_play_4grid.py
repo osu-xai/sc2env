@@ -451,9 +451,9 @@ class TugOfWar():
                 elif unit_types[entry.unit_type] >= 15 and unit_types[entry.unit_type] <= 62:
                     # Grid
                     if player == 1:
-                        if entry.pos.x >= 0 and entry.pos.x <= 48:
+                        if entry.pos.x >= 0 and entry.pos.x <= 45.5:
                             grid_index = 0
-                        elif entry.pos.x > 48 and entry.pos.x <= 64:
+                        elif entry.pos.x > 45.5 and entry.pos.x <= 64:
                             grid_index = 1
                         elif entry.pos.x > 64 and entry.pos.x < 82.5:
                             grid_index = 2
@@ -462,9 +462,9 @@ class TugOfWar():
                         else:
                             print("ERROR!!! Unit recorded is somehow out of range of the map")
                     else:
-                        if entry.pos.x >= 0 and entry.pos.x <= 48:
+                        if entry.pos.x >= 0 and entry.pos.x <= 45.5:
                             grid_index = 3
-                        elif entry.pos.x > 48 and entry.pos.x <= 64:
+                        elif entry.pos.x > 45.5 and entry.pos.x <= 64:
                             grid_index = 2
                         elif entry.pos.x > 64 and entry.pos.x < 82.5:
                             grid_index = 1
