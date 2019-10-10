@@ -1,5 +1,6 @@
 const forwardDP = 3;
 const forwardDPCheck = false;
+//const interestingDPs = [400]
 const interestingDPs = [3,4,5,10,11,14,15,16,27,28,29,30,31,32,33]
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
@@ -17,7 +18,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     for (dpIndex in decisionPoints){decisionPointsFullCopy.push(decisionPoints[dpIndex]);}
     getInterestingFrameNumbersForDPs();
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
-    controlsManager.registerJQueryHandleForWaitCursor($("#fullscreen-modal"));
+    controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 

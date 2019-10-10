@@ -300,7 +300,7 @@ function updateButtonsAfterJump() {
 
 function jumpToStep(step){
     clearGameBoard();
-    hideExplanationControls();
+    explControlsManager.hideExplanationControls();
 	activeSC2UIManager.jumpToFrame(step);
 	updateButtonsAfterJump();
     if (userStudyMode){

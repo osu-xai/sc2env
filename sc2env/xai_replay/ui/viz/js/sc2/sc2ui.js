@@ -60,6 +60,8 @@ var videoPlaybackRate = 4 / recorderCaptureInterval;
 var relativeReplayDir = "./replays";
 var activeSC2UIManager = undefined;
 
+var explControlsManager = getExplControlsManager();
+
 function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim = {};
     uim.dataManager = sc2DataManager;
@@ -68,7 +70,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
     uim.forwarded = false;
 
     createVideoElement(uim.videoFilepath);
-    toggleOnUIElements();   
+    showUnitValuesInFrontOfGameboard();   
 
     uim.renderTooltipsForCurrentStep = function() {
         clearGameBoard();
@@ -131,7 +133,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         controlsManager.clearWaitCursor();
     }
     uim.play = function(){
-        hideExplanationControls();
+        explControlsManager.hideExplanationControls();
         video.play()
     }
     uim.pause = function() {
@@ -183,20 +185,13 @@ function createVideoElement(path){
 
 	video.load();	
     video.playbackRate = videoPlaybackRate;
-    video.currentTime = trimBy / framesPerSecond
-    toggleOnUIElements();
+    video.currentTime = trimBy / framesPerSecond;
 }
 
-function toggleOnUIElements(){
+function showUnitValuesInFrontOfGameboard(){
     $('#unit-value-panels-toggle').css('display', "block")
     $('.unit-value-panels').css('display', "grid")
-
-    $('#model-free-radio').css('display', "inline")
-    $('#model-free-radio-label').css('display', "inline")
-    $('#model-based-radio').css('display', "inline")
-    $('#model-based-radio-label').css('display', "inline")
-    $('#key-disable-check').css('display', "inline")
-    $('#key-disable-check-label').css('display', "inline")
+    
 }
 
 function getTooltipColorRGBAForUnit(unitInfo){

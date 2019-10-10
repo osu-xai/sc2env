@@ -90,6 +90,16 @@ function removePrincipalVariation(cy, contextNode){
     });
 }
 
+function isCyNodeInList(node, nodeList){
+    var result = false;
+    nodeList.forEach(function (child){
+        var childId = child.data("id");
+        if (node["data"]["id"] == childId){
+            result = true;
+        }
+    }); 
+    return result;    
+}
 // creates a PV under the selected node (contextNode)
 // requires a parent to already exist
 // contextNode does not need to be a cytoscape node, but can be one.

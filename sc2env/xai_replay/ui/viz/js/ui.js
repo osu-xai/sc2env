@@ -472,48 +472,14 @@ function sizeNonGeneratedElements() {
 		}
 	});
 	
-	$('#fullscreen-button1-toggle').css('float', "left")
-	$('#fullscreen-button1-toggle').css('text-align', "center")
-	$('#fullscreen-button1-toggle').css('font-size', "20px")
-	$('#fullscreen-button1-toggle').css('font-family', "Arial")
-	$('#fullscreen-button1-toggle').css('width', "200px")
-	$('#fullscreen-button1-toggle').css('height', "30px")
-	//$('#fullscreen-button1-toggle').css('margin-left', "10%")
-
-    
-	//$('#model-free-radio').css('float', "left")
-	$('#model-free-radio').css('text-align', "center")
-	$('#model-free-radio').css('font-size', "15px")
-	$('#model-free-radio').css('font-family', "Arial")
-	//$('#model-free-radio').css('width', "300px")
-    $('#model-free-radio').css('height', "30px")
-    
-	//$('#model-based-radio').css('float', "left")
-	$('#model-based-radio').css('text-align', "center")
-	$('#model-based-radio').css('font-size', "15px")
-	$('#model-based-radio').css('font-family', "Arial")
-	//$('#model-based-radio').css('width', "300px")
-	$('#model-based-radio').css('height', "30px")
-
-	$('#fullscreen-modal').css('width', "95%")
-	$('#fullscreen-modal').css('height', "88%")
-	$('#fullscreen-modal').css('margin-left', "2%")
-	// $('#fullscreen-modal').css('right', "5%")
-	// $('#fullscreen-modal').css('top', "7%")
-	// $('#fullscreen-modal').css('margin-bottom', "8%")
-
-	$('#fullscreen-modal').css('position', "absolute")
-	$('#fullscreen-modal').css('background-color', "whitesmoke")
-	$('#fullscreen-modal').css('border-radius', "10px")
-	$('#fullscreen-modal').css('z-index', zIndexMap["modalPopUp"])
-	$('#fullscreen-modal').css('border', "3px solid black")
+	
 
 
 
-	var toggle_fullscreen_modal = document.getElementById("fullscreen-button1-toggle");
-	toggle_fullscreen_modal.addEventListener('click', function(event){
-		if ($('#fullscreen-modal').css('display') == 'none'){
-            $('#fullscreen-modal').css('display', "block")
+	var showExplanationTreeButton = document.getElementById("button-show-explanations");
+	showExplanationTreeButton.addEventListener('click', function(event){
+		if (!explControlsManager.isExplanationsVisible()){
+            explControlsManager.showExplanationsWindow();
             if (buildTreeOnDemand){
                 var step = sessionIndexManager.getCurrentIndex();
                 if (step != frameOfCurrentTree){
@@ -526,8 +492,7 @@ function sizeNonGeneratedElements() {
                     frameOfCurrentTree = step;
                 }
             }
-            // hide the 'show explanation' button
-            $('#fullscreen-button1-toggle').css('display', "none");
+            explControlsManager.requestHideShowExplanationButton();
 		}
 	});
 	
@@ -547,16 +512,8 @@ function sizeNonGeneratedElements() {
 	$("#playback-controls-panel").css("margin-bottom", "10px");
 	$("#playback-controls-panel").css("z-index", zIndexMap["allTheWayToFront"]);
 
-
-	$("#explanation-control-panel").css("height", "60px")
-	$("#explanation-control-panel").css("position", "absolute");
-	$("#explanation-control-panel").css("top", "45%");
-	$("#explanation-control-panel").css("left", "5%");
-	$("#explanation-control-panel").css("right", "5%");
-	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
-	$("#explanation-control-panel").css("z-index", zIndexMap["allTheWayToFront"]);
-	// $("#explanation-control-panel").css("width", widthOfTimeline);
-
+    explControlsManager.styleControls();
+	
 
 	$("#friendly-title").css("font-size", "18px")
 	$("#enemy-title").css("font-size", "18px")

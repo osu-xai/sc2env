@@ -353,20 +353,22 @@ function renderUnitValues(frameInfo){
         document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
         document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
         
-        changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number)
-        for (var i = 0; i < decisionPoints.length; i++){
-            if (frameInfo.frame_number >= decisionPoints[i] + 2){
-                pauseAtInterestingDp(decisionPoints[i]);
-                decisionPoints.splice(i,1);
-                //alert("calling initTree");
-                if (!buildTreeOnDemand){
-                    forgetCyTree();
-                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + ".json", frameInfo.frame_number);
-                    // initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json", frameInfo.frame_number);
+        changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number);
+        if (explControlsManager.isUserStudyMode()){
+            for (var i = 0; i < decisionPoints.length; i++){
+                if (frameInfo.frame_number >= decisionPoints[i] + 2){
+                    pauseAtInterestingDp(decisionPoints[i]);
+                    // if (!buildTreeOnDemand){
+                    //     forgetCyTree();
+                    //     initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + ".json", frameInfo.frame_number);
+                    //     // initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json", frameInfo.frame_number);
+                    // }
+                    decisionPoints.splice(i,1);
+                    return;
                 }
-                return;
             }
         }
+        
 }
 function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
     if (frameNumber < interestingDPsByFrame[0]){
@@ -381,27 +383,9 @@ function pauseAtInterestingDp(currDecisionPoint){
     for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
         if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
             pauseGame();
-            showExplanationControls();
+            explControlsManager.showExplanationControls();
         }
     }
-}
-
-function showExplanationControls(){
-    $('#unlock-key-label').css('display', "block");
-    $('#unlock-key-text').css('display', "block");
-    $('#fullscreen-button1-toggle').css('display', "block");
-    if(isExplanationLockEnabled()) {
-        $('#fullscreen-button1-toggle').prop('disabled', true);
-    }
-}
-
-function isExplanationLockEnabled(){
-    return !(document.getElementById('key-disable-check').checked);
-}
-function hideExplanationControls(){
-    $('#unlock-key-label').css('display', "none");
-    $('#unlock-key-text').css('display', "none");
-    $('#fullscreen-button1-toggle').css('display', "none");
 }
 
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
