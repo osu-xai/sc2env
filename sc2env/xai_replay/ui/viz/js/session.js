@@ -311,69 +311,61 @@ htmlAllianceTextForKey["enemy.Pylon"] = "Enemy ";
 
 
 function renderUnitValues(frameInfo){
-        var unit = frameInfo
-        for (unitCount in unitInfoKeys){
-            if(unit[unitInfoKeys[unitCount] + "_delta_triggered"] == 1){
-
-                if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
-                    document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "+" + (unit[unitInfoKeys[unitCount] + "_delta"])
-                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML =  (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
-                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                }
-
-                else{
-                    if(frameInfo['wave_triggered'] == 1){
-                        document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                        document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
-                        document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                    }
-
-                }
+    var unit = frameInfo
+    for (unitCount in unitInfoKeys){
+        if(unit[unitInfoKeys[unitCount] + "_delta_triggered"] == 1){
+            if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
+                document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "+" + (unit[unitInfoKeys[unitCount] + "_delta"])
+                document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML =  (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
+                document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
             }
-
             else{
-                if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
-                    document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "NA"
+                if(frameInfo['wave_triggered'] == 1){
                     document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
                     document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
                     document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
                 }
-                else{
-                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
-                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                }
-            } 
-        }
-
-        var nexusUnits = getNexusUnits(frameInfo);
-        document.getElementById("friendly.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"top",nexusUnits);
-        document.getElementById("friendly.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"bottom",nexusUnits);
-        document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
-        document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
-        
-        changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number)
-        for (var i = 0; i < decisionPoints.length; i++){
-            if (frameInfo.frame_number >= decisionPoints[i] + 2){
-                pauseAtInterestingDp(decisionPoints[i]);
-                decisionPoints.splice(i,1);
-                //alert("calling initTree");
-                if (!buildTreeOnDemand){
-                    forgetCyTree();
-                    initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + ".json", frameInfo.frame_number);
-                    // initTree("js/tree/json/whole_decision_point_" + getWave(frameInfo) + "_minified.json", frameInfo.frame_number);
-                }
-                return;
             }
         }
+
+        else{
+            if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
+                document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "NA"
+                document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
+                document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+            }
+            else{
+                document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
+                document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
+                document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
+            }
+        } 
+    }
+
+    var nexusUnits = getNexusUnits(frameInfo);
+    document.getElementById("friendly.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"top",nexusUnits);
+    document.getElementById("friendly.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"bottom",nexusUnits);
+    document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
+    document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
+    
+    changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number);
+    for (var i = 0; i < decisionPoints.length; i++){
+        if (frameInfo.frame_number > decisionPoints[i]){
+            pauseAtInterestingDp(decisionPoints[i]);
+            decisionPoints.splice(i,1);
+            return;
+        }
+    }
 }
+
 function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
     if (frameNumber < interestingDPsByFrame[0]){
-        video.playbackRate = 1;
+        video.playbackRate = 1; //twice the speed of videoPlaybackRate
     }
     else{
-        video.playbackRate = videoPlaybackRate;
+        video.playbackRate = videoPlaybackRate; // 0.5
     }
 }
 
