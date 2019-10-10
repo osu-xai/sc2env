@@ -1,44 +1,214 @@
 
+var indexNexusHealthTop =    { "agent":63, "enemy":65 };
+var indexNexusHealthBottom = { "agent":64, "enemy":66 };  
+
+var playerGraphWidth = 800;
+var playerGraphHeight = 800;
+var unitGapWidth = 10;
+var maxPylons = 3;
+
+var unitCountsCanvasWidth = 1600;
+var unitCountsCanvasHeight = 800;
+var nexusHealthDivWidth = 70;
+var nexusHealthMargin = 10;
+var nexusHealthBorderWidth = 10;
+var verticalSeparatorWidth = 10;
+var nexusHealthBarWidth = nexusHealthDivWidth - (2 * (nexusHealthBorderWidth + nexusHealthMargin));
+var unitRowsWidth = playerGraphWidth - nexusHealthDivWidth - verticalSeparatorWidth;
+var maxRenderableUnitCount = Math.floor(unitRowsWidth / (unitGapWidth * 2));
+
+var laneBorderColor = "#404040";
+
+var pylonLeftAndRightSpacerPercent = 10;
+var pylonSetPercent                = 35;
+var pylonTwixtSpacerPercent        = 10;
 
 function getFriendlyGraphString(data, unitValuesDict, biggestUnitCount){
-  return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto auto; height: 800; width: 800;">' +
-            '<style>' + 
-              '#' + data.id + '_nexus_graph_container ' + '{' +
-                'display: grid; grid-template-rows: auto 12px auto; grid-template-columns: auto; justify-content:start;' +
-                'background-color: ivory; height:700px;width:100px; margin-top:140%;' +
-              '}' +
-            '</style>' +
-            '<div id="' + data.id + '_nexus_graph_container">' +
-              drawNexusHealth(data["state"][63]) +
-              '<div style="background-color:black;"></div>' +
-              drawNexusHealth(data["state"][64]) +
-            '</div>' +
-            '<style>' + 
-              '#' + data.id + '_unit_graph_container ' + '{' +
-                'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCount) + ';' +
-                'background-color: ivory; height:700px;width:700px; margin-top:20%;' +
-              '}' +
-            '</style>' +
-            '<div id="' + data.id + '_unit_graph_container">' +
-              drawStateUnitDiv(unitValuesDict["TOP Marines State"]-unitValuesDict["TOP Marines Action"], "darkGrey") + drawActionUnitDiv(unitValuesDict["TOP Marines Action"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["TOP Marines State"], biggestUnitCount) +
-              drawStateUnitDiv(unitValuesDict["TOP Banelings State"]-unitValuesDict["TOP Banelings Action"], "darkOrange") + drawActionUnitDiv(unitValuesDict["TOP Banelings Action"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["TOP Banelings State"], biggestUnitCount) +
-              drawStateUnitDiv(unitValuesDict["TOP Immortals State"]-unitValuesDict["TOP Immortals Action"], "blue") + drawActionUnitDiv(unitValuesDict["TOP Immortals Action"], 'blue') + drawPlaceHolderDivs(unitValuesDict["TOP Immortals State"], biggestUnitCount) +
-              '<div style="background-color:black; grid-column-end: span ' + biggestUnitCount + ';"></div>' +
-              drawStateUnitDiv(unitValuesDict["BOT Marines State"]-unitValuesDict["BOT Marines Action"], "darkGrey") + drawActionUnitDiv(unitValuesDict["BOT Marines Action"], 'darkGrey') + drawPlaceHolderDivs(unitValuesDict["BOT Marines State"], biggestUnitCount) +
-              drawStateUnitDiv(unitValuesDict["BOT Banelings State"]-unitValuesDict["BOT Banelings Action"], "darkOrange") + drawActionUnitDiv(unitValuesDict["BOT Banelings Action"], 'darkOrange') + drawPlaceHolderDivs(unitValuesDict["BOT Banelings State"], biggestUnitCount) +
-              drawStateUnitDiv(unitValuesDict["BOT Immortals State"]-unitValuesDict["BOT Immortals Action"], "blue") + drawActionUnitDiv(unitValuesDict["BOT Immortals Action"], 'blue') + drawPlaceHolderDivs(unitValuesDict["BOT Immortals State"], biggestUnitCount) +
-            '</div>' +
-            '<div></div>' +
-            '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto; height: 70px;">' + 
-               drawStatePylons(unitValuesDict["Pylons State"] - unitValuesDict["Pylons Action"]) + drawActionPylons(unitValuesDict["Pylons Action"]) + drawPylonPlaceHolderDivs(unitValuesDict["Pylons State"]) + 
-            '</div>' +
-          '</div>';
+    var unitPlusGapWidth = unitRowsWidth / biggestUnitCount;
+    var unitWidth = unitPlusGapWidth - unitGapWidth;
+    if (unitWidth < unitGapWidth) {
+        unitWidth = unitGapWidth;
+    }
+    var result =  '<div class="flex-column" style="height:' + playerGraphHeight + 'px;width:' + playerGraphWidth + 'px;">' + 
+        getTransparentTopSpacer() + 
+        getHpPlusUnitRow(41,"agent","TOP",unitValuesDict, unitWidth, data["state"][indexNexusHealthTop["agent"]]) + 
+        getLaneBorder(2) +
+        getHpPlusUnitRow(41,"agent","BOT",unitValuesDict, unitWidth, data["state"][indexNexusHealthBottom["agent"]]) + 
+        getSpacerPlusPylonsRow(16,"agent",unitValuesDict) + 
+        '</div>';
+    return result;
+}
+
+
+function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
+    var unitPlusGapWidth = unitRowsWidth / biggestUnitCount;
+    var unitWidth = unitPlusGapWidth - unitGapWidth;
+    if (unitWidth < unitGapWidth) {
+        unitWidth = unitGapWidth;
+    }
+    var result =  '<div class="flex-column" style="height:' + playerGraphHeight + 'px;width:' + playerGraphWidth + 'px;">' + 
+        getTransparentTopSpacer() + 
+        getHpPlusUnitRow(41,"enemy","TOP",unitValuesDict, unitWidth, data["state"][indexNexusHealthTop["enemy"]]) + 
+        getLaneBorder(2) +
+        getHpPlusUnitRow(41,"enemy","BOT",unitValuesDict, unitWidth, data["state"][indexNexusHealthBottom["enemy"]]) + 
+        getSpacerPlusPylonsRow(16,"enemy",unitValuesDict) + 
+        '</div>';
+    return result;
+}
+
+function getTransparentTopSpacer() {
+    return '<div style="height:80px;width:100%"></div>';
+}
+function getLaneBorder(heightPercent){
+    return '<div style="background-color:' + laneBorderColor + ';width:100%;height:' + heightPercent + '%;"></div>';
+}
+function getHpPlusUnitRow(percentHeight, player, lane, unitValuesDict, unitWidth, nexusHealth){
+    var result = undefined;
+    
+    var paddingTopPercent = 1;
+    percentHeight = percentHeight - paddingTopPercent;
+    if (player == "agent"){
+        result = '<div class="flex-row" style="width:100%;height:' + percentHeight + '%;background-color:ivory;padding-top:' + paddingTopPercent + '%;">' + getNexusHealth(nexusHealth) + getVerticalSeparator() + getUnitsRows(player, lane, unitValuesDict, unitWidth) + '</div>';
+    }
+    else{
+        result = '<div class="flex-row" style="width:100%;height:' + percentHeight + '%;background-color:ivory;padding-top:' + paddingTopPercent + '%;">' + getUnitsRows(player, lane, unitValuesDict, unitWidth) + getVerticalSeparator() + getNexusHealth(nexusHealth) + '</div>';
+    }
+    return result;
+}
+
+function getVerticalSeparator(){
+    return '<div style="height:100%;width:' + verticalSeparatorWidth + 'px;background-color:' + laneBorderColor + '"></div>';
+}
+function getUnitsRows(player, lane, unitValuesDict, unitWidth){
+    var paddingLeft = 6;
+    var unitRowsWidthSansPaddingLeft = unitRowsWidth - paddingLeft;
+    var result = '<div class="flex-column" style="width:' + unitRowsWidthSansPaddingLeft + 'px;padding-left:' + paddingLeft + 'px">' + 
+                getUnitsRow(33,player, lane, "Marines",   unitValuesDict, "darkGrey",   unitWidth, "margin-bottom") + 
+                getUnitsRow(33,player, lane, "Banelings", unitValuesDict, "darkOrange", unitWidth, "margin-bottom") + 
+                getUnitsRow(33,player, lane, "Immortals", unitValuesDict, "blue",       unitWidth, "margin-bottom") + 
+           '</div>';
+    return result;
+}
+
+function getUnitsRow(percentHeight,player, lane, UnitType, unitValuesDict, color, unitWidth, marginBottom){
+    var stateKey = lane + " " + UnitType + " State";
+    var actionKey = lane+ " " + UnitType + " Action";
+    var stateCount = unitValuesDict[stateKey];
+    var actionCount = unitValuesDict[actionKey];
+    var curUnitCount = stateCount - actionCount;
+    if (curUnitCount + actionCount > maxRenderableUnitCount){
+        curUnitCount = maxRenderableUnitCount - actionCount;
+    }
+    var unitMargin = undefined;
+    var result = undefined;
+    if (player == "agent"){
+        unitMargin = "margin-right:"+ unitGapWidth + "px;"
+        result = '<div class="flex-row" style="height:' + percentHeight + '%;width:100%;' + marginBottom + ':3%">' + 
+              getStateUnitRects(curUnitCount, color, unitWidth, unitMargin) + 
+              getActionUnitRects(actionCount, color, unitWidth, unitMargin) + 
+              '</div>'
+        return result;
+    }
+    else {
+        unitMargin = "margin-left:"+ unitGapWidth + "px;"
+        result = '<div class="flex-row" style="height:' + percentHeight + '%;width:100%;' + marginBottom + ':3%;justify-content: flex-end;">' + 
+            getActionUnitRects(actionCount, color, unitWidth, unitMargin) + 
+            getStateUnitRects(curUnitCount, color, unitWidth, unitMargin) + 
+        '</div>'
+        return result;
+    }
+}
+
+function getActionUnitRects(unitCount, color, unitWidth, unitMargin){
+    var unitDivString = "";
+    for(var i = 0; i < unitCount; i++){
+        unitDivString += '<div style="width:' + unitWidth + 'px;border:8px solid black;background-color:' + color + ';' + unitMargin + '"></div>'
+    }
+    return unitDivString;
+}
+  
+function getStateUnitRects(unitCount, color, unitWidth, unitMargin){
+    var unitStateDivString = "";
+    for(var i = 0; i < unitCount; i++){
+        unitStateDivString += '<div style="width:' + unitWidth + 'px;background-color:' + color + ';' + unitMargin + '"></div>'
+    }
+    return unitStateDivString;
+}
+
+
+function getSpacerPlusPylonsRow(percentHeight, player, unitValuesDict){
+    var stateCount = unitValuesDict["Pylons State"] - unitValuesDict["Pylons Action"];
+    var actionCount = unitValuesDict["Pylons Action"];
+    var placeHolderCount = maxPylons - (stateCount + actionCount);
+    var margin = 25;
+    var pylonWidth = (unitRowsWidth - (margin * maxPylons)) / maxPylons ;
+    var result = undefined;
+    if (player == "agent"){
+        result = '<div class="flex-row" style="height:' + percentHeight + '%;margin-top:15px;">' + 
+            getSpacerForUnderNexusHealth() + 
+            getStatePylons(stateCount, pylonWidth, margin) + 
+            getActionPylons(actionCount, pylonWidth, margin) + 
+            getPlaceHolderPylons(placeHolderCount, pylonWidth, margin) + 
+            '</div>';
+    }
+    else {
+        result = '<div class="flex-row" style="height:' + percentHeight + '%;margin-top:15px;">' + 
+            getPlaceHolderPylons(placeHolderCount, pylonWidth, margin) + 
+            getActionPylons(actionCount, pylonWidth, margin) + 
+            getStatePylons(stateCount, pylonWidth, margin) + 
+            getSpacerForUnderNexusHealth() + 
+            '</div>';
+    }
+    return result;
+}
+
+function getSpacerForUnderNexusHealth(){
+    var width = nexusHealthDivWidth;
+    var result = '<div style="width:' + width + 'px;"></div>';
+    return result;
+}
+
+function getStatePylons(pylonCount, pylonWidth, margin){
+    var pylonString = "";
+    for (var i = 0; i < pylonCount; i++){
+        //pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
+        pylonString += '<div style="text-align:center;border: 8px solid yellow;background-color:yellow;height:35px;margin:' + margin + 'px;width:' + pylonWidth + 'px"></div>';
+      }
+    return pylonString;
+}
+  
+  
+function getActionPylons(pylonCount, pylonWidth, margin){
+    var pylonString = "";
+    for (var i = 0; i < pylonCount; i++){
+        //pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
+        pylonString += '<div style="text-align:center;border: 8px solid black;background-color:yellow;height:35px;margin:' + margin + 'px;width:' + pylonWidth + 'px"></div>';
+      }
+    return pylonString;
+  }
+  
+  function getPlaceHolderPylons(placeHolderCount, pylonWidth, margin){
+    var pylonString = "";
+    for(var i = 0; i < placeHolderCount; i++){
+        pylonString += '<div style="border: 8px solid yellow;background-color:rgba(255,255,0,.30);height:35px;margin:' + margin + 'px;width:' + pylonWidth + 'px"></div>'
+    }
+    return pylonString;
+  }
+    
+  
+function getNexusHealth(nexusHealth){
+    var nexusHealthPercent = (nexusHealth/2000) * 100;
+    return '<div class="flex-column" style="margin:' + nexusHealthMargin + 'px;border:' + nexusHealthBorderWidth + 'px solid green;height:85%; width:' + nexusHealthBarWidth + 'px;" >' + getNexusHealthBarPart(100 - nexusHealthPercent, 'white') + getNexusHealthBarPart(nexusHealthPercent, 'green') + '</div>';
+}
+
+function getNexusHealthBarPart(percentHeight, color){
+    return '<div style="height:' + percentHeight + '%;width:100%;background-color:' + color + '";></div>'
 }
 
 
 
-function getEnemyGraphString(data, unitValuesDict, biggestUnitCount){
-  return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800; width: 800;" >' +
+function getEnemyGraphStringOrig(data, unitValuesDict, biggestUnitCount){
+  return  '<div style="display: grid; grid-gap: 10px; grid-template-columns: auto auto; grid-template-rows: auto 70px; height: 800px; width: 800px;" >' +
             '<style>' + 
             '#' + data.id + '_unit_graph_container ' + '{' +
               'display: grid; grid-column-gap:8px; grid-row-gap: 20px; grid-template-rows: 94.5px 94.5px 94.5px 12px 94.5px 94.5px 94.5px; grid-template-columns:' + getColumnStylingString(biggestUnitCount) + ';' +
@@ -87,13 +257,6 @@ function getNodeGlyphs(data, biggestUnitCount){
       return '<div class="flex-column" style="margin:50px;" onload="onloadTest">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>';
     }
 }
-var unitCountsCanvasWidth = 1600;
-var unitCountsCanvasHeight = 800;
-var nexusHealthWidth = 70;
-
-var pylonLeftAndRightSpacerPercent = 10;
-var pylonSetPercent                = 35;
-var pylonTwixtSpacerPercent        = 10;
 function getGameStateRow(data){
     return '<div class="flex-row" >' + getNexusStates(data,63,64) + getUnitCountsSvg(data) + getNexusStates(data,65,66) + '</div>';
 }
@@ -153,14 +316,6 @@ function getPlayerTitle(name, color){
     return '<div style="color:' + color + ';font-size:120px;font-weight:bold;width:50%;text-align:center">' + name + '</div>';
 }
   
-function getNexusHealth(nexusHealth){
-    var nexusHealthPercent = (nexusHealth/2000) * 100;
-    return '<div class=flex-column" style="border:16px solid white;height:50%; width:' + nexusHealthWidth + 'px;" >' + getNexusHealthBarPart(100 - nexusHealthPercent, 'black') + getNexusHealthBarPart(nexusHealthPercent, 'green') + '</div>';
-}
-
-function getNexusHealthBarPart(percentHeight, color){
-    return '<div style="height:' + percentHeight + '%;width:100%;background-color:' + color + '";></div>'
-}
 
 function drawNexusHealth(nexusHealth){
   var nexusHealthPercent = (1-(nexusHealth/2000)) * 100;
