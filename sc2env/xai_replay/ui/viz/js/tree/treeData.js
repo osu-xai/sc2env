@@ -87,13 +87,7 @@ function initTree(jsonPath, frameNumber){
         }
         cy = cytoscape(treeData);
         var rootNodeId = backingTreeRoot["data"]["id"];
-        addNextBestChild(cy,cy.getElementById(rootNodeId));
-        refreshCy();
-        addNextBestChild(cy,cy.getElementById(rootNodeId));
-        refreshCy();
-        addNextBestChild(cy,cy.getElementById(rootNodeId));
-        refreshCy();
-        addNextBestChild(cy,cy.getElementById(rootNodeId));
+        addNextFourBestChildren(cy,cy.getElementById(rootNodeId));
         refreshCy();
         if (alertWithZoomAndPanValuesOfModelBasedView){
             var zoom = cy.zoom();

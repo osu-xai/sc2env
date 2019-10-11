@@ -100,6 +100,47 @@ function isCyNodeInList(node, nodeList){
     }); 
     return result;    
 }
+
+function addNextFourBestChildren(cy, contextNode){
+    var nodes = treeData["elements"]["nodes"];
+    var edges = treeData["elements"]["edges"];
+    var children = contextNode.data("sc2_cyChildren");
+    var edgesToChildren = contextNode.data("sc2_cyEdgesToCyChildren");
+    var currRenderedChildren = contextNode.outgoers().targets();
+    var nonRenderedChildren = [];
+
+    for (childIndex in children){
+        var currChild = children[childIndex];
+        if (!isCyNodeInList(currChild, currRenderedChildren)){
+            nonRenderedChildren.push(currChild);        
+        }
+    }
+    var nextFour = [];
+    var count = 0;
+    if (nonRenderedChildren.length > 0){
+        var sortedNonRenderedChildren = sortChildren(nonRenderedChildren, sortScoreHighToLow);
+        for (var index in sortedNonRenderedChildren){
+            if (count < 4){
+                var newChild = sortedNonRenderedChildren[index];
+                nextFour.push(newChild);
+            }
+            count += 1;
+        }
+    }
+    
+    // get the edges for the new ones
+    for (var i in nextFour){
+        var newChild = nextFour[i];
+        var currEdge = undefined;
+        for (var edgesIndex in edgesToChildren){
+            currEdge = edgesToChildren[edgesIndex];
+            if (currEdge["data"]["target"] == newChild["data"]["id"]){
+                edges.push(currEdge);
+                nodes.push(newChild);
+            }
+        }
+    }
+}
 // creates a PV under the selected node (contextNode)
 // requires a parent to already exist
 // contextNode does not need to be a cytoscape node, but can be one.
@@ -114,14 +155,7 @@ function addNextBestChild(cy, contextNode){
 
         for (childIndex in children){
             var currChild = children[childIndex];
-            var isRendered = false;
-            currRenderedChildren.forEach(function (child){
-                var childId = child.data("id");
-                if (currChild["data"]["id"] == childId){
-                    isRendered = true;
-                }
-            });     
-            if (isRendered == false){
+            if (!isCyNodeInList(currChild, currRenderedChildren)){
                 nonRenderedChildren.push(currChild);        
             }
         }

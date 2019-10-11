@@ -437,13 +437,7 @@ function getYAxis() {
     }
     cy = cytoscape(treeData);
     var rootNodeId = backingTreeRoot["data"]["id"];
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
-    refreshCy();
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
-    refreshCy();
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
-    refreshCy();
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    addNextFourBestChildren(cy,cy.getElementById(rootNodeId));
     refreshCy();
     checkMenuAvailibleActions(cy.getElementById(rootNodeId))
     cy.zoom({
@@ -467,13 +461,7 @@ function setToModelBasedTreatment(){
     }
     cy = cytoscape(treeData);
     var rootNodeId = backingTreeRoot["data"]["id"];
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
-    refreshCy();
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
-    refreshCy();
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
-    refreshCy();
-    addNextBestChild(cy,cy.getElementById(rootNodeId));
+    addNextFourBestChildren(cy,cy.getElementById(rootNodeId));
     refreshCy();
     checkMenuAvailibleActions(cy.getElementById(rootNodeId))
     controlsManager.clearWaitCursor();
