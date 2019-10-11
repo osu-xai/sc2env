@@ -213,7 +213,7 @@ function getNodeGlyphs(data, biggestUnitCount){
       return getFriendlyGraphString(data, unitValuesDict, biggestUnitCount);
   }
   else if (isEnemyActionNode(data)){
-      return getEnemyGraphString(data, unitValuesDict, biggestUnitCount);
+      return getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount);
   }
   else{
       //return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:8%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCount) + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:60%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount) + '</div>';
