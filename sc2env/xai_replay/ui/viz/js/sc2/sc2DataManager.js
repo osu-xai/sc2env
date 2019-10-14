@@ -2,6 +2,7 @@ const forwardDP = 3;
 const forwardDPCheck = false;
 //const interestingDPs = [400]
 const interestingDPs = [3,4,5,10,11,14,15,16,27,28,29,30,31,32,33]
+var forwardProgressDPs = []; //accumulate dps as user visits them. used for navigation bar clicks
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
@@ -16,7 +17,8 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addUnitDeltasToFrames(frameInfos);
     getDecisionPointFrames(frameInfos, 0)
     for (dpIndex in decisionPoints){decisionPointsFullCopy.push(decisionPoints[dpIndex]);}
-    getInterestingFrameNumbersForDPs();
+    convertDPNumToFrame(interestingDPs, interestingDPsByFrame);
+    convertDPNumToFrame([1], forwardProgressDPs)
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
@@ -36,12 +38,14 @@ function isInterestingDP(dp){
     }
     return false;
 }
-function getInterestingFrameNumbersForDPs(){
-    for (var dpIndex in interestingDPs){
-        var currInterestingDP = interestingDPs[dpIndex];
-        interestingDPsByFrame.push(decisionPoints[currInterestingDP-1]);
+function convertDPNumToFrame(dpList, dpFrameList){
+    for (var dpIndex in dpList){
+        var currInterestingDP = dpList[dpIndex];
+        dpFrameList.push(decisionPointsFullCopy[currInterestingDP-1]);
     }
 }
+
+
 
 function trimFirstFrames(frameInfos, trimBy){
     for (var i = 0; i < trimBy; i++){
