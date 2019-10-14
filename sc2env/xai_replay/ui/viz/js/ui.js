@@ -598,15 +598,27 @@ var subtractPixels = function(a,b){
 
 
 expl_ctrl_canvas.addEventListener('click', function (event) {
-    // if (true){
-    //     return;
-    // }
 	if (!isUserInputBlocked()){
 		var matchingStep = getMatchingExplanationStep(expl_ctrl_ctx, event.offsetX, event.offsetY);
 		if (matchingStep == undefined){
 			processTimelineClick(event);
 		}
 		else{
+			if (matchingStep > forwardProgressDPs[forwardProgressDPs.length-1] && enableForwardTimelineBlock){
+				// pauseGame();
+				if (document.getElementById('customErrMsg') == undefined){
+					showCustomErrorMsg("Cannot skip forward. Only steps prior to: DP" + forwardProgressDPs.length + " are unlocked.");
+				}
+				setTimeout(function() {
+					var errMsg = $('#customErrMsg')
+					errMsg.fadeOut('400', function (){
+						var errMsg = $('#customErrMsg')
+						errMsg.innerHTML = '';
+						errMsg.remove();
+					});
+				}, 3500); // <-- time in milliseconds
+				return; //TODO KEEP TRACK OF WHERE USER HAS REACHED
+			}
 			if (matchingStep == sessionIndexManager.getCurrentIndex()) {
 				//no need to move - already at step with explanation
 			}

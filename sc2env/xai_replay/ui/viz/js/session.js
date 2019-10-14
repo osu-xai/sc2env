@@ -350,14 +350,25 @@ function renderUnitValues(frameInfo){
     document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
 
     changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number);
-    if (explControlsManager.isUserStudyMode()){
-        for (var i = 0; i < decisionPoints.length; i++){
-            if (frameInfo.frame_number >= decisionPoints[i] + 2){
-                pauseAtInterestingDp(decisionPoints[i]);
-                decisionPoints.splice(i,1);
-                return;
-            }
+    for (var i = 0; i < decisionPoints.length; i++){
+        if (frameInfo.frame_number > decisionPoints[i]){
+            pauseAtInterestingDp(decisionPoints[i]);
+            addVisitedDPToForwardProgress(decisionPoints[i+1]);
+            decisionPoints.splice(i,1);
+            return;
         }
+    }
+}
+
+function addVisitedDPToForwardProgress(dpFrame){
+    var beenThere = false;
+    for (var dpIndex = 0; dpIndex < forwardProgressDPs.length; dpIndex++){
+        if (dpFrame == forwardProgressDPs[dpIndex]){
+            beenThere = true;
+        }
+    }
+    if (!beenThere){
+        forwardProgressDPs.push(dpFrame);
     }
 }
 

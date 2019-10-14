@@ -1,5 +1,6 @@
 var userInputBlocked = false;
 var liveModeInputBlocked = false;
+var enableForwardTimelineBlock = true;
 
 function paintProgress(value) {
 	showPositionOnTimeline(value);
@@ -47,14 +48,51 @@ function processTimelineClick(e) {
 	if (clickX < 0){
 		clickX = 0;
     }
-    controlsManager.setWaitCursor();
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
 	var targetStepString = "" + replaySequenceTargetStep;
+	if (targetStepString > forwardProgressDPs[forwardProgressDPs.length-1] && enableForwardTimelineBlock){
+		// pauseGame();
+		if (document.getElementById('customErrMsg') == undefined){
+			showCustomErrorMsg("Cannot skip forward. Only steps prior to: DP" + forwardProgressDPs.length + " are unlocked.");
+		}
+		setTimeout(function() {
+			var errMsg = $('#customErrMsg')
+			errMsg.fadeOut('400', function (){
+				var errMsg = $('#customErrMsg')
+				errMsg.innerHTML = '';
+				errMsg.remove();
+			});
+		}, 3500); // <-- time in milliseconds
+		return; //TODO KEEP TRACK OF WHERE USER HAS REACHED
+	}
 	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
 	//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
 	//SC2_DEFERRED targetClickHandler(e, logLine);
+	controlsManager.setWaitCursor();
     jumpToStep(targetStepString);
 }
+
+function showCustomErrorMsg(msg){
+	var backgroundDiv = document.createElement("div");
+	var errorMsg = document.createTextNode(msg);
+	backgroundDiv.appendChild(errorMsg);
+	backgroundDiv.style.backgroundColor = "rgba(255,0,0,.8)";
+	backgroundDiv.style.fontSize = "15px"
+	backgroundDiv.style.color = "white";
+	backgroundDiv.style.border = "3px solid white";
+	backgroundDiv.style.borderRadius = "10px";	
+	backgroundDiv.style.textAlign = "center";
+	backgroundDiv.style.top = "38%";
+	backgroundDiv.style.left = "37.5%";
+	backgroundDiv.style.right = "37.5%";
+	backgroundDiv.style.width = "25%"
+	backgroundDiv.style.position = "absolute";
+	backgroundDiv.style.padding = "5px";
+	backgroundDiv.id = "customErrMsg"
+
+	document.getElementById("game-row").appendChild(backgroundDiv);
+}
+
 function stageUserCommand(userCommand) {
 	var scaiiPkt = new proto.ScaiiPacket;
 	scaiiPkt.setUserCommand(userCommand);
