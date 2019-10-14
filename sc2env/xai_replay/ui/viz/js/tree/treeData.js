@@ -46,7 +46,7 @@ var treeStyle =
     .friendlyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
-        height: 1700; \
+        height: 1800; \
         width: 1100; \
     } \
     .enemyAction{ \
@@ -56,6 +56,7 @@ var treeStyle =
     } \
     .principalVariation { \
         background-color: #999999; \
+        border-color: #999999; \
     } \
     edge { \
         curve-style: straight; \

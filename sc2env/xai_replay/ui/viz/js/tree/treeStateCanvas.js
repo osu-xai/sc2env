@@ -151,9 +151,9 @@ function getHeightForCount(count){
 }
 function getPlayerColor(player){
     if (player == "agent"){
-        return "blue";
+        return "#8080F0";
     }
-    return "red";
+    return "#F08080";
 }
 
 var yOffsetsInQuadrantForPlayer = {};
