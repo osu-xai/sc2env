@@ -49,8 +49,10 @@ function processTimelineClick(e) {
 		clickX = 0;
     }
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
-	var targetStepString = "" + replaySequenceTargetStep;
-	if (targetStepString > forwardProgressDPs[forwardProgressDPs.length-1] && enableForwardTimelineBlock){
+    var targetStepString = "" + replaySequenceTargetStep;
+    var targetStepAsNum = Number(targetStepString);
+    var forwardProgressDPAsNum = forwardProgressDPs[forwardProgressDPs.length-1];
+	if ((targetStepAsNum > forwardProgressDPAsNum) && enableForwardTimelineBlock){
 		// pauseGame();
 		if (document.getElementById('customErrMsg') == undefined){
 			showCustomErrorMsg("Cannot skip forward. Only steps prior to: DP" + forwardProgressDPs.length + " are unlocked.");

@@ -1,6 +1,7 @@
 function getExplControlsManager(){
     m = {};
     m.mode = "study";
+    enableForwardTimelineBlock = true;
 
     m.isUserStudyMode = function(){
         return (this.mode == "study");
@@ -35,11 +36,13 @@ function getExplControlsManager(){
         this.mode = "study";
         this.hideDevControls();
         this.hideExplanationControls();
+        enableForwardTimelineBlock = true;
     }
     m.setModeToDev = function(){
         this.mode = "dev";
         this.renderDevControls();
         this.showExplanationControls();
+        enableForwardTimelineBlock = false;
     }
     m.isExplanationsVisible = function() {
         return !($('#explanation-tree-window').css('display') == 'none');
