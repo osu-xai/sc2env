@@ -277,10 +277,13 @@ function getStudyQuestionManager(questions, userId, treatmentId) {
 
 function clearUserIdScreen() {
     $("#user-id-div").remove();
+}
+
+function clearUserIdScreenYear1() {
+    $("#user-id-div").remove();
     tabManager.userIdHasBeenSet = true;
     activeStudyQuestionManager.poseFirstQuestion();
 }
-
 function acceptAnswer(e) {
     var asqm = activeStudyQuestionManager;
     var renderer = asqm.renderer;

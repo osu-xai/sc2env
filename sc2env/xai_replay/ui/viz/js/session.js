@@ -164,7 +164,10 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
     }
     currentExplManager.stepsWithExplanations = activeSC2DataManager.getExplanationStepsList();
     controlsManager.doneLoadReplayFile(); //SC2_TODO_NAV_TEST
-    if (userStudyMode){
+    if(explControlsManager.isUserStudyMode()){
+        showUserIdScreen();
+    }
+    else if (userStudyMode){
         if (!hasShownWelcomeScreen){
             // can't be tab hop, must be first screen shown
             clearLoadingScreen();
