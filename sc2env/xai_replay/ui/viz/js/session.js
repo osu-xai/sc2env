@@ -181,9 +181,25 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
             clearLoadingScreen();
         }
     }
+    setTreatmentFromFile();
 }
 
-
+function setTreatmentFromFile(){
+    $.ajax({
+        url:'http://localhost:8000/treatmentControl/modelFree.txt',
+        type:'HEAD',
+        error: function()
+        {
+            $('#model-based-radio').click();
+            //setToModelBasedTreatment()
+        },
+        success: function()
+        {
+            $('#model-free-radio').click();
+            //setToModelFreeTreatment();
+        }
+    });
+}
 
 function checkForEndOfGame(){
     if (sessionIndexManager.isAtEndOfGame()) {
