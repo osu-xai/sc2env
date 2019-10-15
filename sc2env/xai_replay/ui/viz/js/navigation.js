@@ -55,7 +55,7 @@ function processTimelineClick(e) {
 	if ((targetStepAsNum > forwardProgressDPAsNum) && enableForwardTimelineBlock){
 		// pauseGame();
 		if (document.getElementById('customErrMsg') == undefined){
-			showCustomErrorMsg("Cannot skip forward. Only steps prior to: DP" + forwardProgressDPs.length + " are unlocked.");
+			showCustomErrorMsg("Cannot skip forward. Only steps prior to DP" + forwardProgressDPs.length + " are unlocked.");
 		}
 		setTimeout(function() {
 			var errMsg = $('#customErrMsg')
