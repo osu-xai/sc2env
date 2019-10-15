@@ -27,49 +27,75 @@ var treeLayout = {
     }
 // was SteelBlue  
 // PV was        background-color: #239B56; \
+var nodeBackgroundColor = "LightSlateGray";
+var genericNodeHeight = 1200;
+var genericNodeWidth = 1800;
+var genericNodeBorderWidth = "10px";
+var genericNodeBorderColor = "black"
+
+var stateNodeHeight = 1300;
+var stateNodeWidth = 1800;
+
+var friendlyActionNodeHeight = 1800;
+var friendlyActionNodeWidth = 1700;
+
+var enemyActionNodeWidth = 1700;
+
+
+var principalVariationBackgroundColor = "#999999";
+var principalVariationBorderColor = "#999999";
+
+var genericEdgeLineColor = "#ffaaaa";
+
+var userAddedNodeColor = "SlateBlue";
+var selectedNodeColor = "PaleVioletRed";
+var highlightedNodeColor = "navy";
+
+// ' +  + '
 var treeStyle =
     'node { \
-        background-color: LightSlateGray; \
-        height: 1200; \
-        width: 1800; \
+        background-color: ' + nodeBackgroundColor + '; \
+        height: ' + genericNodeHeight + '; \
+        width: ' + genericNodeWidth + '; \
         background-fit: cover; \
-        border-color: black; \
-        border-width: 10px; \
+        border-color: ' + genericNodeBorderColor + '; \
+        border-width: ' + genericNodeBorderWidth + '; \
     } \
     .highlightedNode { \
-        background-color: navy; \
+        background-color: ' + highlightedNodeColor + '; \
     } \
     .stateNode{ \
-        height: 1300; \
+        height: ' + stateNodeHeight + '; \
+        width: ' + stateNodeWidth + '; \
         shape: roundrectangle; \
     } \
     .friendlyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
-        height: 1800; \
-        width: 1100; \
+        height: ' + friendlyActionNodeHeight + '; \
+        width: ' + friendlyActionNodeWidth + '; \
     } \
     .enemyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
-        width: 1100; \
+        width: ' + enemyActionNodeWidth + '; \
     } \
     .principalVariation { \
-        background-color: #999999; \
-        border-color: #999999; \
+        background-color: ' + principalVariationBackgroundColor + '; \
+        border-color: ' + principalVariationBorderColor + '; \
     } \
     edge { \
         curve-style: straight; \
         width: 30; \
         target-arrow-shape: triangle; \
-        line-color: #ffaaaa; \
-        target-arrow-color: #ffaaaa; \
+        line-color: ' + genericEdgeLineColor + '; \
+        target-arrow-color: ' + genericEdgeLineColor + '; \
     } \
     .userAddedNode { \
-        background-color: SlateBlue; \
+        background-color: ' + userAddedNodeColor + '; \
     } \
     .selectedNode{ \
-        background-color: PaleVioletRed; \
+        background-color: ' + selectedNodeColor + '; \
     }';
 
 var cy = undefined;
