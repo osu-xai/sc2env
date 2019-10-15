@@ -73,7 +73,7 @@ function getChartString(chartData){
     //var chartString = '<div class="flex-column" style="background-color:#F0FFF0;;height: 400px; width: 800px;padding=30px;">' + getChartContentRow(chartData) + getXAxisRow() + '</div>';
     //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getSemiCircles(chartData) + getAxes() + '</svg></div>';
     //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getFadedCircles(chartData) + getAxes() + '</svg></div>';
-    return '<div style="background-image: linear-gradient(to top, #80E080 , #FFFFFF, #80E080);"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getWinBars(chartData) + getAxes() + '</svg></div>';
+    return '<div style="background-color:white;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getWinBars(chartData) + getAxes() + '</svg></div>';
 }
 //<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
 //  <line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />

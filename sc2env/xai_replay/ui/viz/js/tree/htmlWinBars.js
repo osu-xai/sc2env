@@ -31,24 +31,38 @@ imageOrigin[5] = [chartWidth * 0/4,chartHeight * 1/2];// destroy, bottom, left
 imageOrigin[6] = [chartWidth * 1/4,chartHeight * 0];// lowest,  top,    left
 imageOrigin[7] = [chartWidth * 1/4,chartHeight * 1/2];// lowest,  bottom, left */
 var winBarYOrigin = {};
-winBarYOrigin[0] = chartHeight * (3/12);
-winBarYOrigin[1] = chartHeight * (7/12);
-winBarYOrigin[2] = chartHeight * (1/12);
-winBarYOrigin[3] = chartHeight * (9/12);
-winBarYOrigin[4] = chartHeight * (3/12);
-winBarYOrigin[5] = chartHeight * (7/12);
-winBarYOrigin[6] = chartHeight * (1/12);
-winBarYOrigin[7] = chartHeight * (9/12);
+var quadrantBarSep = 10;
+winBarYOrigin[0] = chartHeight * (1/12) - quadrantBarSep;
+winBarYOrigin[1] = chartHeight * (7/12) - quadrantBarSep;
+winBarYOrigin[2] = chartHeight * (3/12) + quadrantBarSep;
+winBarYOrigin[3] = chartHeight * (9/12) + quadrantBarSep;
+winBarYOrigin[4] = chartHeight * (1/12) - quadrantBarSep;
+winBarYOrigin[5] = chartHeight * (7/12) - quadrantBarSep;
+winBarYOrigin[6] = chartHeight * (3/12) + quadrantBarSep;
+winBarYOrigin[7] = chartHeight * (9/12) + quadrantBarSep;
 
 function getBarForDestructionLevel(index, width, height, xOrigin, yOrigin){
-    if (index == 0 || index == 1 || index == 4 || index == 5){
-        // destroy bar
-        var result = '<rect style="fill:black" x="' + xOrigin + '" y="' + yOrigin + '" width="' + width + '" height="' + height + '"' + '" stroke="black" stroke-width="1" />';
+    var enemyColor = getPlayerColor("enemy");
+    var agentColor = getPlayerColor("agent");
+    if (index == 0 || index == 1 ){
+        // destroy bar enemy
+        
+        var result = '<rect style="fill:' + enemyColor + '" x="' + xOrigin + '" y="' + yOrigin + '" width="' + width + '" height="' + height + '"' + '" stroke="' + enemyColor + '" stroke-width="1" />';
         return result; 
     }
+    if (index == 4 || index == 5){
+        // destroy bar agent
+        var result = '<rect style="fill:' + agentColor + '" x="' + xOrigin + '" y="' + yOrigin + '" width="' + width + '" height="' + height + '"' + '" stroke="' + agentColor + '" stroke-width="1" />';
+        return result; 
+    }
+    else if (index == 2 || index == 3) {
+        // damage bar enemy
+        var result = '<rect style="' + getPartialFillPattern("h-stripe-xai-enemy") + '" x="' + xOrigin + '" y="' + yOrigin + '" width="' + width + '" height="' + height + '"' + '" stroke="' + getPlayerColor("enemy") + '" stroke-width="1" />';
+        return result;
+    }
     else {
-        // damage bar
-        var result = '<rect style="' + getPartialFillPattern() + '" x="' + xOrigin + '" y="' + yOrigin + '" width="' + width + '" height="' + height + '"' + '" stroke="black" stroke-width="1" />';
+        // damage bar agent
+        var result = '<rect style="' + getPartialFillPattern("h-stripe-xai-agent") + '" x="' + xOrigin + '" y="' + yOrigin + '" width="' + width + '" height="' + height + '"' + '" stroke="' + getPlayerColor("agent") + '" stroke-width="1" />';
         return result;
     }
 }
@@ -66,14 +80,19 @@ function renderWinBar( index, value){
     console.log(result);
     return result;
 }
-function getPartialFillPattern(){
-    return 'fill: url(#h-stripe-xai) #fff;'
+function getPartialFillPattern(patternName){
+    return 'fill: url(#' + patternName + ') #fff;'
 }
 //
 
 function getPatternDef(){
-    return '<defs> <pattern id="h-stripe-xai" width="1.0" height=".2" patternContentUnits="objectBoundingBox">' + 
-                         '<rect x="0" y="0" width="1.0" height=".1" fill="black"/>' +
-                 '</pattern></defs>';
+    return '<defs>' +
+                '<pattern id="h-stripe-xai-agent" width="1.0" height=".2" patternContentUnits="objectBoundingBox">' + 
+                    '<rect x="0" y="0" width="1.0" height=".1" fill="' + getPlayerColor("agent") + '"/>' +
+                '</pattern>' + 
+                '<pattern id="h-stripe-xai-enemy" width="1.0" height=".2" patternContentUnits="objectBoundingBox">' + 
+                    '<rect x="0" y="0" width="1.0" height=".1" fill="' + getPlayerColor("enemy") + '"/>' +
+                '</pattern>' +
+            '</defs>';
                 
 }
