@@ -225,6 +225,7 @@
                                 <script src="js/linear/defaultView.js"></script>
                                 <script src="js/linear/storyLine.js"></script>
                                 <script src="js/linear/storyLines.js"></script>
+                                <script src="js/tree/htmlConstants.js"></script>
                                 <script src="js/tree/treeData.js"></script>
                                 <script src="js/tree/incrementalTree.js"></script>
                                 <script src="js/tree/incrementalTreeUtils.js"></script>
@@ -341,34 +342,34 @@
                         </div>
                         
 
-                        <div id="playback-controls-panel" class="flex-row">
-                            <button id="reward-values-panel-toggle" alt="View Rewards" style="display: none;height:30px;">Show Rewards</button>
+                        <div id="playback-controls-panel" class="flex-row" style="font-size:18px;">
+                            <button id="reward-values-panel-toggle" alt="View Rewards" style="display: none;height:20px;">Show Rewards</button>
                             <div style="width:35%">
                                 <input id="dev-mode-check" style="display:inline;margin-left:15px; transform: scale(1.5);vertical-align:middle" onchange="devModeChanged()" type="checkbox" name="keyDisable" value="keyDisable">
-                                <label id="dev-mode-check-label" style="display:inline;margin-left:10px;line-height:35px;font-size:20px">Dev Mode</label>
-                                <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;height:30px;">Hide Unit Information</button>
+                                <label id="dev-mode-check-label" style="display:inline;margin-left:10px;line-height:25px;">Dev Mode</label>
+                                <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;height:20px;">Hide Unit Information</button>
                             </div>
-                            <div style="width:20%;font-size:20px" class="flex-row">
-                                <div id="step-value" style="line-height:35px"></div>
+                            <div style="width:20%;" class="flex-row">
+                                <div id="step-value" style="line-height:25px"></div>
                                 <!--<div id="rewind-control"></div>
                                 <div id="step-back-control"></div>
                                 <div id="step-forward-control"></div>-->
-                                <button id="connect-button" style="font-size:20px;height:30px;">Start</button>
+                                <button id="connect-button" style="height:20px;">Start</button>
                                 <div id="pause-play-control"></div>
                             </div>
-                            <div style="width:10%;font-size:20px;margin-right:30px;" class="flex-row">
-                                <label id="unlock-key-label" style="display:none;text-align:right;width:80%;line-height:35px;">Unlock Explanation</label>
-                                <input id="unlock-key-text" style="display:none;font-size:20px;height:30px;width:20%;margin-left:10px;vertical-align:middle" type="text" name="unlock-key" onkeyup="checkUnlockKey()">
+                            <div style="width:10%;margin-right:20px;" class="flex-row">
+                                <label id="unlock-key-label" style="display:none;text-align:right;width:80%;line-height:25px;">Unlock Explanation</label>
+                                <input id="unlock-key-text" style="display:none;height:20px;width:20%;margin-left:10px;vertical-align:middle" type="text" name="unlock-key" onkeyup="checkUnlockKey()">
                             </div>
                             <div style="width:15%">
-                                <button id="button-show-explanations" disabled='disabled' style="margin-right:40px;height:30px;">Show Explanations</button>
+                                <button id="button-show-explanations" disabled='disabled' style="margin-right:40px;height:20px;">Show Explanations</button>
                             </div>
                             
                             <div style="width:15%" class="flex-row">
                                 <input id="model-free-radio" style="display:none;transform: scale(1.5);vertical-align:middle" type="radio" name="treatment" value="model-free">
-                                <label id="model-free-radio-label" style="display:none;margin-left:10px;line-height:35px;font-size:20px">Model Free</label>
+                                <label id="model-free-radio-label" style="display:none;margin-left:10px;line-height:25px;">Model Free</label>
                                 <input id="model-based-radio" style="display:none;margin-left:15px; transform: scale(1.5);vertical-align:middle" type="radio" name="treatment" value="model-based"checked>
-                                <label id="model-based-radio-label" style="display:none;margin-left:10px;line-height:35px;font-size:20px">Model Based</label>
+                                <label id="model-based-radio-label" style="display:none;margin-left:10px;line-height:25px;">Model Based</label>
                                 
                             </div>
 

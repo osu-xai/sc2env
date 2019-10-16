@@ -1,8 +1,4 @@
 
-var pylonLeftAndRightSpacerPercent = 10;
-var pylonSetPercent                = 35;
-var pylonTwixtSpacerPercent        = 10;
-
 
 function getStateString(data, unitValuesDict) {
     //return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:8%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCount) + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:60%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount) + '</div>';
@@ -11,7 +7,7 @@ function getStateString(data, unitValuesDict) {
 }
 
 function getGameStateRow(data){
-    return '<div class="flex-row" >' + getNexusStates(data,63,64) + getUnitCountsSvg(data) + getNexusStates(data,65,66) + '</div>';
+    return '<div class="flex-row" >' + getNexusStates(data,63,64,"agent") + getUnitCountsSvg(data) + getNexusStates(data,65,66,"enemy") + '</div>';
 }
 
 {/* <svg width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -33,14 +29,15 @@ function getGameStateRow(data){
 </svg> */}
 function getUnitCountsSvg(data){
     var state = data.state;
-    return '<div style="background-color:white"><svg height="' + unitCountsCanvasHeight + '" width="' + unitCountsCanvasWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + renderUnitsOnField(state) + '</svg></div>';
+    return '<div style="background-color:white"><svg height="' + armyStrengthHeight + '" width="' + armyStrengthWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + renderUnitsOnField(state) + '</svg></div>';
  
 }
 
-function getNexusStates(data, topIndex, bottomIndex){
-    return '<div class="flex-column" id="' + data.id + '_nexus_graph_container" style="height:' + unitCountsCanvasHeight + ';">' +
-            getNexusHealth(data["state"][topIndex]) +
-            getNexusHealth(data["state"][bottomIndex]) +
+function getNexusStates(data, topIndex, bottomIndex, player){
+    return '<div class="flex-column" id="' + data.id + '_nexus_graph_container" style="height:' + armyStrengthHeight + ';">' +
+            getNexusHealth(data["state"][topIndex], getPlayerColor(player)) +
+            '<div style="width:100%;background-color:black;height:10px"></div>' + 
+            getNexusHealth(data["state"][bottomIndex],getPlayerColor(player)) +
     '</div>';
 }
 

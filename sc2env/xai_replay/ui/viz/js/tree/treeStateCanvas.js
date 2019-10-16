@@ -1,8 +1,8 @@
 
 function renderUnitsOnField(stateVector){
     var v = stateVector;
-    var w = unitCountsCanvasWidth;
-    var h = unitCountsCanvasHeight;
+    var w = armyStrengthWidth;
+    var h = armyStrengthHeight;
     return renderMidLine(w,h) +
     //renderVerticalLine(1,w,h) +
     //renderVerticalLine(2,w,h) +
@@ -149,12 +149,6 @@ function getHeightForCount(count){
     }
     return radius;
 }
-function getPlayerColor(player){
-    if (player == "agent"){
-        return "#8080F0";
-    }
-    return "#F08080";
-}
 
 var yOffsetsInQuadrantForPlayer = {};
 yOffsetsInQuadrantForPlayer["marine"] = 1;
@@ -166,14 +160,14 @@ laneIndex["top"] = 0;
 laneIndex["bottom"] = 1;
 function getYOrigin(lane, unitType){
     var index = laneIndex[lane];
-    var topEdgeOfQuadrant= index * (unitCountsCanvasHeight / 2);
+    var topEdgeOfQuadrant= index * (armyStrengthHeight / 2);
     var unitTypeOffset = getPlayerYCenterInQuadrant(unitType);
     var yCenter = topEdgeOfQuadrant + unitTypeOffset;
     return yCenter;
 }
 
 function getXOrigin(gridIndex,player){
-    var leftEdgeOfQuadrant= gridIndex * (unitCountsCanvasWidth / 4);
+    var leftEdgeOfQuadrant= gridIndex * (armyStrengthWidth / 4);
     var unitTypeOffset = getPlayerXCenterInQuadrant(player);
     var xCenter = leftEdgeOfQuadrant + unitTypeOffset;
     return xCenter;
@@ -187,7 +181,7 @@ function getPlayerXCenterInQuadrant(player){
     else {
         playerIndex = 1;
     }
-    var halfWidthOfQuadrant = unitCountsCanvasWidth / 8;
+    var halfWidthOfQuadrant = armyStrengthWidth / 8;
     var quarterWidthOfQuadrant = halfWidthOfQuadrant / 2;
     var xCenter = playerIndex * halfWidthOfQuadrant + quarterWidthOfQuadrant;
     return xCenter;
@@ -196,7 +190,7 @@ function getPlayerXCenterInQuadrant(player){
 
 function getPlayerYCenterInQuadrant(unitType){
     var unitIndex = yOffsetsInQuadrantForPlayer[unitType];
-    var fourthOfHeightOfQuadrant = unitCountsCanvasHeight / 8;
+    var fourthOfHeightOfQuadrant = armyStrengthHeight / 8;
     var yCenter = unitIndex * fourthOfHeightOfQuadrant;
     return yCenter;
 }

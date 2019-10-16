@@ -194,7 +194,8 @@ function buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode){
         cyFriendlyActionNode["data"]["points"] = friendlyActionShapePoints;
         cyFriendlyActionNode["data"]["sc2_cyParent"] = cyStateNode;
         cyFriendlyActionNode["data"]["sc2_nodeType"] = className;
-        var cyEdge = getEdge(trimBestNotationDuplicate(jsonStateNode["name"]), trimBestNotationDuplicate(cyFriendlyActionNode["data"]["id"]));
+        var edgeClass = getEdgeClassFromParentNode(cyFriendlyActionNode);
+        var cyEdge = getEdge(trimBestNotationDuplicate(jsonStateNode["name"]), trimBestNotationDuplicate(cyFriendlyActionNode["data"]["id"]), edgeClass);
         cyStateNode["data"]["sc2_cyChildren"].push(cyFriendlyActionNode);
         cyStateNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
         buildEnemyActionCynodesUnderFriendlyActionCynodes(jsonFriendlyActionNode, cyFriendlyActionNode);
@@ -214,8 +215,8 @@ function buildEnemyActionCynodesUnderFriendlyActionCynodes(jsonFriendlyActionNod
         cyEnemyActionNode["data"]["points"] = enemyActionShapePoints;
         cyEnemyActionNode["data"]["sc2_cyParent"] = cyFriendlyActionNode;
         cyEnemyActionNode["data"]["sc2_nodeType"] = className;
-
-        var cyEdge = getEdge(trimBestNotationDuplicate(jsonFriendlyActionNode["name"]), trimBestNotationDuplicate(cyEnemyActionNode["data"]["id"]));
+        var edgeClass = getEdgeClassFromParentNode(cyEnemyActionNode);
+        var cyEdge = getEdge(trimBestNotationDuplicate(jsonFriendlyActionNode["name"]), trimBestNotationDuplicate(cyEnemyActionNode["data"]["id"]), edgeClass);
         cyFriendlyActionNode["data"]["sc2_cyChildren"].push(cyEnemyActionNode);
         cyFriendlyActionNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
         buildStateCyNodeUnderEnemyActionCynode(jsonEnemyActionNode, cyEnemyActionNode);
@@ -233,8 +234,8 @@ function buildStateCyNodeUnderEnemyActionCynode(jsonEnemyActionNode, cyEnemyActi
         cyStateNode["data"]["sc2_nodeType"] = className;
         cyStateNode["data"]["sc2_cyParent"] = cyEnemyActionNode;
         cyStateNode["data"]["state"] = jsonStateNode["state"];
-
-        var cyEdge = getEdge(trimBestNotationDuplicate(jsonEnemyActionNode["name"]), trimBestNotationDuplicate(cyStateNode["data"]["id"]));
+        var edgeClass = getEdgeClassFromParentNode(cyStateNode);
+        var cyEdge = getEdge(trimBestNotationDuplicate(jsonEnemyActionNode["name"]), trimBestNotationDuplicate(cyStateNode["data"]["id"]), edgeClass);
         cyEnemyActionNode["data"]["sc2_cyChildren"].push(cyStateNode);
         cyEnemyActionNode["data"]["sc2_cyEdgesToCyChildren"].push(cyEdge);
         buildFriendlyActionCynodesUnderStateNode(jsonStateNode, cyStateNode);

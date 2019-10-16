@@ -87,11 +87,11 @@ function getPartialFillPattern(patternName){
 
 function getPatternDef(){
     return '<defs>' +
-                '<pattern id="h-stripe-xai-agent" width="1.0" height=".2" patternContentUnits="objectBoundingBox">' + 
-                    '<rect x="0" y="0" width="1.0" height=".1" fill="' + getPlayerColor("agent") + '"/>' +
+                '<pattern id="h-stripe-xai-agent" width="1.0" height=".3333" patternContentUnits="objectBoundingBox">' + 
+                    '<rect x="0" y="0" width="1.0" height=".16666" fill="' + getPlayerColor("agent") + '"/>' +
                 '</pattern>' + 
-                '<pattern id="h-stripe-xai-enemy" width="1.0" height=".2" patternContentUnits="objectBoundingBox">' + 
-                    '<rect x="0" y="0" width="1.0" height=".1" fill="' + getPlayerColor("enemy") + '"/>' +
+                '<pattern id="h-stripe-xai-enemy" width="1.0" height=".3333" patternContentUnits="objectBoundingBox">' + 
+                    '<rect x="0" y="0" width="1.0" height=".16666" fill="' + getPlayerColor("enemy") + '"/>' +
                 '</pattern>' +
             '</defs>';
                 

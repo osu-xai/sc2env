@@ -1,3 +1,10 @@
+function getPlayerColor(player){
+    if (player == "agent"){
+        return "#8080F0";
+    }
+    return "#F08080";
+}
+
 var treeData = {    
                     container: document.getElementById('cy'),
                     boxSelectionEnabled: false,
@@ -16,7 +23,7 @@ var treeLayout = {
         fit: true, // whether to fit the viewport to the graph
         directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
         padding: 10, // padding on fit
-        spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+        spacingFactor: 0.9, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
         avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
         nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
         roots: undefined, // the roots of the trees
@@ -27,62 +34,44 @@ var treeLayout = {
     }
 // was SteelBlue  
 // PV was        background-color: #239B56; \
-var nodeBackgroundColor = "LightSlateGray";
-var genericNodeHeight = 1200;
-var genericNodeWidth = 1800;
-var genericNodeBorderWidth = "10px";
-var genericNodeBorderColor = "black"
 
-var stateNodeHeight = 1300;
-var stateNodeWidth = 1800;
+// ' +  + '             background-image: linear-gradient(to right, #80F080 , #F0F0F0) ;\
+   
 
-var friendlyActionNodeHeight = 1800;
-var friendlyActionNodeWidth = 1700;
-
-var enemyActionNodeWidth = 1700;
-
-
-var principalVariationBackgroundColor = "#999999";
-var principalVariationBorderColor = "#999999";
-
-var genericEdgeLineColor = "#ffaaaa";
-
-var userAddedNodeColor = "SlateBlue";
-var selectedNodeColor = "PaleVioletRed";
-var highlightedNodeColor = "navy";
-
-// ' +  + '
 var treeStyle =
     'node { \
         background-color: ' + nodeBackgroundColor + '; \
-        height: ' + genericNodeHeight + '; \
-        width: ' + genericNodeWidth + '; \
+        height: ' + genericNodeHeight + 'px; \
+        width: ' + genericNodeWidth + 'px; \
         background-fit: cover; \
-        border-color: ' + genericNodeBorderColor + '; \
-        border-width: ' + genericNodeBorderWidth + '; \
+        border-color: ' + genericNodeBorderColor  + '; \
+        border-width: ' + genericNodeBorderWidth + 'px; \
     } \
     .highlightedNode { \
         background-color: ' + highlightedNodeColor + '; \
     } \
     .stateNode{ \
-        height: ' + stateNodeHeight + '; \
-        width: ' + stateNodeWidth + '; \
+        height: ' + stateNodeHeight + 'px; \
+        width: ' + stateNodeWidth + 'px; \
         shape: roundrectangle; \
     } \
     .friendlyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
-        height: ' + friendlyActionNodeHeight + '; \
-        width: ' + friendlyActionNodeWidth + '; \
+        height: ' + friendlyActionNodeHeight + 'px; \
+        width: ' + friendlyActionNodeWidth + 'px; \
+        border-color: ' + getPlayerColor("agent") + '; \
+        border-width: ' + actionNodeBorderWidth + 'px; \
     } \
     .enemyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
         width: ' + enemyActionNodeWidth + '; \
+        border-color: ' + getPlayerColor("enemy") + '; \
+        border-width: ' + actionNodeBorderWidth + 'px; \
     } \
     .principalVariation { \
         background-color: ' + principalVariationBackgroundColor + '; \
-        border-color: ' + principalVariationBorderColor + '; \
     } \
     edge { \
         curve-style: straight; \
@@ -90,6 +79,13 @@ var treeStyle =
         target-arrow-shape: triangle; \
         line-color: ' + genericEdgeLineColor + '; \
         target-arrow-color: ' + genericEdgeLineColor + '; \
+    } \
+    .principalVariationEdge { \
+        line-color: ' + principalVariationBackgroundColor + '; \
+        target-arrow-color: ' + principalVariationBackgroundColor + '; \
+        width: 60; \
+    } \
+    .basicEdge { \
     } \
     .userAddedNode { \
         background-color: ' + userAddedNodeColor + '; \
@@ -302,13 +298,22 @@ function getCyNodeFromJsonNode(inputNode, parentId, cyClass){
     return cyNode;
 }
 
+function getEdgeClassFromParentNode(parent){
+    var classString = parent["classes"];
+    if (classString.includes("principalVariation")){
+        return "principalVariationEdge";
+    }
+    else {
+        return "basicEdge";
+    }
+}
 
-
-function getEdge(source, target){
+function getEdge(source, target, cyClass){
     var cyEdge = {}
     cyEdge["data"] = {};
     cyEdge["data"]["source"] = source;
     cyEdge["data"]["target"] = target;
+    cyEdge["classes"] = cyClass;
     return cyEdge
 }
 

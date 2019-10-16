@@ -12,35 +12,36 @@ function getNodeGlyphs(data, biggestUnitCount){
     }
 }
 
-var bestQValueColorPV = "white";
-var bestQValueColor = "white";
+function getQStyling() {
+    return 'font-size:200px;margin-bottom:' + qMarginBottom + 'px;margin-top:' + qMarginTop + 'px;text-align:center;';
+}
 // bestQvalue is the percolated back up value from the leaf.
 function getBestQValue(data){
   // var afterStateQValue = data["after state q_value"];
   var bestStateQValue = data["best q_value"];
   var name = data["name"];
   if(data['root']){
-    return '<div style="color:' + bestQValueColorPV + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+    return '<div style="color:' + bestQValueColorPV + ';' + getQStyling() + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
   }
   // TODO refactor because do same for state and action
   if (name.indexOf("_action") != -1){
       if (name.indexOf("best") != -1){
           // principle variation
-          return '<div style="color:' + bestQValueColorPV + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColorPV + ';' + getQStyling() + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
       else{
           // others
-          return '<div style="color:' + bestQValueColor + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColor + ';' + getQStyling() + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
   }
   else{
       //state
       if (name.indexOf("best") != -1){
           // principle variation
-          return '<div style="color:' + bestQValueColorPV + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColorPV + ';' + getQStyling() + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
       else{
-          return '<div style="color:' + bestQValueColor + ';font-size:200px;text-align:center;">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColor + ';' + getQStyling() + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
       }
   }
 }
@@ -53,11 +54,7 @@ function getChart(data){
             return "";
         }
         else {
-            return '<div class="flex-row">' +
-                        '<div style="height:100%;width:' + sideMarginWidth + 'px;"></div>' + 
-                        getChartString(chartData) + 
-                        '<div style="height:100%;width:' + sideMarginWidth + 'px;"></div>' +
-                    '</div>';
+            return getChartString(chartData);
         }
         
     }
@@ -65,15 +62,18 @@ function getChart(data){
         return "";
     }
 }
-var chartHeight = 400;
-var chartWidth = 800;
 function getChartString(chartData){
     console.log("===================getChartString===================");
     // make chart container div with specific dimensions that is a flex-column
     //var chartString = '<div class="flex-column" style="background-color:#F0FFF0;;height: 400px; width: 800px;padding=30px;">' + getChartContentRow(chartData) + getXAxisRow() + '</div>';
     //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getSemiCircles(chartData) + getAxes() + '</svg></div>';
     //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getFadedCircles(chartData) + getAxes() + '</svg></div>';
-    return '<div style="background-color:white;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getWinBars(chartData) + getAxes() + '</svg></div>';
+    var result = '<div class="flex-row" style="height:"' + chartHeight + 'px; width:"' + friendlyActionNodeWidth + 'px">' +
+              '<div style="width:' + percentWidthForChartLateralSpacer + '%";></div>' +
+              '<svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getWinBars(chartData) + getAxes() + '</svg>' + 
+              '<div style="width:' + percentWidthForChartLateralSpacer + '%";></div>' +
+            '</div>';
+    return result;
 }
 //<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
 //  <line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
