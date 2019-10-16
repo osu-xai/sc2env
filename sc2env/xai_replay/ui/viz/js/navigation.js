@@ -126,7 +126,8 @@ var tryResume = function (e) {
 function resumeGame() {
 	controlsManager.userClickedResume();
 	// video.currentTime = 80 / framesPerSecond
-	activeSC2UIManager.play();
+    activeSC2UIManager.play();
+    disableShowExplanationButton();
 	//SC2_TODO_NAV_TEST - new logic that re-engages the driver loop
 	// if play button cue arrow present, remove it
 	$("#cue-arrow-div").remove();

@@ -492,7 +492,7 @@ function sizeNonGeneratedElements() {
                     frameOfCurrentTree = step;
                 }
             }
-            explControlsManager.requestHideShowExplanationButton();
+            //explControlsManager.requestHideShowExplanationButton();
 		}
 	});
 	
