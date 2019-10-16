@@ -1,7 +1,6 @@
 function getExplControlsManager(){
     m = {};
     m.mode = "study";
-    enableForwardTimelineBlock = true;
 
     m.isUserStudyMode = function(){
         return (this.mode == "study");
@@ -16,7 +15,6 @@ function getExplControlsManager(){
             enableShowExplanationsButton();
         }
     }
-    //enableForwardTimelineBlock
     m.renderDevControls = function(){
         $('#model-free-radio').css('display', "inline")
         $('#model-free-radio-label').css('display', "inline")
@@ -214,6 +212,7 @@ function checkUnlockKey(){
 function devModeChanged(){
     if ($("#dev-mode-check").prop('checked')){
         explControlsManager.setModeToDev();
+        enableForwardTimelineBlock = false;
     }
     else {
         explControlsManager.setModeToUserStudy();

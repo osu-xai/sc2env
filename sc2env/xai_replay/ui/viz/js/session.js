@@ -209,7 +209,10 @@ function setTutorialModeFromFile(){
         type:'HEAD',
         error: function()
         {
-            enableForwardTimelineBlock = true;
+            // not tutorial mode, but we don't want timeline block enabled iw we are in dev mode
+            if (explControlsManager.isUserStudyMode()){
+                enableForwardTimelineBlock = true;
+            }
             year2TutorialMode = false;
         },
         success: function()
