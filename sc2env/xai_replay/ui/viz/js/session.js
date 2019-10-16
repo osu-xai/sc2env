@@ -182,7 +182,9 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
         }
     }
     setTreatmentFromFile();
+    setTutorialModeFromFile();
 }
+
 
 function setTreatmentFromFile(){
     $.ajax({
@@ -197,6 +199,23 @@ function setTreatmentFromFile(){
         {
             $('#model-free-radio').click();
             //setToModelFreeTreatment();
+        }
+    });
+}
+var year2TutorialMode = false;
+function setTutorialModeFromFile(){
+    $.ajax({
+        url:'http://localhost:8000/treatmentControl/tutorialYes.txt',
+        type:'HEAD',
+        error: function()
+        {
+            enableForwardTimelineBlock = true;
+            year2TutorialMode = false;
+        },
+        success: function()
+        {
+            enableForwardTimelineBlock = false;
+            year2TutorialMode = true;
         }
     });
 }

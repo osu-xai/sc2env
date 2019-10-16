@@ -7,7 +7,7 @@ function getExplControlsManager(){
         return (this.mode == "study");
     }
     m.showExplanationControls = function(){
-        showShowExplanationButton();
+        enableShowExplanationButton();
         if(this.isUserStudyMode()) {
             disableShowExplanationsButton();
             showUnlockControls();
@@ -36,7 +36,9 @@ function getExplControlsManager(){
         this.mode = "study";
         this.hideDevControls();
         this.hideExplanationControls();
-        enableForwardTimelineBlock = true;
+        if (!year2TutorialMode) {
+            enableForwardTimelineBlock = true;
+        }
     }
     m.setModeToDev = function(){
         this.mode = "dev";
@@ -54,13 +56,12 @@ function getExplControlsManager(){
     m.hideExplanationControls = function(){
         if(this.isUserStudyMode()) {
             hideUnlockControls();
-            hideShowExplanationButton();
         }
     }
 
     m.requestHideShowExplanationButton = function(){
         if (this.isUserStudyMode()){
-            hideShowExplanationButton();
+            disableShowExplanationButton();
         }
     }
     
@@ -117,12 +118,12 @@ function getExplControlsManager(){
 }
 
 
-function hideShowExplanationButton(){
-    $('#button-show-explanations').css('display', "none");
+function disableShowExplanationButton(){
+    $('#button-show-explanations').attr('disabled', 'disabled');
 }
 
-function showShowExplanationButton(){
-    $('#button-show-explanations').css('display', "block");
+function enableShowExplanationButton(){
+    $('#button-show-explanations').removeAttr('disabled');
 }
 
 function hideUnlockControls(){
