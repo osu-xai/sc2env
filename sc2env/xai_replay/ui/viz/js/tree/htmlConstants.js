@@ -41,7 +41,7 @@ var pHeightActionEnemyKeyPlusUnits        = 35;// * 2
 var pHeightActionEnemyLaneBorder          = 1;
 var pHeightActionEnemySpacerAbovePylonRow = 2;
 var pHeightActionEnemyPylons              = 8;
-var pHeightActionEnemyQValue              = 19;
+//var pHeightActionEnemyQValue              = 19;
             
 var pWidthActionKey            = 7; 
 var pWidthActionKeyCountSpacer = 1;  

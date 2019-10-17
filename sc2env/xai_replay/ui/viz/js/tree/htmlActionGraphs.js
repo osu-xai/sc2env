@@ -35,7 +35,7 @@ function getEnemyActionHtml(data, unitValuesDict, biggestUnitCount){
             getKeyPlusUnitRow( 100,pHeightActionEnemyKeyPlusUnits,"enemy","BOT",unitValuesDict, unitWidth, data["state"][indexNexusHealthBottom["enemy"]]) + 
             getSpacer(         100,pHeightActionEnemySpacerAbovePylonRow) + 
             getActionPylonsRow(100,pHeightActionEnemyPylons,"enemy",unitValuesDict) + 
-            getBestQValue(     100,pHeightActionEnemyQValue,data) + 
+            //getBestQValue(     100,pHeightActionEnemyQValue,data) + 
         '</div>';
     return result;
 }
