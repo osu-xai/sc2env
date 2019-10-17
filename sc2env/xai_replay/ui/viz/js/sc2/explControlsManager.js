@@ -221,8 +221,6 @@ function devModeChanged(){
 
 function hideFileChoiceListBox(){
     $('#replay-file-selector').css("display","none");
-    friendlyLaneNeutralContainerWidth = "50%";
-    enemyLaneNeutralContainerWidth = "50%";
-    $('#friendly-lane-neutral-container').css("width",friendlyLaneNeutralContainerWidth);
-    $('#enemy-lane-neutral-container').css("width",enemyLaneNeutralContainerWidth);
+    $('#friendly-lane-neutral-container').css("width","50%");
+    $('#enemy-lane-neutral-container').css("width","50%");
 }
