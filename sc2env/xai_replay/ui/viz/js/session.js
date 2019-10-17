@@ -372,7 +372,7 @@ function renderUnitValues(frameInfo){
         }
         else{
             if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
-                document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "NA"
+                document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "" //NA
                 document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
                 document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
                 document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)

@@ -131,8 +131,8 @@ laneForKey["enemy.immortalBuilding.top"] = "top";
 laneForKey["enemy.marineBuilding.bottom"] = "bottom";
 laneForKey["enemy.banelingBuilding.bottom"] = "bottom";
 laneForKey["enemy.immortalBuilding.bottom"] = "bottom";
-laneForKey["friendly.Pylon"] = "NA";
-laneForKey["enemy.Pylon"] = "NA";
+laneForKey["friendly.Pylon"] = ""; //NA
+laneForKey["enemy.Pylon"] = ""; //NA
 
 
 function addUnitCountsToFrames(frameInfos){

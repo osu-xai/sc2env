@@ -1,5 +1,4 @@
 function createLegendForTreeChart(){
-    
     // append legend div in explanationRewards so will be right of chartCanvas
     var legendDiv = document.createElement("DIV");
     //legendDiv.setAttribute("height", canvasHeight);
@@ -79,9 +78,17 @@ function createLegendForTreeChart(){
 
 }
 
-
 function renderLegendTitle() {
     var titleElement = document.getElementById("legend-title");
     var titleContent = document.createTextNode("Game Outcome Predictions");
     titleElement.appendChild(titleContent);
+}
+
+function renderRockPaperScissors(){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute('style', 'border: 1px solid black');
+    svg.setAttribute('width', '600');
+    svg.setAttribute('height', '250');
+    svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+    document.getElementById('r-p-s-key').appendChild(svg);
 }

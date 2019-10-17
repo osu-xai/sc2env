@@ -121,15 +121,7 @@ function initTree(jsonPath, frameNumber){
         controlsManager.clearWaitCursor();
     });
 }
-window.onload = function()
-{
-    $('#model-free-radio').click(function () {
-        setToModelFreeTreatment();
-    });
-    $('#model-based-radio').click(function () {
-        setToModelBasedTreatment();
-    });
-};
+
 function forgetCyTree(){
     treeData["elements"] = {  nodes: [],
                               edges: []
