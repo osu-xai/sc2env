@@ -118,13 +118,12 @@ function drawTriangleAtOrigin(x,y,color, count){
 }
 
 function randomShift(val){
-    return val;
-    // var randomOffset = Math.floor(Math.random() * 20); 
-    // var randomSign = Math.floor(Math.random() * 2);
-    // if (randomSign == 0){
-    //     randomOffset = 0 - randomOffset;
-    // }
-    // return  val + randomOffset;
+    var randomOffset = Math.floor(Math.random() * 20); 
+    var randomSign = Math.floor(Math.random() * 2);
+    if (randomSign == 0){
+        randomOffset = 0 - randomOffset;
+    }
+    return  val + randomOffset;
 }
 function drawEllipseAtOrigin(x,y,color, count){
     if (count == 0){
