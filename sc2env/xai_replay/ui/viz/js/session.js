@@ -214,6 +214,7 @@ function setTutorialModeFromFile(){
                 enableForwardTimelineBlock = true;
             }
             year2TutorialMode = false;
+            hideFileChoiceListBox();
         },
         success: function()
         {

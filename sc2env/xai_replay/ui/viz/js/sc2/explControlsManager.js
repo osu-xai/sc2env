@@ -218,3 +218,11 @@ function devModeChanged(){
         explControlsManager.setModeToUserStudy();
     }
 }
+
+function hideFileChoiceListBox(){
+    $('#replay-file-selector').css("display","none");
+    friendlyLaneNeutralContainerWidth = "50%";
+    enemyLaneNeutralContainerWidth = "50%";
+    $('#friendly-lane-neutral-container').css("width",friendlyLaneNeutralContainerWidth);
+    $('#enemy-lane-neutral-container').css("width",enemyLaneNeutralContainerWidth);
+}
