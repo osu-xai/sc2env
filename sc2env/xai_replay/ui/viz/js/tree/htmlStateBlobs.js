@@ -1,13 +1,26 @@
 
 
-function getStateString(data, unitValuesDict) {
-    //return '<div style="display:grid;grid-gap:50px;grid-template-columns:auto auto;">' + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:8%;">FRIENDLY</div>' + getFriendlyGraphString(data, unitValuesDict, biggestUnitCount) + '<div style="color:ivory;font-size:120px;font-weight:bold;position:absolute;top:0%;left:60%;">ENEMY</div>' + getEnemyGraphString(data, unitValuesDict["Enemy"], biggestUnitCount) + '</div>';
-    //return '<div class="flex-column" style="margin:50px;" onload="finishInit("' + data.id + '")">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>'
-    return '<div class="flex-column" style="padding:20px;" onload="onloadTest">' + getPlayerTitlesRow() + getGameStateRow(data) + getPylonsRow(unitValuesDict["Pylons State"], unitValuesDict["Enemy"]["Pylons State"]) + '</div>';
+function getStateHtml(data, unitValuesDict) {
+    var pylonCountFriendly = unitValuesDict["Pylons State"];
+    var pylonCountEnemy = unitValuesDict["Enemy"]["Pylons State"];
+    return '<div class="flex-column" style="width:100%;height:100%;" onload="onloadTest">' + 
+        getPlayerTitlesRow(100,pHeightStateTitlesRow) + 
+        getGameStateRow(   100,pHeightStateArmyStringRow,data) + 
+        getSpacer(         100,pHeightStateSpacerAbovePylonRow) + 
+        getStatePylonsRow( 100,pHeightStatePylonsRow, pylonCountFriendly, pylonCountEnemy) + 
+        getBestQValue(     100,pHeightStateQValRow,      data) + 
+        '</div>';
 }
 
-function getGameStateRow(data){
-    return '<div class="flex-row" >' + getNexusStates(data,63,64,"agent") + getUnitCountsSvg(data) + getNexusStates(data,65,66,"enemy") + '</div>';
+function getSpacer(pWidth, pHeight){
+    return '<div style="width:' + pWidth + '%;height:' + pHeight + '%"></div>';
+}
+function getGameStateRow(pWidth, pHeight, data){
+    return '<div class="flex-row" style="width:' + pWidth + '%;height:' + pHeight + '%">' + 
+            getNexusStates(  pWidthStateNexus,     100,data,63,64,"agent") + 
+            getUnitCountsSvg(pWidthStateUnitCounts,100,data) + 
+            getNexusStates(  pWidthStateNexus,     100,data,65,66,"enemy") + 
+            '</div>';
 }
 
 {/* <svg width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -27,66 +40,46 @@ function getGameStateRow(data){
 
 <path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="blue" stroke-width="5"/>
 </svg> */}
-function getUnitCountsSvg(data){
+function getUnitCountsSvg(pWidth, pHeight, data){
     var state = data.state;
-    return '<div style="background-color:white"><svg height="' + armyStrengthHeight + '" width="' + armyStrengthWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + renderUnitsOnField(state) + '</svg></div>';
+    return '<div style="width:' + pWidth + '%;height:' + pHeight + '%;background-color:white">' + 
+                '<svg style="width:100%;height:100%;" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + renderUnitsOnField(state) + '</svg>' +
+            '</div>';
  
 }
 
-function getNexusStates(data, topIndex, bottomIndex, player){
-    return '<div class="flex-column" id="' + data.id + '_nexus_graph_container" style="height:' + armyStrengthHeight + ';">' +
-            getNexusHealth(data["state"][topIndex], getPlayerColor(player)) +
-            '<div style="width:100%;background-color:black;height:10px"></div>' + 
-            getNexusHealth(data["state"][bottomIndex],getPlayerColor(player)) +
-    '</div>';
+function getNexusStates(pWidth, pHeight, data, topIndex, bottomIndex, player){
+    return '<div class="flex-column" id="' + data.id + '_nexus_graph_container" style="width:' + pWidth + '%;height:' + pHeight + '%;">' +
+                getNexusHealthColumnInsideDiv(100,pHeightStateNexusHealth,data["state"][topIndex], getPlayerColor(player)) +
+                getNexusHealthColumnDivider(100,pHeightStateNexusDivider) + 
+                getNexusHealthColumnInsideDiv(100,pHeightStateNexusHealth,data["state"][bottomIndex],getPlayerColor(player)) +
+            '</div>';
 }
 
-function getPylonsRow(friendlyPylonState, enemyPylonState) {
-    return '<div class="flex-row" style ="width:100%;">' + getSpacerAsWideAsNexusHealth() + getPylonState(friendlyPylonState) +  getSpacerBetweenPylonSets() + getPylonState(enemyPylonState) + getSpacerAsWideAsNexusHealth() + '</div>';
+function getNexusHealthColumnDivider(pWidth, pHeight){
+    return '<div style="width:' + pWidth + '%;background-color:black;height:' + pHeight + '%"></div>';
+}
+function getStatePylonsRow(pWidth, pHeight, friendlyPylonCount, enemyPylonCount) {
+    return '<div class="flex-row" style ="width:' + pWidth + '%;height:' + pHeight + '%;">' + 
+        getPylonSpacer(pWidthStatePylonSpacerLeft,  100) + 
+        getPylonTrio( pWidthStatePylonsFriendly,   100, "agent", friendlyPylonCount, 0) +  
+        getPylonSpacer(pWidthStatePylonSpacerMiddle,100) + 
+        getPylonTrio( pWidthStatePylonsEnemy,      100, "enemy", enemyPylonCount, 0) +
+        getPylonSpacer(pWidthStatePylonSpacerRight, 100, ) + '</div>';
 }
 
-function getSpacerBetweenPylonSets() {
-    return '<div style="width:' + pylonTwixtSpacerPercent + '%"></div>';
+function getPylonSpacer(pWidth, pHeight) {
+    return '<div style="width:' + pWidth + '%;height:' + pHeight + '%;"></div>';
 }
 
-function getSpacerAsWideAsNexusHealth() {
-    return '<div style="width:' + pylonLeftAndRightSpacerPercent + '%;"></div>';
-}
-function getPylonState(pylonState){
-    return '<div style="display: grid; grid-gap: 30px; grid-template-columns: auto auto auto;width:' + pylonSetPercent + '%;">' + 
-    drawPylonPlaceHolderDivs(pylonState) + drawStatePylons(pylonState) + 
-          '</div>';
+function getPlayerTitlesRow(pWidth, pHeight) {
+    return '<div class="flex-row" style="box-sizing: border-box;width:' + pWidth + '%;height:' + pHeight + '%;padding:10px;background-color:' + playerTitleRowColor + '">' + 
+           getPlayerTitle(50,100,"FRIENDLY", getPlayerColor("agent")) + 
+           getPlayerTitle(50,100,"ENEMY", getPlayerColor("enemy")) + 
+           '</div>';
 }
 
-function getPlayerTitlesRow() {
-    return '<div class="flex-row" style="width=100%;padding:10px;">' + getPlayerTitle("FRIENDLY", getPlayerColor("agent")) + getPlayerTitle("ENEMY", getPlayerColor("enemy")) + '</div>';
+function getPlayerTitle(pWidth, pHeight, name, color){
+    return '<div style="background-color:' + playerNameBackgroundColor + ';color:' + color + ';font-size:80px;font-weight:bold;width:' + pWidth + '%;height:' + pHeight + '%;text-align:center">' + name + '</div>';
 }
-
-function getPlayerTitle(name, color){
-    return '<div style="padding:10px;background-color:white;color:' + color + ';font-size:120px;font-weight:bold;width:50%;text-align:center">' + name + '</div>';
-}
-  
-
-
-
-function drawStatePylons(pylonCount){
-    var pylonString = "";
-    var maxPylons = 3;
-    for (var i = 0; i < pylonCount; i++){
-        //pylonString += '<div style="position:absolute;text-align:center;background-color:yellow;height:25px;margin:15px;"></div>';
-        pylonString += '<div style="text-align:center;border: 8px solid yellow;background-color:yellow;height:35px;margin:15px;"></div>';
-        }
-    return pylonString;
-}
-
-  
-
-function drawPylonPlaceHolderDivs(pylonCount){
-    var pylonString = "";
-    var maxPylons = 3;
-    for(var i = 0; i < (maxPylons-pylonCount); i++){
-        pylonString += '<div style="border: 8px solid yellow;background-color:rgba(255,255,0,.30);height:35px;margin:15px;"></div>'
-    }
-    return pylonString;
-  }
   

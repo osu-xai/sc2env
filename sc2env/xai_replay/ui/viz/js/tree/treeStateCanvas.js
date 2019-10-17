@@ -30,11 +30,12 @@ function renderUnitsOnField(stateVector){
 
 function renderVerticalLine(index, w,h){
     var x = index * w/4;
-    return '<line x1="' + x + '" x2="' + x + '" y1="0" y2="' + h + '" stroke="black" stroke-width="1"/>';
+    return '<line x1="' + x + '" x2="' + x + '" y1="0" y2="' + h + '" stroke="black" stroke-width="' + quadtrantDividerThickness + '"/>';
 }
 
 function renderMidLine(w,h){ 
-    return '<line x1="0" x2="' + w + '" y1="' + h/2 + '" y2="' + h/2 + '" stroke="black" stroke-width="10"/>';
+    var newY = (h/2) - (quadtrantDividerThickness);
+    return '<line x1="0" x2="' + w + '" y1="' + newY + '" y2="' + newY + '" stroke="black" stroke-width="' + quadtrantDividerThickness + '"/>';
 }
 // player 1 units top lane grid 1,				[15:17] (marine, bane, immortal)
 // player 1 units top lane grid 2,				[18:20] (marine, bane, immortal)
@@ -117,12 +118,13 @@ function drawTriangleAtOrigin(x,y,color, count){
 }
 
 function randomShift(val){
-    var randomOffset = Math.floor(Math.random() * 20); 
-    var randomSign = Math.floor(Math.random() * 2);
-    if (randomSign == 0){
-        randomOffset = 0 - randomOffset;
-    }
-    return  val + randomOffset;
+    return val;
+    // var randomOffset = Math.floor(Math.random() * 20); 
+    // var randomSign = Math.floor(Math.random() * 2);
+    // if (randomSign == 0){
+    //     randomOffset = 0 - randomOffset;
+    // }
+    // return  val + randomOffset;
 }
 function drawEllipseAtOrigin(x,y,color, count){
     if (count == 0){

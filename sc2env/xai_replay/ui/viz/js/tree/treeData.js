@@ -23,7 +23,7 @@ var treeLayout = {
         fit: true, // whether to fit the viewport to the graph
         directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
         padding: 10, // padding on fit
-        spacingFactor: 0.9, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+        spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
         avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
         nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
         roots: undefined, // the roots of the trees
@@ -59,14 +59,15 @@ var treeStyle =
         shape: polygon; \
         shape-polygon-points: data(points); \
         height: ' + friendlyActionNodeHeight + 'px; \
-        width: ' + friendlyActionNodeWidth + 'px; \
+        width: ' + actionNodeWidth + 'px; \
         border-color: ' + getPlayerColor("agent") + '; \
         border-width: ' + actionNodeBorderWidth + 'px; \
     } \
     .enemyAction{ \
         shape: polygon; \
         shape-polygon-points: data(points); \
-        width: ' + enemyActionNodeWidth + '; \
+        height: ' + enemyActionNodeHeight + 'px; \
+        width: ' + actionNodeWidth + '; \
         border-color: ' + getPlayerColor("enemy") + '; \
         border-width: ' + actionNodeBorderWidth + 'px; \
     } \
@@ -145,7 +146,7 @@ function intitTreeLables(cy, biggestUnitCountTuple){
             halignBox: 'center', // title vertical position. Can be 'left',''center, 'right'
             valignBox: 'center', // title relative box vertical position. Can be 'top',''center, 'bottom'
             cssClass: '', // any classes will be as attribute of <div> container for every title
-            tpl: function (data) { return   getNodeGlyphs(data, biggestUnitCountTuple) + getBestQValue(data) + getChart(data)  } // your html template here
+            tpl: function (data) { return   getNodeHtml(data, biggestUnitCountTuple)  } // your html template here
         }
         ]
     );

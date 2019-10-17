@@ -261,12 +261,12 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
   	});
 }
 function sizeNonGeneratedElements() { 
-	var percentWidthAcronym = .40;
-	var percentWidthReplayLabel = .25;
-	var percentWidthFileSelector = .35;
-	var acronymWidth      = gameContainerWidth * percentWidthAcronym;
-	var replayLabelWidth  = gameContainerWidth * percentWidthReplayLabel;
-	var fileSelectorWidth = gameContainerWidth * percentWidthFileSelector;
+	var pWidthAcronym = .40;
+	var pWidthReplayLabel = .25;
+	var pWidthFileSelector = .35;
+	var acronymWidth      = gameContainerWidth * pWidthAcronym;
+	var replayLabelWidth  = gameContainerWidth * pWidthReplayLabel;
+	var fileSelectorWidth = gameContainerWidth * pWidthFileSelector;
 	$("#game-titled-container").css("width", "100%");
 	// 150
 	$("#scaii-acronym").css("padding-left", "20px");
