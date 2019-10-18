@@ -92,7 +92,7 @@ function getChartString(pWidth, pHeight, chartData){
     //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getFadedCircles(chartData) + getAxes() + '</svg></div>';
     var result = '<div class="flex-row" style="background-color:white;height:' + pHeight + '%; width:' + pWidth + '%">' +
               '<div style="width:' + pWidthChartMargin + '%;height:100%";></div>' +
-              '<svg style="width:' + pWidthChartContent + '%;height:100%;" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getWinBars(chartData) + getAxes() + '</svg>' + 
+              '<svg style="width:' + pWidthChartContent + '%;height:100%;" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getQuadWinBars(chartData) + getXAxis() + '</svg>' + 
               '<div style="width:' + pWidthChartMargin + '%;height:100%";></div>' +
             '</div>';
     return result;

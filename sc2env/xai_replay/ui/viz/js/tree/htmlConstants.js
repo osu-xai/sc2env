@@ -1,5 +1,9 @@
 // generic nodes
-var nodeBackgroundColor = "#E0E0E0";
+var nodeBackgroundColor = "#B0B0B0";
+
+// principa variation
+var principalVariationBackgroundColor = "#808080";
+
 var genericNodeHeight = 1200;
 var genericNodeWidth = 1800;
 var genericNodeBorderWidth = "10px";
@@ -11,7 +15,7 @@ var genericEdgeLineColor = "#ffaaaa";
 // how much of the node should be taken up vertically and horizontally
 var portionOfNodeToUseVertically = {};
 portionOfNodeToUseVertically["state"]          = 0.91;
-portionOfNodeToUseVertically["friendlyAction"] = 0.77;
+portionOfNodeToUseVertically["friendlyAction"] = 0.85;
 portionOfNodeToUseVertically["enemyAction"]    = 0.8;
 
 var portionOfNodeToUseHorizontally = 0.92;
@@ -29,13 +33,13 @@ var enemyActionNodeHeight = 1300;
 
 var actionNodeBorderWidth = "50px";
 
-var pHeightActionFriendlyTopSpacer           = 8;
-var pHeightActionFriendlyKeyPlusUnits        = 23;// * 2
+var pHeightActionFriendlyTopSpacer           = 10;
+var pHeightActionFriendlyKeyPlusUnits        = 22;// * 2
 var pHeightActionFriendlyLaneBorder          = 1;
 var pHeightActionFriendlySpacerAbovePylonRow = 2;
 var pHeightActionFriendlyPylons              = 7;
-var pHeightActionFriendlyQValue              = 13;
-var pHeightActionFriendlyWinChance           = 23;
+var pHeightActionFriendlyQValue              = 11;
+var pHeightActionFriendlyWinChance           = 25;
 
 var pHeightActionEnemyKeyPlusUnits        = 35;// * 2
 var pHeightActionEnemyLaneBorder          = 1;
@@ -52,8 +56,6 @@ var pWidthActionUnitRows       = 92;
 var unitRowsWidth = actionNodeWidth * portionOfNodeToUseHorizontally * (pWidthActionUnitRows / 100) ;
 
 
-// principa variation
-var principalVariationBackgroundColor = "#C0C0C0";
 
 // user interactions
 var userAddedNodeColor = "SlateBlue";
@@ -113,7 +115,7 @@ var pylonPaddingVertical = 8;
 var pWidthChartContent = 80;
 var pWidthChartMargin  = 8; //*2
 
-var chartHeight = friendlyActionNodeHeight + portionOfNodeToUseVertically["friendlyAction"] * (pHeightActionFriendlyWinChance / 100);
+var chartHeight = friendlyActionNodeHeight * portionOfNodeToUseVertically["friendlyAction"] * (pHeightActionFriendlyWinChance / 100);
 var chartWidth = actionNodeWidth * portionOfNodeToUseHorizontally * (pWidthChartContent/100);
 var quadtrantDividerThickness = 20;
 // Q value

@@ -182,31 +182,45 @@
                                                 <div id="predicted-win-legend-title" style="width:100%;text-align:center;padding-top:5px;padding-bottom:10px;font-size:17px;"><b>GAME END PREDICTION</b></div>
                                                 <div id="predicted-win-legend-entries" class="flex-column" style="width:100%">
                                                     <div class="flex-row" style="width:100%;height:20px;margin-bottom:8px;">
-                                                        <div style="width:40px;height:100%;background-color:#8080F0"></div>
+                                                        <div style="width:40px;">
+                                                            <svg >
+                                                                <defs> <pattern id="legend-top-destroy-agent-lines" width="0.25" height="1" patternContentUnits="objectBoundingBox"><rect x="0" y="0" width="0.125" height="1" fill="#8080F0"/></pattern>
+                                                                </defs>
+                                                                <rect fill="url(#legend-top-destroy-agent-lines)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                                            </svg>
+                                                        </div>
                                                         <div style="line-height:5px;padding: 5px;height:100%;">Agent Nexus Destroyed</div>
                                                     </div>
                                                     <div class="flex-row" style="width:100%;height:20px;margin-bottom:8px">
                                                         <div style="width:40px;">
                                                             <svg >
-                                                                <defs> <pattern id="h-stripe-xai-agent" width="1.0" height=".2" patternContentUnits="objectBoundingBox">
-                                                                    <rect x="0" y="0" width="1.0" height=".1" fill="#8080F0"/></pattern>
+                                                                <defs> <pattern id="legend-top-lowest-agent-squares" x="0.05" + y="0.05" width="0.2" height="0.4" patternUnits="objectBoundingBox">
+                                                                    <rect x="0" y="0" width="4" height="4" fill="#8080F0"/></pattern>
                                                                 </defs>
-                                                                <rect style="fill: url(#h-stripe-xai-agent) #8080F0;" x="0" y="0" width="40" height="20" stroke="#8080F0" stroke-width="1" />
+                                                                <rect fill="url(#legend-top-lowest-agent-squares)" width="40" height="20" stroke="black" stroke-width="2"/>
                                                             </svg>
                                                         </div>
                                                         <div style="line-height:5px;padding:5px;">Lowest Agent Nexus Health</div>
                                                     </div>
                                                     <div class="flex-row" style="width:100%;height:20px;margin-bottom:8px;">
-                                                        <div style="width:40px;height:100%;background-color:#F08080"></div>
+                                                        <div style="width:40px;">
+                                                            <svg >
+                                                                <defs> 
+                                                                    <pattern id="legend-top-destroy-enemy-lines" width="0.25" height="1" patternContentUnits="objectBoundingBox"><rect x="0" y="0" width="0.125" height="1" fill="#F08080"/></pattern>
+                                                                </defs>
+                                                                <rect fill="url(#legend-top-destroy-enemy-lines)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                                            </svg>
+                                                            </div>
                                                         <div style="line-height:5px;padding: 5px;height:100%;">Enemy Nexus Destroyed</div>
                                                     </div>
                                                     <div class="flex-row" style="width:100%;height:20px;">
                                                         <div style="width:40px;">
                                                             <svg >
-                                                                <defs> <pattern id="h-stripe-xai-enemy" width="1.0" height=".2" patternContentUnits="objectBoundingBox">
-                                                                    <rect x="0" y="0" width="1.0" height=".1" fill="#F08080"/></pattern>
+                                                                <defs> 
+                                                                    <pattern id="legend-top-lowest-enemy-squares" x="0.05" + y="0.05" width="0.2" height="0.4" patternUnits="objectBoundingBox"><rect x="0" y="0" width="4" height="4" fill="#F08080"/></pattern>
                                                                 </defs>
-                                                                <rect style="fill: url(#h-stripe-xai-enemy) #F08080;" x="0" y="0" width="40" height="20" stroke="#F08080" stroke-width="1" />
+                                                                <rect fill="url(#legend-top-lowest-enemy-squares)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                                                <!--<rect style="fill: url(#h-stripe-xai-enemy) #F08080;" x="0" y="0" width="40" height="20" stroke="black" stroke-width="1" />-->
                                                             </svg>
                                                         </div>
                                                         <div style="line-height:5px;padding: 5px;">Lowest Enemy Nexus Health</div>
@@ -236,7 +250,7 @@
                                 <script src="js/tree/htmlWinCircleSlash.js"></script>
                                 <script src="js/tree/htmlWinSemiCircle.js"></script>
                                 <script src="js/tree/htmlActionGraphs.js"></script>
-                                <script src="js/tree/htmlWinBars.js"></script>
+                                <script src="js/tree/htmlQuadWinBars.js"></script>
                                 <script src="js/tree/treatment.js"></script>
                                 <script src="js/tree/treeUtils.js"></script>
                                 <script src="js/tree/queryTree.js"></script>
