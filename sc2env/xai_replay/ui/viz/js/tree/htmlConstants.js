@@ -107,8 +107,8 @@ var maxPylons = 3;
 var pWidthActionPylonSpacer = 8; // *2
 var pWidthActionPylonTrio = 80;
                 
-var pylonPaddingSide = 25;
-var pylonPaddingVertical = 8;
+var pylonPaddingSide = 50;
+var pylonPaddingVertical = 20;
 // pylons in state nodes
 
 // predicted win
