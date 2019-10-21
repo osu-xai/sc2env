@@ -23,10 +23,11 @@ function getQuadWinBars(chartData){
 
 
     var winBars = getPatternDefForSpecs(specs) + 
-    renderWinBarPair(2,"top",   "enemy",     chartData[0]["value"],chartData[2]["value"]) +
-    renderWinBarPair(3,"bottom","enemy",     chartData[1]["value"],chartData[3]["value"]) +
-    renderWinBarPair(0,"top",   "agent",  chartData[4]["value"],chartData[6]["value"]) +
-    renderWinBarPair(1,"bottom","agent",  chartData[5]["value"],chartData[7]["value"]);
+    renderWinBarPair("En Top",2,"top",   "enemy",     chartData[0]["value"],chartData[2]["value"]) +
+    renderWinBarPair("En Bot",3,"bottom","enemy",     chartData[1]["value"],chartData[3]["value"]) +
+    renderWinBarPair("Fr Top",0,"top",   "agent",  chartData[4]["value"],chartData[6]["value"]) +
+    renderWinBarPair("Fr Bot",1,"bottom","agent",  chartData[5]["value"],chartData[7]["value"]);
+
 
     // leave for testing
     // renderWinBarPair(2,"top",   "enemy",     0.20,0.8) +
@@ -41,7 +42,7 @@ function getXAxis(){
     var x2 = chartWidth;
     var maxBarHeight = chartHeight - (chartHeight/3);
     var remainderChartHeight = chartHeight - maxBarHeight;
-    var y = chartHeight - (remainderChartHeight/ 2);
+    var y = chartHeight - (remainderChartHeight * (3/4));
     var result = '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" style="stroke:black;stroke-width:10" />';
     return result;
 }
@@ -59,19 +60,27 @@ function getXAxis(){
 // [5] = // destroy, bottom, left
 // [7] = // lowest,  bottom, left 
 
-function renderWinBarPair(barPairIndex,lane,player,destroyValue,lowestValue){
+function renderWinBarPair(text, barPairIndex,lane,player,destroyValue,lowestValue){
     //4 bars evenly spaced, which means 7 slots
     var firstBarXOrigin  = 0;
     var barWidth = chartWidth / 7;  
     var xOrigin =  firstBarXOrigin + barPairIndex * barWidth * 2;
+    var labelXOrigin = barPairIndex * barWidth * 2;
     var maxBarHeight = chartHeight - (chartHeight/3);
     var remainderChartHeight = chartHeight - maxBarHeight;
-    var xAxisAtY = chartHeight - (remainderChartHeight/ 2);
+    var xAxisAtY = chartHeight - (remainderChartHeight *(3/4));
+    var labelYOrigin = xAxisAtY + (remainderChartHeight * (1 / 2));
+    var label = renderWinBarLabel(text, labelXOrigin, labelYOrigin, chartHeight);
     var yOriginDestroy = xAxisAtY - maxBarHeight * destroyValue;
     var yOriginLowest = yOriginDestroy - maxBarHeight * lowestValue;
     var result = getDestroyVLineBar(lane, player, xOrigin, yOriginDestroy, destroyValue * maxBarHeight, barWidth) + 
-                 getLowestSquaresBar(lane, player, xOrigin, yOriginLowest, lowestValue * maxBarHeight, barWidth)
+                 getLowestSquaresBar(lane, player, xOrigin, yOriginLowest, lowestValue * maxBarHeight, barWidth) + label;
     return result;
+}
+
+function renderWinBarLabel(text, x, y, chartHeight){
+    var size = chartHeight * (1/16);
+    return '<text x="' + x + '" y="' + y + '" font-size="50" font-weight="bold" style="fill:black;" >' + text + '</text>';
 }
 
 // function getDestroyBarTest(lane, player, xOrigin, yOrigin, barHeight, width){

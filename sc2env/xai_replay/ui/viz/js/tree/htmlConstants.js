@@ -15,7 +15,7 @@ var genericEdgeLineColor = "#ffaaaa";
 // how much of the node should be taken up vertically and horizontally
 var portionOfNodeToUseVertically = {};
 portionOfNodeToUseVertically["state"]          = 0.91;
-portionOfNodeToUseVertically["friendlyAction"] = 0.85;
+portionOfNodeToUseVertically["friendlyAction"] = 0.96;
 portionOfNodeToUseVertically["enemyAction"]    = 0.8;
 
 var portionOfNodeToUseHorizontally = 0.92;
