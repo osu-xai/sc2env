@@ -164,7 +164,7 @@ var actionButtonIds = [];
 function generateNodeActionMenu(id){
     var div = document.getElementById(id);
     //$("#" + id).css("visibility", "hidden");
-    $("#" + id).css("padding", "20px");
+    $("#" + id).css("padding", "12px");
     $("#" + id).css("background-color", "#E0E0E0");
 
     var nodeActionsLabel = document.createElement("LABEL");
@@ -173,7 +173,7 @@ function generateNodeActionMenu(id){
     div.append(nodeActionsLabel);
     $("#node-actions-label").css("font-size", "30px");
     $("#node-actions-label").css("text-align", "center");
-    $("#node-actions-label").css("padding", "10px");
+    $("#node-actions-label").css("padding", "0px");
 
     var nextBestActionId = "next-best-action-button";
     var nextBestActionButton = getNodeActionButton(nextBestActionId, "Show next best action", showNextBestAction);
