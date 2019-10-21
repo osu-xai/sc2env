@@ -145,13 +145,13 @@ function getActionPylonsRow(pWidth, pHeight, player, unitValuesDict){
 var pylonBorderColor = {}
 pylonBorderColor["current"] = "yellow";
 pylonBorderColor["new"] = "black";
-pylonBorderColor["missing"] = "yellow";
+pylonBorderColor["missing"] = "";
 
 
 var pylonBackgroundColor = {}
 pylonBackgroundColor["current"] = "yellow";
 pylonBackgroundColor["new"] = "yellow";
-pylonBackgroundColor["missing"] = "#808080";
+pylonBackgroundColor["missing"] = "";
 
 function getStylingIndicesForPlayer(player, currentCount, newCount){
     var missingCount = maxPylons - currentCount - newCount;
