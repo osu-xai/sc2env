@@ -57,7 +57,7 @@ function getKeyPlusUnitRow(pWidth, pHeight, player, lane, unitValuesDict, unitWi
         result = '<div class="flex-row" style="width:' + pWidth + '%;height:' + pHeight + '%;background-color: ivory;padding-top;">' + 
             getUnitsRows(        pWidthActionUnitRows,      100,player, lane, unitValuesDict, unitWidth) + 
             getVerticalSeparator(pWidthActionKeyCountSpacer,100) + 
-            getShapeKeysColumn((pWidthActionKey/100)*actionNodeWidth,           (pHeightActionEnemyKeyPlusUnits/100)*enemyActionNodeHeight+60, getPlayerColor("enemy")) + '</div>';
+            getShapeKeysColumn((pWidthActionKey/100)*actionNodeWidth,           (pHeightActionEnemyKeyPlusUnits/100)*enemyActionNodeHeight - 50, getPlayerColor("enemy")) + '</div>';
 
             // getNexusHealthColumn(pWidthActionKey,           100,nexusHealth, getPlayerColor("enemy")) + '</div>';
     }
@@ -343,9 +343,9 @@ function getPylonTrio(pWidth, pHeight, player, currentCount, newCount){
 function getShapeKeysColumn(pWidth, pHeight, color){
     return '<div class="flex-column" style="box-sizing: border-box;padding:' + nexusHealthBorderPercent +'"> \
                 <svg width="' + pWidth + '" height="' + pHeight + '"> \
-                    <rect x="10" y="' + pHeight/4 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \
                     <ellipse cx="' + pWidth/2 + '" cy="' + pHeight/12 + '" rx="' + (pWidth*.9)/2 + '" ry="' + pWidth/4 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
-                    <polygon points="' + pWidth/2 + ',' + pHeight/2 + ' ' + pWidth*.2 +',' + 2*pHeight/3 + ' ' + pWidth*.8 +', ' + 2*pHeight/3 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
+                    <rect x="'+ .1*pWidth +'" y="' + pHeight/3 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \
+                    <polygon points="' + pWidth/2 + ',' + 3*pHeight/5 + ' ' + pWidth*.2 +',' + 8*pHeight/10 + ' ' + pWidth*.8 +', ' + 8*pHeight/10 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
                 </svg> \
             </div>';
 }
