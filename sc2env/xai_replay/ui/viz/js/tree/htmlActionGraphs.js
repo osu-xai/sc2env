@@ -347,9 +347,9 @@ function getPylonTrio(pWidth, pHeight, player, currentCount, newCount){
 function getShapeKeysColumn(pWidth, pHeight, color){
     return '<div class="flex-column" style="box-sizing: border-box;padding:' + nexusHealthBorderPercent +'"> \
                 <svg width="' + pWidth + '" height="' + pHeight + '"> \
-                    <ellipse cx="' + pWidth/2 + '" cy="' + pHeight/12 + '" rx="' + (pWidth*.9)/2 + '" ry="' + pWidth/4 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
-                    <rect x="'+ .1*pWidth +'" y="' + pHeight/3 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \
-                    <polygon points="' + pWidth/2 + ',' + 3*pHeight/5 + ' ' + pWidth*.2 +',' + 8*pHeight/10 + ' ' + pWidth*.8 +', ' + 8*pHeight/10 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
+                    <ellipse cx="' + pWidth/2 + '" cy="' + pHeight/6 + '" rx="' + (pWidth*.9)/2 + '" ry="' + pWidth/4 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
+                    <rect x="'+ .1*pWidth +'" y="' + 4*pHeight/10 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \
+                    <polygon points="' + pWidth/2 + ',' + .7*pHeight + ' ' + pWidth*.2 +',' + .85*pHeight + ' ' + pWidth*.8 +', ' + .85*pHeight + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
                 </svg> \
             </div>';
 }
