@@ -113,25 +113,33 @@ function getSummaryUnitsRow(pWidth, pHeight,player, color, stateCount, actionCou
     if (player == "agent"){
         var startingOwnedIndex = 0;
         var endingDisplayedOwnedIndex = Math.min(stateCount, maxUnitsToShowInEachHalf);
-        indexOfOwnedDots = endingDisplayedOwnedIndex + 1;
+        indexOfOwnedDots = endingDisplayedOwnedIndex;
         indexOfOwnedTotal = indexOfOwnedDots + 3;
         for (var i = startingOwnedIndex; i < endingDisplayedOwnedIndex; i ++){
             ownedXOffsets.push(i);
         }
         var startingNewIndex = halfMaxUnitCount;
         var endingDisplayedNewIndex = Math.min(startingNewIndex + actionCount, startingNewIndex + maxUnitsToShowInEachHalf)
-        indexOfNewDots = endingDisplayedNewIndex + 1;
+        indexOfNewDots = endingDisplayedNewIndex;
         indexOfNewTotal = indexOfNewDots + 3;
         for (var i = startingNewIndex; i < endingDisplayedNewIndex; i++){
             newXOffsets.push(i);
         }
     }
     else {
-        var max = maxRenderableUnitCount
-        for (var i = max; i > max - stateCount; i--){
+        var max = maxRenderableUnitCount;
+        var startingOwnedIndex = maxRenderableUnitCount;
+        var endingDisplayedOwnedIndex = Math.max(max - stateCount, max - maxUnitsToShowInEachHalf);
+        indexOfOwnedDots = endingDisplayedOwnedIndex  - 2;
+        indexOfOwnedTotal = indexOfOwnedDots - 1;
+        for (var i = startingOwnedIndex; i > endingDisplayedOwnedIndex; i--){
             ownedXOffsets.push(i);
         }
-        for (var i = max - stateCount; i > max - stateCount - actionCount; i--){
+        var startingNewIndex = halfMaxUnitCount;
+        var endingDisplayedNewIndex = Math.max(startingNewIndex - actionCount, startingNewIndex - maxUnitsToShowInEachHalf);
+        indexOfNewDots = endingDisplayedNewIndex - 2;
+        indexOfNewTotal = indexOfNewDots - 1;
+        for (var i = startingNewIndex; i > endingDisplayedNewIndex; i--){
             newXOffsets.push(i);
         }
     }
@@ -139,19 +147,31 @@ function getSummaryUnitsRow(pWidth, pHeight,player, color, stateCount, actionCou
         '<svg style="width:100%;height:100%;" fill="white"version="1.1" xmlns="http://www.w3.org/2000/svg">' +
         
         getSvgUnits(ownedXOffsets, newXOffsets, color) + 
-        getDots(indexOfOwnedDots, indexOfOwnedTotal, stateCount) + 
-        getDots(indexOfNewDots, indexOfNewTotal, actionCount) +
+        getDots(indexOfOwnedDots, indexOfOwnedTotal, stateCount, maxUnitsToShowInEachHalf) + 
+        getDots(indexOfNewDots, indexOfNewTotal, actionCount, maxUnitsToShowInEachHalf) +
         '</svg>' +
     '</div>'
     return result;
 }
 
-function getDots(indexOfDots, indexOfTotal, count){
+function getDots(indexOfDots, indexOfTotal, count, maxUnitsToShowInEachHalf){
+    if (count <= maxUnitsToShowInEachHalf){
+        return '';
+    }
+    var interDotDistance = 60;
     var unitPlusGapWidth  = fixedUnitWidth + unitGapWidth
-    var xOriginDot1  = indexOfDots * unitPlusGapWidth;
-    var xOriginDot2  = xoriginDot1 + 10;
-    var xOriginTotal = indexOfTotal * unitPlusGapWidth;
-    var result = '<circle cx="' + + '" cy="' + + '" r="6">';
+    var x1 = indexOfDots * unitPlusGapWidth + (interDotDistance / 2);
+    var x2 = x1 + interDotDistance;
+    var x3 = x2 + interDotDistance;
+    var xTotal = indexOfTotal * unitPlusGapWidth;
+    var y = 60;
+    var radius = 14;
+    var textY = 90;   // 280, 340, 400   textis 
+    var fontSize = 80;
+    var result = '<circle cx="' + x1 + '" cy="' + y + '" r="' + radius + '" fill="black"/>' +
+                 '<circle cx="' + x2 + '" cy="' + y + '" r="' + radius + '" fill="black"/>' +
+                 '<circle cx="' + x3 + '" cy="' + y + '" r="' + radius + '" fill="black"/>' +
+                 '<text x="' + xTotal + '" y="' + textY + '" font-size="' + fontSize + '" font-weight="bold" style="fill:black;" >' + count + '</text>';
     return result;
 }
 function getSimpleUnitsRow(pWidth, pHeight, player, color, stateCount, actionCount){
@@ -188,12 +208,12 @@ function getSvgUnits(ownedXOffsets, newXOffsets, color){
     for (var index in ownedXOffsets){
         var ownedUnitIndex = ownedXOffsets[index];
         var xOrigin = ownedUnitIndex * (fixedUnitWidth + unitGapWidth);
-        result += '<rect style="fill:' + color + '" x="' + xOrigin + '" y="5" width="' + fixedUnitWidth + '" height="85%"' + '" stroke="' + color + '" stroke-width="1" />';
+        result += '<rect style="fill:' + color + '" x="' + xOrigin + '" y="5" width="' + fixedUnitWidth + '" height="85%" stroke="' + color + '" stroke-width="1"/>';
     }
     for (var index in newXOffsets){
         var newUnitIndex = newXOffsets[index];
         var xOrigin = newUnitIndex * (fixedUnitWidth + unitGapWidth);
-        result += '<rect style="fill:' + color + '" x="' + xOrigin + '" y="5" width="' + fixedUnitWidth + '" height="85%"' + '" stroke="black" stroke-width="10" />';
+        result += '<rect style="fill:' + color + '" x="' + xOrigin + '" y="5" width="' + fixedUnitWidth + '" height="85%" stroke="black" stroke-width="10"/>';
     }
     return result;
 }
