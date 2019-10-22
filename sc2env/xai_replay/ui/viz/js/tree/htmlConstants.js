@@ -65,8 +65,10 @@ var highlightedNodeColor = "navy";
 
 // building counts
 var laneBorderColor = "#404040";
-var unitGapWidth = 8;
-var maxRenderableUnitCount = Math.floor(unitRowsWidth / (unitGapWidth * 2));
+var unitGapWidth = 20;
+var fixedUnitWidth = 60;
+var maxRenderableUnitCount = Math.floor(unitRowsWidth / (unitGapWidth  + fixedUnitWidth));
+
 
 var marineColor = "#DDDDDD";
 var banelingColor = "#AAAAAA";

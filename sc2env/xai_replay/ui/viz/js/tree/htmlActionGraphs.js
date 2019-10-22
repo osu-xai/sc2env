@@ -76,6 +76,126 @@ function getUnitsRows(pWidth, pHeight, player, lane, unitValuesDict, unitWidth){
 }
 
 function getUnitsRow(pWidth, pHeight,player, lane, UnitType, unitValuesDict, color, unitWidth){
+    // if owned + new <= width , straight layout
+    // else
+    //      if new > half avail space
+    //          use right half for new + ...(#)
+    //          use left half for owned + ...(#)
+    //      else 
+    //          paint new on right
+    //          use remaining space to show owned ... (#)
+    var stateKey = lane + " " + UnitType + " State";
+    var actionKey = lane+ " " + UnitType + " Action";
+    var stateCount = unitValuesDict[stateKey];
+    var actionCount = unitValuesDict[actionKey];
+    var curUnitCount = stateCount - actionCount;
+    if (maxRenderableUnitCount >= curUnitCount){
+        return getSimpleUnitsRow(pWidth, pHeight,player, color, stateCount, actionCount);
+    }
+    else {
+        // need to use summary view
+        return getSummaryUnitsRow(pWidth, pHeight,player, color, stateCount, actionCount)
+    }
+}
+
+function getSummaryUnitsRow(pWidth, pHeight,player, color, stateCount, actionCount){
+    var halfMaxUnitCount = Math.floor(maxRenderableUnitCount / 2);
+    var maxUnitsToShowInEachHalf = halfMaxUnitCount - 5;
+    var ownedXOffsets = [];
+    var newXOffsets = [];
+    var indexOfNewTotal = undefined;
+    var indexOfNewDots = undefined;
+    var indexOfOwnedDots = undefined;
+    var indexOfOwnedTotal = undefined;
+    if (player == "agent"){
+        var startingOwnedIndex = 0;
+        var endingDisplayedOwnedIndex = Math.min(stateCount, maxUnitsToShowInEachHalf);
+        indexOfOwnedDots = endingDisplayedOwnedIndex + 1;
+        indexOfOwnedTotal = indexOfOwnedDots + 3;
+        for (var i = startingOwnedIndex; i < endingDisplayedOwnedIndex; i ++){
+            ownedXOffsets.push(i);
+        }
+        var startingNewIndex = halfMaxUnitCount;
+        var endingDisplayedNewIndex = Math.min(startingNewIndex + actionCount, startingNewIndex + maxUnitsToShowInEachHalf)
+        indexOfNewDots = endingDisplayedNewIndex + 1;
+        indexOfNewTotal = indexOfNewDots + 3;
+        for (var i = startingNewIndex; i < endingDisplayedNewIndex; i++){
+            newXOffsets.push(i);
+        }
+    }
+    else {
+        var max = maxRenderableUnitCount
+        for (var i = max; i > max - stateCount; i--){
+            ownedXOffsets.push(i);
+        }
+        for (var i = max - stateCount; i > max - stateCount - actionCount; i--){
+            newXOffsets.push(i);
+        }
+    }
+    result = '<div style="box-sizing: border-box;height:' + pHeight + '%;width:' + pWidth + '%;padding-top:1%">' + 
+        '<svg style="width:100%;height:100%;" fill="white"version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+        
+        getSvgUnits(ownedXOffsets, newXOffsets, color) + 
+        getDots(indexOfOwnedDots, indexOfOwnedTotal, stateCount) + 
+        getDots(indexOfNewDots, indexOfNewTotal, actionCount) +
+        '</svg>' +
+    '</div>'
+    return result;
+}
+
+function getDots(indexOfDots, indexOfTotal, count){
+    var unitPlusGapWidth  = fixedUnitWidth + unitGapWidth
+    var xOriginDot1  = indexOfDots * unitPlusGapWidth;
+    var xOriginDot2  = xoriginDot1 + 10;
+    var xOriginTotal = indexOfTotal * unitPlusGapWidth;
+    var result = '<circle cx="' + + '" cy="' + + '" r="6">';
+    return result;
+}
+function getSimpleUnitsRow(pWidth, pHeight, player, color, stateCount, actionCount){
+    var ownedXOffsets = [];
+    var newXOffsets = [];
+    if (player == "agent"){
+        for (var i = 0; i < stateCount; i ++){
+            ownedXOffsets.push(i);
+        }
+        for (var i = stateCount; i < stateCount + actionCount; i++){
+            newXOffsets.push(i);
+        }
+    }
+    else {
+        var max = maxRenderableUnitCount
+        for (var i = max; i > max - stateCount; i--){
+            ownedXOffsets.push(i);
+        }
+        for (var i = max - stateCount; i > max - stateCount - actionCount; i--){
+            newXOffsets.push(i);
+        }
+    }
+    result = '<div style="box-sizing: border-box;height:' + pHeight + '%;width:' + pWidth + '%;padding-top:1%">' + 
+        '<svg style="width:100%;height:100%;" fill="white"version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+        
+        getSvgUnits(ownedXOffsets, newXOffsets, color) + 
+        '</svg>' +
+    '</div>'
+    return result;
+}
+
+function getSvgUnits(ownedXOffsets, newXOffsets, color){
+    var result = '';
+    for (var index in ownedXOffsets){
+        var ownedUnitIndex = ownedXOffsets[index];
+        var xOrigin = ownedUnitIndex * (fixedUnitWidth + unitGapWidth);
+        result += '<rect style="fill:' + color + '" x="' + xOrigin + '" y="5" width="' + fixedUnitWidth + '" height="85%"' + '" stroke="' + color + '" stroke-width="1" />';
+    }
+    for (var index in newXOffsets){
+        var newUnitIndex = newXOffsets[index];
+        var xOrigin = newUnitIndex * (fixedUnitWidth + unitGapWidth);
+        result += '<rect style="fill:' + color + '" x="' + xOrigin + '" y="5" width="' + fixedUnitWidth + '" height="85%"' + '" stroke="black" stroke-width="10" />';
+    }
+    return result;
+}
+
+function getUnitsRowOld(pWidth, pHeight,player, lane, UnitType, unitValuesDict, color, unitWidth){
     var stateKey = lane + " " + UnitType + " State";
     var actionKey = lane+ " " + UnitType + " Action";
     var stateCount = unitValuesDict[stateKey];
