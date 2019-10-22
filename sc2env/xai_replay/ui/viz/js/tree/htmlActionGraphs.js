@@ -130,15 +130,15 @@ function getSummaryUnitsRow(pWidth, pHeight,player, color, stateCount, actionCou
         var max = maxRenderableUnitCount;
         var startingOwnedIndex = maxRenderableUnitCount;
         var endingDisplayedOwnedIndex = Math.max(max - stateCount, max - maxUnitsToShowInEachHalf);
-        indexOfOwnedDots = endingDisplayedOwnedIndex  - 2;
-        indexOfOwnedTotal = indexOfOwnedDots - 1;
+        indexOfOwnedDots = endingDisplayedOwnedIndex  - 1;
+        indexOfOwnedTotal = indexOfOwnedDots - 2;
         for (var i = startingOwnedIndex; i > endingDisplayedOwnedIndex; i--){
             ownedXOffsets.push(i);
         }
         var startingNewIndex = halfMaxUnitCount;
         var endingDisplayedNewIndex = Math.max(startingNewIndex - actionCount, startingNewIndex - maxUnitsToShowInEachHalf);
-        indexOfNewDots = endingDisplayedNewIndex - 2;
-        indexOfNewTotal = indexOfNewDots - 1;
+        indexOfNewDots = endingDisplayedNewIndex - 1;
+        indexOfNewTotal = indexOfNewDots - 2;
         for (var i = startingNewIndex; i > endingDisplayedNewIndex; i--){
             newXOffsets.push(i);
         }
@@ -147,20 +147,24 @@ function getSummaryUnitsRow(pWidth, pHeight,player, color, stateCount, actionCou
         '<svg style="width:100%;height:100%;" fill="white"version="1.1" xmlns="http://www.w3.org/2000/svg">' +
         
         getSvgUnits(ownedXOffsets, newXOffsets, color) + 
-        getDots(indexOfOwnedDots, indexOfOwnedTotal, stateCount, maxUnitsToShowInEachHalf) + 
-        getDots(indexOfNewDots, indexOfNewTotal, actionCount, maxUnitsToShowInEachHalf) +
+        getDots(indexOfOwnedDots, indexOfOwnedTotal, stateCount, maxUnitsToShowInEachHalf, player) + 
+        getDots(indexOfNewDots, indexOfNewTotal, actionCount, maxUnitsToShowInEachHalf, player) +
         '</svg>' +
     '</div>'
     return result;
 }
 
-function getDots(indexOfDots, indexOfTotal, count, maxUnitsToShowInEachHalf){
+function getDots(indexOfDots, indexOfTotal, count, maxUnitsToShowInEachHalf, player){
     if (count <= maxUnitsToShowInEachHalf){
         return '';
     }
+    
     var interDotDistance = 60;
     var unitPlusGapWidth  = fixedUnitWidth + unitGapWidth
     var x1 = indexOfDots * unitPlusGapWidth + (interDotDistance / 2);
+    if (player == "enemy"){
+        x1 = x1 - interDotDistance;
+    }
     var x2 = x1 + interDotDistance;
     var x3 = x2 + interDotDistance;
     var xTotal = indexOfTotal * unitPlusGapWidth;
