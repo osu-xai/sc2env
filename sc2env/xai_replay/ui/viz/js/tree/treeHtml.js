@@ -42,29 +42,32 @@ function getQStyling(pWidth, pHeight) {
 function getBestQValue(pWidth, pHeight, data){
   // var afterStateQValue = data["after state q_value"];
   var bestStateQValue = data["best q_value"];
+  var adjustedBestQ = bestStateQValue * 100;
+  adjustedBestQ = adjustedBestQ.toFixed(3);
+
   var name = data["name"];
   if(data['root']){
-    return '<div style="color:' + bestQValueColorPV + ';' + getQStyling(pWidth, pHeight) + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+    return '<div style="color:' + bestQValueColorPV + ';' + getQStyling(pWidth, pHeight) + '">' + adjustedBestQ + '%</div>';
   }
   // TODO refactor because do same for state and action
   if (name.indexOf("_action") != -1){
       if (name.indexOf("best") != -1){
           // principle variation
-          return '<div style="color:' + bestQValueColorPV + ';' + getQStyling(pWidth, pHeight) + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColorPV + ';' + getQStyling(pWidth, pHeight) + '">' + adjustedBestQ + '%</div>';
       }
       else{
           // others
-          return '<div style="color:' + bestQValueColor + ';' + getQStyling(pWidth, pHeight) + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColor + ';' + getQStyling(pWidth, pHeight) + '">' + adjustedBestQ + '%</div>';
       }
   }
   else{
       //state
       if (name.indexOf("best") != -1){
           // principle variation
-          return '<div style="color:' + bestQValueColorPV + ';' + getQStyling(pWidth, pHeight) + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColorPV + ';' + getQStyling(pWidth, pHeight) + '">' + adjustedBestQ + '%</div>';
       }
       else{
-          return '<div style="color:' + bestQValueColor + ';' + getQStyling(pWidth, pHeight) + '">' + bestStateQValue.toFixed(5).replace(/^[0]+/, "") + '</div>';
+          return '<div style="color:' + bestQValueColor + ';' + getQStyling(pWidth, pHeight) + '">' + adjustedBestQ + '%</div>';
       }
   }
 }

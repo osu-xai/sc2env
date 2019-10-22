@@ -48,7 +48,8 @@ function getKeyPlusUnitRow(pWidth, pHeight, player, lane, unitValuesDict, unitWi
     var result = undefined;
     if (player == "agent"){
         result = '<div class="flex-row" style="width:' + pWidth + '%;height:' + pHeight + '%;background-color: ivory;">' +
-            getNexusHealthColumn(pWidthActionKey,           100,nexusHealth, getPlayerColor("agent")) + 
+            // getNexusHealthColumn(pWidthActionKey,           100,nexusHealth, getPlayerColor("agent")) + 
+            getShapeKeysColumn((pWidthActionKey/100)*actionNodeWidth,           (pHeightActionFriendlyKeyPlusUnits/100)*friendlyActionNodeHeight, getPlayerColor("agent")) + 
             getVerticalSeparator(pWidthActionKeyCountSpacer,100) + 
             getUnitsRows(        pWidthActionUnitRows,      100,player, lane, unitValuesDict, unitWidth) + '</div>';
     }
@@ -56,7 +57,9 @@ function getKeyPlusUnitRow(pWidth, pHeight, player, lane, unitValuesDict, unitWi
         result = '<div class="flex-row" style="width:' + pWidth + '%;height:' + pHeight + '%;background-color: ivory;padding-top;">' + 
             getUnitsRows(        pWidthActionUnitRows,      100,player, lane, unitValuesDict, unitWidth) + 
             getVerticalSeparator(pWidthActionKeyCountSpacer,100) + 
-            getNexusHealthColumn(pWidthActionKey,           100,nexusHealth, getPlayerColor("enemy")) + '</div>';
+            getShapeKeysColumn((pWidthActionKey/100)*actionNodeWidth,           (pHeightActionEnemyKeyPlusUnits/100)*enemyActionNodeHeight+60, getPlayerColor("enemy")) + '</div>';
+
+            // getNexusHealthColumn(pWidthActionKey,           100,nexusHealth, getPlayerColor("enemy")) + '</div>';
     }
     return result;
 }
@@ -315,6 +318,16 @@ function getPylonTrio(pWidth, pHeight, player, currentCount, newCount){
     }
     result += '</div></div>';
     return result;
+}
+
+function getShapeKeysColumn(pWidth, pHeight, color){
+    return '<div class="flex-column" style="box-sizing: border-box;padding:' + nexusHealthBorderPercent +'"> \
+                <svg width="' + pWidth + '" height="' + pHeight + '"> \
+                    <rect x="10" y="' + pHeight/4 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \
+                    <ellipse cx="' + pWidth/2 + '" cy="' + pHeight/12 + '" rx="' + (pWidth*.9)/2 + '" ry="' + pWidth/4 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
+                    <polygon points="' + pWidth/2 + ',' + pHeight/2 + ' ' + pWidth*.2 +',' + 2*pHeight/3 + ' ' + pWidth*.8 +', ' + 2*pHeight/3 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
+                </svg> \
+            </div>';
 }
 
 function getNexusHealthColumn(pWidth, pHeight, nexusHealth, color){
