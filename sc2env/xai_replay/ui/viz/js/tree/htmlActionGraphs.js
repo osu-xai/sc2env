@@ -201,7 +201,6 @@ function getPylonTrio(pWidth, pHeight, player, currentCount, newCount){
 }
 
 function getShapeKeysColumn(pWidth, pHeight, color){
-    console.log("w: " + pWidth + "\th: " + pHeight)
     return '<div class="flex-column" style="box-sizing: border-box;padding:' + nexusHealthBorderPercent +'"> \
                 <svg width="' + pWidth + '" height="' + pHeight + '"> \
                     <rect x="10" y="' + pHeight/4 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \

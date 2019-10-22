@@ -75,7 +75,7 @@ var treeStyle =
         background-color: ' + principalVariationBackgroundColor + '; \
     } \
     edge { \
-        curve-style: taxi; \
+        curve-style: bezier; \
         width: 30; \
         target-arrow-shape: triangle; \
         line-color: ' + genericEdgeLineColor + '; \
