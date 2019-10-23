@@ -34,7 +34,8 @@ function renderVerticalLine(index, w,h){
 }
 
 function renderMidLine(w,h){ 
-    var newY = (h/2) - (quadtrantDividerThickness);
+    var verticalFudgeFactor = 3;
+    var newY = (h/2) - (quadtrantDividerThickness) + verticalFudgeFactor;
     return '<line x1="0" x2="' + w + '" y1="' + newY + '" y2="' + newY + '" stroke="black" stroke-width="' + quadtrantDividerThickness + '"/>';
 }
 // player 1 units top lane grid 1,				[15:17] (marine, bane, immortal)
