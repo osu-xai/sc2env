@@ -1,16 +1,18 @@
 // generic nodes
-var nodeBackgroundColor = "#B0B0B0";
+var nodeBackgroundColor = "#A0A0A0";
 
 // principa variation
-var principalVariationBackgroundColor = "#808080";
+var principalVariationBackgroundColor = "#606060";
 
 var genericNodeHeight = 1200;
 var genericNodeWidth = 1800;
 var genericNodeBorderWidth = "10px";
-var genericNodeBorderColor = "black"
+var genericNodeBorderColor = "black";
+var principalVariationEdgeWidth = 90;
 
 // generic edges
 var genericEdgeLineColor = nodeBackgroundColor;
+var genericEdgeWidth = 45;
 
 // how much of the node should be taken up vertically and horizontally
 var portionOfNodeToUseVertically = {};

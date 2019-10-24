@@ -76,10 +76,13 @@ var treeStyle =
     } \
     edge { \
         curve-style: bezier; \
-        width: 30; \
+        width: ' + genericEdgeWidth + '; \
         target-arrow-shape: triangle; \
         line-color: ' + genericEdgeLineColor + '; \
         target-arrow-color: ' + genericEdgeLineColor + '; \
+        source-endpoint: 180deg ; \
+        target-endpoint: 0deg ; \
+        target-arrow-shape: Arrow; \
     } \
     .enemyActionEdge { \
         target-arrow-shape: none; \
@@ -87,7 +90,7 @@ var treeStyle =
     .principalVariationEdge { \
         line-color: ' + principalVariationBackgroundColor + '; \
         target-arrow-color: ' + principalVariationBackgroundColor + '; \
-        width: 60; \
+        width: ' + principalVariationEdgeWidth + '; \
     } \
     .userAddedNode { \
         background-color: ' + userAddedNodeColor + '; \
