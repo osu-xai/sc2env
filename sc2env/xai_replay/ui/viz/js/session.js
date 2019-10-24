@@ -193,12 +193,12 @@ function setTreatmentFromFile(){
         error: function()
         {
             $('#model-based-radio').click();
-            //setToModelBasedTreatment()
+            setToModelBasedTreatment();
         },
         success: function()
         {
             $('#model-free-radio').click();
-            //setToModelFreeTreatment();
+            setToModelFreeTreatment();
         }
     });
 }
