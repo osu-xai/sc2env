@@ -23,7 +23,7 @@ var treeLayout = {
         fit: true, // whether to fit the viewport to the graph
         directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
         padding: 10, // padding on fit
-        spacingFactor: 1.0, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+        spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
         avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
         nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
         roots: undefined, // the roots of the trees
@@ -75,13 +75,13 @@ var treeStyle =
         background-color: ' + principalVariationBackgroundColor + '; \
     } \
     edge { \
-        curve-style: bezier; \
         width: ' + genericEdgeWidth + '; \
+        curve-style: taxi; \
+        taxi-direction: downward;\
+        taxi-turn: 150;\
         target-arrow-shape: triangle; \
         line-color: ' + genericEdgeLineColor + '; \
         target-arrow-color: ' + genericEdgeLineColor + '; \
-        source-endpoint: 180deg ; \
-        target-endpoint: 0deg ; \
         target-arrow-shape: Arrow; \
     } \
     .enemyActionEdge { \

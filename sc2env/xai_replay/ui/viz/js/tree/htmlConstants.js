@@ -12,7 +12,7 @@ var principalVariationEdgeWidth = 90;
 
 // generic edges
 var genericEdgeLineColor = nodeBackgroundColor;
-var genericEdgeWidth = 45;
+var genericEdgeWidth = principalVariationEdgeWidth;
 
 // how much of the node should be taken up vertically and horizontally
 var portionOfNodeToUseVertically = {};
