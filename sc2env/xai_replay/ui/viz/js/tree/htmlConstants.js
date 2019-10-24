@@ -10,7 +10,7 @@ var genericNodeBorderWidth = "10px";
 var genericNodeBorderColor = "black"
 
 // generic edges
-var genericEdgeLineColor = "#ffaaaa";
+var genericEdgeLineColor = nodeBackgroundColor;
 
 // how much of the node should be taken up vertically and horizontally
 var portionOfNodeToUseVertically = {};
@@ -32,6 +32,8 @@ var friendlyActionNodeHeight = 2000;
 var enemyActionNodeHeight = 1300;
 
 var actionNodeBorderWidth = "50px";
+var halfOfBothBorders = 25 + 25;
+var actionNodeWidthPlusBorder = actionNodeWidth + 50;
 
 var pHeightActionFriendlyTopSpacer           = 10;
 var pHeightActionFriendlyKeyPlusUnits        = 22;// * 2
@@ -98,8 +100,7 @@ var pWidthStatePylonsEnemy       = 34;
 var pWidthStatePylonSpacerRight  = 6;
 
 
-var armyStrengthWidthPercent = 80;
-var armyStrengthWidth = stateNodeWidth * portionOfNodeToUseHorizontally * (armyStrengthWidthPercent/100);
+var armyStrengthWidth = stateNodeWidth * portionOfNodeToUseHorizontally * (pWidthStateUnitCounts/100);
 var armyStrengthHeight = stateNodeHeight * portionOfNodeToUseVertically["state"] * (pHeightStateArmyStringRow/100);
 
 // pylons
@@ -125,5 +126,3 @@ var bestQValueColorPV = "white";
 var bestQValueColor = "white";
 var qPaddingTop = 25;
 var qPaddingBottom = 40;
-
-

@@ -23,7 +23,7 @@ var treeLayout = {
         fit: true, // whether to fit the viewport to the graph
         directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
         padding: 10, // padding on fit
-        spacingFactor: 1.1, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+        spacingFactor: 1.0, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
         avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
         nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
         roots: undefined, // the roots of the trees
@@ -83,12 +83,13 @@ var treeStyle =
         line-color: ' + genericEdgeLineColor + '; \
         target-arrow-color: ' + genericEdgeLineColor + '; \
     } \
+    .enemyActionEdge { \
+        target-arrow-shape: none; \
+    } \
     .principalVariationEdge { \
         line-color: ' + principalVariationBackgroundColor + '; \
         target-arrow-color: ' + principalVariationBackgroundColor + '; \
         width: 60; \
-    } \
-    .basicEdge { \
     } \
     .userAddedNode { \
         background-color: ' + userAddedNodeColor + '; \
@@ -293,14 +294,17 @@ function getCyNodeFromJsonNode(inputNode, parentId, cyClass){
     return cyNode;
 }
 
-function getEdgeClassFromParentNode(parent){
-    var classString = parent["classes"];
+function getEdgeClassFromParentNode(target){
+    var result = '';
+    var classString = target["classes"];
     if (classString.includes("principalVariation")){
-        return "principalVariationEdge";
+        result += "principalVariationEdge";
     }
-    else {
-        return "basicEdge";
+    
+    if (target["data"]["sc2_nodeType"] == "enemyAction"){
+        result += " enemyActionEdge";
     }
+    return result;
 }
 
 function getEdge(source, target, cyClass){
