@@ -189,6 +189,7 @@ function getLowestSquaresPattern(player, lane, barHeight){
     var patternHeight = lowestConstant / (barHeight * maxBarHeight);
     var result = '<pattern id="'+ lane + '-lowest-' + player + '" x="' + patternX + '" + y="' + patternY + '" width="' + patternWidth + '" height="' + patternHeight+ '" patternUnits="objectBoundingBox">' + 
     '<rect x="0" y="0" width="' + rectWidth + '" height="' + rectHeight + '" fill="' + getPlayerColor(player) + '"/>' +
+    '<rect x="' + rectWidth + '" y="' + rectHeight + '" width="' + rectWidth + '" height="' + rectHeight + '" fill="' + getPlayerColor(player) + '"/>' +
 '</pattern>';
     return result;
 }
