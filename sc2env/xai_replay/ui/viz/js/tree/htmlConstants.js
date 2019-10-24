@@ -32,6 +32,7 @@ var friendlyActionNodeHeight = 2000;
 var enemyActionNodeHeight = 1300;
 
 var actionNodeBorderWidth = "50px";
+var halfOfBothBorders = 25 + 25;
 var actionNodeWidthPlusBorder = actionNodeWidth + 50;
 
 var pHeightActionFriendlyTopSpacer           = 10;
@@ -125,5 +126,3 @@ var bestQValueColorPV = "white";
 var bestQValueColor = "white";
 var qPaddingTop = 25;
 var qPaddingBottom = 40;
-
-

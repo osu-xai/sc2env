@@ -56,6 +56,7 @@ var currFocusNode = undefined;
 function handleClickEvent(cy){
     cy.on('click', 'node', function (evt) { 
         var currNode = evt.target;
+        
         leftJustifyNodes(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);
         intitTreeLables(cy, biggestUnitCountTuple);
@@ -151,6 +152,7 @@ function refreshCy(){
         }
         restateLayout(cy);
         //sortNodes(cy);
+        verticallyAdjustEnemyActions(cy);
         leftJustifyNodes(cy);
         intitTreeEvents(cy);
         var biggestUnitCountTuple = getLargestUnitCount(cy);

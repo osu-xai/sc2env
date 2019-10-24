@@ -128,6 +128,117 @@ function leftJustifyNodes(cy){
         }
     });
 }
+var nodeYAdjustmentRegister = undefined;
+var computedYAdjustmentDistance = undefined;
+// since can't return a single value from the forEach loop below, register matching y value in a dictionary for lookup
+var yPositionOfNodeForId = {};
+function extractYPositionsOfNodes(){
+    cy.nodes().forEach(function( ele ){
+        var id = ele.data("id");
+        var y = ele.position("y");
+        yPositionOfNodeForId[id] = y;
+    });
+}
+
+function isNodeInCynodeList(node, cynodeList){
+    for (var i in cynodeList){
+        var cyNode = cynodeList[i];
+        var cyNodeId = cyNode["data"]["id"];
+        var nodeId = node["data"]["id"];
+        if (nodeId == cyNodeId){
+            return true;
+        }
+    }
+    return false;
+}
+function computeYAdjustmentDistance(){
+    extractYPositionsOfNodes();
+    if (computedYAdjustmentDistance == undefined){
+        var activeNodes = treeData["elements"]["nodes"];
+        for (var i in activeNodes){
+            // look for the first active friendlyAction node and find a child enemy action to use in calculation
+            var node = activeNodes[i];
+            if (node["data"]["sc2_nodeType"] == "friendlyAction"){
+                for (var j in node["data"]["sc2_cyChildren"]){
+                    var child = node["data"]["sc2_cyChildren"][j];
+                    if (isNodeInCynodeList(child, activeNodes)){ 
+                        var friendlyActionNodeId = node ["data"]["id"];
+                        var enemyActionNodeId    = child["data"]["id"];
+                        var yPositionFriendly = yPositionOfNodeForId[friendlyActionNodeId];
+                        var yPositionEnemy = yPositionOfNodeForId[enemyActionNodeId];
+                        var yDistance = yPositionEnemy - yPositionFriendly;
+                        var halfHeightFriendly = friendlyActionNodeHeight / 2;
+                        var halfHeightEnemy = enemyActionNodeHeight / 2;
+                        computedYAdjustmentDistance = yDistance - halfHeightFriendly - halfHeightEnemy - halfOfBothBorders;
+                        return;
+                    }
+                }
+                
+            }
+        }
+    }
+}
+function verticallyAdjustEnemyActions(cy){
+    computeYAdjustmentDistance();
+    nodeYAdjustmentRegister = {};
+    registerNodeYAdjustments(cy);
+    performNodeYAdjustments(cy);
+    cy.fit();
+}
+
+function performNodeYAdjustments(cy){
+    cy.nodes().forEach(function( ele ){
+        var id = ele.data("id");
+        var count = nodeYAdjustmentRegister[id];
+        if (count != undefined){
+            var currentY = ele.position('y');
+            var newY = currentY - count * computedYAdjustmentDistance;
+            ele.position('y',newY);
+        }
+    });
+}
+function registerNodeYAdjustments(){
+    var activeNodes = treeData["elements"]["nodes"];
+    var activeEnemyActionNodes = gatherEnemyActionNodes(activeNodes);
+    for (var i in activeEnemyActionNodes){
+        var node = activeEnemyActionNodes[i];
+        registerYAdjustmentForNodeAndActiveChildren(node);
+    }
+}
+
+function registerYAdjustmentForNode(node){
+    var id = node["data"]["id"];
+    var curValue = nodeYAdjustmentRegister[id];
+    if (curValue == undefined){
+        nodeYAdjustmentRegister[id] = 1;
+    }
+    else {
+        nodeYAdjustmentRegister[id] += 1;
+    }
+    console.log("nodeYAdjustmentRegister for " + id + " = " +  nodeYAdjustmentRegister[id]);
+}
+function registerYAdjustmentForNodeAndActiveChildren(node){
+    registerYAdjustmentForNode(node);
+    var children = node["data"]["sc2_cyChildren"];
+    if (children != undefined){
+        for (var i in children){
+            var child = children[i];
+            if (isNodeInCynodeList(child,treeData["elements"]["nodes"])){
+                registerYAdjustmentForNodeAndActiveChildren(child);
+            }
+        }
+    }
+}
+function gatherEnemyActionNodes(nodes){
+    var result = [];
+    for (var i in nodes){
+        var node = nodes[i];
+        if (node["data"]["sc2_nodeType"] == "enemyAction"){
+            result.push(node);
+        }
+    }
+    return result;
+}
 function restateLayout(cy){
   cy.style().fromString(treeStyle).update()
   var layout = cy.layout(treeLayout);
@@ -397,14 +508,14 @@ function isNodeExpressedAsLeaf(node, activeNodes){
     return (visibleChildCount == 0);
 }
 function positionNodeAndParent(node, i){
-    setNodePosition(node, i);
+    setNodeXPosition(node, i);
     var parent = node["data"]["sc2_cyParent"];
     if (parent != undefined){
         positionNodeAndParent(parent, i)
     }
 }
 
-function setNodePosition(node, i){
+function setNodeXPosition(node, i){
     console.log("setting xOffset for " + node["data"]["id"] + " to position " + i);
     node["data"]["xOffset"] = i;
 }
