@@ -115,15 +115,6 @@ function getExplControlsManager(){
     return m;
 }
 
-
-function disableShowExplanationButton(){
-    $('#button-show-explanations').attr('disabled', 'disabled');
-}
-
-function enableShowExplanationButton(){
-    $('#button-show-explanations').removeAttr('disabled');
-}
-
 function hideUnlockControls(){
     $('#unlock-key-label').css('display','none');
     $('#unlock-key-text').css('display','none');
