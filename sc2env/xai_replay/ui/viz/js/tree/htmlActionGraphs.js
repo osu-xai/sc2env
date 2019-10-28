@@ -89,8 +89,8 @@ function getUnitsRow(pWidth, pHeight,player, lane, UnitType, unitValuesDict, col
     //          use remaining space to show owned ... (#)
     var stateKey = lane + " " + UnitType + " State";
     var actionKey = lane+ " " + UnitType + " Action";
-    var stateCount = unitValuesDict[stateKey];
     var actionCount = unitValuesDict[actionKey];
+    var stateCount = unitValuesDict[stateKey] - actionCount;// Nick's fix
     var curUnitCount = stateCount - actionCount;
     if (maxRenderableUnitCount >= curUnitCount){
         return getSimpleUnitsRow(pWidth, pHeight,player, color, stateCount, actionCount);
