@@ -6,7 +6,7 @@ function getExplControlsManager(){
         return (this.mode == "study");
     }
     m.showExplanationControls = function(){
-        enableShowExplanationButton();
+        enableShowExplanationsButton();
         if(this.isUserStudyMode()) {
             disableShowExplanationsButton();
             showUnlockControls();
@@ -59,7 +59,7 @@ function getExplControlsManager(){
 
     m.requestHideShowExplanationButton = function(){
         if (this.isUserStudyMode()){
-            disableShowExplanationButton();
+            disableShowExplanationsButton();
         }
     }
     
