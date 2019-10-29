@@ -292,7 +292,7 @@ function getActionPylonsRow(pWidth, pHeight, player, unitValuesDict){
 var pylonBorderColor = {}
 pylonBorderColor["current"] = "yellow";
 pylonBorderColor["new"] = "black";
-pylonBorderColor["missing"] = "rgb(255,255,0,0.4)";
+pylonBorderColor["missing"] = "rgba(255,255,0,0.4)";
 
 
 var pylonBackgroundColor = {}

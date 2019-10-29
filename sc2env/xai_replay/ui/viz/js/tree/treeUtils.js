@@ -118,10 +118,11 @@ function leftJustifyNodes(cy){
             console.log(" position of node " + ele.data("id") + " UNAVAILABLE ");
         }
         else{
+            var nodeMargin = 200;
             var oldPosition = ele.position("x");
             //console.log(" ele.width : " + ele.width());
             //var widthFactor = (Number(ele.width()) + 200);
-            var widthFactor = 2000; // 1800 + 200 buffer since state nodes are 1800
+            var widthFactor = stateNodeWidth + nodeMargin; 
             var newXPosition = Number(ele.data("xOffset")) * widthFactor + anchorToLeft;
             //console.log("changing  position of node " + ele.data("id") + " from " + oldPosition + " to position " + newXPosition + " based on xOffset " + ele.data("xOffset"));
             ele.position('x', newXPosition);

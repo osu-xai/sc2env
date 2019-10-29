@@ -94,8 +94,8 @@ function getExplControlsManager(){
         $("#explanation-control-panel").css("height", "60px")
         $("#explanation-control-panel").css("position", "absolute");
         $("#explanation-control-panel").css("top", "45%");
-        $("#explanation-control-panel").css("left", "5%");
-        $("#explanation-control-panel").css("right", "5%");
+        $("#explanation-control-panel").css("left", "0%");
+        $("#explanation-control-panel").css("right", "0%");
         $("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
         $("#explanation-control-panel").css("z-index", zIndexMap["allTheWayToFront"]);
 

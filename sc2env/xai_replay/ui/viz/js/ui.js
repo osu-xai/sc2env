@@ -147,7 +147,7 @@ function drawExplanationTimeline() {
 	}
 	let ctx = expl_ctrl_ctx;
 	
-	expl_ctrl_canvas.width = $(window).width()*.9;
+	expl_ctrl_canvas.width = $(window).width();
 	ctx.beginPath();
 	ctx.moveTo(timelineMargin,explanationControlYPosition);
 	ctx.lineWidth = timelineHeight;
