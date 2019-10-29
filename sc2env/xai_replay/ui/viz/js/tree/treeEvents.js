@@ -142,7 +142,6 @@ function enableActionMenuButton(id){
     $("#" + id).attr("disabled", false);
     colorButtonEnabled(id);
 }
-
 function refreshCy(){
     cy.destroy();
     cy = cytoscape(treeData);

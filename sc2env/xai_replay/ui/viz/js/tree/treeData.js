@@ -126,6 +126,16 @@ function initTree(jsonPath, frameNumber){
     });
 }
 
+window.onload = function()
+{
+    $('#model-free-radio').click(function () {
+        setToModelFreeTreatment();
+    });
+    $('#model-based-radio').click(function () {
+        setToModelBasedTreatment();
+    });
+};
+
 function forgetCyTree(){
     treeData["elements"] = {  nodes: [],
                               edges: []
