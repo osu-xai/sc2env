@@ -119,6 +119,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         if (this.jumped){
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
+            sessionIndexManager.setReplaySequencerIndex(frameNumber);
 
         }
 
@@ -182,7 +183,7 @@ function createVideoElement(path){
 }
 
 function showUnitValuesInFrontOfGameboard(){
-    $('#unit-value-panels-toggle').css('display', "block")
+    // $('#unit-value-panels-toggle').css('display', "block")
     $('.unit-value-panels').css('display', "grid")
     
 }

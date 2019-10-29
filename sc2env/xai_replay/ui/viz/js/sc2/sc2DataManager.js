@@ -215,7 +215,7 @@ function addUnitDeltasToFrames(frameInfos){
                     else if (curCount != 0){
                         curCount++;
                         // console.log(key + " frame " + frameIndex + " curCount " + curCount);
-                        if (curCount > 60){ // chose 60 to be far enough past when we toggle on the unit additions , which was 10 past the DP
+                        if (curCount > 85){ // chose 90 to be far enough past when we toggle on the unit additions , which was 10 past the DP
                             deltaKeyCounters[deltaCounterKey] = 0;
                             // console.log(key + " frame " + frameIndex + " resetting to 0")
                             frame[deltaKey + "_triggered"] = 0;

@@ -85,13 +85,17 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);
         //SC2_TODO_SAL}
         //console.log('replaySequencerIndex is now ' + index);
-        var displayVal = this.getStepCountToDisplay();
+		// var displayVal = this.getStepCountToDisplay();
+		var displayVal = decisionPointsFullCopy.length - decisionPoints.length;
+
         //console.log('display Step value : ' + displayVal);
 		if (displayVal == undefined){
 			$("#step-value").html('');
 		}
 		else {
-			$("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
+			// $("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
+			$("#step-value").html('DP ' + displayVal + ' / ' + decisionPointsFullCopy.length);
+
 		}
 		paintProgress(this.getProgressBarValue());
 	}

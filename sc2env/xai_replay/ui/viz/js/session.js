@@ -358,7 +358,7 @@ function isFrameFarEnoughPastDP(frameInfo){
         var nextDpFrame = decisionPointsFullCopy[Number(i)+ 1];
         var windowStart = dpFrame  + farEnoughPastDP;
         if (nextDpFrame == undefined){
-            var windowEnd = windowStart  + 80;
+            var windowEnd = windowStart  + 75;
         }
         else {
             var windowEnd = nextDpFrame;

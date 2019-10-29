@@ -43,7 +43,7 @@ function getBestQValue(pWidth, pHeight, data){
   // var afterStateQValue = data["after state q_value"];
   var bestStateQValue = data["best q_value"];
   var adjustedBestQ = bestStateQValue * 100;
-  adjustedBestQ = adjustedBestQ.toFixed(3);
+  adjustedBestQ = adjustedBestQ.toFixed(2);
 
   var name = data["name"];
   if(data['root']){

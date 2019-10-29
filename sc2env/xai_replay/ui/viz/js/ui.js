@@ -452,25 +452,25 @@ function sizeNonGeneratedElements() {
 	
 
 	
-	$('#unit-value-panels-toggle').css('float', "right")
-	$('#unit-value-panels-toggle').css('text-align', "center")
-	$('#unit-value-panels-toggle').css('font-size', "20px")
-	$('#unit-value-panels-toggle').css('font-family', "Arial")
-	$('#unit-value-panels-toggle').css('width', "300px")
-	$('#unit-value-panels-toggle').css('height', "30px")
-	//$('#unit-value-panels-toggle').css('margin-left', "30%")
+	// $('#unit-value-panels-toggle').css('float', "right")
+	// $('#unit-value-panels-toggle').css('text-align', "center")
+	// $('#unit-value-panels-toggle').css('font-size', "20px")
+	// $('#unit-value-panels-toggle').css('font-family', "Arial")
+	// $('#unit-value-panels-toggle').css('width', "300px")
+	// $('#unit-value-panels-toggle').css('height', "30px")
+	// //$('#unit-value-panels-toggle').css('margin-left', "30%")
 
-	var toggle_units = document.getElementById("unit-value-panels-toggle");
-	toggle_units.addEventListener('click', function(event){
-		if ($('.unit-value-panels').css('display') == 'none'){
-			$('.unit-value-panels').css('display', "grid");
-			$('#unit-value-panels-toggle').html("Hide Unit Information");
-		}
-		else{
-			$('.unit-value-panels').css('display', "none");
-			$('#unit-value-panels-toggle').html("Show Unit Information");
-		}
-	});
+	// var toggle_units = document.getElementById("unit-value-panels-toggle");
+	// toggle_units.addEventListener('click', function(event){
+	// 	if ($('.unit-value-panels').css('display') == 'none'){
+	// 		$('.unit-value-panels').css('display', "grid");
+	// 		$('#unit-value-panels-toggle').html("Hide Unit Information");
+	// 	}
+	// 	else{
+	// 		$('.unit-value-panels').css('display', "none");
+	// 		$('#unit-value-panels-toggle').html("Show Unit Information");
+	// 	}
+	// });
 	
 	
 

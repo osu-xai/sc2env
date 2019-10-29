@@ -23,7 +23,7 @@ else if(user == 'lab1'){
     treePanY = -150.92017674738906;
 }
 
-else if(user == 'lab1'){
+else if(user == 'lab2'){
     treeZoom = 0.05523355904969587;
     treePanX = 688.4222569723402;
     treePanY = -150.92017674738906;
