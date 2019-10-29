@@ -114,7 +114,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         renderUnitValues(frame);
 
         userStudyAdjustmentsForFrameChange();
-        getDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
+        setLaterDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
 
         if (this.jumped){
             this.renderTooltipsForCurrentStep();

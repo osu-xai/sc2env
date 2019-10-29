@@ -414,11 +414,11 @@ function renderUnitValues(frameInfo){
     }
     
     changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number);
-    for (var i = 0; i < decisionPoints.length; i++){
-        if (frameInfo.frame_number > decisionPoints[i]){
-            pauseAtInterestingDp(decisionPoints[i]);
-            addVisitedDPToForwardProgress(decisionPoints[i+1]);
-            decisionPoints.splice(i,1);
+    for (var i = 0; i < laterDPFrames.length; i++){
+        if (frameInfo.frame_number > laterDPFrames[i]){
+            pauseAtInterestingDp(laterDPFrames[i]);
+            addVisitedDPToForwardProgress(laterDPFrames[i+1]);
+            laterDPFrames.splice(i,1);
             return;
         }
     }
@@ -449,6 +449,8 @@ function pauseAtInterestingDp(currDecisionPoint){
     for (var dpIndex = 0; dpIndex < pauseAndExplainDPsByFrame.length; dpIndex++){
         if (currDecisionPoint == pauseAndExplainDPsByFrame[dpIndex]){
             pauseGame();
+            var prevDPNum = Number(pauseAndExplainDPs[dpIndex]) - 1;
+            explControlsManager.setExplanationFocusToDP(prevDPNum);
             explControlsManager.showExplanationControls();
         }
         else if (currDecisionPoint == pauseAndPredictDPsByFrame[dpIndex]){

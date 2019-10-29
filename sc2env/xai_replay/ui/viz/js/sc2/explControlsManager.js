@@ -1,10 +1,26 @@
 function getExplControlsManager(){
     m = {};
+    m.prevFocusDP = undefined;
     m.mode = "study";
 
     m.isUserStudyMode = function(){
         return (this.mode == "study");
     }
+
+    m.setExplanationFocusToDP = function(dp){
+        this.prevFocusDP = dp;
+        $('#button-show-explanations').html("Show Explanation for DP" + dp);
+    }
+    
+    m.clearAnyPrevDPFocus = function(){
+        $('#button-show-explanations').html("Show Explanation");
+        this.prevFocusDP = undefined;
+    }
+
+    m.getPrevDPDesired = function(){
+        return this.prevFocusDP;
+    }
+
     m.showExplanationControls = function(){
         enableShowExplanationsButton();
         if(this.isUserStudyMode()) {
@@ -15,6 +31,7 @@ function getExplControlsManager(){
             enableShowExplanationsButton();
         }
     }
+
     m.renderDevControls = function(){
         $('#model-free-radio').css('display', "inline")
         $('#model-free-radio-label').css('display', "inline")
@@ -38,12 +55,14 @@ function getExplControlsManager(){
             enableForwardTimelineBlock = true;
         }
     }
+
     m.setModeToDev = function(){
         this.mode = "dev";
         this.renderDevControls();
         this.showExplanationControls();
         enableForwardTimelineBlock = false;
     }
+
     m.isExplanationsVisible = function() {
         return !($('#explanation-tree-window').css('display') == 'none');
     }
@@ -51,6 +70,7 @@ function getExplControlsManager(){
     m.showExplanationsWindow = function(){
         $('#explanation-tree-window').css('display', "block")
     }
+
     m.hideExplanationControls = function(){
         if(this.isUserStudyMode()) {
             hideUnlockControls();
@@ -69,6 +89,7 @@ function getExplControlsManager(){
             hideUnlockControls();
         }
     }
+
     m.styleControls = function(){
         $("#explanation-control-panel").css("height", "60px")
         $("#explanation-control-panel").css("position", "absolute");
@@ -82,7 +103,7 @@ function getExplControlsManager(){
         $('#button-show-explanations').css('text-align', "center")
         $('#button-show-explanations').css('font-size', "20px")
         $('#button-show-explanations').css('font-family', "Arial")
-        $('#button-show-explanations').css('width', "200px")
+        $('#button-show-explanations').css('width', "300px")
         $('#button-show-explanations').css('height', "30px")
         
         this.decorateRadioButton($('#model-free-radio'))
@@ -109,12 +130,14 @@ function getExplControlsManager(){
             hideUnlockControls();
         }
     }
+
     m.decorateRadioButton = function(r){
         r.css('text-align', "center")
         r.css('font-size', "15px")
         r.css('font-family', "Arial")
         r.css('height', "30px")
     }
+
     return m;
 }
 
@@ -130,6 +153,7 @@ function showUnlockControls(){
 
 function hideExplanations(){
     explControlsManager.hideExplanations();
+    explControlsManager.clearAnyPrevDPFocus();
 }
 
 function disableShowExplanationsButton(){

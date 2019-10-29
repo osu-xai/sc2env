@@ -16,11 +16,11 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addWaveTriggeredToFrames(frameInfos);
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
-    getDecisionPointFrames(frameInfos, 0)
-    for (dpIndex in decisionPoints){decisionPointsFullCopy.push(decisionPoints[dpIndex]);}
-    convertDPNumToFrame(pauseAndExplainDPs, pauseAndExplainDPsByFrame);
-    convertDPNumToFrame(pauseAndPredictDPs, pauseAndPredictDPsByFrame);
-    convertDPNumToFrame([1], forwardProgressDPs)
+    setLaterDecisionPointFrames(frameInfos, 0)
+    for (dpIndex in laterDPFrames){decisionPointsFullCopy.push(laterDPFrames[dpIndex]);}
+    convertDPNumsToFrames(pauseAndExplainDPs, pauseAndExplainDPsByFrame);
+    convertDPNumsToFrames(pauseAndPredictDPs, pauseAndPredictDPsByFrame);
+    convertDPNumsToFrames([1], forwardProgressDPs)
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
@@ -40,7 +40,7 @@ function isPauseAndExplainDP(dp){
     }
     return false;
 }
-function convertDPNumToFrame(dpList, dpFrameList){
+function convertDPNumsToFrames(dpList, dpFrameList){
     for (var dpIndex in dpList){
         var currInterestingDP = dpList[dpIndex];
         dpFrameList.push(decisionPointsFullCopy[currInterestingDP-1]);
@@ -59,12 +59,12 @@ function trimFirstFrames(frameInfos, trimBy){
     return frameInfos;
 }
 
-var decisionPoints = []
-function getDecisionPointFrames(frameInfos, frameNumber){
-    decisionPoints = [];
+var laterDPFrames = []
+function setLaterDecisionPointFrames(frameInfos, frameNumber){
+    laterDPFrames = [];
     for (var i = frameNumber; i < frameInfos.length; i++){
         if (frameInfos[i].frame_info_type == "decision_point"){
-            decisionPoints.push(frameInfos[i].frame_number);
+            laterDPFrames.push(frameInfos[i].frame_number);
         }
     }
 }
@@ -461,4 +461,19 @@ function collectBarInfo(bar_saliency_id, barName, barValue){
     bar.saliencyId = bar_saliency_id;
     bar.value = barValue;
     return bar;
+}
+
+function getFrameInfoForPauseAndPredictDP(dp){
+    var result = undefined;
+    if (dp != undefined){
+        for (var i in pauseAndPredictDPs){
+            var currDP = pauseAndPredictDPs[i];
+            if (currDP == dp){
+                var frame = pauseAndPredictDPsByFrame[i];
+                result = activeSC2DataManager.getFrameInfo(frame);
+                break;
+            }
+        }
+    }
+    return result;
 }
