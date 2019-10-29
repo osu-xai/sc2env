@@ -10,6 +10,12 @@ var pauseAndExplainDPsByFrame = [];
 var pauseAndPredictDPsByFrame = [];
 var decisionPointsFullCopy = [];
 
+function forgetFirstPairOfPredictAndExplainDps(){
+    pauseAndPredictDPs.shift();
+    pauseAndExplainDPs.shift();
+    pauseAndPredictDPsByFrame.shift();
+    pauseAndExplainDPsByFrame.shift();
+}
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
