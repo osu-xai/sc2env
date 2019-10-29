@@ -9,6 +9,8 @@ var trimBy = 80
 var pauseAndExplainDPsByFrame = [];
 var pauseAndPredictDPsByFrame = [];
 var decisionPointsFullCopy = [];
+var laterDPFrames = []
+
 
 function forgetFirstPairOfPredictAndExplainDps(){
     pauseAndPredictDPs.shift();
@@ -64,8 +66,6 @@ function trimFirstFrames(frameInfos, trimBy){
     }
     return frameInfos;
 }
-
-var laterDPFrames = []
 function setLaterDecisionPointFrames(frameInfos, frameNumber){
     laterDPFrames = [];
     for (var i = frameNumber; i < frameInfos.length; i++){

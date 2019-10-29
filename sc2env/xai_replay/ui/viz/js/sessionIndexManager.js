@@ -86,7 +86,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         //SC2_TODO_SAL}
         //console.log('replaySequencerIndex is now ' + index);
 		// var displayVal = this.getStepCountToDisplay();
-		var displayVal = decisionPointsFullCopy.length - decisionPoints.length;
+		var displayVal = decisionPointsFullCopy.length - laterDPFrames.length;
 
         //console.log('display Step value : ' + displayVal);
 		if (displayVal == undefined){
