@@ -107,7 +107,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 	}
 	
 	sim.getPercentIntoGameForStep = function(step){
-		var value = Math.floor((step / this.replaySequencerMaxIndex ) * 100);
+		var value = (step / this.replaySequencerMaxIndex ) * 100;
 		return value;
 	}
 	sim.getCurrentIndex = function() {
