@@ -89,15 +89,18 @@ function getExplControlsManager(){
         this.decorateRadioButton($('#model-based-radio'))
         
 
-        $('#explanation-tree-window').css('width', "95%")
-        $('#explanation-tree-window').css('height', "88%")
-        $('#explanation-tree-window').css('margin-left', "2%")
+        //$('#explanation-tree-window').css('width', "95%")
+        $('#explanation-tree-window').css('width', "100%")
+        //$('#explanation-tree-window').css('height', "88%")
+        $('#explanation-tree-window').css('height', "100%")
+        //$('#explanation-tree-window').css('margin-left', "2%")
+        $('#explanation-tree-window').css('margin-left', "0%")
 
         $('#explanation-tree-window').css('position', "absolute")
         $('#explanation-tree-window').css('background-color', "whitesmoke")
-        $('#explanation-tree-window').css('border-radius', "10px")
+        //$('#explanation-tree-window').css('border-radius', "10px")
         $('#explanation-tree-window').css('z-index', zIndexMap["modalPopUp"])
-        $('#explanation-tree-window').css('border', "3px solid black")
+        //$('#explanation-tree-window').css('border', "3px solid black")
     }
 
     m.correctUnlockKeyEntered = function(){
