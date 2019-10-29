@@ -437,7 +437,7 @@ function addVisitedDPToForwardProgress(dpFrame){
 }
 
 function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
-    if (frameNumber < interestingDPsByFrame[0]){
+    if (frameNumber < pauseAndPredictDPsByFrame[0]){
         video.playbackRate = 1; //twice the speed of videoPlaybackRate
     }
     else{
@@ -446,10 +446,16 @@ function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
 }
 
 function pauseAtInterestingDp(currDecisionPoint){
-    for (var dpIndex = 0; dpIndex < interestingDPsByFrame.length; dpIndex++){
-        if (currDecisionPoint == interestingDPsByFrame[dpIndex]){
+    for (var dpIndex = 0; dpIndex < pauseAndExplainDPsByFrame.length; dpIndex++){
+        if (currDecisionPoint == pauseAndExplainDPsByFrame[dpIndex]){
             pauseGame();
             explControlsManager.showExplanationControls();
+        }
+        else if (currDecisionPoint == pauseAndPredictDPsByFrame[dpIndex]){
+            pauseGame();
+        }
+        else {
+            //don't pause
         }
     }
 }

@@ -1,12 +1,13 @@
 const forwardDP = 3;
 const forwardDPCheck = false;
-//const interestingDPs = [400]
-const interestingDPs = [3,4,5,10,11,14,15,16,27,28,29,30,31,32,33]
+const pauseAndPredictDPs = [5,7,11,17,20,26,28,29,36]
+const pauseAndExplainDPs = [6,8,12,18,21,27,29,30,37]
 var forwardProgressDPs = []; //accumulate dps as user visits them. used for navigation bar clicks
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
-var interestingDPsByFrame = [];
+var pauseAndExplainDPsByFrame = [];
+var pauseAndPredictDPsByFrame = [];
 var decisionPointsFullCopy = [];
 
 function getSC2DataManager(sc2ReplaySessionConfig) {
@@ -17,7 +18,8 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addUnitDeltasToFrames(frameInfos);
     getDecisionPointFrames(frameInfos, 0)
     for (dpIndex in decisionPoints){decisionPointsFullCopy.push(decisionPoints[dpIndex]);}
-    convertDPNumToFrame(interestingDPs, interestingDPsByFrame);
+    convertDPNumToFrame(pauseAndExplainDPs, pauseAndExplainDPsByFrame);
+    convertDPNumToFrame(pauseAndPredictDPs, pauseAndPredictDPsByFrame);
     convertDPNumToFrame([1], forwardProgressDPs)
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
@@ -29,9 +31,9 @@ function getSC2DataManagerFromJson(jsonData){
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
-function isInterestingDP(dp){
-    for (var index in interestingDPs){
-        var intDP = interestingDPs[index];
+function isPauseAndExplainDP(dp){
+    for (var index in pauseAndExplainDPs){
+        var intDP = pauseAndExplainDPs[index];
         if (intDP == dp){
             return true;
         }

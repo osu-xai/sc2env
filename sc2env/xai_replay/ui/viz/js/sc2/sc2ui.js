@@ -105,7 +105,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         if (sessionIndexManager.isAtDecisionPoint()){
             var dpString = sessionIndexManager.getDPThatStartsEpochForStep(frameNumber);
             var dp = dpString.replace("DP","");
-            if (isInterestingDP(Number(dp))){
+            if (isPauseAndExplainDP(Number(dp))){
                 explControlsManager.showExplanationControls();
             }
         }
