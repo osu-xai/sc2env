@@ -451,54 +451,29 @@ function sizeNonGeneratedElements() {
 	document.getElementById('enemy.nexusHealth.bottom').style.padding = "5px";
 	
 
-	
-	// $('#unit-value-panels-toggle').css('float', "right")
-	// $('#unit-value-panels-toggle').css('text-align', "center")
-	// $('#unit-value-panels-toggle').css('font-size', "20px")
-	// $('#unit-value-panels-toggle').css('font-family', "Arial")
-	// $('#unit-value-panels-toggle').css('width', "300px")
-	// $('#unit-value-panels-toggle').css('height', "30px")
-	// //$('#unit-value-panels-toggle').css('margin-left', "30%")
-
-	// var toggle_units = document.getElementById("unit-value-panels-toggle");
-	// toggle_units.addEventListener('click', function(event){
-	// 	if ($('.unit-value-panels').css('display') == 'none'){
-	// 		$('.unit-value-panels').css('display', "grid");
-	// 		$('#unit-value-panels-toggle').html("Hide Unit Information");
-	// 	}
-	// 	else{
-	// 		$('.unit-value-panels').css('display', "none");
-	// 		$('#unit-value-panels-toggle').html("Show Unit Information");
-	// 	}
-	// });
-	
-	
-
-
-
 	var showExplanationTreeButton = document.getElementById("button-show-explanations");
 	showExplanationTreeButton.addEventListener('click', function(event){
 		if (!explControlsManager.isExplanationsVisible()){
             explControlsManager.showExplanationsWindow();
             if (buildTreeOnDemand){
                 var step = sessionIndexManager.getCurrentIndex();
+                console.log("step initially : " + step);
+                if (mostRecentVisitedPauseAndPredictDPFrame != undefined){
+                    console.log("changing step to prev DP step " + mostRecentVisitedPauseAndPredictDPFrame)
+                    step = mostRecentVisitedPauseAndPredictDPFrame;
+                    mostRecentVisitedPauseAndPredictDPFrame = undefined;
+                }
                 if (step != frameOfCurrentTree){
-                    forgetCyTree();
-                    forgetBackingTree();
                     var frameInfo = activeSC2DataManager.getFrameInfo(step);
-                    var prevDpDesired = explControlsManager.getPrevDPDesired();
-                    var prevDPFrameInfo = getFrameInfoForPauseAndPredictDP(prevDpDesired);
-                    if (prevDPFrameInfo != undefined){
-                        frameInfo = prevDPFrameInfo;
-                    }
                     var treeDataDir = "js/tree/json/" + chosenFile;
                     var dpNumber = getWave(frameInfo);
+                    console.log("frame " + step + "  dpNumber " + dpNumber);
+                    forgetCyTree();
+                    forgetBackingTree();
                     initTree(dpNumber, treeDataDir + "/whole_decision_point_" + dpNumber + ".json",frameInfo.frame_number);
-                    //initTree(treeDataDir + "/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
                     frameOfCurrentTree = step;
                 }
             }
-            //explControlsManager.requestHideShowExplanationButton();
 		}
 	});
 	

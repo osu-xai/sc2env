@@ -1,6 +1,5 @@
 function getExplControlsManager(){
     m = {};
-    m.prevFocusDP = undefined;
     m.mode = "study";
 
     m.isUserStudyMode = function(){
@@ -8,17 +7,11 @@ function getExplControlsManager(){
     }
 
     m.setExplanationFocusToDP = function(dp){
-        this.prevFocusDP = dp;
         $('#button-show-explanations').html("Show Explanation for DP" + dp);
     }
     
     m.clearAnyPrevDPFocus = function(){
         $('#button-show-explanations').html("Show Explanation");
-        this.prevFocusDP = undefined;
-    }
-
-    m.getPrevDPDesired = function(){
-        return this.prevFocusDP;
     }
 
     m.showExplanationControls = function(){
