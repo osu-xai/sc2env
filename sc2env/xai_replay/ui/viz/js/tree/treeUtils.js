@@ -272,9 +272,16 @@ function switchChildrenPositions(cy, currNode, switchNode){
     });
 }
 
+
 var actionButtonIds = [];  
-function generateNodeActionMenu(id){
+function generateNodeActionMenu(id, dp){
     var div = document.getElementById(id);
+    var bigDPDiv = document.createElement("div");
+    bigDPDiv.setAttribute("id", "big-dp-for-tree");
+    bigDPDiv.setAttribute("style", "margin:auto;padding:10px;");
+    var svgForBigDP = getSVGDP('big-dp-for-tree-svg', 100, 100, 35, dp);
+    bigDPDiv.innerHTML = svgForBigDP;
+    div.append(bigDPDiv);
     //$("#" + id).css("visibility", "hidden");
     $("#" + id).css("padding", "12px");
     $("#" + id).css("background-color", "#E0E0E0");
@@ -316,7 +323,7 @@ function generateNodeActionMenu(id){
     div.append(hidePvButton)
     decorateNodeActionButton(hidePvId);
     actionButtonIds.push(hidePvId);
-
+    
 }
 
 function getNodeActionButton(id, buttonText, f){

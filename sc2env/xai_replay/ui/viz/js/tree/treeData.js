@@ -100,14 +100,15 @@ var treeStyle =
     }';
 
 var cy = undefined;
-function initTree(jsonPath, frameNumber){
+function initTree(dp, jsonPath, frameNumber){
+        $('#big-dp-for-tree-svg').text("D" + dp);
         controlsManager.setWaitCursor();
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
         populatePrincipalVariationTrajectory(backingTreeRoot);
         var nodeMenuExist = document.getElementById("node-actions-label");
         if (nodeMenuExist == undefined){
-            generateNodeActionMenu("node-menu");
+            generateNodeActionMenu("node-menu", dp);
         }
         else{
             currFocusNode = undefined;
@@ -123,6 +124,7 @@ function initTree(jsonPath, frameNumber){
             alert("zoom : " + zoom + "  pan x " + pan["x"] + " pan y " + pan["y"]);
         }
         controlsManager.clearWaitCursor();
+        
     });
 }
 

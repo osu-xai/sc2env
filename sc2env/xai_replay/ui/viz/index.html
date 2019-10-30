@@ -106,9 +106,7 @@
                         <button class="tabbutton" onclick="openExplanationView(event, 'linear')">Linear View</button>
                     </div>-->
                     <div id="explanation-content" style="width:100%;height:100%">
-                        <div id="cy" style="width:100%;height:100%;display:block;padding:0px;" class="tabcontent">
-                    
-                        </div>
+                        <div id="cy" style="width:100%;height:100%;display:block;padding:0px;" class="tabcontent"></div>
                         <div id="tree-legends" class="flex-column" style="position:absolute;bottom:2%;left:1%;width:17%;background-color: ivory;">
                             <div id="r-p-s-key" style="margin-left:50px;"> <!-- style="position:absolute;bottom:1%;right:0%;"-->
                                     <svg width="150" height="120">
@@ -218,8 +216,8 @@
                         </div>
                         
                         <button id="close_explanation-tree-button" onclick="hideExplanations()" style="padding:3px;font-family:Arial;font-size:35px;font-weight:bold;position:absolute;top:1%;right:1%;color:red; border-radius: 3px;">X</button>
+                        <div id="node-menu" class="flex-column" style="position: absolute; left:1%; top:1%;z-index:100;padding:10px;"></div>
                         
-                        <div id="node-menu" class="flex-column" style="position: absolute; left:1%; top:1%; z-index:100;padding:10px;"></div>
                         <!--<div id="linear" style="width:100%;height:100%;display:none" class="tabcontent"></div>-->
                     </div>
                 </div>
@@ -228,6 +226,7 @@
                 <script src="js/linear/storyLine.js"></script>
                 <script src="js/linear/storyLines.js"></script>
                 <script src="js/tree/htmlConstants.js"></script>
+                <script src="js/tree/htmlDP.js"></script>
                 <script src="js/tree/treeData.js"></script>
                 <script src="js/tree/incrementalTree.js"></script>
                 <script src="js/tree/incrementalTreeUtils.js"></script>

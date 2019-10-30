@@ -390,8 +390,8 @@ function sizeNonGeneratedElements() {
 
 
 	$('.unit-value-panels').css('font-size', "15px")
-	$('.unit-value-panels').css('font-family', "Arial")
-
+    $('.unit-value-panels').css('font-family', "Arial")
+    
 	
 	document.getElementById('friendly.nexusHealth.top').style.position = "absolute";
 	document.getElementById('friendly.nexusHealth.top').style.top = "12.5%";
@@ -492,7 +492,8 @@ function sizeNonGeneratedElements() {
                         frameInfo = prevDPFrameInfo;
                     }
                     var treeDataDir = "js/tree/json/" + chosenFile;
-                    initTree(treeDataDir + "/whole_decision_point_" + getWave(frameInfo) + ".json",frameInfo.frame_number);
+                    var dpNumber = getWave(frameInfo);
+                    initTree(dpNumber, treeDataDir + "/whole_decision_point_" + dpNumber + ".json",frameInfo.frame_number);
                     //initTree(treeDataDir + "/whole_decision_point_" + getWave(frameInfo) + "_minified.json");
                     frameOfCurrentTree = step;
                 }

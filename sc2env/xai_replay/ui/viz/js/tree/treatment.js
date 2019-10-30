@@ -7,7 +7,7 @@ function setToModelFreeTreatment(){
    populatePrincipalVariationTrajectory(backingTreeRoot);
    var nodeMenuExist = document.getElementById("node-actions-label");
    if (nodeMenuExist == undefined){
-       generateNodeActionMenu("node-menu");
+       generateNodeActionMenu("node-menu", "?");
    }
    cy = cytoscape(treeData);
    var rootNodeId = backingTreeRoot["data"]["id"];
@@ -31,7 +31,7 @@ function setToModelBasedTreatment(){
    populatePrincipalVariationTrajectory(backingTreeRoot);
    var nodeMenuExist = document.getElementById("node-actions-label");
    if (nodeMenuExist == undefined){
-       generateNodeActionMenu("node-menu");
+       generateNodeActionMenu("node-menu", "?");
    }
    cy = cytoscape(treeData);
    var rootNodeId = backingTreeRoot["data"]["id"];
