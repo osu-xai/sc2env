@@ -70,7 +70,6 @@ function processTimelineClick(e) {
 	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
 	//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
 	//SC2_DEFERRED targetClickHandler(e, logLine);
-	controlsManager.setWaitCursor();
     jumpToStep(targetStepString);
 }
 
@@ -340,11 +339,13 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
+    controlsManager.setWaitCursor();
     clearGameBoard();
     explControlsManager.hideExplanationControls();
 	activeSC2UIManager.jumpToFrame(step);
 	updateButtonsAfterJump();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
-	}
+    }
+    //don't clearWaitCursor because the video needs time to adjust
 }
