@@ -1,0 +1,6 @@
+This is a file for controlling the treatment.  
+
+Changing the name of this file to modelFree.txt will trigger that mode.  
+
+Keeping it as modelBased.txt will trigger that mode.
+
