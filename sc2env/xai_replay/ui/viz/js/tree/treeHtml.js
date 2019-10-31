@@ -8,7 +8,7 @@ function getNodeHtml(data, biggestUnitCount){
         return getNodeHtmlUsingFunction(getEnemyActionHtml, "enemyAction", data, unitValuesDict["Enemy"], biggestUnitCount, actionNodeWidth, enemyActionNodeHeight);
     }
     else {
-        return getNodeHtmlUsingFunction(getStateHtml, "state", data, unitValuesDict, "NA", stateNodeWidth, stateNodeHeight );
+        return getNodeHtmlUsingFunction(getStateHtml, "state", data, unitValuesDict, "NA", stateNodeWidth, stateNodeHeight);
     }
 }
 

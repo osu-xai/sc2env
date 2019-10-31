@@ -279,7 +279,7 @@ function generateNodeActionMenu(id, dp){
     var bigDPDiv = document.createElement("div");
     bigDPDiv.setAttribute("id", "big-dp-for-tree");
     bigDPDiv.setAttribute("style", "margin:auto;padding:10px;");
-    var svgForBigDP = getSVGDP('big-dp-for-tree-svg', 100, 100, 35, dp);
+    var svgForBigDP = getSVGDP('big-dp-for-tree-svg', 85, 85, 35, dp, 0);
     bigDPDiv.innerHTML = svgForBigDP;
     div.append(bigDPDiv);
     //$("#" + id).css("visibility", "hidden");

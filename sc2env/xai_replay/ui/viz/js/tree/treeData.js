@@ -100,8 +100,10 @@ var treeStyle =
     }';
 
 var cy = undefined;
+var currentTreeDP = undefined;
 function initTree(dp, jsonPath, frameNumber){
         $('#big-dp-for-tree-svg').text("D" + dp);
+        currentTreeDP = dp;
         controlsManager.setWaitCursor();
         $.getJSON(jsonPath, function(rawSc2Json) {
         generateBackingTreeOfCynodes(rawSc2Json);
@@ -386,4 +388,16 @@ function cyPopulateStateNodesUnderEnemyActions(jsonEnemyActionNode){
         edges.push(cyEdge);
         cyPopulateFriendlyActionUnderState(jsonStateNode);
     }
+}
+
+
+function getStateHopsFromRoot(data){
+    if (data["root"] == "iAmRoot"){
+        return 0;
+    }
+    if (data["sc2_cyChildren"].length == 0){
+        return 2;
+    }
+    // must be middle state
+    return 1;
 }

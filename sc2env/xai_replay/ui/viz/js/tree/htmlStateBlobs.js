@@ -3,8 +3,9 @@
 function getStateHtml(data, unitValuesDict) {
     var pylonCountFriendly = unitValuesDict["Pylons State"];
     var pylonCountEnemy = unitValuesDict["Enemy"]["Pylons State"];
+    var statesFromRoot = getStateHopsFromRoot(data);
     return '<div class="flex-column" style="width:100%;height:100%;" onload="onloadTest">' + 
-        getPlayerTitlesRow(100,pHeightStateTitlesRow) + 
+        getPlayerTitlesRow(100,pHeightStateTitlesRow, statesFromRoot) + 
         getGameStateRow(   100,pHeightStateArmyStringRow,data) + 
         getSpacer(         100,pHeightStateSpacerAbovePylonRow) + 
         getStatePylonsRow( 100,pHeightStatePylonsRow, pylonCountFriendly, pylonCountEnemy) + 
@@ -72,14 +73,21 @@ function getPylonSpacer(pWidth, pHeight) {
     return '<div style="width:' + pWidth + '%;height:' + pHeight + '%;"></div>';
 }
 
-function getPlayerTitlesRow(pWidth, pHeight) {
-    return '<div class="flex-row" style="box-sizing: border-box;width:' + pWidth + '%;height:' + pHeight + '%;padding:10px;background-color:' + playerTitleRowColor + '">' + 
-           getPlayerTitle(50,100,"FRIENDLY", getPlayerColor("agent")) + 
-           getPlayerTitle(50,100,"ENEMY", getPlayerColor("enemy")) + 
+function getPlayerTitlesRow(pWidth, pHeight, statesFromRoot) {
+    return '<div class="flex-row" style="box-sizing: border-box;width:' + pWidth + '%;height:' + pHeight + '%;padding:10px;background-color:' + playerTitleRowColor + ';border:solid black 1px;">' + 
+           getPlayerTitle(46,100,"FRIENDLY", getPlayerColor("agent")) + 
+           getDPDiamond(8, 90, currentTreeDP,statesFromRoot) + 
+           getPlayerTitle(46,100,"ENEMY", getPlayerColor("enemy")) + 
            '</div>';
 }
 
 function getPlayerTitle(pWidth, pHeight, name, color){
-    return '<div style="background-color:' + playerNameBackgroundColor + ';color:' + color + ';font-size:80px;font-weight:bold;width:' + pWidth + '%;height:' + pHeight + '%;text-align:center">' + name + '</div>';
+    return '<div style="background-color:' + playerTitleRowColor + ';color:' + color + ';font-size:100px;font-weight:bold;width:' + pWidth + '%;height:' + pHeight + '%;text-align:center">' + name + '</div>';
 }
-  
+
+function  getDPDiamond(pWidth, pHeight, dp, statesFromRoot){
+    var result = '<div style="width:' + pWidth + '%;height:' + pHeight + '%;">' + 
+                    getSVGDP('na', 130, 130, 50, dp, statesFromRoot) + 
+                '</div>';
+    return result;
+}

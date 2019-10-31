@@ -25,7 +25,7 @@ var portionOfNodeToUseHorizontally = 0.92;
 // state nodes
 var stateNodeHeight = 1500;
 var stateNodeWidth = 2000;
-var playerTitleRowColor = "#EEEEEE";
+var playerTitleRowColor = "#DDDDDD";
 
 // action nodes
 var actionNodeWidth = 1700;
@@ -80,7 +80,7 @@ var immortalColor = "#666666";
 
 
 //state node units on field counts
-var pHeightStateTitlesRow     = 8;
+var pHeightStateTitlesRow     = 12;
 var pHeightStateArmyStringRow = 72;
 var pHeightStateSpacerAbovePylonRow = 2
 var pHeightStatePylonsRow     = 7; 
@@ -88,7 +88,6 @@ var pHeightStateQValRow       = 9;
 
 var pWidthStateNexus      = 6; 
 var pWidthStateUnitCounts = 88; 
-var playerNameBackgroundColor = "#EEEEEE";
 
 // state node - nexus health
 var pHeightStateNexusHealth  = 49; //*2
