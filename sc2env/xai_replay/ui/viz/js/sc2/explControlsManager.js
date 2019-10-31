@@ -142,11 +142,13 @@ function hideUnlockControls(){
 function showUnlockControls(){
     $('#unlock-key-label').css('display', "block");
     $('#unlock-key-text').css('display', "block");
+    controlsManager.disablePauseResume();
 }
 
 function hideExplanations(){
     explControlsManager.hideExplanations();
     explControlsManager.clearAnyPrevDPFocus();
+    controlsManager.enablePauseResume();
 }
 
 function disableShowExplanationsButton(){
