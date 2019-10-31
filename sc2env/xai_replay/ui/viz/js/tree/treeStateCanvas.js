@@ -93,9 +93,9 @@ function drawRectangleAtOrigin(x,y,color, count){
     }
     var width = getWidthForCount(count);
     var height = getHeightForCount(count)
-    var xLeft = x - width / 2;
+    var xLeft = x - (width / 2) + 15;
     var yTop = y - height / 2;
-    return '<rect x="' + randomShift(xLeft) + '" y="' + randomShift(yTop) + '" width="' + width + '" height="' + height + '" style="fill:' + color + ';stroke:' + color + ';stroke-width:1;" />'
+    return '<rect x="' + xLeft + '" y="' + yTop + '" width="' + width + '" height="' + height + '" style="fill:' + color + ';stroke:' + color + ';stroke-width:1;" />'
 
 }
 
@@ -103,8 +103,8 @@ function drawTriangleAtOrigin(x,y,color, count){
     if (count == 0){
         return '';
     }
-    var shiftedX = randomShift(x);
-    var shiftedY = randomShift(y);
+    var shiftedX = x - 20;
+    var shiftedY = y;
     var immortalBoost = 1;
     var width = getWidthForCount(count) * immortalBoost;
     var height = getHeightForCount(count)* immortalBoost;
@@ -118,22 +118,23 @@ function drawTriangleAtOrigin(x,y,color, count){
     return '<polygon points="' + pointSequence + '" style="fill:' + color + ';stroke:' + color + ';stroke-width:1" />';
 }
 
-function randomShift(val){
-    var randomOffset = Math.floor(Math.random() * 20); 
-    var randomSign = Math.floor(Math.random() * 2);
-    if (randomSign == 0){
-        randomOffset = 0 - randomOffset;
-    }
-    return  val + randomOffset;
-}
+// function randomShift(val){
+//     var randomOffset = Math.floor(Math.random() * 20); 
+//     var randomSign = Math.floor(Math.random() * 2);
+//     if (randomSign == 0){
+//         randomOffset = 0 - randomOffset;
+//     }
+//     return  val + randomOffset;
+// }
 function drawEllipseAtOrigin(x,y,color, count){
     if (count == 0){
         return '';
     }
     var width = getWidthForCount(count);
     var height = getHeightForCount(count);
+    var shiftedX = x - 15;
 
-    return '<ellipse cx="' + randomShift(x) + '" cy="' + randomShift(y) + '" rx="' + width/2 + '" ry="' + height/2 + '" stroke="' + color + '" fill="' + color + '" stroke-width="1"/>'
+    return '<ellipse cx="' + shiftedX + '" cy="' + y + '" rx="' + width/2 + '" ry="' + height/2 + '" stroke="' + color + '" fill="' + color + '" stroke-width="1"/>'
 }
 function getWidthForCount(count){
     var radius = (count * 25);
