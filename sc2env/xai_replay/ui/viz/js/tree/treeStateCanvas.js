@@ -135,8 +135,17 @@ function drawEllipseAtOrigin(x,y,color, count){
 
     return '<ellipse cx="' + randomShift(x) + '" cy="' + randomShift(y) + '" rx="' + width/2 + '" ry="' + height/2 + '" stroke="' + color + '" fill="' + color + '" stroke-width="1"/>'
 }
-
 function getWidthForCount(count){
+    var radius = (count * 30);
+    return radius;
+}
+
+function getHeightForCount(count){
+    var radius = (count * 8);
+    return radius;
+}
+
+function getWidthForCountOld(count){
     var radius = (count * 4 ) + 30;
     if (radius > 280) {
         return 280;
@@ -144,7 +153,7 @@ function getWidthForCount(count){
     return radius;
 }
 
-function getHeightForCount(count){
+function getHeightForCountOld(count){
     var radius = (count * 2) + 15;
     if (radius > 140) {
         return 140;
