@@ -31,6 +31,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     convertDPNumsToFrames([1], forwardProgressDPs)
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
+    controlsManager.registerJQueryHandleForWaitCursor($("#explanation-control-panel"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 

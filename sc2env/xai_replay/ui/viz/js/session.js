@@ -416,7 +416,7 @@ function renderUnitValues(frameInfo){
     changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number);
     for (var i = 0; i < laterDPFrames.length; i++){
         if (frameInfo.frame_number > laterDPFrames[i]){
-            if (explControleManager.isUserStudyMode()){
+            if (explControlsManager.isUserStudyMode()){
                 pauseAtInterestingDp(laterDPFrames[i]);
             }
             addVisitedDPToForwardProgress(laterDPFrames[i+1]);
