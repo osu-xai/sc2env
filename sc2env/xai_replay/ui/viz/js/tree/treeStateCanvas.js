@@ -105,7 +105,7 @@ function drawTriangleAtOrigin(x,y,color, count){
     }
     var shiftedX = randomShift(x);
     var shiftedY = randomShift(y);
-    var immortalBoost = 3;
+    var immortalBoost = 1;
     var width = getWidthForCount(count) * immortalBoost;
     var height = getHeightForCount(count)* immortalBoost;
     var xBottomLeft = shiftedX - width / 2;
