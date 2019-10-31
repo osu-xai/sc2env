@@ -150,7 +150,9 @@ function hideExplanations(){
 }
 
 function disableShowExplanationsButton(){
-    $('#button-show-explanations').prop('disabled', true);
+    if (explControlsManager.isUserStudyMode()){
+        $('#button-show-explanations').prop('disabled', true);
+    }
 }
 
 function enableShowExplanationsButton(){
