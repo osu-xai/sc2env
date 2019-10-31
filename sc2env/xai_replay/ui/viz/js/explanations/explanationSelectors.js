@@ -91,12 +91,16 @@ function configureExplanationSelectorDiamond(decisionPointNumber,step){
 	ctx.closePath();
 	ctx.fill();
 	
-	ctx.fillStyle = 'white';
+    ctx.fillStyle = 'white';
+    var singleDigitRightCorrection = 0;
+    if (decisionPointNumber < 10){
+        var singleDigitRightCorrection = 2;
+    }
 	if (currentStep == step) {
-		var textCenterX = ((rightVertexX - leftVertexX) / 2) + leftVertexX - 10;
+		var textCenterX = ((rightVertexX - leftVertexX) / 2) + leftVertexX - 12 + singleDigitRightCorrection;
 	}
 	else {
-		var textCenterX = ((rightVertexX - leftVertexX) / 2) + leftVertexX - 7;
+		var textCenterX = ((rightVertexX - leftVertexX) / 2) + leftVertexX - 9 + singleDigitRightCorrection;
 	}
 	ctx.font = "Arial";
 	var textCenterY = explanationControlYPosition + 5;
