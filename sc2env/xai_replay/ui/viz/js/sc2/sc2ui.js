@@ -114,13 +114,12 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         renderUnitValues(frame);
 
         userStudyAdjustmentsForFrameChange();
-        setLaterDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
 
         if (this.jumped){
             this.renderTooltipsForCurrentStep();
             this.jumped = false;
             sessionIndexManager.setReplaySequencerIndex(frameNumber);
-
+            setLaterDecisionPointFrames(this.dataManager.frameInfos, frameNumber)
         }
 
         checkForEndOfGame()

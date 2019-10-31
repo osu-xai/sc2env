@@ -349,7 +349,7 @@ function getShapeKeysColumn(pWidth, pHeight, color){
                 <svg width="' + pWidth + '" height="' + pHeight + '"> \
                     <ellipse cx="' + pWidth/2 + '" cy="' + pHeight/6 + '" rx="' + (pWidth*.9)/2 + '" ry="' + pWidth/4 + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
                     <rect x="'+ .1*pWidth +'" y="' + 4*pHeight/10 + '" width="' + pWidth*.8 + '" height="' + pWidth/2 + '" style="stroke-width:3;fill:' + color + ';stroke:rgb(0,0,0)" /> \
-                    <polygon points="' + pWidth/2 + ',' + .7*pHeight + ' ' + pWidth*.2 +',' + .85*pHeight + ' ' + pWidth*.8 +', ' + .85*pHeight + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
+                    <polygon points="' + pWidth/2 + ',' + .65*pHeight + ' ' + pWidth*.1 +',' + .9*pHeight + ' ' + pWidth*.9 +', ' + .9*pHeight + '" style="fill:' + color + ';stroke:black;stroke-width:3" /> \
                 </svg> \
             </div>';
 }
