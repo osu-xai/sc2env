@@ -21,7 +21,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
             var dpStep = this.decisionPointSteps[i];
             if (Number(dpStep) <= Number(step)) {
                 var indexPlusOne = Number(i) + Number(1);
-                result = "DP" + indexPlusOne; 
+                result = "DP " + indexPlusOne; 
             }
             else {
                 return result;
@@ -86,7 +86,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         //SC2_TODO_SAL}
         //console.log('replaySequencerIndex is now ' + index);
 		// var displayVal = this.getStepCountToDisplay();
-		var displayVal = decisionPointsFullCopy.length - laterDPFrames.length;
+		var displayVal = currentDP;
 
         //console.log('display Step value : ' + displayVal);
 		if (displayVal == undefined){
@@ -94,7 +94,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		}
 		else {
 			// $("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
-			$("#step-value").html('DP ' + displayVal + ' / ' + decisionPointsFullCopy.length);
+			$("#step-value").html(displayVal + ' / ' + decisionPointsFullCopy.length);
 
 		}
 		paintProgress(this.getProgressBarValue());

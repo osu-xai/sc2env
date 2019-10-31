@@ -57,7 +57,6 @@ function convertDPNumsToFrames(dpList, dpFrameList){
 }
 
 
-
 function trimFirstFrames(frameInfos, trimBy){
     for (var i = 0; i < trimBy; i++){
         frameInfos.shift()
