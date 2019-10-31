@@ -136,7 +136,7 @@ function drawEllipseAtOrigin(x,y,color, count){
     return '<ellipse cx="' + randomShift(x) + '" cy="' + randomShift(y) + '" rx="' + width/2 + '" ry="' + height/2 + '" stroke="' + color + '" fill="' + color + '" stroke-width="1"/>'
 }
 function getWidthForCount(count){
-    var radius = (count * 30);
+    var radius = (count * 25);
     return radius;
 }
 
