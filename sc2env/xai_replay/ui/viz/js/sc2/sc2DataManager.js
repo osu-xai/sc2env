@@ -1,7 +1,7 @@
 const forwardDP = 3;
 const forwardDPCheck = false;
-const pauseAndPredictDPs = [6,7,11,17,20,26,28,29,36]
-const pauseAndExplainDPs = [7,8,12,18,21,27,29,30,37]
+const pauseAndPredictDPs = [6,7,11,17,20,26,36]
+const pauseAndExplainDPs = [7,8,12,18,21,27,37]
 var forwardProgressDPs = []; //accumulate dps as user visits them. used for navigation bar clicks
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
