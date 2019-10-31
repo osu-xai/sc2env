@@ -210,7 +210,7 @@ function checkUnlockKey(){
     }
     var step = sessionIndexManager.getCurrentIndex();
     var dpString = sessionIndexManager.getDPThatStartsEpochForStep(step);
-    var dp = dpString.replace("DP","");
+    var dp = dpString.replace("DP ","");
     var unlockCode = unlockKeys[dp];
     if (unlockCode == code){
         explControlsManager.correctUnlockKeyEntered();
