@@ -181,12 +181,12 @@ function getDestroyVLinePattern(player, lane, barHeight){
 function getLowestSquaresPattern(player, lane, barHeight){
     var patternX = 0.05;
     var patternY = 0.05;
-    var patternWidth = 0.25;
+    var patternWidth = 0.10;
     //var patternHeight = 0.2;
-    var rectWidth = 20;
-    var rectHeight = 20;
+    var rectWidth = 10;
+    var rectHeight = 10;
     var maxBarHeight = chartHeight - (chartHeight/3);
-    var patternHeight = lowestConstant / (barHeight * maxBarHeight);
+    var patternHeight = lowestConstant / (barHeight * maxBarHeight * 2);
     var result = '<pattern id="'+ lane + '-lowest-' + player + '" x="' + patternX + '" + y="' + patternY + '" width="' + patternWidth + '" height="' + patternHeight+ '" patternUnits="objectBoundingBox">' + 
     '<rect x="0" y="0" width="' + rectWidth + '" height="' + rectHeight + '" fill="' + getPlayerColor(player) + '"/>' +
     '<rect x="' + rectWidth + '" y="' + rectHeight + '" width="' + rectWidth + '" height="' + rectHeight + '" fill="' + getPlayerColor(player) + '"/>' +
