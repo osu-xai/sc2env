@@ -32,7 +32,9 @@ function showNextBestAction(){
 // }
 
 function hideNode(){
+    
     removeNode(cy, currFocusNode);
+    disableActionMenu();
     refreshCy();
 }
 
