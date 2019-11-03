@@ -12,11 +12,24 @@ var decisionPointsFullCopy = [];
 var laterDPFrames = []
 var mostRecentVisitedPauseAndPredictDPFrame = undefined;
 
-function forgetFirstPairOfPredictAndExplainDps(){
+var activePauseAndExplainDP = undefined;
+var activePauseAndExplainDPFrame = undefined;
+
+function forgetPauseAndPredictDPInfo(){
     pauseAndPredictDPs.shift();
-    pauseAndExplainDPs.shift();
     mostRecentVisitedPauseAndPredictDPFrame = pauseAndPredictDPsByFrame.shift();
-    pauseAndExplainDPsByFrame.shift();
+}
+
+function forgetPauseAndExplainDPInfo(){
+    activePauseAndExplainDP = pauseAndExplainDPs.shift();
+    activePauseAndExplainDPFrame = pauseAndExplainDPsByFrame.shift();
+}
+
+function revisitActiveExplainDP(){
+    pauseAndExplainDPs.unshift(activePauseAndExplainDP);
+    activePauseAndExplainDP = undefined;
+    pauseAndExplainDPsByFrame.unshift(activePauseAndExplainDPFrame);
+    activePauseAndExplainDPFrame = undefined;
 }
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);

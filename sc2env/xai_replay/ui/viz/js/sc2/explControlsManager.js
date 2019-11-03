@@ -66,6 +66,9 @@ function getExplControlsManager(){
 
     m.hideExplanationControls = function(){
         if(this.isUserStudyMode()) {
+            if (activePauseAndExplainDP != undefined){
+                revisitActiveExplainDP()
+            }
             hideUnlockControls();
         }
     }

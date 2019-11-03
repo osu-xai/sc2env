@@ -454,10 +454,11 @@ function pauseAtInterestingDp(currDecisionPoint){
             var prevDPNum = Number(pauseAndExplainDPs[dpIndex]) - 1;
             explControlsManager.setExplanationFocusToDP(prevDPNum);
             explControlsManager.showExplanationControls();
-            forgetFirstPairOfPredictAndExplainDps();
+            forgetPauseAndExplainDPInfo();
         }
         else if (currDecisionPoint == pauseAndPredictDPsByFrame[dpIndex]){
             pauseGame();
+            forgetPauseAndPredictDPInfo();
         }
         else {
             //don't pause
