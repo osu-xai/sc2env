@@ -220,6 +220,8 @@ function setTutorialModeFromFile(){
         {
             enableForwardTimelineBlock = false;
             year2TutorialMode = true;
+            $('#dev-mode-check').css("display", "inline");
+            $('#dev-mode-check-label').css("display", "inline");
         }
     });
 }
