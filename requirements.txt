@@ -4,6 +4,3 @@ tqdm
 gym
 pysc2
 imutil>=0.2.1
-websockets
-rangehttpserver
-protobuf==3.5.2
