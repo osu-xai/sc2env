@@ -458,10 +458,8 @@ function sizeNonGeneratedElements() {
             if (buildTreeOnDemand){
                 var step = sessionIndexManager.getCurrentIndex();
                 console.log("step initially : " + step);
-                if (mostRecentVisitedPauseAndPredictDPFrame != undefined){
-                    console.log("changing step to prev DP step " + mostRecentVisitedPauseAndPredictDPFrame)
-                    step = mostRecentVisitedPauseAndPredictDPFrame;
-                    mostRecentVisitedPauseAndPredictDPFrame = undefined;
+                if(explControlsManager.userStudyDPToDisplay != undefined){
+                    step = framesByDP[explControlsManager.userStudyDPToDisplay];
                 }
                 if (step != frameOfCurrentTree){
                     var frameInfo = activeSC2DataManager.getFrameInfo(step);

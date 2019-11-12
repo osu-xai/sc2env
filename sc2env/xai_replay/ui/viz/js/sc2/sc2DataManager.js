@@ -8,16 +8,15 @@ var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
 var pauseAndExplainDPsByFrame = [];
 var pauseAndPredictDPsByFrame = [];
-var decisionPointsFullCopy = [];
+var allDecisionPointFrames = [];
 var laterDPFrames = []
-var mostRecentVisitedPauseAndPredictDPFrame = undefined;
 
 var activePauseAndExplainDP = undefined;
 var activePauseAndExplainDPFrame = undefined;
 
 function forgetPauseAndPredictDPInfo(){
     pauseAndPredictDPs.shift();
-    mostRecentVisitedPauseAndPredictDPFrame = pauseAndPredictDPsByFrame.shift();
+    pauseAndPredictDPsByFrame.shift();
 }
 
 function forgetPauseAndExplainDPInfo(){
@@ -38,10 +37,11 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
     setLaterDecisionPointFrames(frameInfos, 0)
-    for (dpIndex in laterDPFrames){decisionPointsFullCopy.push(laterDPFrames[dpIndex]);}
+    for (dpIndex in laterDPFrames){allDecisionPointFrames.push(laterDPFrames[dpIndex]);}
     convertDPNumsToFrames(pauseAndExplainDPs, pauseAndExplainDPsByFrame);
     convertDPNumsToFrames(pauseAndPredictDPs, pauseAndPredictDPsByFrame);
     convertDPNumsToFrames([1], forwardProgressDPs)
+    rememberFramesByDP(frameInfos);
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-control-panel"));
@@ -65,7 +65,7 @@ function isPauseAndExplainDP(dp){
 function convertDPNumsToFrames(dpList, dpFrameList){
     for (var dpIndex in dpList){
         var currInterestingDP = dpList[dpIndex];
-        dpFrameList.push(decisionPointsFullCopy[currInterestingDP-1]);
+        dpFrameList.push(allDecisionPointFrames[currInterestingDP-1]);
     }
 }
 
@@ -88,6 +88,15 @@ function setLaterDecisionPointFrames(frameInfos, frameNumber){
     }
 }
 
+var framesByDP = {};
+function rememberFramesByDP(frameInfos){
+    for (var i = 0; i < frameInfos.length; i++){
+        if (frameInfos[i].frame_info_type == "decision_point"){
+            var dpNum = frameInfos[i]["decision_point_number"];
+            framesByDP[dpNum]= i;
+        }
+    }
+}
 var unitInfoKeys = [
     "friendly.marineBuilding.top",
     "friendly.banelingBuilding.top",

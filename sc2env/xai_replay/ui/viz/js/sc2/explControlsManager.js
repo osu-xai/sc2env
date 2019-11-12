@@ -1,17 +1,19 @@
 function getExplControlsManager(){
     m = {};
     m.mode = "study";
-
+    m.userStudyDPToDisplay = undefined;
     m.isUserStudyMode = function(){
         return (this.mode == "study");
     }
 
     m.setExplanationFocusToDP = function(dp){
         $('#button-show-explanations').html("Show Explanation for DP" + dp);
+        this.userStudyDPToDisplay = dp;
     }
     
-    m.clearAnyPrevDPFocus = function(){
+    m.clearUserStudyDPToDisplay = function(){
         $('#button-show-explanations').html("Show Explanation");
+        this.userStudyDPToDisplay = undefined;
     }
 
     m.showExplanationControls = function(){
@@ -61,7 +63,7 @@ function getExplControlsManager(){
     }
 
     m.showExplanationsWindow = function(){
-        $('#explanation-tree-window').css('display', "block")
+        $('#explanation-tree-window').css('display', "block");
     }
 
     m.hideExplanationControls = function(){
@@ -134,6 +136,12 @@ function getExplControlsManager(){
         r.css('height', "30px")
     }
 
+    m.registerResume = function() {
+        disableShowExplanationsButton();
+        if (this.isUserStudyMode()){
+            this.clearUserStudyDPToDisplay();
+        }
+    }
     return m;
 }
 
@@ -150,7 +158,6 @@ function showUnlockControls(){
 
 function hideExplanations(){
     explControlsManager.hideExplanations();
-    explControlsManager.clearAnyPrevDPFocus();
     controlsManager.enablePauseResume();
 }
 
@@ -215,7 +222,7 @@ function checkUnlockKey(){
     }
     var step = sessionIndexManager.getCurrentIndex();
     var dpString = sessionIndexManager.getDPThatStartsEpochForStep(step);
-    var dp = dpString.replace("DP ","");
+    var dp = dpString.replace("DP","").trim();
     var unlockCode = unlockKeys[dp];
     if (unlockCode == code){
         explControlsManager.correctUnlockKeyEntered();

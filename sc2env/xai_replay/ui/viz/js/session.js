@@ -355,9 +355,9 @@ htmlAllianceTextForKey["enemy.Pylon"] = "Enemy ";
 function isFrameFarEnoughPastDP(frameInfo){
     var frameNumber = frameInfo.frame_number;
     var farEnoughPastDP = 10;
-    for (var i in decisionPointsFullCopy){
-        var dpFrame = decisionPointsFullCopy[i];
-        var nextDpFrame = decisionPointsFullCopy[Number(i)+ 1];
+    for (var i in allDecisionPointFrames){
+        var dpFrame = allDecisionPointFrames[i];
+        var nextDpFrame = allDecisionPointFrames[Number(i)+ 1];
         var windowStart = dpFrame  + farEnoughPastDP;
         if (nextDpFrame == undefined){
             var windowEnd = windowStart  + 75;
@@ -449,16 +449,17 @@ function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
     }
 }
 
-function pauseAtInterestingDp(currDecisionPoint){
+function pauseAtInterestingDp(currDecisionPointFrame){
     for (var dpIndex = 0; dpIndex < pauseAndExplainDPsByFrame.length; dpIndex++){
-        if (currDecisionPoint == pauseAndExplainDPsByFrame[dpIndex]){
+        if (currDecisionPointFrame == pauseAndExplainDPsByFrame[dpIndex]){
             pauseGame();
-            var prevDPNum = Number(pauseAndExplainDPs[dpIndex]) - 1;
+            var curDPNum = Number(pauseAndExplainDPs[dpIndex]);
+            var prevDPNum = curDPNum - 1;
             explControlsManager.setExplanationFocusToDP(prevDPNum);
             explControlsManager.showExplanationControls();
             forgetPauseAndExplainDPInfo();
         }
-        else if (currDecisionPoint == pauseAndPredictDPsByFrame[dpIndex]){
+        else if (currDecisionPointFrame == pauseAndPredictDPsByFrame[dpIndex]){
             pauseGame();
             forgetPauseAndPredictDPInfo();
         }

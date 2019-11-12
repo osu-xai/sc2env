@@ -94,7 +94,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		}
 		else {
 			// $("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
-			$("#step-value").html(displayVal + ' / ' + decisionPointsFullCopy.length);
+			$("#step-value").html(displayVal + ' / ' + allDecisionPointFrames.length);
 
 		}
 		paintProgress(this.getProgressBarValue());
