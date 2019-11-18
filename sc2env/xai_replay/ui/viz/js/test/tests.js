@@ -30,14 +30,14 @@ function getFailureChecker() {
 function runTests(){
     var fc = getFailureChecker();
     runVideoManagerTests(fc);
-    runQuestionAccessManagerTests(fc);
-    runChartManagerTests(fc);
-    runChartDataSelectionTests(fc);
+    //runQuestionAccessManagerTests(fc);
+    //runChartManagerTests(fc);
+    //runChartDataSelectionTests(fc);
 
-    runChartDataTextTests(fc);
-    runChartDataColorTests(fc);
-    runRankingTests(fc);
-    runSessionTests(fc);
+    //runChartDataTextTests(fc);
+    //runChartDataColorTests(fc);
+    //runRankingTests(fc);
+    //runSessionTests(fc);
 
     var chartTypes = [0,1,2];
     //0 - seeSawChart
@@ -60,6 +60,7 @@ function runTests(){
         runMsxGeometryTests (fc, chartTesting);
     }
     runTreeTests(fc);
+    runTreeChoiceManagerTests(fc);
     var message = "";
     for (var i in fc.testNames){
         var testName = fc.testNames[i];
