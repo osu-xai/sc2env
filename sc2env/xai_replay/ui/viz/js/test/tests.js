@@ -29,7 +29,6 @@ function getFailureChecker() {
 }
 function runTests(){
     var fc = getFailureChecker();
-    runVideoManagerTests(fc);
     //runQuestionAccessManagerTests(fc);
     //runChartManagerTests(fc);
     //runChartDataSelectionTests(fc);
@@ -61,6 +60,7 @@ function runTests(){
     }
     runTreeTests(fc);
     runTreeChoiceManagerTests(fc);
+    runExplanationAccessManagerTests(fc);
     var message = "";
     for (var i in fc.testNames){
         var testName = fc.testNames[i];
