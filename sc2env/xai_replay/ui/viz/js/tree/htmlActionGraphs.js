@@ -92,7 +92,7 @@ function getUnitsRow(pWidth, pHeight,player, lane, UnitType, unitValuesDict, col
     var actionCount = unitValuesDict[actionKey];
     var stateCount = unitValuesDict[stateKey] - actionCount;// Nick's fix
     var curUnitCount = stateCount - actionCount;
-    if (maxRenderableUnitCount >= curUnitCount){
+    if (maxRenderableUnitCount >= stateCount){
         return getSimpleUnitsRow(pWidth, pHeight,player, color, stateCount, actionCount);
     }
     else {
