@@ -89,10 +89,6 @@ function getChart(pWidth, pHeight, data){
     }
 }
 function getChartString(pWidth, pHeight, chartData){
-    // make chart container div with specific dimensions that is a flex-column
-    //var chartString = '<div class="flex-column" style="background-color:#F0FFF0;;height: 400px; width: 800px;padding=30px;">' + getChartContentRow(chartData) + getXAxisRow() + '</div>';
-    //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getSemiCircles(chartData) + getAxes() + '</svg></div>';
-    //return '<div style="background-color:#F0FFF0;"><svg height="' + chartHeight + '" width="' + chartWidth + '" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getFadedCircles(chartData) + getAxes() + '</svg></div>';
     var result = '<div class="flex-row" style="background-color:white;height:' + pHeight + '%; width:' + pWidth + '%">' +
               '<div style="width:' + pWidthChartMargin + '%;height:100%";></div>' +
               '<svg style="width:' + pWidthChartContent + '%;height:100%;" fill="white" version="1.1" xmlns="http://www.w3.org/2000/svg">' + getQuadWinBars(chartData) + getXAxis() + '</svg>' + 
