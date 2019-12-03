@@ -58,10 +58,16 @@ function runTests(){
         runMsxRankingTests(fc, chartTesting);
         runMsxGeometryTests (fc, chartTesting);
     }
+<<<<<<< Updated upstream
     runTreeTests(fc);
     runTreeChoiceManagerTests(fc);
     runExplanationAccessManagerTests(fc);
     runAutoPauseManagerTests(fc);
+=======
+    // runTreeTests(fc);
+    // runTreeChoiceManagerTests(fc);
+    // runExplanationAccessManagerTests(fc);
+>>>>>>> Stashed changes
     var message = "";
     for (var i in fc.testNames){
         var testName = fc.testNames[i];
