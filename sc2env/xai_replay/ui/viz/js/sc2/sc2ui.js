@@ -29,8 +29,6 @@ var sc2GameOrigPixelViewableWidth  = 2048 * aspectRatio;
 var sc2GameOrigPixelViewableHeight = 2048;
 var roughlyHalfWidthOfUnitAsPercentageOfCanvas = 0.05;
 
-//var sc2GameOrigPixelOffscreenToLeftX   = (sc2GameOrigPixelWidth - sc2GameOrigPixelViewableWidth)/2; //40
-//var sc2GameOrigPixelOffscreenToBottomY = (sc2GameOrigPixelHeight - sc2GameOrigPixelViewableHeight)/2;//160
 
 var sc2GameOrigPixelViewableWidth_Scaled  = sc2GameOrigPixelViewableWidth * videoScaleFactor;
 var sc2GameOrigPixelViewableHeight_Scaled = sc2GameOrigPixelViewableHeight * videoScaleFactor;
@@ -90,30 +88,21 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         this.jumped = true;
         video.currentTime = currentTime + (trimBy / framesPerSecond);
         // event will fire that will trigger expressFrameInfo
-        
-        //sessionIndexManager.setReplaySequencerIndex(frameNumber);
-        //this.renderStateForCurrentStep();
-        //performFinalAdjustmentsForFrameChange(this.dataManager.getFrameInfo(frameNumber));
     }
 
     
     uim.expressFrameInfo = function(frameNumber) {
-        console.log("expressingFrameInfo");
         frameNumber = this.dataManager.validateStep(frameNumber);
         sessionIndexManager.setReplaySequencerIndex(frameNumber);
 
-        if (sessionIndexManager.isAtDecisionPoint()){
-            var dpString = sessionIndexManager.getDPThatStartsEpochForStep(frameNumber);
-            var dp = dpString.replace("DP","");
-            if (isPauseAndExplainDP(Number(dp))){
-                explControlsManager.showExplanationControls();
-            }
-        }
         expressCumulativeRewards(this.dataManager.getFrameInfo(frameNumber));
         frame = this.dataManager.getFrameInfo(frameNumber);
         renderUnitValues(frame);
-
-        userStudyAdjustmentsForFrameChange();
+        var dpPausingAt = explControlsManager.affirmAutoPause(frameNumber);
+        if (dpPausingAt != undefined){
+            pauseGame();
+            explControlsManager.pauseAtDP(dpPausingAt);
+        }
 
         if (this.jumped){
             this.renderTooltipsForCurrentStep();
@@ -126,7 +115,7 @@ function getSC2UIManager(sc2DataManager, filenameRoot) {
         controlsManager.clearWaitCursor();
     }
     uim.play = function(){
-        explControlsManager.hideExplanationControls();
+        //explControlsManager.resume();
         video.play()
     }
     uim.pause = function() {
@@ -191,23 +180,6 @@ function getTooltipColorRGBAForUnit(unitInfo){
     return "#ffffff";
 }
 
-
-
-// function translateUnitXToCanvasXOld(unitX){
-//     var percentX = unitX / 40;
-//     var origGameX = sc2GameOrigPixelWidth * percentX;
-//     var canvasX = origGameX - sc2GameOrigPixelOffscreenToLeftX;
-//     var scaledCanvasX = canvasX * videoScaleFactor;
-//     return scaledCanvasX;
-// }
-
-// function translateUnitYToCanvasYOld(unitY){
-//     var percentY = unitY / 40;
-//     var origGameY = sc2GameOrigPixelHeight * percentY;
-//     var canvasY = origGameY - sc2GameOrigPixelOffscreenToBottomY;
-//     var scaledCanvasY = canvasY * videoScaleFactor;
-//     return scaledCanvasY;
-// }
 
 function translateUnitXToCanvasX(unitX){
     var unitXCamera = unitX - xEdgeToCamera;

@@ -1,29 +1,136 @@
+//
+// Her'es the design for the 2019 fall study, "study mode"  ("dev mode" has no control of access to explanations):
+//
+// user plays the replay, autopauses at entry in pauseAndPredictDPs, but play button enabled
+// play from there and stop at entry in pauseAndExplainDPs, play button is disabled
+// if this is the first time arriving at the peDP, then unlock controls are shown.
+//  if the user jumps backward to a previous DP before unlocking, and then plays forward, autopause will happen
+// and unlock controls displayed.
+//  once user unlocks, if they hop back before showing the explanation and then play forward, autopause will
+// happen at the peDP, but no unlock controls are shown.  Instead, the show explanation button willcontain the dp
+// number of the associated (previous) ppDP.
+// note thatany time an autopause occurs at a peDP, the play button is disabled, preventing user from moving 
+// forward from peDP until they show the explanation.  Dismissing the explanation tree re-enables the play button.
+//
+// If user hops back to previous dp that is prior to an "already-explained" peDP, then the "show explanation" button 
+// is enabled and has the number of that DP.  So, the only time the button will have the prior DP number in it is 
+// during the "controlled explanation".
+//
+// If a user tries to hop forward past the highest "already explained"  peDP, they are blocked with a message that explains why
+// If user has not reached the first peDP and tries to hop forward, they are blocked with the message that explains why
+//
+// ANother way to think of it is with zones
+
+// zoneNoPeDPYetExplained - this covers the first DPs prior to the first peDP if that peDP hasnot yet been explained
+// zoneBeforeHighestExplainedPeDP 
+// zoneAtUnexplainedPeDP
+// zoneAfterHighestExplainedPeDP
+//
+//  zoneNoPeDPYetExplained - can't hop forward, no access to explanations
+//  zoneBeforeHighestExplainedPeDP - can hop anywhere in here, show explanation button enabled and aimed at the actual DP
+//  zoneAtUnexplainedPeDP  - has to be unlocked, show explanation button is aimed at prior DP
+//  zoneAfterHighestExplainedPeDP - can only play through this, can't hop around
+
+
 function getExplControlsManager(){
     m = {};
     m.mode = "study";
+    m.explanationAccessManager = explanationAccessManagerStudy;
+    m.treeChoiceManager = treeChoiceManagerStudy;
+    m.autoPauseManager = autoPauseManagerStudy;
     m.userStudyDPToDisplay = undefined;
+    m.parkedAtDP = undefined;
+
     m.isUserStudyMode = function(){
         return (this.mode == "study");
     }
 
-    m.setExplanationFocusToDP = function(dp){
-        $('#button-show-explanations').html("Show Explanation for DP" + dp);
-        this.userStudyDPToDisplay = dp;
+    m.getDPToDisplay = function() {
+        return this.treeChoiceManager.dpToRender;
     }
-    
-    m.clearUserStudyDPToDisplay = function(){
-        $('#button-show-explanations').html("Show Explanation");
-        this.userStudyDPToDisplay = undefined;
+    m.pauseAtDP = function(dp){
+        this.explanationAccessManager.pauseAtDP(dp);
+        this.treeChoiceManager.pauseAtDP(dp);
+        this.parkedAtDP = dp;
+        this.refresh();
     }
 
-    m.showExplanationControls = function(){
-        enableShowExplanationsButton();
-        if(this.isUserStudyMode()) {
-            disableShowExplanationsButton();
+    m.hopToDP = function(dp){
+        this.explanationAccessManager.hopToDP(dp);
+        this.treeChoiceManager.hopToDP(dp);
+        this.parkedAtDP = dp;
+        this.refresh();
+    }
+
+    m.userPaused = function(){
+        var currentStep = sessionIndexManager.getCurrentIndex();
+        var dpStep = sessionIndexManager.getStepThatStartsEpochForStep(currentStep);
+        var prevDP = dpsByFrame[dpStep];
+        if (dpStep == currentStep){
+            this.pauseAtDP(prevDP);
+        }
+        else {
+            this.pauseAfterDP(prevDP);
+        }
+    }
+
+    m.pauseAfterDP = function(dp){
+        this.explanationAccessManager.pauseAfterDP(dp);
+        this.treeChoiceManager.pauseAfterDP(dp);
+        this.parkedAtDP = undefined;
+        this.refresh();
+    }
+
+    m.hopToAfterDP = function(dp){
+        this.explanationAccessManager.hopToAfterDP(dp);
+        this.treeChoiceManager.hopToAfterDP(dp);
+        this.refresh();
+    }
+
+    m.someExplanationShown = function(dp){
+        this.treeChoiceManager.someExplanationShown(dp);
+        this.refresh();
+    }
+
+    // m.forwardedFromExplanation = function(){
+    //     this.explanationAccessManager.forwardedFromExplanation();
+    //     this.treeChoiceManager.forwardedFromExplanation();
+    //     this.refresh();
+    // }
+    m.processJumpToDPStep = function(step){
+        var targetDP = dpsByFrame[step];
+        this.hopToDP(targetDP);
+    }
+
+    m.processJumpToNonDPStep = function(step){
+        var dpStep = sessionIndexManager.getStepThatStartsEpochForStep(step);
+        var prevDP = dpsByFrame[dpStep];
+        this.hopToAfterDP(prevDP);
+    }
+
+    m.isForwardGestureBlocked = function(frame){
+        return this.treeChoiceManager.isForwardGestureBlocked(frame);
+    }
+    m.refresh = function(){
+        var dpToRender = this.treeChoiceManager.dpToRender;
+        if (dpToRender == "NA" || dpToRender == undefined){
+            $('#button-show-explanations').html("Show Explanation");
+        }
+        else {
+            $('#button-show-explanations').html("Show Explanation for DP" + dpToRender);
+        }
+
+        if (this.explanationAccessManager.showUnlockControls){
             showUnlockControls();
         }
         else {
+            hideUnlockControls();
+        }
+        if (this.explanationAccessManager.showExplButtonEnabled){
             enableShowExplanationsButton();
+        }
+        else {
+            disableShowExplanationsButton();
         }
     }
 
@@ -45,47 +152,39 @@ function getExplControlsManager(){
     m.setModeToUserStudy = function(){
         this.mode = "study";
         this.hideDevControls();
-        this.hideExplanationControls();
+        //this.hideExplanationControls();
         if (!year2TutorialMode) {
             enableForwardTimelineBlock = true;
         }
+        this.explanationAccessManager = explanationAccessManagerStudy;
+        this.treeChoiceManager = treeChoiceManagerStudy;
+        this.autoPauseManager = autoPauseManagerStudy;
+        this.refresh();
     }
 
     m.setModeToDev = function(){
         this.mode = "dev";
         this.renderDevControls();
-        this.showExplanationControls();
+        //this.showExplanationControls();
         enableForwardTimelineBlock = false;
+        this.explanationAccessManager = explanationAccessManagerDev;
+        this.treeChoiceManager = treeChoiceManagerDev;
+        this.autoPauseManager = autoPauseManagerDev;
+        this.refresh();
     }
 
     m.isExplanationsVisible = function() {
         return !($('#explanation-tree-window').css('display') == 'none');
     }
 
+
     m.showExplanationsWindow = function(){
         $('#explanation-tree-window').css('display', "block");
-    }
-
-    m.hideExplanationControls = function(){
-        if(this.isUserStudyMode()) {
-            if (activePauseAndExplainDP != undefined){
-                revisitActiveExplainDP()
-            }
-            hideUnlockControls();
-        }
-    }
-
-    m.requestHideShowExplanationButton = function(){
-        if (this.isUserStudyMode()){
-            disableShowExplanationsButton();
-        }
+        this.treeChoiceManager.someExplanationShown();
     }
     
     m.hideExplanations = function() {
         $('#explanation-tree-window').css('display', "none");
-        if (this.isUserStudyMode()){
-            hideUnlockControls();
-        }
     }
 
     m.styleControls = function(){
@@ -122,11 +221,9 @@ function getExplControlsManager(){
         //$('#explanation-tree-window').css('border', "3px solid black")
     }
 
-    m.correctUnlockKeyEntered = function(){
-        if (this.isUserStudyMode()){
-            enableShowExplanationsButton();
-            hideUnlockControls();
-        }
+    m.correctUnlockKeyEntered = function(dp){
+        this.explanationAccessManager.unlocked(dp);
+        this.refresh();
     }
 
     m.decorateRadioButton = function(r){
@@ -136,12 +233,19 @@ function getExplControlsManager(){
         r.css('height', "30px")
     }
 
-    m.registerResume = function() {
-        disableShowExplanationsButton();
-        if (this.isUserStudyMode()){
-            this.clearUserStudyDPToDisplay();
-        }
+    m.noteResume = function() {
+        this.explanationAccessManager.resume();
+        this.treeChoiceManager.resume();
+        this.refresh();
     }
+
+    m.affirmAutoPause = function(frameNumber){
+        var priorDPStep = sessionIndexManager.getStepThatStartsEpochForStep(frameNumber);
+        var priorDP = dpsByFrame[priorDPStep];
+        var highestDPCompleted = this.treeChoiceManager.highestDPCompleted;
+        return this.autoPauseManager.affirmAutoPause(priorDP, highestDPCompleted);
+    }
+
     return m;
 }
 
@@ -162,9 +266,7 @@ function hideExplanations(){
 }
 
 function disableShowExplanationsButton(){
-    if (explControlsManager.isUserStudyMode()){
-        $('#button-show-explanations').prop('disabled', true);
-    }
+    $('#button-show-explanations').prop('disabled', true);
 }
 
 function enableShowExplanationsButton(){
@@ -225,7 +327,7 @@ function checkUnlockKey(){
     var dp = dpString.replace("DP","").trim();
     var unlockCode = unlockKeys[dp];
     if (unlockCode == code){
-        explControlsManager.correctUnlockKeyEntered();
+        explControlsManager.correctUnlockKeyEntered(Number(dp));
     }
     else {
         alert("unlock key " + dpString + " does not match expected value, please try again.")

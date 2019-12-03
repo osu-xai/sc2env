@@ -61,6 +61,7 @@ function runTests(){
     runTreeTests(fc);
     runTreeChoiceManagerTests(fc);
     runExplanationAccessManagerTests(fc);
+    runAutoPauseManagerTests(fc);
     var message = "";
     for (var i in fc.testNames){
         var testName = fc.testNames[i];

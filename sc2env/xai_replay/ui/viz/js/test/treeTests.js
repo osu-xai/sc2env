@@ -155,7 +155,7 @@ function newNode(id){
     n["data"] = {};
     n["data"]["sc2_cyChildren"] = [];
     n["id"] = id;    
-    console.log("adding node " + id);
+    //console.log("adding node " + id);
     return n;
 }
 

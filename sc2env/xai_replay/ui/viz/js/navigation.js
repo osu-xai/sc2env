@@ -43,6 +43,14 @@ function showPositionOnTimeline(value) {
 	ctx.fill();
 }
 
+function isForwardGesture(targetStep){
+    var currentStep = sessionIndexManager.getCurrentIndex();
+    if (targetStep > currentStep){
+        return true;
+    }
+    return false;
+}
+
 function processTimelineClick(e) {
 	var clickX = e.offsetX - timelineMargin;
 	if (clickX < 0){
@@ -51,22 +59,11 @@ function processTimelineClick(e) {
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
     var targetStepString = "" + replaySequenceTargetStep;
     var targetStepAsNum = Number(targetStepString);
-    var forwardProgressDPAsNum = forwardProgressDPs[forwardProgressDPs.length-1];
-	if ((targetStepAsNum > forwardProgressDPAsNum) && enableForwardTimelineBlock){
-		// pauseGame();
-		if (document.getElementById('customErrMsg') == undefined){
-			showCustomErrorMsg("Cannot skip forward. Only steps prior to DP" + forwardProgressDPs.length + " are unlocked.");
-		}
-		setTimeout(function() {
-			var errMsg = $('#customErrMsg')
-			errMsg.fadeOut('400', function (){
-				var errMsg = $('#customErrMsg')
-				errMsg.innerHTML = '';
-				errMsg.remove();
-			});
-		}, 3500); // <-- time in milliseconds
-		return; //TODO KEEP TRACK OF WHERE USER HAS REACHED
-	}
+    if (isForwardGesture(targetStepAsNum)){
+        if (explControlsManager.isForwardGestureBlocked(targetStepAsNum)){
+            return;
+        }
+    }
 	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
 	//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
 	//SC2_DEFERRED targetClickHandler(e, logLine);
@@ -103,7 +100,8 @@ var tryPause = function (e) {
 	if (!userInputBlocked) {
 		//SC2_DEFERRED var logLine = templateMap["pauseButton"];
 		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_PAUSE>", "NA");
-		//SC2_DEFERRED targetClickHandler(e, logLine);
+        //SC2_DEFERRED targetClickHandler(e, logLine);
+        explControlsManager.userPaused();
 		pauseGame();
 	}
 }
@@ -126,7 +124,7 @@ function resumeGame() {
 	controlsManager.userClickedResume();
 	// video.currentTime = 80 / framesPerSecond
     activeSC2UIManager.play();
-    explControlsManager.registerResume();
+    explControlsManager.noteResume();
 	//SC2_TODO_NAV_TEST - new logic that re-engages the driver loop
 	// if play button cue arrow present, remove it
 	$("#cue-arrow-div").remove();
@@ -341,11 +339,20 @@ function updateButtonsAfterJump() {
 function jumpToStep(step){
     controlsManager.setWaitCursor();
     clearGameBoard();
-    explControlsManager.hideExplanationControls();
+    explControlsManager.processJumpToNonDPStep(step);
 	activeSC2UIManager.jumpToFrame(step);
 	updateButtonsAfterJump();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
     }
     //don't clearWaitCursor because the video needs time to adjust
+}
+
+function jumpToDPStep(step){
+    controlsManager.setWaitCursor();
+    clearGameBoard();
+    explControlsManager.processJumpToDPStep(step);
+    activeSC2UIManager.jumpToFrame(step);
+	updateButtonsAfterJump();
+    //enableShowExplanationsButton();
 }

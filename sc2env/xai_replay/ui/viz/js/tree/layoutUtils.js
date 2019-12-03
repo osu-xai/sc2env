@@ -312,7 +312,7 @@ function positionNodeAndParent(node, i){
 }
 
 function setNodeXPosition(node, i){
-    console.log("setting xOffset for " + node["data"]["id"] + " to position " + i);
+    //console.log("setting xOffset for " + node["data"]["id"] + " to position " + i);
     node["data"]["xOffset"] = i;
 }
 

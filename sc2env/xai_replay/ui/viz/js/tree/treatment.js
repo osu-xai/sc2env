@@ -27,6 +27,9 @@ function setToModelFreeTreatment(){
 function setToModelBasedTreatment(){
    controlsManager.setWaitCursor();
    sc2Treatment = "ModelBased";
+   if (backingTreeRoot == undefined){
+       return;
+   }
    forgetCyTree();
    populatePrincipalVariationTrajectory(backingTreeRoot);
    var nodeMenuExist = document.getElementById("node-actions-label");

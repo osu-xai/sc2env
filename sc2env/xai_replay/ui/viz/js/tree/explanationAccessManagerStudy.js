@@ -11,8 +11,10 @@ function getExplanationAccessManagerStudy(pauseAndExplainDPs){
     eam.showExplButtonEnabled = false;
 
     eam.highestDPUnlocked = -1;
-
+    eam.currentDP = undefined;
+    eam.highestDPCompleted = -1;
     eam.arriveAtDP = function(dp){
+        this.currentDP = dp;
         //this.highestDPPaused = dp;
         if (this.dps.includes(dp)){
             if (dp > this.highestDPUnlocked){
@@ -27,13 +29,18 @@ function getExplanationAccessManagerStudy(pauseAndExplainDPs){
             }
         }
         else {
-            if (dp <= this.highestDPUnlocked){
+            if (this.highestDPCompleted == -1){
+                // shouldn't show any explanations yet
+                this.showUnlockControls = false;
+                this.showExplButtonEnabled = false;
+            }
+            else if (dp <= this.highestDPCompleted){
                 // not at interestingDP and <= highestUnlocked
                 this.showUnlockControls = false;
                 this.showExplButtonEnabled = true;
             }
             else {
-                // not at interestingDP and > highestUnlocked
+                // not at interestingDP and > highestDPCompleted
                 this.showUnlockControls = false;
                 this.showExplButtonEnabled = false;
             }
@@ -49,6 +56,7 @@ function getExplanationAccessManagerStudy(pauseAndExplainDPs){
     }
 
     eam.arriveAfterDP = function(dp){
+        this.currentDP = undefined;
         if (this.dps.includes(dp)){
             if (dp >= this.highestDPUnlocked){
                 // at interestingDp and dp > highestUnlocked
@@ -62,13 +70,18 @@ function getExplanationAccessManagerStudy(pauseAndExplainDPs){
             }
         }
         else {
-            if (dp <= this.highestDPUnlocked){
+            if (this.highestDPCompleted == -1){
+                // shouldn't show any explanations yet
+                this.showUnlockControls = false;
+                this.showExplButtonEnabled = false;
+            }
+            else if (dp <= this.highestDPCompleted){
                 // not at interestingDP and <= highestUnlocked
                 this.showUnlockControls = false;
                 this.showExplButtonEnabled = true;
             }
             else {
-                // not at interestingDP and > highestUnlocked
+                // not at interestingDP and > highestDPCompleted
                 this.showUnlockControls = false;
                 this.showExplButtonEnabled = false;
             }
@@ -92,6 +105,12 @@ function getExplanationAccessManagerStudy(pauseAndExplainDPs){
     eam.resume = function(){
         this.showUnlockControls = false;
         this.showExplButtonEnabled = false;
+        if (this.currentDP != undefined){
+            if (this.dps.includes(this.currentDP)){
+                this.highestDPCompleted = this.currentDP;
+                this.currentDP = undefined;
+            }
+        }
     }
 
     return eam;
