@@ -2,7 +2,14 @@ const forwardDP = 3;
 const forwardDPCheck = false;
 const pauseAndPredictDPs = [6,7,11,17,20,26,36]
 const pauseAndExplainDPs = [7,8,12,18,21,27,37]
-var forwardProgressDPs = []; //accumulate dps as user visits them. used for navigation bar clicks
+
+var explanationAccessManagerStudy = getExplanationAccessManagerStudy(pauseAndExplainDPs);
+var explanationAccessManagerDev = getExplanationAccessManagerDev(pauseAndExplainDPs);
+var treeChoiceManagerStudy = getTreeChoiceManagerStudy(pauseAndExplainDPs);
+var treeChoiceManagerDev = getTreeChoiceManagerDev(pauseAndExplainDPs);
+var autoPauseManagerStudy = getAutoPauseManagerStudy(pauseAndPredictDPs, pauseAndExplainDPs);
+var autoPauseManagerDev = getAutoPauseManagerDev();
+
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
@@ -11,25 +18,6 @@ var pauseAndPredictDPsByFrame = [];
 var allDecisionPointFrames = [];
 var laterDPFrames = []
 
-var activePauseAndExplainDP = undefined;
-var activePauseAndExplainDPFrame = undefined;
-
-function forgetPauseAndPredictDPInfo(){
-    pauseAndPredictDPs.shift();
-    pauseAndPredictDPsByFrame.shift();
-}
-
-function forgetPauseAndExplainDPInfo(){
-    activePauseAndExplainDP = pauseAndExplainDPs.shift();
-    activePauseAndExplainDPFrame = pauseAndExplainDPsByFrame.shift();
-}
-
-function revisitActiveExplainDP(){
-    pauseAndExplainDPs.unshift(activePauseAndExplainDP);
-    activePauseAndExplainDP = undefined;
-    pauseAndExplainDPsByFrame.unshift(activePauseAndExplainDPFrame);
-    activePauseAndExplainDPFrame = undefined;
-}
 function getSC2DataManager(sc2ReplaySessionConfig) {
     var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
@@ -40,7 +28,7 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     for (dpIndex in laterDPFrames){allDecisionPointFrames.push(laterDPFrames[dpIndex]);}
     convertDPNumsToFrames(pauseAndExplainDPs, pauseAndExplainDPsByFrame);
     convertDPNumsToFrames(pauseAndPredictDPs, pauseAndPredictDPsByFrame);
-    convertDPNumsToFrames([1], forwardProgressDPs)
+    //convertDPNumsToFrames([1], forwardProgressDPs)
     rememberFramesByDP(frameInfos);
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
@@ -89,11 +77,13 @@ function setLaterDecisionPointFrames(frameInfos, frameNumber){
 }
 
 var framesByDP = {};
+var dpsByFrame = {};
 function rememberFramesByDP(frameInfos){
     for (var i = 0; i < frameInfos.length; i++){
         if (frameInfos[i].frame_info_type == "decision_point"){
             var dpNum = frameInfos[i]["decision_point_number"];
             framesByDP[dpNum]= i;
+            dpsByFrame[i] = dpNum;
         }
     }
 }
@@ -432,25 +422,6 @@ function extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig) {
 function validateFrameInfos(frameInfos){//SC2_TODO_DEFER implement this 
     return undefined;
 }
-
-// function convertSC2QValuesToJSChart(frameInfo){
-//     var chart = {};
-//     chart.title = "CHART TITLE";
-//     chart.v_title = "VERTICAL AXIS"
-//     chart.h_title = "HORIZONTAL AXIS";
-//     chart.actions = [];
-//     var qValues = frameInfo["q_values"];
-//     var step = frameInfo["frame_number"];
-//     var actionAttackQ1 = collectActionInfo(step, "Attack Q1", qValues["Top_Right"]);
-//     var actionAttackQ2 = collectActionInfo(step, "Attack Q2", qValues["Top_Left"]);
-//     var actionAttackQ3 = collectActionInfo(step, "Attack Q3", qValues["Bottom_Left"]);
-//     var actionAttackQ4 = collectActionInfo(step, "Attack Q4", qValues["Bottom_Right"]);
-//     chart.actions.push(actionAttackQ1);
-//     chart.actions.push(actionAttackQ2);
-//     chart.actions.push(actionAttackQ3);
-//     chart.actions.push(actionAttackQ4);
-//     return chart;
-// }
 
 function averageValuesInDictionary(actionValues){//SC2_TEST
     var values = Object.values(actionValues);

@@ -366,7 +366,7 @@ function isFrameFarEnoughPastDP(frameInfo){
             var windowEnd = nextDpFrame;
         }
         if (frameNumber >= windowStart && frameNumber <= windowEnd){
-            console.log("frame " + frameNumber + " is between "+ windowStart + " and " + windowEnd);
+            //console.log("frame " + frameNumber + " is between "+ windowStart + " and " + windowEnd);
             return true;
         }
     }
@@ -415,58 +415,6 @@ function renderUnitValues(frameInfo){
     
     }
     
-    changePlayBackSpeedForInitialUninterestingDps(frameInfo.frame_number);
-    for (var i = 0; i < laterDPFrames.length; i++){
-        if (frameInfo.frame_number > laterDPFrames[i]){
-            if (explControlsManager.isUserStudyMode()){
-                pauseAtInterestingDp(laterDPFrames[i]);
-            }
-            addVisitedDPToForwardProgress(laterDPFrames[i+1]);
-            laterDPFrames.splice(i,1);
-            return;
-        }
-    }
-}
-
-function addVisitedDPToForwardProgress(dpFrame){
-    var beenThere = false;
-    for (var dpIndex = 0; dpIndex < forwardProgressDPs.length; dpIndex++){
-        if (dpFrame == forwardProgressDPs[dpIndex]){
-            beenThere = true;
-        }
-    }
-    if (!beenThere){
-        forwardProgressDPs.push(dpFrame);
-    }
-}
-
-function changePlayBackSpeedForInitialUninterestingDps(frameNumber){
-    if (frameNumber < pauseAndPredictDPsByFrame[0]){
-        video.playbackRate = 1; //twice the speed of videoPlaybackRate
-    }
-    else{
-        video.playbackRate = videoPlaybackRate; // 0.5
-    }
-}
-
-function pauseAtInterestingDp(currDecisionPointFrame){
-    for (var dpIndex = 0; dpIndex < pauseAndExplainDPsByFrame.length; dpIndex++){
-        if (currDecisionPointFrame == pauseAndExplainDPsByFrame[dpIndex]){
-            pauseGame();
-            var curDPNum = Number(pauseAndExplainDPs[dpIndex]);
-            var prevDPNum = curDPNum - 1;
-            explControlsManager.setExplanationFocusToDP(prevDPNum);
-            explControlsManager.showExplanationControls();
-            forgetPauseAndExplainDPInfo();
-        }
-        else if (currDecisionPointFrame == pauseAndPredictDPsByFrame[dpIndex]){
-            pauseGame();
-            forgetPauseAndPredictDPInfo();
-        }
-        else {
-            //don't pause
-        }
-    }
 }
 
 function expressCumulativeRewards(frameInfo) { //SC2_TEST

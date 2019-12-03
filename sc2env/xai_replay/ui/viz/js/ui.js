@@ -456,20 +456,17 @@ function sizeNonGeneratedElements() {
 		if (!explControlsManager.isExplanationsVisible()){
             explControlsManager.showExplanationsWindow();
             if (buildTreeOnDemand){
-                var step = sessionIndexManager.getCurrentIndex();
-                console.log("step initially : " + step);
-                if(explControlsManager.userStudyDPToDisplay != undefined){
-                    step = framesByDP[explControlsManager.userStudyDPToDisplay];
-                }
-                if (step != frameOfCurrentTree){
-                    var frameInfo = activeSC2DataManager.getFrameInfo(step);
+                var targetDP = explControlsManager.getDPToDisplay();
+                var targetFrame = framesByDP[targetDP];
+                if (targetFrame != frameOfCurrentTree){
+                    var frameInfo = activeSC2DataManager.getFrameInfo(targetFrame);
                     var treeDataDir = "js/tree/json/" + chosenFile;
                     var dpNumber = getWave(frameInfo);
-                    console.log("frame " + step + "  dpNumber " + dpNumber);
+                    console.log("frame " + targetFrame + "  dpNumber " + dpNumber);
                     forgetCyTree();
                     forgetBackingTree();
                     initTree(dpNumber, treeDataDir + "/whole_decision_point_" + dpNumber + ".json",frameInfo.frame_number);
-                    frameOfCurrentTree = step;
+                    frameOfCurrentTree = targetFrame;
                 }
             }
 		}
@@ -583,26 +580,16 @@ expl_ctrl_canvas.addEventListener('click', function (event) {
 			processTimelineClick(event);
 		}
 		else{
-			if (matchingStep > forwardProgressDPs[forwardProgressDPs.length-1] && enableForwardTimelineBlock){
-				// pauseGame();
-				if (document.getElementById('customErrMsg') == undefined){
-					showCustomErrorMsg("Cannot skip forward. Only steps prior to DP" + forwardProgressDPs.length + " are unlocked.");
-				}
-				setTimeout(function() {
-					var errMsg = $('#customErrMsg')
-					errMsg.fadeOut('400', function (){
-						var errMsg = $('#customErrMsg')
-						errMsg.innerHTML = '';
-						errMsg.remove();
-					});
-				}, 3500); // <-- time in milliseconds
-				return; //TODO KEEP TRACK OF WHERE USER HAS REACHED
-			}
+            if (isForwardGesture(matchingStep)){
+                if (explControlsManager.isForwardGestureBlocked(matchingStep)){
+                    return;
+                }
+            }
 			if (matchingStep == sessionIndexManager.getCurrentIndex()) {
 				//no need to move - already at step with explanation
 			}
 			else {
-                jumpToStep(matchingStep);
+                jumpToDPStep(matchingStep);
 				//SC2_DEFERRED var logLine = templateMap["decisionPointList"];
 				//SC2_DEFERRED logLine = logLine.replace("<TARGET>", "decisionPointList")
 				//SC2_DEFERRED logLine = logLine.replace("<J_DP_NUM>", matchingStep);

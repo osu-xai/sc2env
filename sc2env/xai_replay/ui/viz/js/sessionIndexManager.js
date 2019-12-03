@@ -24,9 +24,11 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
                 result = "DP " + indexPlusOne; 
             }
             else {
+                //console.log("getDPThatStartsEpochForStep " + step + " is " + result);
                 return result;
             } 
         }
+        //console.log("getDPThatStartsEpochForStep " + step + " is " + result);
         return result;
     }
 
@@ -35,14 +37,18 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
             alert("step number higher than max!  Returning step 1");
             return 1;
         }
+        var result = 1;
         for (var i in this.decisionPointSteps){
             var dpStep = this.decisionPointSteps[i];
             if (Number(dpStep) <= Number(step)) {
-                return dpStep;
+                result = dpStep;
+            }
+            else {
+                //console.log("getStepThatStartsEpochForStep " + step + " is " + result);
             }
         }
-        alert("step number less than 1!  Returning step 1");
-        return 1;
+        //console.log("getStepThatStartsEpochForStep " + step + " is " + result);
+        return result;
     }
 	// progress bar is divided up in stepSizeAsKnownInReplaySequencer - 1 pieces
 	// because the first chunk of that we want to correspond to ReplaySequencer.scaii_pkts[1]
@@ -118,11 +124,6 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		return this.replaySequencerMaxIndex;
 	}
 
-	// sim.incrementReplaySequencerIndex = function() {
-	// 	if (Number(Number(this.replaySequencerIndex) + Number(1)) <= this.replaySequencerMaxIndex) {
-	// 		this.setReplaySequencerIndex(this.replaySequencerIndex + 1);
-	// 	}
-	// }
 	sim.isAtEndOfGame = function(){
 		if (this.replaySequencerIndex == this.replaySequencerMaxIndex) {
 			return true;
