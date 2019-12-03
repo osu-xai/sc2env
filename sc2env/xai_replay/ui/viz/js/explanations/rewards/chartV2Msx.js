@@ -22,7 +22,7 @@ function sortMsxBars(rawChartData) {
         var action = rd.actions[i];
         if (action.name != maxBarGroup.name) {
             var importantNames = getMinBarAdvantagesRowNBarsPerAction(rd.actions[i], maxBarGroup);
-            console.log(importantNames);
+            //console.log(importantNames);
             for (var j in action.bars) {
                 var bar = action.bars[j];
                 for (var k in importantNames) {
@@ -57,7 +57,7 @@ function getMinBarAdvantagesRowNBarsPerAction(action, maxBarGroup) {
         }
     }
     var finalReturn = (getMinSufficientBarNames(posDiff, totalPos, namePosDiff, totalNegDiff));
-    console.log("-------------------------------");
+    //console.log("-------------------------------");
     return finalReturn;
 }
 function getMinSufficientBarNames(posDiff, totalPos, namePosDiff, totalNegDiff) {
@@ -89,6 +89,5 @@ function getMinSufficientBarNames(posDiff, totalPos, namePosDiff, totalNegDiff) 
     if(minPos <= totalNegDiff) {
         console.log("Error: No positive reward minimum to explain total negative rewards");
     }
-    console.log("The min needed is: " + minPos);
     return importantNames;
 }
