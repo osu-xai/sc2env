@@ -451,9 +451,9 @@ class TugOfWar():
                 elif unit_types[entry.unit_type] >= 15 and unit_types[entry.unit_type] <= 62:
                     # Grid
                     if player == 1:
-                        if entry.pos.x >= 0 and entry.pos.x <= 32:
+                        if entry.pos.x >= 0 and entry.pos.x <= 45.5:
                             grid_index = 0
-                        elif entry.pos.x > 32 and entry.pos.x <= 64:
+                        elif entry.pos.x > 45.5 and entry.pos.x <= 64:
                             grid_index = 1
                         elif entry.pos.x > 64 and entry.pos.x < 82.5:
                             grid_index = 2
@@ -462,9 +462,9 @@ class TugOfWar():
                         else:
                             print("ERROR!!! Unit recorded is somehow out of range of the map")
                     else:
-                        if entry.pos.x >= 0 and entry.pos.x <= 32:
+                        if entry.pos.x >= 0 and entry.pos.x <= 45.5:
                             grid_index = 3
-                        elif entry.pos.x > 32 and entry.pos.x <= 64:
+                        elif entry.pos.x > 45.5 and entry.pos.x <= 64:
                             grid_index = 2
                         elif entry.pos.x > 64 and entry.pos.x < 82.5:
                             grid_index = 1
@@ -629,8 +629,10 @@ class TugOfWar():
     def get_big_A(self, mineral, num_of_pylon, is_train = 0):
 #         print(mineral)
 #         print(self.action_space_dict[num_of_pylon][mineral])
-
+#         mineral = int(mineral)
+#         print(mineral, num_of_pylon)
         if is_train == 0 or is_train == 1:
+            
             big_A = self.action_space[num_of_pylon][: self.action_space_dict[num_of_pylon][mineral]]
             top_lane = np.zeros((len(big_A), 7))
             bottom_lane = np.zeros((len(big_A), 7))
@@ -644,6 +646,7 @@ class TugOfWar():
     #         print(bottom_lane)
             
             big_A = np.vstack((top_lane, bottom_lane))
+            big_A = np.unique(big_A, axis=0)
     #         print(big_A)
     #         return big_A
 
@@ -705,14 +708,20 @@ class TugOfWar():
         s = np.repeat(s.reshape((1,-1)), len(actions), axis = 0)
         actions = np.array(actions)
         # Add all candidate acgtions to the corressponding vector of the state matrix
-        s[:,1:8] += actions
+        s[:,1:7] += actions[:, : -1]
         
 #         print((self.maker_cost_np * actions[: -1]).shape)
         s[:, self.miner_index] -= np.sum(self.maker_cost_np * actions[:, :-1], axis = 1)
         
+        
         index_has_pylon = actions[:, -1] > 0
-        num_of_pylon = s[index_has_pylon, self.pylon_index]
-        s[index_has_pylon, self.miner_index] -= (self.pylon_cost + (num_of_pylon - 1) * 100)
+        while sum(index_has_pylon) != 0:
+            num_of_pylon = s[index_has_pylon, self.pylon_index]
+            s[index_has_pylon, self.pylon_index] += 1
+            s[index_has_pylon, self.miner_index] -= (self.pylon_cost + num_of_pylon * 100)
+            
+            actions[index_has_pylon, -1] -= 1
+            index_has_pylon = actions[:, -1] > 0
         
         assert np.sum(s[:, self.miner_index] >= 0) == s.shape[0]
         return s

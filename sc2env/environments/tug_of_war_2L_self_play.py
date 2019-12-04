@@ -483,6 +483,7 @@ class TugOfWar():
 #         print(bottom_lane)
         
         big_A = np.vstack((top_lane, bottom_lane))
+        big_A = np.unique(big_A, axis = 0)
 #         print(big_A)
 #         return big_A
         if is_train:

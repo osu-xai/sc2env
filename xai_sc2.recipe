@@ -1,0 +1,99 @@
+Bootstrap: docker
+From : ubuntu:16.04
+
+        # as per https://sylabs.io/guides/3.2/user-guide/definition_files.html
+
+%environment
+	export USER=`whoami`
+	export PYTHONPATH=/sc2/sc2env:/sc2/abp:/sc2/sc2env/sc2env/xai_replay/ui/viz/py_backend/proto:
+	export PATH=$PATH:/anaconda3/bin
+
+%post 
+	cd /
+	apt-get update
+        apt-get install -y unzip
+	apt-get install -y bzip2
+	apt-get install -y wget
+	wget -nc https://repo.continuum.io/archive/Anaconda3-2019.03-Linux-x86_64.sh
+	chmod +x Anaconda3-2019.03-Linux-x86_64.sh 
+	./Anaconda3-2019.03-Linux-x86_64.sh -b
+	
+	anaconda3/bin/activate
+	anaconda3/bin/conda install -y python=3.6
+        export PATH=$PATH:/anaconda3/bin
+	rm Anaconda3-2019.03-Linux-x86_64.sh
+
+	apt-get install -y git
+	mkdir /sc2
+	# ----------------------  install sc2env ----------------------------
+	cd /sc2
+
+	git clone https://github.com/osu-xai/sc2env.git
+	pip install numpy
+	pip install torch
+	pip install tqdm
+	pip install gym
+	pip install pysc2
+	pip install imutil
+
+
+
+	# ----------------------  install abp ----------------------------
+	cd /sc2
+	git clone https://github.com/osu-xai/abp
+
+
+	pip install torchvision
+	pip install gym[atari]
+	pip install visdom
+	pip install tensorflow
+	pip install tensorboardX
+	pip install openpyxl
+	apt-get install -y gcc
+	apt-get install -y libopenmpi-dev
+        apt-get install -y openmpi-bin
+	apt-get install -y libhdf5-openmpi-dev
+
+	apt-get install -y cmake
+	apt-get install -y zlib1g-dev
+	apt-get install -y python3-dev
+
+	pip install --no-deps baselines
+	pip install pandas
+	pip install pyyaml
+	pip install coverage
+	pip install scaii>=0.2.0
+	pip install git+https://github.com/greydanus/excitationbp.git#egg=excitationbp
+	pip install git+https://github.com/osu-xai/pytorch-saliency
+
+
+	# ----------------------  install jpg rendering assistance ----------------------------
+	apt install -y libosmesa6-dev
+	apt-get install -y ffmpeg  # to install jpg renderer
+
+	# ----------------------  install replay UI support ----------------------------
+	pip install rangehttpserver
+	pip install websockets 
+
+
+	# ----------------------  install SC2 ----------------------------
+
+	cd /sc2/sc2env/scripts
+
+	wget -nc https://blzdistsc2-a.akamaihd.net/Linux/SC2.4.1.2.60604_2018_05_16.zip
+	unzip -P iagreetotheeula SC2.4.1.2.60604_2018_05_16.zip
+	#ln -s $(pwd)/StarCraftII $HOME/StarCraftII
+
+	wget -nc https://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip
+	unzip -P iagreetotheeula Melee.zip -d StarCraftII/Maps/
+
+	wget -nc https://github.com/deepmind/pysc2/releases/download/v1.2/mini_games.zip
+	unzip mini_games.zip -d StarCraftII/Maps/
+	rm *.zip
+
+
+
+
+
+
+
