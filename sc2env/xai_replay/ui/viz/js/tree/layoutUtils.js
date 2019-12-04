@@ -196,11 +196,11 @@ function ChildScore(child, score) {
     this.score = score;
 }
 
-function sortNodesAsPerPredictedScore(node, children){
-    if (node["data"]["id"].indexOf("state")){
+function sortNodesAsPerPredictedScore(data, children){
+    if (isStateNode(data)){
         return sortChildren(children, sortScoreHighToLow);
     }
-    else if (node["data"]["id"].indexOf("_action_max")){
+    else if (isFriendlyActionNode(data)){
         return sortChildren(children, sortScoreLowToHigh);
     }
     else {
@@ -254,7 +254,7 @@ function sortChildren(children, sortFunction){
 function findChildrenExpressedAsLeavesUnderNode(node, leafNodes, activeNodes) {
     // assumes given node has been determined to be visible
     var children = node["data"]["sc2_cyChildren"];
-    var sortedChildren = sortNodesAsPerPredictedScore(node, children);
+    var sortedChildren = sortNodesAsPerPredictedScore(node.data, children);
     if (sortedChildren != undefined){
         for (var i in sortedChildren){
             var child = sortedChildren[i];
@@ -273,8 +273,7 @@ function findChildrenExpressedAsLeavesUnderNode(node, leafNodes, activeNodes) {
 
 
 function isNodeVisible(node, activeNodes){
-    var isVisible = activeNodes.indexOf(node) != -1;
-    return isVisible;
+    return activeNodes.indexOf(node) != -1;
 }
 
 function isNodeATrueLeaf(node){

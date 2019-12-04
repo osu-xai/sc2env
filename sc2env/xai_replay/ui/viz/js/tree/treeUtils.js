@@ -225,17 +225,61 @@ function checkMenuAvailibleActions(currFocusNode){
     return actionButtonsToBeActivted;
 }
 
-function isFriendlyActionNode(data){
-    if (data.id.indexOf("action_max") != -1){
-        return true;
-    }
-    return false;
+function isStateNode(data){
+// special case for unit tests where id is located somewhere else., too hard to change in the unit tests given implementation
+    // try {
+    //     var id = data.id;           
+    //     var testDataNodeDepth = id.split(".").length - 1; 
+    //     if (testDataNodeDepth == 0 || testDataNodeDepth == 3){
+    //             return true;
+    //         }
+    //         return false;
+    // }
+    // catch{
+        // var id = data.id
+        if (data.id.indexOf("state") != -1){
+            return true;
+        }
+        return false;
+    // }
 }
+
+function isFriendlyActionNode(data){
+// special case for unit tests where id is located somewhere else., too hard to change in the unit tests given implementation
+    // try {
+    //     var id = node.id;           
+    //     var testDataNodeDepth = id.split(".").length - 1; 
+    //     if (testDataNodeDepth == 1 || testDataNodeDepth == 4){
+    //             return true;
+    //         }
+    //         return false;
+    // }
+    // catch{
+        // var id = data.id
+        if (data.id.indexOf("action_max") != -1){
+            return true;
+        }
+        return false;
+    // }
+}
+
 function isEnemyActionNode(data){
-    if (data.id.indexOf("action_min") != -1){
-        return true;
-    }
-    return false;
+    // special case for unit tests where id is located somewhere else., too hard to change in the unit tests given implementation
+    // try {
+    //     var id = node.id;           
+    //     var testDataNodeDepth = id.split(".").length - 1; 
+    //     if (testDataNodeDepth == 2){
+    //             return true;
+    //         }
+    //         return false;
+    // }
+    // catch{
+        // var id = data.id
+        if (data.id.indexOf("action_min") != -1){
+            return true;
+        }
+        return false;
+    // }
 }
 
 
