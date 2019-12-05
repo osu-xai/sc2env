@@ -70,6 +70,35 @@ function promoteTutorialFileIfPresent(replayNames) {//SC2_OK
 
 var userStudyMode = false;
 var rewardDivMap = {};
+
+function handleReplayFilenames(replayNames){//SC2_OK
+    var play = document.getElementById("pauseResumeButton");
+    if (play == undefined){
+        configureNavigationButtons();
+    }
+    
+     // studyQuestionMode not yet set to check, just always check - unlikely to be a problem
+    // make tutorial file the default
+    replayNames = promoteTutorialFileIfPresent(replayNames);
+	for (var i in replayNames) {
+        var name = replayNames[i];
+		$("#replay-file-selector").append($('<option>', {
+			value: i,
+			text: name
+		}));
+    }
+    userStudyMode = config.getUserStudyMode();
+    if (userStudyMode) {
+        removeFileSelectorEtc();
+        tabManager = getTabManager();
+        tabManager.openFirstTab();
+    }
+    else {
+        loadSelectedReplayFile();
+    }
+}
+
+
 // accept the list of replay filenames
 function handleReplayChoiceConfig(config){//SC2_OK
     $("#connect-button").remove();

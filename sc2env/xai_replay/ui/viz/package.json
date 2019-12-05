@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/osu-xai/sc2env#readme",
   "dependencies": {
-    "electron": "^7.1.3"
+    "electron": "^7.1.3",
+    "remote": "^0.2.6"
   }
 }

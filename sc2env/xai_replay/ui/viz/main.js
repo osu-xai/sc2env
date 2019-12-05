@@ -1,8 +1,12 @@
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
+const {app, BrowserWindow} = require('electron');
+const remote = require('remote');
+const path = require('path');
+const fs = require('fs');
 
 // to keep window from being garbage collected by javascript reference it:
 let win;
+
+
 
 //then…
 function createWindow(){
@@ -14,7 +18,7 @@ function createWindow(){
     win.on('closed', ()=> {
         win = null;
     });
-
+   
 }
 
 
