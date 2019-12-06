@@ -1,5 +1,6 @@
 var userInputBlocked = false;
 var liveModeInputBlocked = false;
+var enableForwardTimelineBlock = true;
 
 function paintProgress(value) {
 	showPositionOnTimeline(value);
@@ -42,18 +43,54 @@ function showPositionOnTimeline(value) {
 	ctx.fill();
 }
 
+function isForwardGesture(targetStep){
+    var currentStep = sessionIndexManager.getCurrentIndex();
+    if (targetStep > currentStep){
+        return true;
+    }
+    return false;
+}
+
 function processTimelineClick(e) {
 	var clickX = e.offsetX - timelineMargin;
 	if (clickX < 0){
 		clickX = 0;
-	}
+    }
 	var replaySequenceTargetStep = sessionIndexManager.getReplaySequencerIndexForClick(clickX);
-	var targetStepString = "" + replaySequenceTargetStep;
+    var targetStepString = "" + replaySequenceTargetStep;
+    var targetStepAsNum = Number(targetStepString);
+    if (isForwardGesture(targetStepAsNum)){
+        if (explControlsManager.isForwardGestureBlocked(targetStepAsNum)){
+            return;
+        }
+    }
 	//SC2_DEFERRED var logLine = templateMap["expl-control-canvas"];
 	//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_NUM>", targetStepString);
 	//SC2_DEFERRED targetClickHandler(e, logLine);
     jumpToStep(targetStepString);
 }
+
+function showCustomErrorMsg(msg){
+	var backgroundDiv = document.createElement("div");
+	var errorMsg = document.createTextNode(msg);
+	backgroundDiv.appendChild(errorMsg);
+	backgroundDiv.style.backgroundColor = "rgba(255,0,0,.8)";
+	backgroundDiv.style.fontSize = "15px"
+	backgroundDiv.style.color = "white";
+	backgroundDiv.style.border = "3px solid white";
+	backgroundDiv.style.borderRadius = "10px";	
+	backgroundDiv.style.textAlign = "center";
+	backgroundDiv.style.top = "38%";
+	backgroundDiv.style.left = "37.5%";
+	backgroundDiv.style.right = "37.5%";
+	backgroundDiv.style.width = "25%"
+	backgroundDiv.style.position = "absolute";
+	backgroundDiv.style.padding = "5px";
+	backgroundDiv.id = "customErrMsg"
+
+	document.getElementById("game-row").appendChild(backgroundDiv);
+}
+
 function stageUserCommand(userCommand) {
 	var scaiiPkt = new proto.ScaiiPacket;
 	scaiiPkt.setUserCommand(userCommand);
@@ -63,7 +100,8 @@ var tryPause = function (e) {
 	if (!userInputBlocked) {
 		//SC2_DEFERRED var logLine = templateMap["pauseButton"];
 		//SC2_DEFERRED logLine = logLine.replace("<TIME_LINE_PAUSE>", "NA");
-		//SC2_DEFERRED targetClickHandler(e, logLine);
+        //SC2_DEFERRED targetClickHandler(e, logLine);
+        explControlsManager.userPaused();
 		pauseGame();
 	}
 }
@@ -85,7 +123,8 @@ var tryResume = function (e) {
 function resumeGame() {
 	controlsManager.userClickedResume();
 	// video.currentTime = 80 / framesPerSecond
-	activeSC2UIManager.play();
+    activeSC2UIManager.play();
+    explControlsManager.noteResume();
 	//SC2_TODO_NAV_TEST - new logic that re-engages the driver loop
 	// if play button cue arrow present, remove it
 	$("#cue-arrow-div").remove();
@@ -179,7 +218,7 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 	manager.expressResumeButton = function () {
 		//console.log('expressing RESUME button');
 		this.pauseResumeButton.onclick = tryResume;
-		this.pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="16px" width="14px"/>';
+		this.pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="24px" width="20px"/>';
 	}
 
 	//
@@ -197,7 +236,7 @@ var configureControlsManager = function (pauseResumeButton, rewindButton) {
 		//console.log('expressing PAUSE button');
 		console.log('video.currentTime: ' + video.currentTime);
 		this.pauseResumeButton.onclick = tryPause;
-		this.pauseResumeButton.innerHTML = '<img src="imgs/pause.png", height="16px" width="14px"/>';
+		this.pauseResumeButton.innerHTML = '<img src="imgs/pause.png", height="24px" width="20px"/>';
 	}
 
     manager.isPauseButtonDisplayed = function() {
@@ -298,10 +337,22 @@ function updateButtonsAfterJump() {
 }
 
 function jumpToStep(step){
+    controlsManager.setWaitCursor();
     clearGameBoard();
+    explControlsManager.processJumpToNonDPStep(step);
 	activeSC2UIManager.jumpToFrame(step);
 	updateButtonsAfterJump();
     if (userStudyMode){
         currentExplManager.setExplanationVisibility(activeStudyQuestionManager.squim.decisionPointSteps, step);
-	}
+    }
+    //don't clearWaitCursor because the video needs time to adjust
+}
+
+function jumpToDPStep(step){
+    controlsManager.setWaitCursor();
+    clearGameBoard();
+    explControlsManager.processJumpToDPStep(step);
+    activeSC2UIManager.jumpToFrame(step);
+	updateButtonsAfterJump();
+    //enableShowExplanationsButton();
 }

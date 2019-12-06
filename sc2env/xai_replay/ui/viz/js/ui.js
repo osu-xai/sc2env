@@ -101,10 +101,12 @@ function configureRewindButton(){
 function configurePauseResumeButton(){
 	pauseResumeButton.setAttribute("class", "playbackButton");
 	pauseResumeButton.setAttribute("id", "pauseResumeButton");
-	pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="16px" width="14px"/>';
+    //pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="16px" width="14px"/>';
+    
+	pauseResumeButton.innerHTML = '<img src="imgs/play.png", height="24px" width="20px"/>';
 	$("#pause-play-control").append(pauseResumeButton);
-	$("#pauseResumeButton").css("padding-top","2px");
-	$("#pauseResumeButton").css("padding-bottom","0px");
+	$("#pauseResumeButton").css("padding-top","3px");
+	$("#pauseResumeButton").css("padding-bottom","3px");
 	$("#pauseResumeButton").css("margin-left","15px");
 	pauseResumeButton.onclick = tryPause;
 	$("#pauseResumeButton").css("opacity", "0.6");
@@ -145,7 +147,7 @@ function drawExplanationTimeline() {
 	}
 	let ctx = expl_ctrl_ctx;
 	
-	expl_ctrl_canvas.width = $(window).width()*.9;
+	expl_ctrl_canvas.width = $(window).width();
 	ctx.beginPath();
 	ctx.moveTo(timelineMargin,explanationControlYPosition);
 	ctx.lineWidth = timelineHeight;
@@ -176,7 +178,7 @@ function initUI() { //SC2_TEST
 	sizeNonGeneratedElements();
 	controlsManager.setControlsNotReady();
 	controlsManager.registerJQueryHandleForWaitCursor($("#tabbed-interface"));
-	configureNavigationButtons();
+	//configureNavigationButtons();
 	configureQuestionArea();
 	setUpMetadataToolTipEventHandlers();
     drawExplanationTimeline(); 
@@ -192,6 +194,9 @@ function highlightShapeInRange(x,y) {//SC2_TEST
 function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// for hiding/showing tooltips
 	gameboard_canvas.addEventListener('click', function(evt) {
+        if (true){
+            return; // block for Study2
+        }
 		console.log("clicked!");
 		var x = evt.offsetX;
 		var y = evt.offsetY;
@@ -225,6 +230,9 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
 	// 	$("#step-value").html( x + " , " + y);
 	// });
 	gameboard_canvas.addEventListener('mousemove', function(evt) {
+        if (true){
+            return; // block for study 2
+        }
 		var x = evt.offsetX;
 		var y = evt.offsetY;
 
@@ -253,12 +261,12 @@ function setUpMetadataToolTipEventHandlers() {//SC2_TEST
   	});
 }
 function sizeNonGeneratedElements() { 
-	var percentWidthAcronym = .40;
-	var percentWidthReplayLabel = .25;
-	var percentWidthFileSelector = .35;
-	var acronymWidth      = gameContainerWidth * percentWidthAcronym;
-	var replayLabelWidth  = gameContainerWidth * percentWidthReplayLabel;
-	var fileSelectorWidth = gameContainerWidth * percentWidthFileSelector;
+	var pWidthAcronym = .40;
+	var pWidthReplayLabel = .25;
+	var pWidthFileSelector = .35;
+	var acronymWidth      = gameContainerWidth * pWidthAcronym;
+	var replayLabelWidth  = gameContainerWidth * pWidthReplayLabel;
+	var fileSelectorWidth = gameContainerWidth * pWidthFileSelector;
 	$("#game-titled-container").css("width", "100%");
 	// 150
 	$("#scaii-acronym").css("padding-left", "20px");
@@ -382,8 +390,8 @@ function sizeNonGeneratedElements() {
 
 
 	$('.unit-value-panels').css('font-size', "15px")
-	$('.unit-value-panels').css('font-family', "Arial")
-
+    $('.unit-value-panels').css('font-family', "Arial")
+    
 	
 	document.getElementById('friendly.nexusHealth.top').style.position = "absolute";
 	document.getElementById('friendly.nexusHealth.top').style.top = "12.5%";
@@ -443,62 +451,33 @@ function sizeNonGeneratedElements() {
 	document.getElementById('enemy.nexusHealth.bottom').style.padding = "5px";
 	
 
-	
-	$('#unit-value-panels-toggle').css('float', "left")
-	$('#unit-value-panels-toggle').css('text-align', "center")
-	$('#unit-value-panels-toggle').css('font-size', "12px")
-	$('#unit-value-panels-toggle').css('font-family', "Arial")
-	$('#unit-value-panels-toggle').css('width', "80px")
-	$('#unit-value-panels-toggle').css('height', "30px")
-
-	var toggle_units = document.getElementById("unit-value-panels-toggle");
-	toggle_units.addEventListener('click', function(event){
-		if ($('.unit-value-panels').css('display') == 'none'){
-			$('.unit-value-panels').css('display', "grid")
-		}
-		else{
-			$('.unit-value-panels').css('display', "none")
-		}
-	});
-	
-	$('#fullscreen-button1-toggle').css('float', "left")
-	$('#fullscreen-button1-toggle').css('text-align', "center")
-	$('#fullscreen-button1-toggle').css('font-size', "12px")
-	$('#fullscreen-button1-toggle').css('font-family', "Arial")
-	$('#fullscreen-button1-toggle').css('width', "80px")
-	$('#fullscreen-button1-toggle').css('height', "30px")
-
-
-	$('#fullscreen-modal').css('width', "90%")
-	$('#fullscreen-modal').css('height', "80%")
-	$('#fullscreen-modal').css('left', "5%")
-	$('#fullscreen-modal').css('right', "5%")
-	$('#fullscreen-modal').css('top', "7%")
-	$('#fullscreen-modal').css('bottom', "5%")
-
-	$('#fullscreen-modal').css('position', "absolute")
-	$('#fullscreen-modal').css('background-color', "white")
-	$('#fullscreen-modal').css('border-radius', "10px")
-	$('#fullscreen-modal').css('z-index', zIndexMap["modalPopUp"])
-
-
-
-
-	var toggle_fullscreen_modal = document.getElementById("fullscreen-button1-toggle");
-	toggle_fullscreen_modal.addEventListener('click', function(event){
-		if ($('#fullscreen-modal').css('display') == 'none'){
-			$('#fullscreen-modal').css('display', "block")
-		}
-		else{
-			$('#fullscreen-modal').css('display', "none")
+	var showExplanationTreeButton = document.getElementById("button-show-explanations");
+	showExplanationTreeButton.addEventListener('click', function(event){
+		if (!explControlsManager.isExplanationsVisible()){
+            explControlsManager.showExplanationsWindow();
+            if (buildTreeOnDemand){
+                var targetDP = explControlsManager.getDPToDisplay();
+                var targetFrame = framesByDP[targetDP];
+                if (targetFrame != frameOfCurrentTree){
+                    var frameInfo = activeSC2DataManager.getFrameInfo(targetFrame);
+                    var treeDataDir = "js/tree/json/" + chosenFile;
+                    var dpNumber = getWave(frameInfo);
+                    console.log("frame " + targetFrame + "  dpNumber " + dpNumber);
+                    forgetCyTree();
+                    forgetBackingTree();
+                    initTree(dpNumber, treeDataDir + "/whole_decision_point_" + dpNumber + ".json",frameInfo.frame_number);
+                    frameOfCurrentTree = targetFrame;
+                }
+            }
 		}
 	});
 	
 	var centerPointOfVideo = rewardsPanelWidth + quadrantLabelWidth + sc2GameRenderWidth / 2;
 	var stepValueWidth = 100;
 	var stepValuePaddingLeft = centerPointOfVideo - stepValueWidth - 40;
-	$("#step-value").css("width", stepValueWidth + "px");
-	$("#step-value").css("margin-left", ($(window).width()/2)-120);
+	//$("#step-value").css("width", stepValueWidth + "px");
+	//$("#step-value").css("margin-left", ($(window).width()/2)-120);
+	$("#step-value").css("margin-left", "40%");
 	
 	
 	
@@ -509,16 +488,8 @@ function sizeNonGeneratedElements() {
 	$("#playback-controls-panel").css("margin-bottom", "10px");
 	$("#playback-controls-panel").css("z-index", zIndexMap["allTheWayToFront"]);
 
-
-	$("#explanation-control-panel").css("height", "60px")
-	$("#explanation-control-panel").css("position", "absolute");
-	$("#explanation-control-panel").css("top", "45%");
-	$("#explanation-control-panel").css("left", "5%");
-	$("#explanation-control-panel").css("right", "5%");
-	$("#explanation-control-panel").css("background", "rgba(0,0,0,0)")
-	$("#explanation-control-panel").css("z-index", zIndexMap["allTheWayToFront"]);
-	// $("#explanation-control-panel").css("width", widthOfTimeline);
-
+    explControlsManager.styleControls();
+	
 
 	$("#friendly-title").css("font-size", "18px")
 	$("#enemy-title").css("font-size", "18px")
@@ -609,11 +580,16 @@ expl_ctrl_canvas.addEventListener('click', function (event) {
 			processTimelineClick(event);
 		}
 		else{
+            if (isForwardGesture(matchingStep)){
+                if (explControlsManager.isForwardGestureBlocked(matchingStep)){
+                    return;
+                }
+            }
 			if (matchingStep == sessionIndexManager.getCurrentIndex()) {
 				//no need to move - already at step with explanation
 			}
 			else {
-                jumpToStep(matchingStep);
+                jumpToDPStep(matchingStep);
 				//SC2_DEFERRED var logLine = templateMap["decisionPointList"];
 				//SC2_DEFERRED logLine = logLine.replace("<TARGET>", "decisionPointList")
 				//SC2_DEFERRED logLine = logLine.replace("<J_DP_NUM>", matchingStep);

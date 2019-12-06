@@ -201,10 +201,14 @@ function renderTooltipInfo(ttInfo, div) {
         div.append(createMetadataTooltipEntry(key, val));
     }
 }
-tooltipInfo["Health Max"] = unit.health_max;
-   tooltipInfo["Health"] = unit.health;
-   tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
-tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
+var xaiStudyId = "year2November";
+if (xaiStudyId == "year1FourQuadrant"){
+    tooltipInfo["Health Max"] = unit.health_max;
+    tooltipInfo["Health"] = unit.health;
+    tooltipInfo["Unit Type"] = unit.unit_type; //SC2_TODO_TT make unit_type name pretty in tooltip
+    tooltipInfo["Friend?"] = getIsFriendlyFaction(unit.alliance);
+}
+
 
 function getLabelForInfo(s){
     var label = document.createElement("div");

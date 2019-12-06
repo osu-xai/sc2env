@@ -21,12 +21,14 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
             var dpStep = this.decisionPointSteps[i];
             if (Number(dpStep) <= Number(step)) {
                 var indexPlusOne = Number(i) + Number(1);
-                result = "DP" + indexPlusOne; 
+                result = "DP " + indexPlusOne; 
             }
             else {
+                //console.log("getDPThatStartsEpochForStep " + step + " is " + result);
                 return result;
             } 
         }
+        //console.log("getDPThatStartsEpochForStep " + step + " is " + result);
         return result;
     }
 
@@ -35,14 +37,18 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
             alert("step number higher than max!  Returning step 1");
             return 1;
         }
+        var result = 1;
         for (var i in this.decisionPointSteps){
             var dpStep = this.decisionPointSteps[i];
             if (Number(dpStep) <= Number(step)) {
-                return dpStep;
+                result = dpStep;
+            }
+            else {
+                //console.log("getStepThatStartsEpochForStep " + step + " is " + result);
             }
         }
-        alert("step number less than 1!  Returning step 1");
-        return 1;
+        //console.log("getStepThatStartsEpochForStep " + step + " is " + result);
+        return result;
     }
 	// progress bar is divided up in stepSizeAsKnownInReplaySequencer - 1 pieces
 	// because the first chunk of that we want to correspond to ReplaySequencer.scaii_pkts[1]
@@ -85,13 +91,17 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
         //SC2_TODO_SAL    currentExplManager.captureEntitiesForDecisionPoint(index);
         //SC2_TODO_SAL}
         //console.log('replaySequencerIndex is now ' + index);
-        var displayVal = this.getStepCountToDisplay();
+		// var displayVal = this.getStepCountToDisplay();
+		var displayVal = currentDP;
+
         //console.log('display Step value : ' + displayVal);
 		if (displayVal == undefined){
 			$("#step-value").html('');
 		}
 		else {
-			$("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
+			// $("#step-value").html('step ' + displayVal + ' / ' + this.progressBarSegmentCount);
+			$("#step-value").html(displayVal + ' / ' + allDecisionPointFrames.length);
+
 		}
 		paintProgress(this.getProgressBarValue());
 	}
@@ -103,7 +113,7 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 	}
 	
 	sim.getPercentIntoGameForStep = function(step){
-		var value = Math.floor((step / this.replaySequencerMaxIndex ) * 100);
+		var value = (step / this.replaySequencerMaxIndex ) * 100;
 		return value;
 	}
 	sim.getCurrentIndex = function() {
@@ -114,11 +124,6 @@ function getSessionIndexManager(stepSizeAsKnownInReplaySequencer, decisionPointS
 		return this.replaySequencerMaxIndex;
 	}
 
-	// sim.incrementReplaySequencerIndex = function() {
-	// 	if (Number(Number(this.replaySequencerIndex) + Number(1)) <= this.replaySequencerMaxIndex) {
-	// 		this.setReplaySequencerIndex(this.replaySequencerIndex + 1);
-	// 	}
-	// }
 	sim.isAtEndOfGame = function(){
 		if (this.replaySequencerIndex == this.replaySequencerMaxIndex) {
 			return true;

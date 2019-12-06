@@ -2,14 +2,16 @@
 	<head>
 <html lang="en">
 		<meta charset="utf-8">
-		<title>SCAII Visualization</title>
+		<title>XAI SC2 Explanations</title>
 		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-	    <script src="js/jquery.min.js"></script>
+        <!--<script src="js/jquery.min.js"></script>-->
+        <script>window.$  = window.jQuery = require('jquery')</script>
 	  <script src="js/closure-library/closure/goog/base.js"></script>
 	  <script>
 	  	goog.require('goog.dom');
 	  </script>
-	  <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+      <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+     
 	  <script src="js/protobuf_js/binary/arith.js"></script>
       <script src="js/protobuf_js/binary/constants.js"></script>
       <script src="js/protobuf_js/binary/utils.js"></script>
@@ -20,9 +22,22 @@
       <script src="js/protobuf_js/map.js"></script>
       <script src="js/protobuf_js/message.js"></script>
       <!--<script src="js/protobuf_js/debug.js"></script>-->
+      
+
+      <script src="js/tree/cytoscape.min.js"></script>
+      <script src="js/tree/cytoscape-node-html-label-1.1.2/dist/cytoscape-node-html-label.min.js"></script>
+      <script src="js/tree/cytoscape.js-automove-master/cytoscape-automove.js"></script>
       <script src="js/userStudy/questions/questionAccessManager.js"></script>
+      <script src="js/test/treeChoiceManagerTests.js"></script>
+      <script src="js/tree/treeChoiceManagerDev.js"></script>
+      <script src="js/tree/treeChoiceManagerStudy.js"></script>
+      <script src="js/test/explanationAccessManagerTests.js"></script>
+      <script src="js/tree/explanationAccessManagerDev.js"></script>
+      <script src="js/tree/explanationAccessManagerStudy.js"></script>
+      <script src="js/tree/autoPauseManager.js"></script>
+      <script src="js/sc2/unitUtil.js"></script>
       <script src="js/sc2/sc2DataManager.js"></script>
-      <script src="js/sc2/sc2VideoManager.js"></script>
+      <script src="js/sc2/explControlsManager.js"></script>
       <script src="js/sc2/sc2ui.js"></script>
       <script src="js/test/questionAccessManagerTests.js"></script>
       <script src="js/explanations/rewards/chartV2Data.js"></script>
@@ -45,8 +60,9 @@
       <script src="js/test/chartDataTests/msxColorTests.js"></script>
       <script src="js/test/chartDataTests/msxRankingTests.js"></script>
       <script src="js/test/chartDataTests/msxGeometryTests.js"></script>
-      <script src="js/test/videoPlaybackManagerTests.js"></script>
       <script src="js/test/tests.js"></script>
+      <script src="js/test/treeTests.js"></script>
+      <script src="js/test/autoPauseManagerTests.js"></script>
       <script src="js/userStudy/studyTabs.js"></script>
       <script src="js/userStudy/questions/studyQuestionsEntities.js"></script>
       <script src="js/userStudy/logging/logTemplates.js"></script>
@@ -73,11 +89,14 @@
       <script src="js/explanations/chartV2UI.js"></script>
       <script src="js/explanations/saliencyV2UI.js"></script>
       <script src="js/protobufUtils.js"></script>
+
+
 	  <link rel="stylesheet" type="text/css" href="css/tabs.css">
 	  <link rel="stylesheet" type="text/css" href="css/gameControls.css">
 	  <link rel="stylesheet" type="text/css" href="css/explanations.css">
 	  <link rel="stylesheet" type="text/css" href="css/game.css">
       <link rel="stylesheet" type="text/css" href="css/majorContainers.css">
+      <link rel="stylesheet" type="text/css" href="css/tree.css">
       
       <!-- <link rel="stylesheet" href="css/Treant.css">
       <link rel="stylesheet" href="css/collapsable.css">
@@ -87,13 +106,203 @@
       <script src="js/jquery.easing.js"></script>
       <script src="js/collapsable.js"></script> -->
 
-	<style>
-    </style>
-	</head>
-	<body>
+    </head>
+    <script>
 
-        <div id="tabbed-interface" class="flex-column">
-            <div id="master-tabs" class= "master-tab-container flex-row"></div>
+        </script>
+	<body>
+        
+        <div id="explanation-tree-window" style="display:none;overflow:hidden" class="master-tab-container">
+                <div id="explanation-ui" class="flex-column" style="width:100%;height:100%;position:absolute">
+                    <!-- <div id="explanation-tab" class="flex-row">
+                        <button class="tabbutton active" onclick="openExplanationView(event, 'cy')">Tree View</button>
+                        <button class="tabbutton" onclick="openExplanationView(event, 'linear')">Linear View</button>
+                    </div>-->
+                    <div id="explanation-content" style="width:100%;height:100%">
+                        <div id="cy" style="width:100%;height:100%;display:block;padding:0px;" class="tabcontent">
+                    
+                        </div>
+                        <div id="tree-legends" class="flex-column" style="position:absolute;bottom:2%;left:1%;width:17%;background-color: ivory;padding:4px;">
+                            <div id="r-p-s-key" style="margin-left:50px;"> <!-- style="position:absolute;bottom:1%;right:0%;"-->
+                                <svg width="150" height="120">
+                                    <rect x="5" y="90"width="50" height="25" style="stroke-width:3;fill:white;stroke:rgb(0,0,0)" />
+                                    <text x="25" y="108" fill="green">B</text>
+                                    <line x1="60" y1="100" x2="105" y2="100" style="stroke:black;stroke-width:2" />
+                                        <line x1="60" y1="100" x2="65" y2="105" style="stroke:black;stroke-width:2" />
+                                        <line x1="60" y1="100" x2="65" y2="95" style="stroke:black;stroke-width:2" />
+                                    <ellipse cx="75" cy="15" rx="25" ry="12.5" style="fill:white;stroke:black;stroke-width:3" />
+                                    <text x="69" y="20" fill="green">M</text>
+                                    <line x1="70" y1="30" x2="30" y2="85" style="stroke:black;stroke-width:2" />
+                                        <line x1="70" y1="30" x2="59" y2="33" style="stroke:black;stroke-width:2" />
+                                        <line x1="70" y1="30" x2="73" y2="38" style="stroke:black;stroke-width:2" />
+                                    <polygon points="120,89 100,115 140,115" style="fill:white;stroke:black;stroke-width:3" />
+                                    <text x="118" y="109" fill="green">I</text>
+                                    <line x1="80" y1="30" x2="120" y2="85" style="stroke:black;stroke-width:2" />
+                                        <line x1="122" y1="78" x2="120" y2="85" style="stroke:black;stroke-width:2" />
+                                        <line x1="110" y1="82" x2="120" y2="85" style="stroke:black;stroke-width:2" />
+                                </svg>
+                            </div>
+                            <div style="width:100%;height:4px;background-color:#E0E0E0;margin-bottom:4px;"></div>
+                            <div id="legend-player-color-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                
+                                <div style="left:0%;width:50%;color:black"><b>Units</b></div>
+                                <div style="width:25%;color:#8080FF">Friendly</div>
+                                <div style="width:25%;color:#FF8080">Enemy</div>
+                            </div>
+                            <div id="legend-player-purchased-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="width:50%;">Purchased</div>
+                                <div style="width:25%;"><div style="background-color:#8080FF;width:25px;height:10px;border:2px solid black;"></div></div>
+                                <div style="width:25%;"><div style="background-color:#FF8080;width:25px;height:10px;border:2px solid black;"></div></div>
+                            </div>
+                            <div id="legend-player-owned-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="width:50%;">Owned</div>
+                                <div style="width:25%;"><div style="background-color:#8080FF;width:25px;height:10px;border:2px solid #8080FF;"></div></div>
+                                <div style="width:25%;"><div style="background-color:#FF8080;width:25px;height:10px;border:2px solid #FF8080;"></div></div>
+                            </div>
+                            <div id="legend-nexus-health-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="bottom:5%;width:50%;">Nexus Health</div>
+                                <div style="width:25%;">
+                                    <!--<div style="height:50px;width:10px;background-color:#8080FF;"></div>-->
+                                    <div class="flex-column" style="height:50px;width:14px;box-sizing: border-box;padding:2px;background-color:#8080FF;" >
+                                        <div style="height:10px;width:10px;background-color:white"></div>
+                                        <div style="height:40px;width:10px;background-color:#8080FF;"></div>
+                                    </div>
+                                </div>
+                                <div style="width:25%;">
+                                    <!--<div style="height:50px;width:10px;background-color:#FF8080;"></div>-->
+                                    <div class="flex-column" style="height:50px;width:14px;box-sizing: border-box;padding:2px;;background-color:#FF8080;" >
+                                        <div style="height:10px;width:10px;background-color:white"></div>
+                                        <div style="height:40px;width:10px;background-color:#FF8080;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width:100%;height:4px;background-color:#E0E0E0;margin-bottom:4px;"></div>
+                            <div id="legend-win-fate-title-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="width:50%;"><b>Win Type Probability</b></div>
+                                <div style="width:50%;"></div>
+                            </div>
+                           
+                            <div id="legend-nexus-lowest-row" class="flex-row" style="width:100%; height:20px;padding-bottom:0px;">
+                                <div style="width:50%;">Lowest Nexus Health</div>
+                                <div style="width:25%;">
+                                    <div style="width:40px;">
+                                        <svg >
+                                            <defs> <pattern id="legend-top-lowest-agent-squares" x="0.05" + y="0.05" width="0.2" height="0.4" patternUnits="objectBoundingBox">
+                                                <rect x="0" y="0" width="4" height="4" fill="#8080F0"/>
+                                                <rect x="4" y="4" width="4" height="4" fill="#8080F0"/>
+                                                </pattern>
+                                            </defs>
+                                            <rect fill="url(#legend-top-lowest-agent-squares)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div style="width:25%;">
+                                    <div style="width:40px;">
+                                        <svg >
+                                            <defs> 
+                                                <pattern id="legend-top-lowest-enemy-squares" x="0.05" + y="0.05" width="0.2" height="0.4" patternUnits="objectBoundingBox">
+                                                    <rect x="0" y="0" width="4" height="4" fill="#F08080"/>
+                                                    <rect x="4" y="4" width="4" height="4" fill="#F08080"/>
+                                                </pattern>    
+                                            </defs>
+                                            <rect fill="url(#legend-top-lowest-enemy-squares)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                            <!--<rect style="fill: url(#h-stripe-xai-enemy) #F08080;" x="0" y="0" width="40" height="20" stroke="black" stroke-width="1" />-->
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="legend-nexus-destroyed-row" class="flex-row" style="width:100%;height:30px;padding-bottom:4px;">
+                                <div style="width:50%;">Nexus Destroyed</div>
+                                <div style="width:25%;">
+                                    <div style="width:40px;">
+                                        <svg style="height:100%;">
+                                            <defs> <pattern id="legend-top-destroy-agent-lines" width="0.25" height="1" patternContentUnits="objectBoundingBox"><rect x="0" y="0" width="0.125" height="1" fill="#8080F0"/></pattern>
+                                            </defs>
+                                            <rect fill="url(#legend-top-destroy-agent-lines)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div style="width:25%;">
+                                    <div style="width:40px;">
+                                        <svg style="height:100%;">
+                                            <defs> 
+                                                <pattern id="legend-top-destroy-enemy-lines" width="0.25" height="1" patternContentUnits="objectBoundingBox"><rect x="0" y="0" width="0.125" height="1" fill="#F08080"/></pattern>
+                                            </defs>
+                                            <rect fill="url(#legend-top-destroy-enemy-lines)" width="40" height="20" stroke="black" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width:100%;height:4px;background-color:#E0E0E0;margin-bottom:4px;"></div>
+                            <div id="legend-pylon-title-row" class="flex-row" style="width:100%;padding-bottom:4px">
+                                <div style="width:50%;"><b>Income</b></div>
+                                <div style="width:25%;"></div>
+                                <div style="width:25%;"></div>
+                            </div>
+                            <div id="legend-pylon-placeholder-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="width:75%;">Pylon Placeholder</div>
+                                <div style="width:25%;">
+                                    <div style="box-sizing: border-box;background-color:rgb(255,255,0,0.4);height:100%;padding-left:5px;padding-right:5px;padding-top:2px;padding-bottom:2px;" >
+                                        <div style="text-align:center;background-color:#B0B0B0;height:100%;width:100%;"></div>
+                                    </div>
+                                </div>
+                                <div style="width:25%;">
+                                </div>
+                            </div>
+                            <div id="legend-pylon-purchased-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="width:75%;">Pylon Purchased</div>
+                                <div style="width:25%;">
+                                    <div style="box-sizing: border-box;background-color:black;height:100%;padding-left:5px;padding-right:5px;padding-top:2px;padding-bottom:2px;" >
+                                        <div style="text-align:center;background-color:yellow;height:100%;width:100%;"></div>
+                                    </div>
+                                </div>
+                                <div style="width:25%;">
+                                </div>
+                            </div>
+                            <div id="legend-pylon-owned-row" class="flex-row" style="width:100%;padding-bottom:4px;">
+                                <div style="width:75%;">Pylon Owned</div>
+                                <div style="width:25%;">
+                                    <div style="box-sizing: border-box;background-color:yellow;height:100%;padding-left:5px;padding-right:5px;padding-top:2px;padding-bottom:2px;" >
+                                <div style="text-align:center;background-color:yellow;height:100%;width:100%;"></div>
+                           </div>
+                                </div>
+                                <div style="width:25%;">
+                                </div>
+                            </div>   
+                        
+                        </div>
+                    
+                        
+                        <button id="close_explanation-tree-button" onclick="hideExplanations()" style="padding:3px;font-family:Arial;font-size:35px;font-weight:bold;position:absolute;top:1%;right:1%;color:red; border-radius: 3px;">X</button>
+                        <div id="node-menu" class="flex-column" style="position: absolute; left:1%; top:1%;z-index:100;padding:10px;"></div>
+                        
+                        <!--<div id="linear" style="width:100%;height:100%;display:none" class="tabcontent"></div>-->
+                    </div>
+                </div>
+                <script src="js/linear/storyLineUI.js"></script>
+                <script src="js/linear/defaultView.js"></script>
+                <script src="js/linear/storyLine.js"></script>
+                <script src="js/linear/storyLines.js"></script>
+                <script src="js/tree/htmlConstants.js"></script>
+                <script src="js/tree/htmlDP.js"></script>
+                <script src="js/tree/treeData.js"></script>
+                <script src="js/tree/backingTree.js"></script>
+                <script src="js/tree/treeEvents.js"></script>
+                <script src="js/tree/treeHtml.js"></script>
+                <script src="js/tree/htmlStateBlobs.js"></script>
+                <script src="js/tree/htmlActionGraphs.js"></script>
+                <script src="js/tree/htmlQuadWinBars.js"></script>
+                <script src="js/tree/treatment.js"></script>
+                <script src="js/tree/layoutUtils.js"></script>
+                <script src="js/tree/treeUtils.js"></script>
+                <script src="js/tree/queryTree.js"></script>
+                <script src="js/tree/incrementalTrajectory.js"></script>
+                <script src="js/tree/ctxMenuActions.js"></script>
+                <script src="js/tree/treeElementChartData.js"></script>
+                <script src="js/tree/treeElementChartLegend.js"></script>
+                <script src="js/tree/treeStateCanvas.js"></script>
+                <script src="js/tree/treeZoom.js"></script>
+            </div>
             <div id="scaii-interface" class="bg" style="display:flex-column">
                 <!--<div id="top-title-panel" class="flex-row bg">
                     <div id="scaii-interface-title" class="bg" >Small Configurable AI Interface</div>
@@ -102,11 +311,11 @@
 
                     <div id="game-titled-container" class="titled-container bg" style="display:flex-column;float:left;width:100%;">
                         
-                        <div id="title-row" class="flex-row">
+                        <div id="title-row" class="flex-row" style="font-size:20px;height:30px">
                             <!-- <div id="scaii-acronym" style="font-family:Arial;">XAI  xACT - Year 2 - StarCraft II</div> -->
                             <!-- <div id="game-replay-label" style="font-family:Arial;">replaying game file:</div> -->
                             <div id="friendly-lane-neutral-container" class="lane-neutral-info">
-                                <div id="friendly-title" class="lane-neutral-info" style="display: inline;margin-left: 20%;color: orange;"><b>FRIENDLY </b></div>
+                                <div id="friendly-title" class="lane-neutral-info" style="display: inline;margin-left: 20%;color: #8080FF;"><b>FRIENDLY </b></div>
                                 <div id="p1_mineral" class="lane-neutral-info" style="display: inline;margin-left: 5%;"></div>
                                 <div id="friendly.Pylon_name" style="display: inline;margin-left: 5%;"></div>
                                 <div id="friendly.Pylon_count" class="lane-neutral-info" style="display:inline;margin-left: 1%;"></div>/3
@@ -114,7 +323,7 @@
                             </div>
                             <select id="replay-file-selector" style="font-family:Arial;font-size:16px" onchange="loadSelectedReplayFile()"></select>
                             <div id="enemy-lane-neutral-container" class="lane-neutral-info flex-row">
-                                <div id="enemy-title" class="lane-neutral-info" style="font-size:13px;margin-left: 40%;color: orange;"><b>ENEMY</b></div>
+                                <div id="enemy-title" class="lane-neutral-info" style="font-size:13px;margin-left: 40%;color: #FF8080;"><b>ENEMY</b></div>
                                 <div id="enemy.Pylon_name" style="display: inline;margin-left: 5%"></div>
                                 <div id="enemy.Pylon_count" class="lane-neutral-info" style="margin-left: 1%;"></div>/3
                                 <!-- <div id="enemy.Pylon_delta" class="unit-additive-value"></div> -->
@@ -131,12 +340,7 @@
                         </div>-->
                         <div id="game-row" class="flex-row">
 
-                            <div id="fullscreen-modal" style="display:none;">
-                                <div class="chart" id="collapsable-example"></div>
-                                <!-- <script>
-                                    tree = new Treant( chart_config );
-                                </script> -->
-                            </div>
+
 
                             <div id="unit-value-panels-containter" class="unit-value-panels" style="height:87%;width:99%;display:none;position: absolute;">
                                 <div id="friendly.nexusHealth.top">Nexus Health: </div>
@@ -146,8 +350,8 @@
 
                                 <div class="unit-value-panels" id="p1_top" style="display: grid;grid-template-columns: 25% 37.5% 37.5%;">
                                     <b style="width: 100%">Friendly</b>
-                                    <b style="width: 100%">Current Units</b>
-                                    <b style="width: 100%">Adding Units</b>
+                                    <b style="width: 100%">Current Buildings</b>
+                                    <b style="width: 100%">Adding Buildings</b>
 
                                     <div class="unit-value-panels" id="friendly.marineBuilding.top_name" style="position:relative;">Marine:</div>
                                     <div class="unit-value-panels" id="friendly.marineBuilding.top_count" style="position:relative;"></div>
@@ -165,8 +369,8 @@
 
                                 <div class="unit-value-panels" id="p1_bottom" style="display: grid;grid-template-columns: 25% 37.5% 37.5%;">
                                     <b style="width: 100%">Friendly</b>
-                                    <b style="width: 100%">Current Units</b>
-                                    <b style="width: 100%">Adding Units</b>
+                                    <b style="width: 100%">Current Buildings</b>
+                                    <b style="width: 100%">Adding Buildings</b>
 
                                     <div class="unit-value-panels" id="friendly.marineBuilding.bottom_name" style="position:relative;">Marine:</div>
                                     <div class="unit-value-panels" id="friendly.marineBuilding.bottom_count" style="position:relative;"></div>
@@ -184,7 +388,7 @@
 
                                 <div class="unit-value-panels" id="p2_top" style="display: grid;grid-template-columns: 40% 60%;">
                                     <b style="width: 100%">Enemy</b>
-                                    <b style="width: 100%">Current Units</b>
+                                    <b style="width: 100%">Current Buildings</b>
                                     <!-- <b style="width: 100%">Adding Units</b> -->
 
                                     <div class="unit-value-panels" id="enemy.marineBuilding.top_name" style="position:relative;">Marine:</div>
@@ -203,7 +407,7 @@
 
                                 <div class="unit-value-panels" id="p2_bottom" style="display: grid;grid-template-columns: 40% 60%;">
                                     <b style="width: 100%">Enemy</b>
-                                    <b style="width: 100%">Current Units</b>
+                                    <b style="width: 100%">Current Buildings</b>
                                     <!-- <b style="width: 100%">Adding Units</b> -->
 
                                     <div class="unit-value-panels" id="enemy.marineBuilding.bottom_name" style="position:relative;">Marine:</div>
@@ -232,16 +436,36 @@
                         </div>
                         
 
-                        <div id="playback-controls-panel" class="flex-row">
-                            <button id="reward-values-panel-toggle" alt="View Rewards" style="display: none;">Show Rewards</button>
-                            <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;">Show Units</button>
-                            <button id="fullscreen-button1-toggle" alt="enter alt text her" style="display:none;">Fullscreen Modual</button>
+                        <div id="playback-controls-panel" class="flex-row" style="font-size:18px;">
+                            <button id="reward-values-panel-toggle" alt="View Rewards" style="display: none;height:20px;">Show Rewards</button>
+                            <div style="width:35%">
+                                <input id="dev-mode-check" style="display:none;margin-left:15px; transform: scale(1.5);vertical-align:middle" onchange="devModeChanged()" type="checkbox" name="keyDisable" value="keyDisable">
+                                <label id="dev-mode-check-label" style="display:none;margin-left:10px;line-height:25px;">Dev Mode</label>
+                                <button id="unit-value-panels-toggle" alt="See all unit count information" style="display:none;height:20px;">Hide Unit Information</button>
+                            </div>
+                            <div style="width:20%;" class="flex-row">
+                                <div id="step-value" style="line-height:25px"></div>
+                                <!--<div id="rewind-control"></div>
+                                <div id="step-back-control"></div>
+                                <div id="step-forward-control"></div>-->
+                                <div id="pause-play-control"></div>
+                            </div>
+                            <div style="width:10%;margin-right:20px;" class="flex-row">
+                                <label id="unlock-key-label" style="display:none;text-align:right;width:80%;line-height:25px;">Unlock Explanation</label>
+                                <input id="unlock-key-text" style="display:none;border:black solid 3px;height:20px;width:20%;margin-left:10px;vertical-align:middle" type="text" name="unlock-key" onkeyup="checkUnlockKey()">
+                            </div>
+                            <div style="width:15%">
+                                <button id="button-show-explanations" disabled='disabled' style="margin-right:40px;height:20px;">Show Explanation</button>
+                            </div>
+                            
+                            <div style="width:15%; margin-left:30px;" class="flex-row">
+                                <input id="model-free-radio" style="display:none;transform: scale(1.5);vertical-align:middle" type="radio" name="treatment" value="model-free">
+                                <label id="model-free-radio-label" style="display:none;margin-left:10px;line-height:25px;">Model Free</label>
+                                <input id="model-based-radio" style="display:none;margin-left:15px; transform: scale(1.5);vertical-align:middle" type="radio" name="treatment" value="model-based" checked>
+                                <label id="model-based-radio-label" style="display:none;margin-left:10px;line-height:25px;">Model Based</label>
+                                
+                            </div>
 
-                            <div id="step-value" class="minor-label-text"></div>
-                            <div id="rewind-control"></div>
-                            <div id="step-back-control"></div>
-                            <div id="step-forward-control"></div>
-                            <div id="pause-play-control"></div>
                         </div>
                         <div id="explanation-control-panel" class="timeline-control bg" >
                         </div>
@@ -278,7 +502,8 @@
                     </div>
                 </div>-->
             </div>
-        </div>
-		<script src="js/scaiiViz.js"></script>
-	</body>
+		
+    </body>
+    
+    <script src="js/sc2ReplayUI.js"></script>
 </html>

@@ -1,20 +1,57 @@
+const forwardDP = 3;
+const forwardDPCheck = false;
+const pauseAndPredictDPs = [6,7,11,17,20,26,36]
+const pauseAndExplainDPs = [7,8,12,18,21,27,37]
+
+var explanationAccessManagerStudy = getExplanationAccessManagerStudy(pauseAndExplainDPs);
+var explanationAccessManagerDev = getExplanationAccessManagerDev(pauseAndExplainDPs);
+var treeChoiceManagerStudy = getTreeChoiceManagerStudy(pauseAndExplainDPs);
+var treeChoiceManagerDev = getTreeChoiceManagerDev(pauseAndExplainDPs);
+var autoPauseManagerStudy = getAutoPauseManagerStudy(pauseAndPredictDPs, pauseAndExplainDPs);
+var autoPauseManagerDev = getAutoPauseManagerDev();
+
 var activeSC2DataManager = undefined;
 var DATA_GATHERING_UNIT_ID = 45;
 var trimBy = 80
-function getSC2DataManager(sc2ReplaySessionConfig) {
-    var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
+var pauseAndExplainDPsByFrame = [];
+var pauseAndPredictDPsByFrame = [];
+var allDecisionPointFrames = [];
+var laterDPFrames = []
+
+function getSC2DataManagerFromJson(jsonData){
+    var frameInfos = getFrameInfosFromJson(jsonData);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
     addWaveTriggeredToFrames(frameInfos);
     addUnitCountsToFrames(frameInfos);
     addUnitDeltasToFrames(frameInfos);
-    getDecisionPointFrames(frameInfos, 0)
+    setLaterDecisionPointFrames(frameInfos, 0)
+    for (dpIndex in laterDPFrames){allDecisionPointFrames.push(laterDPFrames[dpIndex]);}
+    convertDPNumsToFrames(pauseAndExplainDPs, pauseAndExplainDPsByFrame);
+    convertDPNumsToFrames(pauseAndPredictDPs, pauseAndPredictDPsByFrame);
+    //convertDPNumsToFrames([1], forwardProgressDPs)
+    rememberFramesByDP(frameInfos);
+    controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
+    controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
+    controlsManager.registerJQueryHandleForWaitCursor($("#explanation-control-panel"));
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 
-function getSC2DataManagerFromJson(jsonData){
-    var frameInfos =getFrameInfosFromJson(jsonData);
-    return getSC2DataManagerFromFrameInfos(frameInfos);
+function isPauseAndExplainDP(dp){
+    for (var index in pauseAndExplainDPs){
+        var intDP = pauseAndExplainDPs[index];
+        if (intDP == dp){
+            return true;
+        }
+    }
+    return false;
 }
+function convertDPNumsToFrames(dpList, dpFrameList){
+    for (var dpIndex in dpList){
+        var currInterestingDP = dpList[dpIndex];
+        dpFrameList.push(allDecisionPointFrames[currInterestingDP-1]);
+    }
+}
+
 
 function trimFirstFrames(frameInfos, trimBy){
     for (var i = 0; i < trimBy; i++){
@@ -25,17 +62,26 @@ function trimFirstFrames(frameInfos, trimBy){
     }
     return frameInfos;
 }
-
-var decisionPoints = []
-function getDecisionPointFrames(frameInfos, frameNumber){
-    decisionPoints = [];
+function setLaterDecisionPointFrames(frameInfos, frameNumber){
+    laterDPFrames = [];
     for (var i = frameNumber; i < frameInfos.length; i++){
         if (frameInfos[i].frame_info_type == "decision_point"){
-            decisionPoints.push(frameInfos[i].frame_number);
+            laterDPFrames.push(frameInfos[i].frame_number);
         }
     }
 }
 
+var framesByDP = {};
+var dpsByFrame = {};
+function rememberFramesByDP(frameInfos){
+    for (var i = 0; i < frameInfos.length; i++){
+        if (frameInfos[i].frame_info_type == "decision_point"){
+            var dpNum = frameInfos[i]["decision_point_number"];
+            framesByDP[dpNum]= i;
+            dpsByFrame[i] = dpNum;
+        }
+    }
+}
 var unitInfoKeys = [
     "friendly.marineBuilding.top",
     "friendly.banelingBuilding.top",
@@ -100,8 +146,8 @@ laneForKey["enemy.immortalBuilding.top"] = "top";
 laneForKey["enemy.marineBuilding.bottom"] = "bottom";
 laneForKey["enemy.banelingBuilding.bottom"] = "bottom";
 laneForKey["enemy.immortalBuilding.bottom"] = "bottom";
-laneForKey["friendly.Pylon"] = "NA";
-laneForKey["enemy.Pylon"] = "NA";
+laneForKey["friendly.Pylon"] = ""; //NA
+laneForKey["enemy.Pylon"] = ""; //NA
 
 
 function addUnitCountsToFrames(frameInfos){
@@ -182,7 +228,7 @@ function addUnitDeltasToFrames(frameInfos){
                     else if (curCount != 0){
                         curCount++;
                         // console.log(key + " frame " + frameIndex + " curCount " + curCount);
-                        if (curCount > 40){
+                        if (curCount > 85){ // chose 90 to be far enough past when we toggle on the unit additions , which was 10 past the DP
                             deltaKeyCounters[deltaCounterKey] = 0;
                             // console.log(key + " frame " + frameIndex + " resetting to 0")
                             frame[deltaKey + "_triggered"] = 0;
@@ -200,8 +246,6 @@ function addUnitDeltasToFrames(frameInfos){
         }
     }
 }
-
-
 
 function addWaveTriggeredToFrames(frameInfos){
     var key = "wave_triggered";
@@ -242,10 +286,6 @@ function addWaveTriggeredToFrames(frameInfos){
         }
     }
 }
-
-
-
-
 
 function getSC2DataManagerFromFrameInfos(frameInfos) {
     var dm = {};
@@ -377,25 +417,6 @@ function extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig) {
 function validateFrameInfos(frameInfos){//SC2_TODO_DEFER implement this 
     return undefined;
 }
-
-// function convertSC2QValuesToJSChart(frameInfo){
-//     var chart = {};
-//     chart.title = "CHART TITLE";
-//     chart.v_title = "VERTICAL AXIS"
-//     chart.h_title = "HORIZONTAL AXIS";
-//     chart.actions = [];
-//     var qValues = frameInfo["q_values"];
-//     var step = frameInfo["frame_number"];
-//     var actionAttackQ1 = collectActionInfo(step, "Attack Q1", qValues["Top_Right"]);
-//     var actionAttackQ2 = collectActionInfo(step, "Attack Q2", qValues["Top_Left"]);
-//     var actionAttackQ3 = collectActionInfo(step, "Attack Q3", qValues["Bottom_Left"]);
-//     var actionAttackQ4 = collectActionInfo(step, "Attack Q4", qValues["Bottom_Right"]);
-//     chart.actions.push(actionAttackQ1);
-//     chart.actions.push(actionAttackQ2);
-//     chart.actions.push(actionAttackQ3);
-//     chart.actions.push(actionAttackQ4);
-//     return chart;
-// }
 
 function averageValuesInDictionary(actionValues){//SC2_TEST
     var values = Object.values(actionValues);

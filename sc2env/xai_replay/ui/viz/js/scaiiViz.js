@@ -44,19 +44,15 @@ var main = function () {
 	initUI();
 	var debug = true;
 	if (debug) {
-		var connectButton = document.createElement("BUTTON");
-		var connectText = document.createTextNode("Start");
+        var connectButton = document.getElementById("connect-button");
 		connectButton.setAttribute("class", "connectButton");
-		connectButton.setAttribute("id", "connectButton");
-		connectButton.appendChild(connectText);
 		connectButton.onclick = function () {
 			tryConnect('.', 0);
 		};
-		$("#playback-controls-panel").append(connectButton);
-		$("#connectButton").css("font-size", "14px");
-		$("#connectButton").css("padding-left", "20px");
-		$("#connectButton").css("padding-right", "20px");
-		$("#connectButton").css("width", "15%");
+		//$("#connect-button").css("float", "left");
+		$("#connect-button").css("padding-left", "20px");
+		$("#connect-button").css("padding-right", "20px");
+		$("#connect-button").css("height", "30px");
 	} else {
 		tryConnect('.', 0);
 	}

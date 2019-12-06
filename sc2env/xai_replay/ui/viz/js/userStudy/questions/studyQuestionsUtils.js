@@ -4,7 +4,7 @@ function showUserIdScreen(){
     var userIdDiv = document.createElement("DIV");
     userIdDiv.setAttribute("id", "user-id-div");
     userIdDiv.setAttribute("class", "flex-column");
-    userIdDiv.setAttribute("style", "position:absolute;left:0px;top:0px;z-index:" + zIndexMap["allTheWayToFront"] + ";margin:auto;font-family:Arial;padding:10px;width:1800px;height:1600px;background-color:white;");
+    userIdDiv.setAttribute("style", "position:absolute;left:0px;top:0px;z-index:" + zIndexMap["allTheWayToFront"] + ";margin:auto;font-family:Arial;padding:10px;width:3000px;height:1600px;background-color:white;");
     $('body').append(userIdDiv);
 
     var questionRow = document.createElement("DIV");
@@ -39,7 +39,7 @@ function showUserIdScreen(){
 
     var next = document.createElement("BUTTON");
     next.setAttribute("id", "user-id-button-next");
-    next.setAttribute("style", "margin-left:280px;font-family:Arial;font-size:18px;padding:10px;");
+    next.setAttribute("style", "margin-left:280px;font-family:Arial;font-size:50px;padding:10px;");
     next.innerHTML = "Start";
     next.onclick = function() {
         clearUserIdScreen();
@@ -148,7 +148,11 @@ function drawArrow(startCoords, endCoords){
     ctx.fillStyle = "#cc0000";
     ctx.fill();
 }
+
 function ensureStudyControlScreenIsWideEnough(){
+    // no need to recalculate
+}
+function ensureStudyControlScreenIsWideEnoughYear1(){
     var interfaceWidth = $("#scaii-interface").width();
     var saliencyWidth = $("#saliency-div").width();
     var width = Math.max(interfaceWidth, saliencyWidth);
