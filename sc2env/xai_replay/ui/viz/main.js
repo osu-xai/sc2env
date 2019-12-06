@@ -1,19 +1,18 @@
 const {app, BrowserWindow} = require('electron');
-const remote = require('remote');
 const path = require('path');
-const fs = require('fs');
+
 
 // to keep window from being garbage collected by javascript reference it:
 let win;
 
-
-
 //then…
 function createWindow(){
-	win = new BrowserWindow({width:1800, height:1000});
+	win = new BrowserWindow({width:2000, height:1200,webPreferences: {
+        nodeIntegration: true
+    }});
 
     win.loadFile("index.html");
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     win.on('closed', ()=> {
         win = null;
@@ -29,3 +28,5 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+       

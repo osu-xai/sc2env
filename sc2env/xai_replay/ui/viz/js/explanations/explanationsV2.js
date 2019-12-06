@@ -18,23 +18,23 @@ function handleSaliencyDetails(explDetails){
 	}
 }
 
-function askBackendForExplanationSaliencyInfo(stepNumber) {
-    var userCommand = new proto.UserCommand;
-    userCommand.setCommandType(proto.UserCommand.UserCommandType.EXPLAIN);
-    var args = ['' +stepNumber];
-    userCommand.setArgsList(args);
-    var scaiiPkt = new proto.ScaiiPacket;
-    scaiiPkt.setUserCommand(userCommand);
-    sendScaiiPacket(scaiiPkt);
-	currentExplanationStep = stepNumber;
-	// if (stepNumber == sessionIndexManager.getCurrentIndex()) {
-	// 	//console.log("no need to move - already at step with explanation");
-	// }
-	// else {
+// function askBackendForExplanationSaliencyInfo(stepNumber) {
+//     var userCommand = new proto.UserCommand;
+//     userCommand.setCommandType(proto.UserCommand.UserCommandType.EXPLAIN);
+//     var args = ['' +stepNumber];
+//     userCommand.setArgsList(args);
+//     var scaiiPkt = new proto.ScaiiPacket;
+//     scaiiPkt.setUserCommand(userCommand);
+//     sendScaiiPacket(scaiiPkt);
+// 	currentExplanationStep = stepNumber;
+// 	// if (stepNumber == sessionIndexManager.getCurrentIndex()) {
+// 	// 	//console.log("no need to move - already at step with explanation");
+// 	// }
+// 	// else {
         
-	// 	jumpToStep(stepNumber);//SC2_TODO - can get rid of this?
-	// }
-}
+// 	// 	jumpToStep(stepNumber);//SC2_TODO - can get rid of this?
+// 	// }
+// }
 
 // function renderWhyButton(step, x, y){
 //     $("#why-button").remove();

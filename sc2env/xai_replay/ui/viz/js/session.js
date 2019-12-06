@@ -76,7 +76,7 @@ function handleReplayFilenames(replayNames){//SC2_OK
     if (play == undefined){
         configureNavigationButtons();
     }
-    
+    console.log('replayNames in handleReplayFilenames: ' + replayNames);
      // studyQuestionMode not yet set to check, just always check - unlikely to be a problem
     // make tutorial file the default
     replayNames = promoteTutorialFileIfPresent(replayNames);
@@ -87,38 +87,7 @@ function handleReplayFilenames(replayNames){//SC2_OK
 			text: name
 		}));
     }
-    userStudyMode = config.getUserStudyMode();
-    if (userStudyMode) {
-        removeFileSelectorEtc();
-        tabManager = getTabManager();
-        tabManager.openFirstTab();
-    }
-    else {
-        loadSelectedReplayFile();
-    }
-}
-
-
-// accept the list of replay filenames
-function handleReplayChoiceConfig(config){//SC2_OK
-    $("#connect-button").remove();
-    var play = document.getElementById("pauseResumeButton");
-    if (play == undefined){
-        configureNavigationButtons();
-    }
-    
-    var replayNames = config.getReplayFilenamesList();
-     // studyQuestionMode not yet set to check, just always check - unlikely to be a problem
-    // make tutorial file the default
-    replayNames = promoteTutorialFileIfPresent(replayNames);
-	for (var i in replayNames) {
-        var name = replayNames[i];
-		$("#replay-file-selector").append($('<option>', {
-			value: i,
-			text: name
-		}));
-    }
-    userStudyMode = config.getUserStudyMode();
+    userStudyMode = false;
     if (userStudyMode) {
         removeFileSelectorEtc();
         tabManager = getTabManager();
@@ -159,14 +128,30 @@ function loadReplayFile(filename) {//SC2_OK
     currentExplManager.setFilename(filename);
     currentExplManager.setUserStudyMode(false);
 
-    var args = [chosenFile];
-	var userCommand = new proto.UserCommand;
-	userCommand.setCommandType(proto.UserCommand.UserCommandType.SELECT_FILE);
-    userCommand.setArgsList(args);
-    var scaiiPkt = new proto.ScaiiPacket;
-    scaiiPkt.setUserCommand(userCommand);
-    sendScaiiPacket(scaiiPkt);
-    console.log("sent file choice scaiiPacket");
+    async function loadReplay(filename) {
+        var jsonFile = filename + '.json';
+        let promise = new Promise(function(resolve, reject) {
+            fs.readFile('./replays/' + jsonFile, (err, data) => {
+                if (err) reject(err);
+                resolve(data);
+            });
+        });
+      
+        let jsonData = await promise; // wait until the promise resolves (*)
+        console.log("promise await done! - have jsonData")
+        ingestReplayJsonData(jsonData);
+    }
+      
+    loadReplay(filename);
+
+    // var args = [chosenFile];
+	// var userCommand = new proto.UserCommand;
+	// userCommand.setCommandType(proto.UserCommand.UserCommandType.SELECT_FILE);
+    // userCommand.setArgsList(args);
+    // var scaiiPkt = new proto.ScaiiPacket;
+    // scaiiPkt.setUserCommand(userCommand);
+    // sendScaiiPacket(scaiiPkt);
+    // console.log("sent file choice scaiiPacket");
 }
 
 function clearUIElementsForNewFile(){//SC2_OK
@@ -178,12 +163,12 @@ function clearUIElementsForNewFile(){//SC2_OK
     rewardsDivMap = {};
 }
 //
-//
-function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
+function ingestReplayJsonData(jsonData){
+    getSC2DataManagerFromJson
     console.log("handleSC2ReplaySessionConfig");
 	var timelineWidth = expl_ctrl_canvas.width - 2*timelineMargin;
     //SC2_TODO_NAV_TEST - ensure UI ignores clicks during fiule load
-    activeSC2DataManager = getSC2DataManager(rsc);
+    activeSC2DataManager = getSC2DataManagerFromJson(jsonData);
     sessionIndexManager = getSessionIndexManager(activeSC2DataManager.getStepCount(), activeSC2DataManager.getExplanationStepsList(), timelineWidth);
     sessionIndexManager.setReplaySequencerIndex(0);
     activeSC2UIManager = getSC2UIManager(activeSC2DataManager, chosenFile, sessionIndexManager);
@@ -210,51 +195,46 @@ function handleSC2ReplaySessionConfig(rsc) {//SC2_TEST
             clearLoadingScreen();
         }
     }
-    setTreatmentFromFile();
-    setTutorialModeFromFile();
+    loadConfigFile();
 }
 
-
-function setTreatmentFromFile(){
-    $.ajax({
-        url:'http://localhost:8000/treatmentControl/modelFree.txt',
-        type:'HEAD',
-        error: function()
-        {
+function loadConfigFile(){
+    async function loadConfig() {
+        let promise = new Promise(function(resolve, reject) {
+            fs.readFile('./config.json', (err, data) => {
+                if (err) reject(err);
+                resolve(data);
+            });
+        });
+      
+        let jsonData = await promise; // wait until the promise resolves (*)
+        var config = JSON.parse(jsonData);
+        if (config["treatment"] == "modelBased"){
             $('#model-based-radio').click();
             setToModelBasedTreatment();
-        },
-        success: function()
-        {
+        }
+        else {
             $('#model-free-radio').click();
             setToModelFreeTreatment();
         }
-    });
-}
-var year2TutorialMode = false;
-function setTutorialModeFromFile(){
-    $.ajax({
-        url:'http://localhost:8000/treatmentControl/tutorialYes.txt',
-        type:'HEAD',
-        error: function()
-        {
+        if (config["tutorial"] == "yes"){
+            enableForwardTimelineBlock = false;
+            year2TutorialMode = true;
+            $('#dev-mode-check').css("display", "inline");
+            $('#dev-mode-check-label').css("display", "inline");
+        }
+        else {
             // not tutorial mode, but we don't want timeline block enabled iw we are in dev mode
             if (explControlsManager.isUserStudyMode()){
                 enableForwardTimelineBlock = true;
             }
             year2TutorialMode = false;
             hideFileChoiceListBox();
-        },
-        success: function()
-        {
-            enableForwardTimelineBlock = false;
-            year2TutorialMode = true;
-            $('#dev-mode-check').css("display", "inline");
-            $('#dev-mode-check-label').css("display", "inline");
         }
-    });
+    }
+    loadConfig();
 }
-
+var year2TutorialMode = false;
 function checkForEndOfGame(){
     if (sessionIndexManager.isAtEndOfGame()) {
 		controlsManager.reachedEndOfGame();
@@ -286,100 +266,6 @@ function userStudyAdjustmentsForFrameChange(){
         currentExplManager.setWhyButtonAccessibility();
     }
 }
-var totalsString = "total score";
-
-function getUnitLane(basicUnitYPos){
-    var lane = "bottom"
-    if (basicUnitYPos > 32){
-        lane = "top"
-    }
-    return lane
-}
-
-function getMineralHealth(frameInfo){
-    var recorderUnitId = 45
-    for (var i in frameInfo.units){
-        var unit = frameInfo.units[i]
-        if (unit.unit_type == recorderUnitId){
-            var recorderUnit = unit
-            var mineralHealthSheildValue = 4
-            if (recorderUnit.shield == mineralHealthSheildValue){
-                currentFriendlyMineralHealth = recorderUnit.health - 1
-             }
-        }
-    }
-    return currentFriendlyMineralHealth
-}
-
-function getNexusUnits(frameInfo){
-    var nexusUnit = 59;
-    var nexusUnits = []
-    for (var unitIndex in frameInfo.units){
-        var unit = frameInfo.units[unitIndex]
-        if (unit["unit_type"] == nexusUnit){
-            nexusUnits.push(unit)
-        }
-    }
-    return nexusUnits
-}
-
-function getNexusHealthForUnit(alliance, lane, nexusUnits){
-    for (var unitIndex in nexusUnits){
-        var unit = nexusUnits[unitIndex];
-        curLane = getUnitLane(unit.y);
-        curAlliance = unit.alliance;
-        if (alliance == curAlliance && curLane == lane){
-            return unit.health;
-        }
-    }
-    return 0;
-}
-
-function getWave(frameInfo){
-    var units = frameInfo["units"]
-    for (unitIndex in units){
-        var unit = units[unitIndex]
-        if (unit["unit_type"] == 45){
-            if (unit["shield"] == 42){
-                var waveNumber = unit["health"]
-                return waveNumber;
-            }
-        }
-    }
-}
-
-var htmlTextForKey = {};
-htmlTextForKey["friendly.marineBuilding.top"] = "Marines: ";
-htmlTextForKey["friendly.banelingBuilding.top"] = "Banelings: ";
-htmlTextForKey["friendly.immortalBuilding.top"] = "Immortals: ";
-htmlTextForKey["friendly.marineBuilding.bottom"] = "Marines: ";
-htmlTextForKey["friendly.banelingBuilding.bottom"] = "Banelings: ";
-htmlTextForKey["friendly.immortalBuilding.bottom"] = "Immortals: ";
-htmlTextForKey["enemy.marineBuilding.top"] = "Marines: ";
-htmlTextForKey["enemy.banelingBuilding.top"] = "Banelings: ";
-htmlTextForKey["enemy.immortalBuilding.top"] = "Immortals: ";
-htmlTextForKey["enemy.marineBuilding.bottom"] = "Marines: ";
-htmlTextForKey["enemy.banelingBuilding.bottom"] = "Banelings: ";
-htmlTextForKey["enemy.immortalBuilding.bottom"] = "Immortals: ";
-htmlTextForKey["friendly.Pylon"] = "Pylons: ";
-htmlTextForKey["enemy.Pylon"] = "Pylons: ";
-
-
-var htmlAllianceTextForKey = {};
-htmlAllianceTextForKey["friendly.marineBuilding.top"] = "Friendly ";
-htmlAllianceTextForKey["friendly.banelingBuilding.top"] = "Friendly ";
-htmlAllianceTextForKey["friendly.immortalBuilding.top"] = "Friendly ";
-htmlAllianceTextForKey["friendly.marineBuilding.bottom"] = "Friendly ";
-htmlAllianceTextForKey["friendly.banelingBuilding.bottom"] = "Friendly ";
-htmlAllianceTextForKey["friendly.immortalBuilding.bottom"] = "Friendly ";
-htmlAllianceTextForKey["enemy.marineBuilding.top"] = "Enemy ";
-htmlAllianceTextForKey["enemy.banelingBuilding.top"] = "Enemy ";
-htmlAllianceTextForKey["enemy.immortalBuilding.top"] = "Enemy ";
-htmlAllianceTextForKey["enemy.marineBuilding.bottom"] = "Enemy ";
-htmlAllianceTextForKey["enemy.banelingBuilding.bottom"] = "Enemy ";
-htmlAllianceTextForKey["enemy.immortalBuilding.bottom"] = "Enemy ";
-htmlAllianceTextForKey["friendly.Pylon"] = "Friendly ";
-htmlAllianceTextForKey["enemy.Pylon"] = "Enemy ";
 
 function isFrameFarEnoughPastDP(frameInfo){
     var frameNumber = frameInfo.frame_number;
@@ -402,49 +288,6 @@ function isFrameFarEnoughPastDP(frameInfo){
     return false;
 }
 
-function renderUnitValues(frameInfo){
-    if (isFrameFarEnoughPastDP(frameInfo)){
-        var unit = frameInfo
-        for (unitCount in unitInfoKeys){
-            if(unit[unitInfoKeys[unitCount] + "_delta_triggered"] == 1){
-                if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
-                    document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "+" + (unit[unitInfoKeys[unitCount] + "_delta"])
-                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML =  (unit[unitInfoKeys[unitCount] + "_count"] - unit[unitInfoKeys[unitCount] + "_delta"])
-                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                }
-                else{
-                    if(frameInfo['wave_triggered'] == 1){
-                        document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                        document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
-                        document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                    }
-                }
-            }
-            else{
-                if (htmlAllianceTextForKey[ unitInfoKeys[unitCount] ] == "Friendly "){
-                    document.getElementById(unitInfoKeys[unitCount] + "_delta").innerHTML = "" //NA
-                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
-                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                }
-                else{
-                    document.getElementById(unitInfoKeys[unitCount] + "_name").innerHTML = htmlTextForKey[unitInfoKeys[unitCount]]
-                    document.getElementById(unitInfoKeys[unitCount] + "_count").innerHTML = (unit[unitInfoKeys[unitCount] + "_count"])
-                    document.getElementById("p1_mineral").innerHTML = "Minerals: " + getMineralHealth(frameInfo)
-                }
-            } 
-        }
-    
-        var nexusUnits = getNexusUnits(frameInfo);
-        document.getElementById("friendly.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"top",nexusUnits);
-        document.getElementById("friendly.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(1,"bottom",nexusUnits);
-        document.getElementById("enemy.nexusHealth.top").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"top",nexusUnits);
-        document.getElementById("enemy.nexusHealth.bottom").innerHTML = "Nexus Health: " + getNexusHealthForUnit(4,"bottom",nexusUnits);
-    
-    }
-    
-}
 
 function expressCumulativeRewards(frameInfo) { //SC2_TEST
     rewardsDict = activeSC2DataManager.getCumulativeRewards(frameInfo);
@@ -543,51 +386,12 @@ function addCumRewardPair(index, key, val){//SC2_OK
 // SC2 fewer packets arrive.   New protocol will bew as follows:
 //
 
-//  INITIAL ORDER OF ARRIVAL OF PACKETS
+//  INITIAL ORDER OF ARRIVAL OF PACKETS Y2 system pre-electron
 //
 //  1. ReplayChoiceConfig   (list of filenames)
 //  2. SC2ReplaySessionConfig
 //  3. StudyQuestions (optional)
 
-function handleScaiiPacket(sPacket) {
-	var result = undefined;
-	if (sPacket.hasReplayChoiceConfig()) {
-		var config = sPacket.getReplayChoiceConfig();
-		replayChoiceConfig = config;
-		handleReplayChoiceConfig(config);
-	}
-	else if (sPacket.hasReplaySessionConfig()) {
-		//console.log("-----got replaySessionConfig");
-		var config = sPacket.getReplaySessionConfig();
-		replaySessionConfig = config;
-		handleSC2ReplaySessionConfig(config,undefined);
-	}
-	else if (sPacket.hasExplDetails()) {
-		//console.log('has expl details');
-		var explDetails = sPacket.getExplDetails();
-        handleSaliencyDetails(explDetails);
-	}
-    else if(sPacket.hasStudyQuestions()) {
-        handleStudyQuestions(sPacket.getStudyQuestions());
-    }
-	// else if (sPacket.hasErr()) {
-	// 	console.log("-----got errorPkt");
-	// 	console.log(sPacket.getErr().getDescription())
-	// }
-    else if (sPacket.hasUserCommand()) {
-		var userCommand = sPacket.getUserCommand();
-		var commandType = userCommand.getCommandType();
-		if (commandType == proto.UserCommand.UserCommandType.SELECT_FILE_COMPLETE){
-
-        
-		}
-	}
-	else {
-		console.log(sPacket.toString())
-		console.log('unexpected message from system!');
-	}
-	return result;
-}
 function epochIsChanging() {
 	if (currentExplManager != undefined) {
 		currentExplManager.removeOverlaysAndOutlines();

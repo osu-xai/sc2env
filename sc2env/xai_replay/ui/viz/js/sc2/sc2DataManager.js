@@ -18,8 +18,8 @@ var pauseAndPredictDPsByFrame = [];
 var allDecisionPointFrames = [];
 var laterDPFrames = []
 
-function getSC2DataManager(sc2ReplaySessionConfig) {
-    var frameInfos = extractFrameInfosFromReplaySessionConfig(sc2ReplaySessionConfig);
+function getSC2DataManagerFromJson(jsonData){
+    var frameInfos = getFrameInfosFromJson(jsonData);
     frameInfos = trimFirstFrames(frameInfos, trimBy)
     addWaveTriggeredToFrames(frameInfos);
     addUnitCountsToFrames(frameInfos);
@@ -33,11 +33,6 @@ function getSC2DataManager(sc2ReplaySessionConfig) {
     controlsManager.registerJQueryHandleForWaitCursor($("#game-row"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-tree-window"));
     controlsManager.registerJQueryHandleForWaitCursor($("#explanation-control-panel"));
-    return getSC2DataManagerFromFrameInfos(frameInfos);
-}
-
-function getSC2DataManagerFromJson(jsonData){
-    var frameInfos = getFrameInfosFromJson(jsonData);
     return getSC2DataManagerFromFrameInfos(frameInfos);
 }
 

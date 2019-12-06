@@ -4,12 +4,14 @@
 		<meta charset="utf-8">
 		<title>XAI SC2 Explanations</title>
 		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-	    <script src="js/jquery.min.js"></script>
+        <!--<script src="js/jquery.min.js"></script>-->
+        <script>window.$  = window.jQuery = require('jquery')</script>
 	  <script src="js/closure-library/closure/goog/base.js"></script>
 	  <script>
 	  	goog.require('goog.dom');
 	  </script>
-	  <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+      <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+     
 	  <script src="js/protobuf_js/binary/arith.js"></script>
       <script src="js/protobuf_js/binary/constants.js"></script>
       <script src="js/protobuf_js/binary/utils.js"></script>
@@ -33,6 +35,7 @@
       <script src="js/tree/explanationAccessManagerDev.js"></script>
       <script src="js/tree/explanationAccessManagerStudy.js"></script>
       <script src="js/tree/autoPauseManager.js"></script>
+      <script src="js/sc2/unitUtil.js"></script>
       <script src="js/sc2/sc2DataManager.js"></script>
       <script src="js/sc2/explControlsManager.js"></script>
       <script src="js/sc2/sc2ui.js"></script>
@@ -103,8 +106,12 @@
       <script src="js/jquery.easing.js"></script>
       <script src="js/collapsable.js"></script> -->
 
-	</head>
+    </head>
+    <script>
+
+        </script>
 	<body>
+        
         <div id="explanation-tree-window" style="display:none;overflow:hidden" class="master-tab-container">
                 <div id="explanation-ui" class="flex-column" style="width:100%;height:100%;position:absolute">
                     <!-- <div id="explanation-tab" class="flex-row">
@@ -441,7 +448,6 @@
                                 <!--<div id="rewind-control"></div>
                                 <div id="step-back-control"></div>
                                 <div id="step-forward-control"></div>-->
-                                <button id="connect-button" style="height:20px;">Start</button>
                                 <div id="pause-play-control"></div>
                             </div>
                             <div style="width:10%;margin-right:20px;" class="flex-row">
@@ -496,6 +502,8 @@
                     </div>
                 </div>-->
             </div>
-		<script src="js/sc2ReplayUI.js"></script>
-	</body>
+		
+    </body>
+    
+    <script src="js/sc2ReplayUI.js"></script>
 </html>

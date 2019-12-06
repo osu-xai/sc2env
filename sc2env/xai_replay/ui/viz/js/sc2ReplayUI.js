@@ -5,7 +5,7 @@
 // goog.require('proto.ExplanationPoint');
 // goog.require('proto.MultiMessage');
 // goog.require('proto.ScaiiPacket');
-
+const fs = require('fs');
 /**
 * Copyright (c) 2017-present, Oregon State University, Inc.
 * All rights reserved.
@@ -17,24 +17,51 @@
 
 var main = function () {
     //runTests();
-	initUI();
-    var replayFilenames = loadReplaynames();
-    handleReplayFilenames(replayFilenames);
+    initUI();
+    
+    loadReplaynames();
+    
 }
 
-
+function extractReplayRootNames(items){
+    var result = [];
+    for (var i in items){
+        var item = items[i];
+        if (item.endsWith('.json')){
+            var root = item.replace('.json','');
+            result.push(root);
+        }
+    }
+    return result;
+}
+    
 function loadReplaynames(){
     //var replayDir = path.join(__dirname, 'replays')
     var replayDir = './replays'
-    
-    fs.readdir(replayDir, function(err, items) {
-        console.log(items);
-     
-        for (var i=0; i<items.length; i++) {
-            console.log(items[i]);
-        }
-    });
-}
+    var items;
+    async function loadFilenames() {
 
+        let promise = new Promise(function(resolve, reject) {
+
+            fs.readdir(replayDir, function(err, items) {
+                console.log(items);
+                if (err != undefined){
+                    reject(err);
+                }
+                else {
+                    var replayNames = extractReplayRootNames(items);
+                    resolve(replayNames);
+                }
+            });
+            
+        });
+      
+        let result = await promise; // wait until the promise resolves (*)
+        console.log("promise await done!")
+        handleReplayFilenames(result);
+    }
+      
+    loadFilenames();
+}
 
 main();
