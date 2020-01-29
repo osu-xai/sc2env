@@ -29,9 +29,11 @@ def register_map(map_dir, map_name, players=1):
     if map_name.endswith('.SC2Map'):
         map_name = map_name.replace('.SC2Map', '')
     map_filename = os.path.join(map_dir, map_name + '.SC2Map')
-
-    print('Copying map {} to maps directory {}'.format(map_filename, maps_install_dir))
-    shutil.copy(map_filename, maps_install_dir)
+    map_target_pathname = os.path.join(maps_install_dir, map_name + '.SC2Map')
+    print('checking for map pathname {}'.format(map_target_pathname))
+    if not os.path.exists(map_target_pathname):
+        print('Copying map {} to maps directory {}'.format(map_filename, maps_install_dir))
+        shutil.copy(map_filename, maps_install_dir)
 
     # Don't do this at home
     class_definition = dict(prefix=map_dir, filename=map_filename, players=players)
