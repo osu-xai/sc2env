@@ -4,5 +4,11 @@ sc2env/xai_replay/ui/viz/js/protobuf_js
 sc2env/xai_replay/ui/viz/replays
 *.jpg
 *.mp4
+*.zip
+*.pyc
+*.egg
 .DS_Store
 .ipynb_checkpoints
+StarCraftII/
+build/
+sc2env.egg-info/
