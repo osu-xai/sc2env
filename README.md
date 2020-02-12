@@ -11,14 +11,7 @@ Built for Ubuntu 16.04 and Python 3.5 with PySC2 2.0 and StarCraft II 4.0 (build
 Game screenshots require `libOSMesa` or a graphical version of StarCraft II (Windows or OSX).
 
 ## Installation
-
-Just run:
-
-````
-    pip install sc2env
-    install_starcraft2
-    python -m sc2env.play_fog_of_war
-````
+See [installation.md](installation.md)
 
 Rendered game screenshots and feature maps should be generated as a set of .jpg files in the current directory.
 
