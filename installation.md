@@ -7,8 +7,8 @@ Recommended Specs:
 
 1. Update and install the latest Nvidia GPU drivers for your distribution.
 2. Install [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit)
-3. Clone the ABP Repo
-    - `git clone https://github.com/osu-xai/abp.git`
+3. Clone the sc2env Repo
+    - `git clone https://github.com/osu-xai/sc2env.git`
 4. Install pip packages ([Anaconda recommended](https://www.anaconda.com/distribution/))
     - `pip install sc2env`
 5. Run setup
