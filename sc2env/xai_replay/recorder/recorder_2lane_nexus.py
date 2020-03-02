@@ -26,7 +26,7 @@ class XaiReplayRecorder2LaneNexus():
         #self.game_clock_tick = 0
         self.frames = [] 
         self.action_component_names = action_component_names
-        self.video = imutil.Video(filename=self.video_pathname)
+        self.video = imutil.Video(filename=self.video_pathname, framerate=25)
         self.decision_point_number = 1
         self.explanation_points_array = []
         self.current_wave_number = 0
