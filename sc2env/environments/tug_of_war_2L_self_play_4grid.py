@@ -85,6 +85,10 @@ action_component_names = {
     2: 'Immortal',
     3: 'Pylon'
 }
+
+friendly_units_kill_idx = list(range(5, 23))
+enemy_units_kill_idx = list(range(105, 122))
+UNITS_TYPE_NUMBER = 3
 class TugOfWar():
     def __init__(self, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
         if map_name is None:
@@ -168,6 +172,8 @@ class TugOfWar():
         # Have to change the combine func if this changed
         self.pylon_cost = 300
         self.pylon_index = 7
+        
+        self.kills_info = np.zeros(UNITS_TYPE_NUMBER ^ 2)
         for i, mc in enumerate(maker_cost.values()):
             self.maker_cost_np[i] = mc
 
@@ -218,6 +224,7 @@ class TugOfWar():
         self.end_state = None
         self.decision_point = 1
         self.num_waves = 0
+        self.kills_info = np.zeros(UNITS_TYPE_NUMBER ^ 2)
         
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
@@ -285,7 +292,7 @@ class TugOfWar():
                 # TODO: consider to merge two for
                 for rt in self.reward_types:
                     self.last_decomposed_reward_dict[rt] = self.decomposed_reward_dict[rt]
-
+                self.game_data = data
                 return state_1, state_2, done, dp
         return None, None, done, dp
 
@@ -725,4 +732,32 @@ class TugOfWar():
         
         assert np.sum(s[:, self.miner_index] >= 0) == s.shape[0]
         return s
-  
+    def get_unit_kill(self):
+        current_kills_info = np.zeros(len(self.kills_info))
+        print(friendly_units_kill_idx)
+        for x in self.game_data:
+            if x.unit_type == UNIT_TYPES['SCV'] and x.shield in friendly_units_kill_idx:
+                #Top lane Marine kill Marine (shield: 5, idx: 0)
+                # Top lane Marine kill Baneling (shield: 6, idx: 1)
+                # Top lane Marine kill Immortals (shield: 7, idx: 2)
+                # Top lane Baneling kill Marine (shield: 8, idx: 3)
+                # Top lane Baneling kill Baneling (shield: 9, idx: 4) 
+                # Top lane Baneling kill Immortal (shield: 10, idx: 5)
+                # Top lane Immortal kill Marine (shield: 11, idx: 6)
+                # Top lane Immortal kill Baneling (shield: 12, idx: 7)
+                # Top lane Immortal kill Immortal (shield: 13, idx: 8)
+                # Bottom lane Marine kill Marine (shield: 14, idx: 9)
+                # Bottom lane Marine kill Baneling (shield: 15, idx: 10)
+                # Bottom lane Marine kill Immortals (shield: 16, idx: 11)
+                # Bottom lane Baneling kill Marine (shield: 17, idx: 12)
+                # Bottom lane Baneling kill Baneling  (shield: 18, idx: 13)
+                # Bottom lane Baneling kill Immortal (shield: 19, idx: 14)
+                # Bottom lane Immortal kill Marine (shield: 20, idx: 15)
+                # Bottom lane Immortal kill Baneling (shield: 21, idx: 16)
+                # Bottom lane Immortal kill Immortal (shield: 22, idx: 17)
+                current_kills_info[x.shield - 5] = x.health - 1
+        print(current_kills_info)
+        print(self.kills_info)
+        diff_kills_info = self.kills_info - current_kills_info
+        self.kills_info = current_kills_info
+        return diff_kills_info
