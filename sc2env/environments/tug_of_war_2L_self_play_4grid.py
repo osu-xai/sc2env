@@ -90,6 +90,8 @@ friendly_units_kill_idx = list(range(5, 23))
 enemy_units_kill_idx = list(range(105, 123))
 damage_to_nexus_idx = list(range(23, 29))
 nexus_get_damage_idx = list(range(123, 129))
+agent_attacking_units_idx = list(range(29, 35))
+enemy_attacking_units_idx = list(range(129, 135))
 UNITS_TYPE_NUMBER = 3
 class TugOfWar():
     def __init__(self, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
@@ -794,3 +796,27 @@ class TugOfWar():
         diff_getdamage_info = getdamage_info - self.nexus_get_damage_info
         self.nexus_get_damage_info = getdamage_info
         return diff_damageto_info, diff_getdamage_info
+    
+    def get_attacking(self):
+        
+# agent_attacking_units_idx = list(range(29, 35))
+# enemy_attacking_units_idx = list(range(129, 135))
+
+        agent_attacking_units = np.zeros(len(agent_attacking_units_idx))
+        enemy_attacking_units = np.zeros(len(enemy_attacking_units_idx))
+        for x in self.game_data:
+            if x.unit_type == UNIT_TYPES['SCV'] and x.shield in agent_attacking_units_idx:
+                
+                agent_attacking_units[int(x.shield) - 29] = x.health - 1
+                print(agent_attacking_units)
+            if x.unit_type == UNIT_TYPES['SCV'] and x.shield in enemy_attacking_units_idx:
+                enemy_attacking_units[int(x.shield) - 129] = x.health - 1
+                print(enemy_attacking_units )
+                
+#         diff_damageto_info = damageto_info - self.damage_to_nexus_info
+#         self.damage_to_nexus_info = damageto_info
+        
+#         diff_getdamage_info = getdamage_info - self.nexus_get_damage_info
+#         self.nexus_get_damage_info = getdamage_info
+        
+        return agent_attacking_units, enemy_attacking_units
