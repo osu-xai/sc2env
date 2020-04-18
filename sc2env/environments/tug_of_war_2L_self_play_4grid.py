@@ -88,6 +88,8 @@ action_component_names = {
 
 friendly_units_kill_idx = list(range(5, 23))
 enemy_units_kill_idx = list(range(105, 123))
+damage_to_nexus_idx = list(range(23, 29))
+nexus_get_damage_idx = list(range(123, 129))
 UNITS_TYPE_NUMBER = 3
 class TugOfWar():
     def __init__(self, map_name = None, unit_type = [], generate_xai_replay = False, xai_replay_dimension = 256, verbose = False):
@@ -175,6 +177,9 @@ class TugOfWar():
         
         self.kills_info = np.zeros(len(friendly_units_kill_idx))
         self.be_killed_info = np.zeros(len(enemy_units_kill_idx))
+        
+        self.damage_to_nexus_info = np.zeros(len(damage_to_nexus_idx))
+        self.nexus_get_damage_info = np.zeros(len(nexus_get_damage_idx))
         for i, mc in enumerate(maker_cost.values()):
             self.maker_cost_np[i] = mc
 
@@ -225,7 +230,12 @@ class TugOfWar():
         self.end_state = None
         self.decision_point = 1
         self.num_waves = 0
+        
+        self.kills_info = np.zeros(len(friendly_units_kill_idx))
         self.be_killed_info = np.zeros(len(enemy_units_kill_idx))
+        
+        self.damage_to_nexus_info = np.zeros(len(damage_to_nexus_idx))
+        self.nexus_get_damage_info = np.zeros(len(nexus_get_damage_idx))
         
         data = self.sc2_env._controllers[0]._client.send(observation = sc_pb.RequestObservation())
         actions_space = self.sc2_env._controllers[0]._client.send(action = sc_pb.RequestAction())
@@ -736,6 +746,7 @@ class TugOfWar():
     def get_unit_kill(self):
         current_kills_info = np.zeros(len(self.kills_info))
         unit_be_killed = np.zeros(len(self.be_killed_info))
+
         for x in self.game_data:
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield in friendly_units_kill_idx:
                 #Top lane Marine kill Marine (shield: 5, idx: 0)
@@ -766,3 +777,20 @@ class TugOfWar():
         diff_be_killed_info = unit_be_killed - self.be_killed_info
         self.be_killed_info = unit_be_killed
         return diff_kills_info, diff_be_killed_info
+    
+    def get_damage_to_nexus(self):
+        damageto_info = np.zeros(len(self.damage_to_nexus_info))
+        getdamage_info = np.zeros(len(self.nexus_get_damage_info))
+        for x in self.game_data:
+            if x.unit_type == UNIT_TYPES['SCV'] and x.shield in damage_to_nexus_idx:
+                
+                damageto_info[int(x.shield) - 23] = x.health - 1
+            if x.unit_type == UNIT_TYPES['SCV'] and x.shield in nexus_get_damage_idx:
+                getdamage_info[int(x.shield) - 123] = x.health - 1
+                
+        diff_damageto_info = damageto_info - self.damage_to_nexus_info
+        self.damage_to_nexus_info = damageto_info
+        
+        diff_getdamage_info = getdamage_info - self.nexus_get_damage_info
+        self.nexus_get_damage_info = getdamage_info
+        return diff_damageto_info, diff_getdamage_info
