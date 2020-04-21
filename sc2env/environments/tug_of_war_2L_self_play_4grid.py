@@ -808,15 +808,18 @@ class TugOfWar():
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield in agent_attacking_units_idx:
                 
                 agent_attacking_units[int(x.shield) - 29] = x.health - 1
-                print(agent_attacking_units)
+#                 print(agent_attacking_units)
             if x.unit_type == UNIT_TYPES['SCV'] and x.shield in enemy_attacking_units_idx:
                 enemy_attacking_units[int(x.shield) - 129] = x.health - 1
-                print(enemy_attacking_units )
+#                 print(enemy_attacking_units )
                 
 #         diff_damageto_info = damageto_info - self.damage_to_nexus_info
 #         self.damage_to_nexus_info = damageto_info
         
 #         diff_getdamage_info = getdamage_info - self.nexus_get_damage_info
 #         self.nexus_get_damage_info = getdamage_info
-        
+#         if (sum(agent_attacking_units) + sum(enemy_attacking_units)) > 0:
+#         print(agent_attacking_units, enemy_attacking_units)
+#         print()
+#         input()
         return agent_attacking_units, enemy_attacking_units
