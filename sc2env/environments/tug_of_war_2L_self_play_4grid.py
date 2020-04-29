@@ -122,7 +122,7 @@ class TugOfWar():
               camera_width_world_units = 100,
               )
             step_mul_value = 16
-        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 2)
+        np.set_printoptions(threshold=sys.maxsize,linewidth=sys.maxsize, precision = 4)
         
         self.sc2_env = sc2_env.SC2Env(
           map_name = map_name,
@@ -557,7 +557,7 @@ class TugOfWar():
                     reward_type = reward_dict[x.shield]
                     self.decomposed_reward_dict[reward_type] = x.health - 1
                     
-                if x.shield == 41 and x.health == 2:
+                if x.shield == 41 and x.health >= 2:
                     end = True
                 if x.shield == 44 and x.health != self.decision_point:
                     self.decision_point = x.health
