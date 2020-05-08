@@ -168,6 +168,9 @@ class XaiReplayRecorder2LaneNexus():
         output_file = open(self.saliency_pathname,"wb")
         output_file.write(data)
 
+        # finish the video, convert mjpeg into mp4
+        self.video.finish()
+
     # def record_saliency_for_decision_point(self, saliencies):
     #     # since we already appended the corresponding frame to the frames list in record_decision_point, 
     #     # we need to subtract 1 here to reference that frame (which is == game clock cycle == "step" in UI terms)
