@@ -5,18 +5,18 @@ import os
 from importlib import import_module
 from abp.configs import NetworkConfig, ReinforceConfig, EvaluationConfig
 
-from abp.examples.pysc2.tug_of_war.hra import run_task
-from abp.examples.pysc2.tug_of_war.sadq_bigA import run_task as run_task_bigA
-from abp.examples.pysc2.tug_of_war.sadq_2p import run_task as run_task_2p
-from abp.examples.pysc2.tug_of_war.model_base_TS import run_task as run_task_mbts
-from abp.examples.pysc2.tug_of_war.sadq_2p_2l import run_task as run_task_2p_2l
-from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid import run_task as run_task_2p_2l_grid
-from abp.examples.pysc2.tug_of_war.sadq_2p_2l_human_play import run_task as run_task_2p_2l_hp
-from abp.examples.pysc2.tug_of_war.sadq_2p_2l_deexplanation import run_task as run_task_2p_2l_deexplanation
-from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed import run_task as run_task_2p_2l_grid_decomposed
-from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed_trans import run_task as run_task_2p_2l_grid_decomposed_trans
+# from abp.examples.pysc2.tug_of_war.hra import run_task
+# from abp.examples.pysc2.tug_of_war.sadq_bigA import run_task as run_task_bigA
+# from abp.examples.pysc2.tug_of_war.sadq_2p import run_task as run_task_2p
+# from abp.examples.pysc2.tug_of_war.model_base_TS import run_task as run_task_mbts
+# from abp.examples.pysc2.tug_of_war.sadq_2p_2l import run_task as run_task_2p_2l
+# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid import run_task as run_task_2p_2l_grid
+# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_human_play import run_task as run_task_2p_2l_hp
+# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_deexplanation import run_task as run_task_2p_2l_deexplanation
+# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed import run_task as run_task_2p_2l_grid_decomposed
+# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed_trans import run_task as run_task_2p_2l_grid_decomposed_trans
 from abp.examples.pysc2.tug_of_war.gqf_2p_2l_grid import run_task as run_task_gqf_2p_2l_grid
-from abp.examples.pysc2.tug_of_war.model_base_TS_grid import run_task as run_task_mbts_grid
+# from abp.examples.pysc2.tug_of_war.model_base_TS_grid import run_task as run_task_mbts_grid
 
 def main():
     parser = argparse.ArgumentParser()
