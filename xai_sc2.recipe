@@ -29,19 +29,24 @@ From : ubuntu:16.04
 	cd /sc2
 
 	git clone https://github.com/osu-xai/sc2env.git
+	cd sc2env
+	git checkout recorder
+	cd /sc2
 	pip install numpy
 	pip install torch
 	pip install tqdm
 	pip install gym
-	pip install pysc2
+	pip install pysc2==2.0.2
 	pip install imutil
 
 
 
 	# ----------------------  install abp ----------------------------
 	cd /sc2
-	git clone https://github.com/osu-xai/abp
-
+	git clone https://github.com/osu-xai/abp.git
+	cd abp
+	get checkout replay_generate
+	cd /sc2
 
 	pip install torchvision
 	pip install gym[atari]
@@ -71,14 +76,9 @@ From : ubuntu:16.04
 	apt install -y libosmesa6-dev
 	apt-get install -y ffmpeg  # to install jpg renderer
 
-	# ----------------------  install replay UI support ----------------------------
-	pip install rangehttpserver
-	pip install websockets 
-
-
 	# ----------------------  install SC2 ----------------------------
 
-	cd /sc2/sc2env/scripts
+	cd /
 
 	wget -nc https://blzdistsc2-a.akamaihd.net/Linux/SC2.4.1.2.60604_2018_05_16.zip
 	unzip -P iagreetotheeula SC2.4.1.2.60604_2018_05_16.zip
@@ -90,6 +90,9 @@ From : ubuntu:16.04
 	wget -nc https://github.com/deepmind/pysc2/releases/download/v1.2/mini_games.zip
 	unzip mini_games.zip -d StarCraftII/Maps/
 	rm *.zip
+
+	# --------------------- custom map placement -----------------------
+    cp /sc2/sc2env/sc2env/maps/TugOfWar-2-Lane-Self-Play-No-FIFO.SC2Map /StarCraftII/Maps
 
 
 
