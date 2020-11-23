@@ -743,7 +743,7 @@ class TugOfWar():
             actions[index_has_pylon, -1] -= 1
             index_has_pylon = actions[:, -1] > 0
         
-        assert np.sum(s[:, self.miner_index] >= 0) == s.shape[0]
+#         assert np.sum(s[:, self.miner_index] >= 0) == s.shape[0]
         return s
     def get_unit_kill(self):
         current_kills_info = np.zeros(len(self.kills_info))

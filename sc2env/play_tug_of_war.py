@@ -13,10 +13,11 @@ from abp.configs import NetworkConfig, ReinforceConfig, EvaluationConfig
 # from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid import run_task as run_task_2p_2l_grid
 # from abp.examples.pysc2.tug_of_war.sadq_2p_2l_human_play import run_task as run_task_2p_2l_hp
 # from abp.examples.pysc2.tug_of_war.sadq_2p_2l_deexplanation import run_task as run_task_2p_2l_deexplanation
-# from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed import run_task as run_task_2p_2l_grid_decomposed
+from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed import run_task as run_task_2p_2l_grid_decomposed
 # from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_decomposed_trans import run_task as run_task_2p_2l_grid_decomposed_trans
 from abp.examples.pysc2.tug_of_war.gqf_2p_2l_grid import run_task as run_task_gqf_2p_2l_grid
 # from abp.examples.pysc2.tug_of_war.model_base_TS_grid import run_task as run_task_mbts_grid
+from abp.examples.pysc2.tug_of_war.sadq_2p_2l_grid_gvf import run_task as run_task_sadq_2p_2l_grid_gvf
 
 def main():
     parser = argparse.ArgumentParser()
@@ -137,7 +138,9 @@ def main():
     elif args.task == 'task_gqf_2p_2l_grid':
         run_task_gqf_2p_2l_grid(evaluation_config, network_config, reinforce_config, map_name = map_name)
     elif args.task == 'task_mbts_grid':
-        run_task_mbts_grid(evaluation_config, network_config, reinforce_config, map_name = map_name)    
+        run_task_mbts_grid(evaluation_config, network_config, reinforce_config, map_name = map_name)
+    elif args.task == 'task_sadq_2p_2l_grid_gvf':
+        run_task_sadq_2p_2l_grid_gvf(evaluation_config, network_config, reinforce_config, map_name = map_name)
     else:
         print("need task")
     return 0
