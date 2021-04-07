@@ -45,6 +45,7 @@ class TugOfWar():
                  xai_replay_dimension=256, verbose=False):
         if map_name is None:
             map_name = MAP_NAME
+        self.map_name = map_name
         maps_dir = os.path.join(os.path.dirname(__file__), '..', 'maps')
         register_map(maps_dir, map_name)
 
